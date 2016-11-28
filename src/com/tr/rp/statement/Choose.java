@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.tr.rp.core.DExpression;
 import com.tr.rp.core.DStatement;
-import com.tr.rp.core.Pair;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.IteratorSplitter;

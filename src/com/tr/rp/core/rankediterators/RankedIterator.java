@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Optional;
 
-import com.tr.rp.core.Pair;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.bool.BoolExp;
 

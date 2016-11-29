@@ -47,4 +47,15 @@ public class LessThan extends BoolExp {
 		return e1.getVal(e) < e2.getVal(e);
 	}
 
+	@Override
+	public BoolExp transformRankExpressions(VarStore v, int rank) {
+		DExpression t1 = e1.transformRankExpressions(v, rank);
+		DExpression t2 = e2.transformRankExpressions(v, rank);
+		if (t1 != e1 || t2 != e2) {
+			return new LessThan(t1, t2);
+		} else {
+			return this;
+		}
+	}
+
 }

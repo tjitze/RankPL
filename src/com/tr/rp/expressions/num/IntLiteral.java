@@ -15,5 +15,10 @@ public class IntLiteral extends DExpression {
 	public int getVal(VarStore e) {
 		return value;
 	}
+
+	@Override
+	public DExpression transformRankExpressions(VarStore v, int rank) {
+		return this;
+	}
 	
 }

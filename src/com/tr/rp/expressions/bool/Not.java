@@ -18,4 +18,14 @@ public class Not extends BoolExp {
 	public BoolExp negate() {
 		return e;
 	}
+
+	@Override
+	public BoolExp transformRankExpressions(VarStore v, int rank) {
+		BoolExp te = transformRankExpressions(v, rank);
+		if (e != te) {
+			return new Not(te);
+		} else {
+			return this;
+		}
+	}
 }

@@ -41,5 +41,10 @@ public class Divide extends AbstractNumOp {
 	public int apply(int a, int b) {
 		return a / b;
 	}
-	
+
+	@Override
+	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+		return new Divide(e1, e2);
+	}
+
 }

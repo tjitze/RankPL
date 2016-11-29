@@ -42,4 +42,9 @@ public class Times extends AbstractNumOp {
 		return a * b;
 	}
 
+	@Override
+	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+		return new Times(e1, e2);
+	}
+
 }

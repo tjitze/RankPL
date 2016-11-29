@@ -15,5 +15,10 @@ public class Var extends DExpression {
 	public int getVal(VarStore e) {
 		return e.getValue(variable);
 	}
+
+	@Override
+	public DExpression transformRankExpressions(VarStore v, int rank) {
+		return this;
+	}
 	
 }

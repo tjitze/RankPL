@@ -41,4 +41,9 @@ public class Minus extends AbstractNumOp {
 		return a - b;
 	}
 
+	@Override
+	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+		return new Minus(e1, e2);
+	}
+
 }

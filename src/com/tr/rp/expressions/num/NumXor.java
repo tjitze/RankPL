@@ -43,4 +43,9 @@ public class NumXor extends AbstractNumOp {
 		return 0;
 	}
 
+	@Override
+	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+		return new NumXor(e1, e2);
+	}
+
 }

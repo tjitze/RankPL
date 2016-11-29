@@ -10,4 +10,10 @@ public class Or extends AbstractBoolOp {
 	public boolean apply(boolean a, boolean b) {
 		return a || b;
 	}	
+	
+	@Override
+	protected AbstractBoolOp createInstance(BoolExp b1, BoolExp b2) {
+		return new Or(b1, b2);
+	}
+
 }

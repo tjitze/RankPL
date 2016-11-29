@@ -41,4 +41,9 @@ public class NumAnd extends AbstractNumOp {
 		return a != 0 && b != 0? 1: 0;
 	}
 
+	@Override
+	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+		return new NumAnd(e1, e2);
+	}
+
 }

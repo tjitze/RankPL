@@ -15,5 +15,10 @@ public class BoolLiteral extends BoolExp {
 	public boolean isTrue(VarStore e) {
 		return value;
 	}
+
+	@Override
+	public BoolExp transformRankExpressions(VarStore v, int rank) {
+		return this;
+	}
 	
 }

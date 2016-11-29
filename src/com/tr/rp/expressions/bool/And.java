@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.bool;
 
+import com.tr.rp.core.Expression;
+
 public class And extends AbstractBoolOp {
 
 	public And(BoolExp e1, BoolExp e2) {
@@ -13,5 +15,10 @@ public class And extends AbstractBoolOp {
 
 	public And and(BoolExp e1) {
 		return new And(this, e1);
+	}
+
+	@Override
+	protected AbstractBoolOp createInstance(BoolExp b1, BoolExp b2) {
+		return new And(b1, b2);
 	}
 }

@@ -6,7 +6,7 @@ import com.tr.rp.expressions.bool.BoolExp;
 
 public class RankExpression extends DExpression {
 
-	private BoolExp b;
+	private final BoolExp b;
 	
 	public RankExpression(BoolExp b) {
 		this.b = b;
@@ -17,4 +17,14 @@ public class RankExpression extends DExpression {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public DExpression transformRankExpressions(VarStore v, int rank) {
+		if (b.isTrue(v)) {
+			return new IntLiteral(rank);
+		} else {
+			return this;
+		}
+	}
+
+	
 }

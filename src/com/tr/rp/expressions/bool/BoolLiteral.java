@@ -1,9 +1,9 @@
 package com.tr.rp.expressions.bool;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.NumExpression;
 
-public class BoolLiteral extends BoolExp {
+public class BoolLiteral extends BoolExpression {
 
 	public final boolean value;
 	
@@ -17,7 +17,7 @@ public class BoolLiteral extends BoolExp {
 	}
 
 	@Override
-	public BoolExp transformRankExpressions(VarStore v, int rank) {
+	public BoolExpression transformRankExpressions(VarStore v, int rank) {
 		return this;
 	}
 	

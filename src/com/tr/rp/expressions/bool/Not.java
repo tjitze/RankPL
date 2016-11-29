@@ -2,11 +2,11 @@ package com.tr.rp.expressions.bool;
 
 import com.tr.rp.core.VarStore;
 
-public class Not extends BoolExp {
+public class Not extends BoolExpression {
 
-	public final BoolExp e;
+	public final BoolExpression e;
 	
-	public Not(BoolExp e) {
+	public Not(BoolExpression e) {
 		this.e = e;
 	}
 
@@ -15,13 +15,13 @@ public class Not extends BoolExp {
 		return !e.isTrue(env);
 	}
 	
-	public BoolExp negate() {
+	public BoolExpression negate() {
 		return e;
 	}
 
 	@Override
-	public BoolExp transformRankExpressions(VarStore v, int rank) {
-		BoolExp te = transformRankExpressions(v, rank);
+	public BoolExpression transformRankExpressions(VarStore v, int rank) {
+		BoolExpression te = transformRankExpressions(v, rank);
 		if (e != te) {
 			return new Not(te);
 		} else {

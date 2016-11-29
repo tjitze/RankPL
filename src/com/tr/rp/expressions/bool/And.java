@@ -4,7 +4,7 @@ import com.tr.rp.core.Expression;
 
 public class And extends AbstractBoolOp {
 
-	public And(BoolExp e1, BoolExp e2) {
+	public And(BoolExpression e1, BoolExpression e2) {
 		super(e1, e2);
 	}
 
@@ -13,12 +13,12 @@ public class And extends AbstractBoolOp {
 		return a && b;
 	}
 
-	public And and(BoolExp e1) {
+	public And and(BoolExpression e1) {
 		return new And(this, e1);
 	}
 
 	@Override
-	protected AbstractBoolOp createInstance(BoolExp b1, BoolExp b2) {
+	protected AbstractBoolOp createInstance(BoolExpression b1, BoolExpression b2) {
 		return new And(b1, b2);
 	}
 }

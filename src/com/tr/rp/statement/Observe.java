@@ -4,13 +4,13 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolExp;
+import com.tr.rp.expressions.bool.BoolExpression;
 
 public class Observe implements DStatement {
 
-	private BoolExp exp;
+	private BoolExpression exp;
 	
-	public Observe(BoolExp exp) {
+	public Observe(BoolExpression exp) {
 		this.exp = exp;
 	}
 

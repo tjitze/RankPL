@@ -1,26 +1,24 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
-
 public class Times extends AbstractNumOp {
 
-	public Times(DExpression e1, DExpression e2) {
+	public Times(NumExpression e1, NumExpression e2) {
 		super(e1, e2);
 	}
 	
-	public Times(DExpression e, String var) {
+	public Times(NumExpression e, String var) {
 		this(e, new Var(var));
 	}
 	
-	public Times(String var, DExpression e) {
+	public Times(String var, NumExpression e) {
 		this(new Var(var), e);
 	}
 	
-	public Times(DExpression e, int val) {
+	public Times(NumExpression e, int val) {
 		this(e, new IntLiteral(val));
 	}
 	
-	public Times(int val, DExpression e) {
+	public Times(int val, NumExpression e) {
 		this(new IntLiteral(val), e);
 	}
 	
@@ -43,7 +41,7 @@ public class Times extends AbstractNumOp {
 	}
 
 	@Override
-	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+	public AbstractNumOp createInstance(NumExpression e1, NumExpression e2) {
 		return new Times(e1, e2);
 	}
 

@@ -1,18 +1,18 @@
 package com.tr.rp.statement;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.num.IntLiteral;
+import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Var;
 
 public class Assign implements DStatement {
 
-	private DExpression exp;
+	private NumExpression exp;
 	private String var;
 	
-	public Assign(String var, DExpression exp) {
+	public Assign(String var, NumExpression exp) {
 		this.var = var;
 		this.exp = exp;
 	}

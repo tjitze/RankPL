@@ -2,7 +2,7 @@ package com.tr.rp.expressions.bool;
 
 public class Or extends AbstractBoolOp {
 
-	public Or(BoolExp e1, BoolExp e2) {
+	public Or(BoolExpression e1, BoolExpression e2) {
 		super(e1, e2);
 	}
 
@@ -12,7 +12,7 @@ public class Or extends AbstractBoolOp {
 	}	
 	
 	@Override
-	protected AbstractBoolOp createInstance(BoolExp b1, BoolExp b2) {
+	protected AbstractBoolOp createInstance(BoolExpression b1, BoolExpression b2) {
 		return new Or(b1, b2);
 	}
 

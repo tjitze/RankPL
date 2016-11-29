@@ -1,27 +1,26 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.VarStore;
 
 public class Divide extends AbstractNumOp {
 
-	public Divide(DExpression e1, DExpression e2) {
+	public Divide(NumExpression e1, NumExpression e2) {
 		super(e1, e2);
 	}
 	
-	public Divide(DExpression e, String var) {
+	public Divide(NumExpression e, String var) {
 		this(e, new Var(var));
 	}
 	
-	public Divide(String var, DExpression e) {
+	public Divide(String var, NumExpression e) {
 		this(new Var(var), e);
 	}
 	
-	public Divide(DExpression e, int val) {
+	public Divide(NumExpression e, int val) {
 		this(e, new IntLiteral(val));
 	}
 	
-	public Divide(int val, DExpression e) {
+	public Divide(int val, NumExpression e) {
 		this(new IntLiteral(val), e);
 	}
 	
@@ -43,7 +42,7 @@ public class Divide extends AbstractNumOp {
 	}
 
 	@Override
-	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+	public AbstractNumOp createInstance(NumExpression e1, NumExpression e2) {
 		return new Divide(e1, e2);
 	}
 

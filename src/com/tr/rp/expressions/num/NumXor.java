@@ -1,26 +1,24 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
-
 public class NumXor extends AbstractNumOp {
 
-	public NumXor(DExpression e1, DExpression e2) {
+	public NumXor(NumExpression e1, NumExpression e2) {
 		super(e1, e2);
 	}
 	
-	public NumXor(DExpression e, String var) {
+	public NumXor(NumExpression e, String var) {
 		this(e, new Var(var));
 	}
 	
-	public NumXor(String var, DExpression e) {
+	public NumXor(String var, NumExpression e) {
 		this(new Var(var), e);
 	}
 	
-	public NumXor(DExpression e, int val) {
+	public NumXor(NumExpression e, int val) {
 		this(e, new IntLiteral(val));
 	}
 	
-	public NumXor(int val, DExpression e) {
+	public NumXor(int val, NumExpression e) {
 		this(new IntLiteral(val), e);
 	}
 	
@@ -44,7 +42,7 @@ public class NumXor extends AbstractNumOp {
 	}
 
 	@Override
-	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+	public AbstractNumOp createInstance(NumExpression e1, NumExpression e2) {
 		return new NumXor(e1, e2);
 	}
 

@@ -1,15 +1,14 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
 
-public abstract class AbstractNumOp extends DExpression {
+public abstract class AbstractNumOp extends NumExpression {
 
-	private DExpression e1;
-	private DExpression e2;
+	private NumExpression e1;
+	private NumExpression e2;
 
-	public AbstractNumOp(DExpression e1, DExpression e2) {
+	public AbstractNumOp(NumExpression e1, NumExpression e2) {
 		this.e1 = e1;
 		this.e2 = e2;
 	}
@@ -23,22 +22,22 @@ public abstract class AbstractNumOp extends DExpression {
 	
 
 	@Override
-	public DExpression transformRankExpressions(VarStore v, int rank) {
-		DExpression t1 = (DExpression)e1.transformRankExpressions(v, rank);
-		DExpression t2 = (DExpression)e2.transformRankExpressions(v, rank);
+	public NumExpression transformRankExpressions(VarStore v, int rank) {
+		NumExpression t1 = (NumExpression)e1.transformRankExpressions(v, rank);
+		NumExpression t2 = (NumExpression)e2.transformRankExpressions(v, rank);
 		if (t1 != getE1() || t2 != getE2()) {
 			return createInstance(t1, t2);
 		}
 		return this;
 	}
 
-	public DExpression getE1() {
+	public NumExpression getE1() {
 		return e1;
 	}
 
-	public DExpression getE2() {
+	public NumExpression getE2() {
 		return e2;
 	}	
 	
-	public abstract AbstractNumOp createInstance(DExpression e1, DExpression e2);
+	public abstract AbstractNumOp createInstance(NumExpression e1, NumExpression e2);
 }

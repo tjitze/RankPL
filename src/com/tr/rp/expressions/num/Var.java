@@ -1,9 +1,8 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.VarStore;
 
-public class Var extends DExpression {
+public class Var extends NumExpression {
 
 	public final String variable;
 	
@@ -17,7 +16,7 @@ public class Var extends DExpression {
 	}
 
 	@Override
-	public DExpression transformRankExpressions(VarStore v, int rank) {
+	public NumExpression transformRankExpressions(VarStore v, int rank) {
 		return this;
 	}
 	

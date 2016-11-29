@@ -8,16 +8,16 @@ import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolExp;
+import com.tr.rp.expressions.bool.BoolExpression;
 
 public class IfElse implements DStatement {
 
-	private BoolExp exp;
+	private BoolExpression exp;
 	private DStatement a, b;
 	private RankedIterator ia;
 	private RankedIterator ib;
 	
-	public IfElse(BoolExp exp, DStatement a, DStatement b) {
+	public IfElse(BoolExpression exp, DStatement a, DStatement b) {
 		this.exp = exp;
 		this.a = a;
 		this.b = b;

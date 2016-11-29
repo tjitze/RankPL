@@ -1,26 +1,24 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
-
 public class Plus extends AbstractNumOp {
 
-	public Plus(DExpression e1, DExpression e2) {
+	public Plus(NumExpression e1, NumExpression e2) {
 		super(e1, e2);
 	}
 	
-	public Plus(DExpression e, String var) {
+	public Plus(NumExpression e, String var) {
 		this(e, new Var(var));
 	}
 	
-	public Plus(String var, DExpression e) {
+	public Plus(String var, NumExpression e) {
 		this(new Var(var), e);
 	}
 	
-	public Plus(DExpression e, int val) {
+	public Plus(NumExpression e, int val) {
 		this(e, new IntLiteral(val));
 	}
 	
-	public Plus(int val, DExpression e) {
+	public Plus(int val, NumExpression e) {
 		this(new IntLiteral(val), e);
 	}
 	
@@ -42,7 +40,7 @@ public class Plus extends AbstractNumOp {
 	}
 	
 	@Override
-	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+	public AbstractNumOp createInstance(NumExpression e1, NumExpression e2) {
 		return new Plus(e1, e2);
 	}
 

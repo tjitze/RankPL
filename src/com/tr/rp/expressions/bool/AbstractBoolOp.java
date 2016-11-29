@@ -1,14 +1,14 @@
 package com.tr.rp.expressions.bool;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.NumExpression;
 
-public abstract class AbstractBoolOp extends BoolExp {
+public abstract class AbstractBoolOp extends BoolExpression {
 
-	public final BoolExp b1, b2;
+	public final BoolExpression b1, b2;
 	
-	public AbstractBoolOp(BoolExp e1, BoolExp e2) {
+	public AbstractBoolOp(BoolExpression e1, BoolExpression e2) {
 		this.b1 = e1;
 		this.b2 = e2;
 	}
@@ -21,14 +21,14 @@ public abstract class AbstractBoolOp extends BoolExp {
 	}
 
 	@Override
-	public BoolExp transformRankExpressions(VarStore v, int rank) {
-		BoolExp t1 = b1.transformRankExpressions(v, rank);
-		BoolExp t2 = b2.transformRankExpressions(v, rank);
+	public BoolExpression transformRankExpressions(VarStore v, int rank) {
+		BoolExpression t1 = b1.transformRankExpressions(v, rank);
+		BoolExpression t2 = b2.transformRankExpressions(v, rank);
 		if (t1 != b1 || t2 != b2) {
 			return createInstance(b1, b2);
 		}
 		return this;
 	}
 
-	protected abstract AbstractBoolOp createInstance(BoolExp e1, BoolExp e2);
+	protected abstract AbstractBoolOp createInstance(BoolExpression e1, BoolExpression e2);
 }

@@ -1,33 +1,33 @@
 package com.tr.rp.expressions.bool;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.num.IntLiteral;
+import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Var;
 
-public class Equals extends BoolExp {
+public class Equals extends BoolExpression {
 
-	public final DExpression e1, e2;
+	public final NumExpression e1, e2;
 
-	public Equals(DExpression e1, DExpression e2) {
+	public Equals(NumExpression e1, NumExpression e2) {
 		this.e1 = e1;
 		this.e2 = e2;
 	}
 	
-	public Equals(DExpression e, String var) {
+	public Equals(NumExpression e, String var) {
 		this(e, new Var(var));
 	}
 	
-	public Equals(String var, DExpression e) {
+	public Equals(String var, NumExpression e) {
 		this(new Var(var), e);
 	}
 	
-	public Equals(DExpression e, int val) {
+	public Equals(NumExpression e, int val) {
 		this(e, new IntLiteral(val));
 	}
 	
-	public Equals(int val, DExpression e) {
+	public Equals(int val, NumExpression e) {
 		this(new IntLiteral(val), e);
 	}
 	
@@ -49,9 +49,9 @@ public class Equals extends BoolExp {
 	}
 
 	@Override
-	public BoolExp transformRankExpressions(VarStore v, int rank) {
-		DExpression t1 = e1.transformRankExpressions(v, rank);
-		DExpression t2 = e2.transformRankExpressions(v, rank);
+	public BoolExpression transformRankExpressions(VarStore v, int rank) {
+		NumExpression t1 = e1.transformRankExpressions(v, rank);
+		NumExpression t2 = e2.transformRankExpressions(v, rank);
 		if (t1 != e1 || t2 != e2) {
 			return new Equals(t1, t2);
 		} else {

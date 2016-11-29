@@ -1,14 +1,13 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
 import com.tr.rp.core.VarStore;
-import com.tr.rp.expressions.bool.BoolExp;
+import com.tr.rp.expressions.bool.BoolExpression;
 
-public class RankExpression extends DExpression {
+public class RankExpression extends NumExpression {
 
-	private final BoolExp b;
+	private final BoolExpression b;
 	
-	public RankExpression(BoolExp b) {
+	public RankExpression(BoolExpression b) {
 		this.b = b;
 	}
 
@@ -18,7 +17,7 @@ public class RankExpression extends DExpression {
 	}
 
 	@Override
-	public DExpression transformRankExpressions(VarStore v, int rank) {
+	public NumExpression transformRankExpressions(VarStore v, int rank) {
 		if (b.isTrue(v)) {
 			return new IntLiteral(rank);
 		} else {

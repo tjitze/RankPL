@@ -1,26 +1,24 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.DExpression;
-
 public class NumAnd extends AbstractNumOp {
 
-	public NumAnd(DExpression e1, DExpression e2) {
+	public NumAnd(NumExpression e1, NumExpression e2) {
 		super(e1, e2);
 	}
 	
-	public NumAnd(DExpression e, String var) {
+	public NumAnd(NumExpression e, String var) {
 		this(e, new Var(var));
 	}
 	
-	public NumAnd(String var, DExpression e) {
+	public NumAnd(String var, NumExpression e) {
 		this(new Var(var), e);
 	}
 	
-	public NumAnd(DExpression e, int val) {
+	public NumAnd(NumExpression e, int val) {
 		this(e, new IntLiteral(val));
 	}
 	
-	public NumAnd(int val, DExpression e) {
+	public NumAnd(int val, NumExpression e) {
 		this(new IntLiteral(val), e);
 	}
 	
@@ -42,7 +40,7 @@ public class NumAnd extends AbstractNumOp {
 	}
 
 	@Override
-	public AbstractNumOp createInstance(DExpression e1, DExpression e2) {
+	public AbstractNumOp createInstance(NumExpression e1, NumExpression e2) {
 		return new NumAnd(e1, e2);
 	}
 

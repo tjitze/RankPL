@@ -6,7 +6,7 @@ import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.And;
-import com.tr.rp.expressions.bool.BoolExp;
+import com.tr.rp.expressions.bool.BoolExpression;
 import com.tr.rp.expressions.bool.BoolLiteral;
 import com.tr.rp.expressions.bool.Equals;
 import com.tr.rp.expressions.num.NumAnd;
@@ -21,12 +21,12 @@ public class BoolCircuit {
 
 	public static void main(String[] args) {
 		
-		BoolExp c1 = new Equals("in1", 1);
-		BoolExp c2 = new Equals("in2", 0);
-		BoolExp c3 = new Equals("in3", 1);
-		BoolExp c4 = new Equals("out1", 1);
-		BoolExp c5 = new Equals("out2", 0);
-		BoolExp cond = new And(c1, c2).and(c3).and(c4).and(c5);
+		BoolExpression c1 = new Equals("in1", 1);
+		BoolExpression c2 = new Equals("in2", 0);
+		BoolExpression c3 = new Equals("in3", 1);
+		BoolExpression c4 = new Equals("out1", 1);
+		BoolExpression c5 = new Equals("out2", 0);
+		BoolExpression cond = new And(c1, c2).and(c3).and(c4).and(c5);
 		
 		DStatement p = new ProgramBuilder()
 				.add(new Choose("in1", 0, 1))

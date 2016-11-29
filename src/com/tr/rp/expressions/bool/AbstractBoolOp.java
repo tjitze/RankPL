@@ -31,4 +31,9 @@ public abstract class AbstractBoolOp extends BoolExpression {
 	}
 
 	protected abstract AbstractBoolOp createInstance(BoolExpression e1, BoolExpression e2);
+
+	public boolean hasRankExpression() {
+		return b1.hasRankExpression() || b2.hasRankExpression();
+	}
+
 }

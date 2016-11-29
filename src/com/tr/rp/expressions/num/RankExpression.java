@@ -25,5 +25,10 @@ public class RankExpression extends NumExpression {
 		}
 	}
 
+	@Override
+	public boolean hasRankExpression() {
+		return true;
+	}
+
 	
 }

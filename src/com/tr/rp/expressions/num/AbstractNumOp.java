@@ -40,4 +40,9 @@ public abstract class AbstractNumOp extends NumExpression {
 	}	
 	
 	public abstract AbstractNumOp createInstance(NumExpression e1, NumExpression e2);
+
+	public boolean hasRankExpression() {
+		return e1.hasRankExpression() || e2.hasRankExpression();
+	}
+
 }

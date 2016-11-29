@@ -20,5 +20,10 @@ public class BoolLiteral extends BoolExpression {
 	public BoolExpression transformRankExpressions(VarStore v, int rank) {
 		return this;
 	}
+
+	@Override
+	public boolean hasRankExpression() {
+		return false;
+	}
 	
 }

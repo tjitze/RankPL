@@ -28,4 +28,9 @@ public class Not extends BoolExpression {
 			return this;
 		}
 	}
+	
+	@Override
+	public boolean hasRankExpression() {
+		return e.hasRankExpression();
+	}
 }

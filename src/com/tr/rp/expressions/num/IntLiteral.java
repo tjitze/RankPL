@@ -19,5 +19,10 @@ public class IntLiteral extends NumExpression {
 	public NumExpression transformRankExpressions(VarStore v, int rank) {
 		return this;
 	}
+
+	@Override
+	public boolean hasRankExpression() {
+		return false;
+	}
 	
 }

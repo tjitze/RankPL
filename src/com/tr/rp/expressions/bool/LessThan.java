@@ -58,4 +58,8 @@ public class LessThan extends BoolExpression {
 		}
 	}
 
+	@Override
+	public boolean hasRankExpression() {
+		return e1.hasRankExpression() || e2.hasRankExpression();
+	}
 }

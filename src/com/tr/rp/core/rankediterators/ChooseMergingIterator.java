@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.RankedVarStore;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.NumExpression;
 
 /**
  * Iterator that takes two iterators as input and produces
@@ -14,12 +15,10 @@ import com.tr.rp.core.VarStore;
  * Accepts an optional offset for the two inputs, to adjust 
  * the rank of one of the two input iterators.
  */
-public class MergingIterator<V> implements RankedIterator<VarStore> {
+public class ChooseMergingIterator<V> implements RankedIterator<VarStore> {
 
 	private final RankedIterator<VarStore> in1;
 	private final RankedIterator<VarStore> in2;
-	private final int offset1;
-	private final int offset2;
 
 	private final PriorityQueue<RankedVarStore> pq = new PriorityQueue<RankedVarStore>(
 			new Comparator<RankedVarStore>() {
@@ -30,27 +29,19 @@ public class MergingIterator<V> implements RankedIterator<VarStore> {
 			});
 	private boolean in1next = false;
 	private boolean in2next = false;
-
-	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, int offset1, int offset2) {
+	
+	private NumExpression e;
+	
+	private int normalizationOffset = -1;
+	
+	public ChooseMergingIterator(RankedIterator<VarStore> in1, 
+			RankedIterator<VarStore> in2, NumExpression e) {
 		this.in1 = in1;
 		this.in2 = in2;
 		in1next = in1.next();
 		in2next = in2.next();
 		// Correct offset in case one input fails
-		if (in1next) {
-			this.offset2 = offset2;
-		} else {
-			this.offset2 = 0;
-		}
-		if (in2next) {
-			this.offset1 = offset1;
-		} else {
-			this.offset1 = 0;
-		}
-	}
-	
-	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2) {
-		this(in1, in2, 0, 0);
+		this.e = e;
 	}
 	
 	@Override
@@ -58,24 +49,31 @@ public class MergingIterator<V> implements RankedIterator<VarStore> {
 		if (!pq.isEmpty()) pq.remove();
 		if (pq.isEmpty()) {
 			if (in1next) {
-				pq.add(new RankedVarStore(in1.getItem(), Rank.add(in1.getRank(), offset1)));
+				pq.add(new RankedVarStore(in1.getItem(), in1.getRank()));
 				in1next = in1.next();
 			}
 			if (in2next) {
-				pq.add(new RankedVarStore(in2.getItem(), Rank.add(in2.getRank(), offset2)));
+				pq.add(new RankedVarStore(in2.getItem(), Rank.add(in2.getRank(), e.getVal(in2.getItem()))));
 				in2next = in2.next();
 			}
 		} else {
-			// Fill pq
+			// Make sure we don't skip any item
 			int currentRank = pq.peek().rank;
 			while (in1next && in1.getRank() < currentRank) {
 				pq.add(new RankedVarStore(in1.getItem(),in1.getRank()));
 				in1next = in1.next();
 			}
+			// Here we may be adding items ranked higher than current rank,
+			// but that's ok. We just need to ensure that all items that are
+			// possibly ranked n are in pq.
 			while (in2next && in2.getRank() < currentRank) {
-				pq.add(new RankedVarStore(in2.getItem(),in2.getRank()));
+				pq.add(new RankedVarStore(in2.getItem(),Rank.add(in2.getRank(), e.getVal(in2.getItem()))));
 				in2next = in2.next();
 			}
+		}
+		// Normalize ranks
+		if (!pq.isEmpty() && normalizationOffset == -1) {
+			normalizationOffset = pq.peek().rank;
 		}
 		return !pq.isEmpty();
 	}
@@ -87,7 +85,7 @@ public class MergingIterator<V> implements RankedIterator<VarStore> {
 
 	@Override
 	public int getRank() {
-		return pq.peek().rank;
+		return pq.peek().rank - normalizationOffset;
 	}
 
 }

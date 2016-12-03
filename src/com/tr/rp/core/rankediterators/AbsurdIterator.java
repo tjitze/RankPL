@@ -19,4 +19,7 @@ public class AbsurdIterator<V> implements RankedIterator<V> {
 		return Integer.MAX_VALUE;
 	}
 
+	public String toString() {
+		return "AbsurdIterator";
+	}
 }

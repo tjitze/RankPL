@@ -19,10 +19,10 @@ public class IteratorSplitter<V> {
 	private final LinkedList<Integer> rsA = new LinkedList<Integer>();
 	private final LinkedList<Integer> rsB = new LinkedList<Integer>();
 
-	private V va;
-	private int ra;
-	private V vb;
-	private int rb;
+	private V va = null;
+	private int ra = -1;
+	private V vb = null;
+	private int rb = -1;
 	
 	public IteratorSplitter(RankedIterator<V> in) {
 		this.in = in;
@@ -92,6 +92,10 @@ public class IteratorSplitter<V> {
 			}
 			
 		};	
+	}
+	
+	public String toString() {
+		return "IteratorSplitter(in="+in+")";
 	}
 
 }

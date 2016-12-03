@@ -26,4 +26,7 @@ public class BoolLiteral extends BoolExpression {
 		return false;
 	}
 	
+	public String toString() {
+		return ""+value;
+	}
 }

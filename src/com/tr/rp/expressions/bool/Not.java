@@ -21,7 +21,7 @@ public class Not extends BoolExpression {
 
 	@Override
 	public BoolExpression transformRankExpressions(VarStore v, int rank) {
-		BoolExpression te = transformRankExpressions(v, rank);
+		BoolExpression te = e.transformRankExpressions(v, rank);
 		if (e != te) {
 			return new Not(te);
 		} else {
@@ -32,5 +32,9 @@ public class Not extends BoolExpression {
 	@Override
 	public boolean hasRankExpression() {
 		return e.hasRankExpression();
+	}
+	
+	public String toString() {
+		return "Not(" + e + ")";
 	}
 }

@@ -18,4 +18,7 @@ public class Composition implements DStatement {
 		return b.getIterator(a.getIterator(parent));
 	}
 
+	public String toString() {
+		return a + ": " + b;
+	}
 }

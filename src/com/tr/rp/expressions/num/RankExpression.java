@@ -18,7 +18,7 @@ public class RankExpression extends NumExpression {
 
 	@Override
 	public NumExpression transformRankExpressions(VarStore v, int rank) {
-		if (b.isTrue(v)) {
+		if (v == null || b.isTrue(v)) {
 			return new IntLiteral(rank);
 		} else {
 			return this;
@@ -30,5 +30,7 @@ public class RankExpression extends NumExpression {
 		return true;
 	}
 
-	
+	public String toString() {
+		return "rank("+b+")";
+	}
 }

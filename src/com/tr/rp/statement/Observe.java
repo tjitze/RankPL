@@ -1,10 +1,13 @@
 package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
+import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
+import com.tr.rp.tools.ResultPrinter;
 
 public class Observe implements DStatement {
 
@@ -15,56 +18,57 @@ public class Observe implements DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> parent) {
-		parent.next();
-		VarStore initialV = parent.getItem();
-		int initialR = parent.getRank();
-		while (!exp.isTrue(initialV)) {
-			if (!parent.next()) return new AbsurdIterator<VarStore>();
-			initialV = parent.getItem();
-			initialR = parent.getRank();
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
+		// Find first varstore satisfying condition
+		// (if there is no varstore then hasnext will be false)
+		final BufferingIterator bi = new BufferingIterator(in);
+		boolean hasNext = bi.next();
+		while (hasNext && !exp.isTrue(bi.getItem())) { 
+			hasNext = bi.next();
 		}
-		final VarStore initialVf = initialV;
-		final int initialRf = initialR;
-		final int conditioningOffset = initialR;
+		// Remember rank of this varstore
+		final int conditioningOffset = hasNext? bi.getRank(): Integer.MAX_VALUE;
+		// Move back one item so that we can reuse the buffering iterator
+		if (hasNext) bi.reset(bi.getIndex() - 1);
 		return new RankedIterator<VarStore>() {
-			
-			VarStore v = initialVf;
-			int r = initialRf;
 			
 			@Override
 			public boolean next() {
-				boolean next = parent.next();
-				v = parent.getItem();
-				r = parent.getRank();
-				while (next && !exp.isTrue(v)) {
-					next = parent.next();
-					v = parent.getItem();
-					r = parent.getRank();
-				}
-				if (!next) {
-					v = null;
-					r = Integer.MAX_VALUE;
-				}
-				return next;
+				// Find next varstore satisfying condition
+				boolean hasNext = bi.next();
+				//try {
+					while (hasNext && !exp.isTrue(bi.getItem())) { 
+						hasNext = bi.next();
+					}
+				//} catch (Exception e) {
+				//	System.out.println("Exception");
+				//}
+				return hasNext;
 			}
 
 			@Override
 			public VarStore getItem() {
-				return v;
+				return bi.getItem();
 			}
 
 			@Override
 			public int getRank() {
-				return r - conditioningOffset;
+				// Subtract offset so that ranks start with zero
+				return Rank.sub(bi.getRank(),  conditioningOffset);
 			}
 			
 			@Override
 			public int getConditioningOffset() {
 				return conditioningOffset;
 			}
+			
+			public String toString() {
+				return "ObserveIterator(exp=" + exp + ", buffer=" + bi + ")";
+			}
 		};
 	}
 
-	
+	public String toString() {
+		return "observe " + exp;
+	}
 }

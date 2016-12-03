@@ -7,8 +7,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ChooseMergingIterator;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.MergingIterator;
+import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
@@ -16,19 +18,19 @@ import com.tr.rp.expressions.num.NumExpression;
 public class Choose implements DStatement {
 
 	public DStatement s1, s2;
-	public IntLiteral rank;
+	public NumExpression rank;
 
-//	public Choose(DStatement s1, DStatement s2, DExpression rank) {
-//		this.s1 = s1;
-//		this.s2 = s2;
-//		this.rank = rank;
-//	}
-//
-//	public Choose(String var, DExpression v1, DExpression v2, DExpression rank) {
-//		this.s1 = new Assign(var, v1);
-//		this.s2 = new Assign(var, v2);
-//		this.rank = rank;
-//	}
+	public Choose(DStatement s1, DStatement s2, NumExpression rank) {
+		this.s1 = s1;
+		this.s2 = s2;
+		this.rank = rank;
+	}
+
+	public Choose(String var, NumExpression v1, NumExpression v2, NumExpression rank) {
+		this.s1 = new Assign(var, v1);
+		this.s2 = new Assign(var, v2);
+		this.rank = rank;
+	}
 
 	public Choose(String var, NumExpression v1, NumExpression v2, int rank) {
 		this.s1 = new Assign(var, v1);
@@ -151,11 +153,17 @@ public class Choose implements DStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> parent) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) {
+		//RankExpressionTransformIterator rt = new RankExpressionTransformIterator(parent, rank);
 		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(parent);
-		RankedIterator<VarStore> ria = s1.getIterator(split.getA());
-		RankedIterator<VarStore> rib = s2.getIterator(split.getB());
-		return new MergingIterator<VarStore>(ria, rib, 0, rank.value);
+		return new ChooseMergingIterator(
+				s1.getIterator(split.getA()), 
+				s2.getIterator(split.getB()), 
+				rank);
+	}
+	
+	public String toString() {
+		return "{" + s1 + " <" + rank + "> " + s2 + "}";
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
@@ -25,27 +26,33 @@ public class Assign implements DStatement {
 		this(var1, new Var(var2));
 	}
 
-	int rank = 0;
-
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> parent) {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
+		RankTransformIterator<NumExpression> rt = 
+				new RankTransformIterator<NumExpression>(in, this.exp);
+		NumExpression exp2 = rt.getExpression();
 		return new RankedIterator<VarStore>() {
 
 			@Override
 			public boolean next() {
-				return parent.next();
+				return rt.next();
 			}
 
 			@Override
 			public VarStore getItem() {
-				return parent.getItem().create(var, exp.getVal(parent.getItem()));
+				if (rt.getItem() == null) return null;
+				return rt.getItem().create(var, exp2.getVal(rt.getItem()));
 			}
 
 			@Override
 			public int getRank() {
-				return parent.getRank();
+				return rt.getRank();
 			}
 		};
+	}
+	
+	public String toString() {
+		return var + " := " + exp;
 	}
 	
 }

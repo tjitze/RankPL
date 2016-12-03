@@ -12,6 +12,7 @@ public class Var extends NumExpression {
 
 	@Override
 	public int getVal(VarStore e) {
+		if (e == null) throw new NullPointerException();
 		return e.getValue(variable);
 	}
 
@@ -23,6 +24,10 @@ public class Var extends NumExpression {
 	@Override
 	public boolean hasRankExpression() {
 		return false;
+	}
+	
+	public String toString() {
+		return variable;
 	}
 	
 }

@@ -21,4 +21,5 @@ public class And extends AbstractBoolOp {
 	protected AbstractBoolOp createInstance(BoolExpression b1, BoolExpression b2) {
 		return new And(b1, b2);
 	}
+
 }

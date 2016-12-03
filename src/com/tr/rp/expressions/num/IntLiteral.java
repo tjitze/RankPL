@@ -25,4 +25,9 @@ public class IntLiteral extends NumExpression {
 		return false;
 	}
 	
+
+	public String toString() {
+		return "" + value;
+	}
+	
 }

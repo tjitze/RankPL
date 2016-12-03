@@ -44,5 +44,9 @@ public abstract class AbstractNumOp extends NumExpression {
 	public boolean hasRankExpression() {
 		return e1.hasRankExpression() || e2.hasRankExpression();
 	}
+	
+	public String toString() {
+		return e1 + " numOp " + e2;
+	}
 
 }

@@ -3,7 +3,7 @@ package com.tr.rp.expressions.bool;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
 
-public abstract class BoolExpression extends Expression {
+public abstract class BoolExpression extends Expression<BoolExpression> {
 
 	public abstract boolean isTrue(VarStore e);
 

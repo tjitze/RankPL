@@ -2,8 +2,11 @@ package com.tr.rp.statement;
 
 import java.util.LinkedList;
 
+import com.tr.rp.core.DStatement;
+import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
+import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolLiteral;
 import com.tr.rp.expressions.bool.Equals;
@@ -198,5 +201,36 @@ public class IfElseTest extends RPLBaseTest {
 
 		assert(result.next() == false);
 
+	}
+	
+	public void testCorrectMerging() {
+		DStatement p = new ProgramBuilder()
+				.add(new Choose("fx1", 0, 1, 5))
+				.add(new Choose("a1", 0, 1, 0))
+				.add(new IfElse(new Equals("fx1", 0),
+						new Skip(),
+						new Skip()))
+				.build();
+		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator());
+		
+		assert(result.next());
+		assert(result.getItem().getValue("fx1") == 0);
+		assert(result.getItem().getValue("a1") == 0);
+		assert(result.getRank() == 0);
+
+		assert(result.next());
+		assert(result.getItem().getValue("fx1") == 0);
+		assert(result.getItem().getValue("a1") == 1);
+		assert(result.getRank() == 0);
+
+		assert(result.next());
+		assert(result.getItem().getValue("fx1") == 1);
+		assert(result.getItem().getValue("a1") == 0);
+		assert(result.getRank() == 5);
+
+		assert(result.next());
+		assert(result.getItem().getValue("fx1") == 1);
+		assert(result.getItem().getValue("a1") == 1);
+		assert(result.getRank() == 5);
 	}
 }

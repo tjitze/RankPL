@@ -68,12 +68,12 @@ public class MergingIterator<V> implements RankedIterator<VarStore> {
 		} else {
 			// Fill pq
 			int currentRank = pq.peek().rank;
-			while (in1next && in1.getRank() < currentRank) {
-				pq.add(new RankedVarStore(in1.getItem(),in1.getRank()));
+			while (in1next && Rank.add(in1.getRank(), offset1) + offset1 < currentRank) {
+				pq.add(new RankedVarStore(in1.getItem(),Rank.add(in1.getRank(), offset1)));
 				in1next = in1.next();
 			}
-			while (in2next && in2.getRank() < currentRank) {
-				pq.add(new RankedVarStore(in2.getItem(),in2.getRank()));
+			while (in2next && Rank.add(in2.getRank(), offset2) < currentRank) {
+				pq.add(new RankedVarStore(in2.getItem(),Rank.add(in2.getRank(), offset2)));
 				in2next = in2.next();
 			}
 		}

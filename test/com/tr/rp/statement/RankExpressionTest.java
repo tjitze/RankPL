@@ -15,7 +15,7 @@ public class RankExpressionTest extends RPLBaseTest {
 	public void testSimpleRankExpressions() {
 
 		DStatement s = new Assign("c", new RankExpression(new Equals("a", 1)));
-		RankedIterator<VarStore> result = s.getIterator(getTestIterator());
+		RankedIterator result = s.getIterator(getTestIterator());
 
 		assert(result.next() == true);
 		assert(result.getItem().getValue("c") == 0);

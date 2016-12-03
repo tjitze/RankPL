@@ -18,7 +18,7 @@ public class Observe implements DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
+	public RankedIterator getIterator(final RankedIterator in) {
 		// Find first varstore satisfying condition
 		// (if there is no varstore then hasnext will be false)
 		final BufferingIterator bi = new BufferingIterator(in);
@@ -30,7 +30,7 @@ public class Observe implements DStatement {
 		final int conditioningOffset = hasNext? bi.getRank(): Integer.MAX_VALUE;
 		// Move back one item so that we can reuse the buffering iterator
 		if (hasNext) bi.reset(bi.getIndex() - 1);
-		return new RankedIterator<VarStore>() {
+		return new RankedIterator() {
 			
 			@Override
 			public boolean next() {

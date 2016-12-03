@@ -26,7 +26,7 @@ public class IfElse implements DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) {
+	public RankedIterator getIterator(RankedIterator parent) {
 
 		// Process rank expressions
 		RankTransformIterator<BoolExpression> i = 
@@ -34,22 +34,22 @@ public class IfElse implements DStatement {
 		BoolExpression exp2 = i.getExpression();
 		
 		// Split input
-		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(parent);
+		IteratorSplitter split = new IteratorSplitter(parent);
 
 		// Apply condition 
-		RankedIterator<VarStore> ia1 = new Observe(exp2).getIterator(split.getA());
-		RankedIterator<VarStore> ia2 = new Observe(exp2.negate()).getIterator(split.getB());
+		RankedIterator ia1 = new Observe(exp2).getIterator(split.getA());
+		RankedIterator ia2 = new Observe(exp2.negate()).getIterator(split.getB());
 		
 		// Remember offsets (prior ranks of the conditions)
 		int offset1 = ia1.getConditioningOffset();
 		int offset2 = ia2.getConditioningOffset();
 				
 		// Execute statements
-		RankedIterator<VarStore> ib1 = a.getIterator(ia1);
-		RankedIterator<VarStore> ib2 = b.getIterator(ia2);
+		RankedIterator ib1 = a.getIterator(ia1);
+		RankedIterator ib2 = b.getIterator(ia2);
 
 		// Merge result
-		RankedIterator<VarStore> rc = new MergingIterator<VarStore>(ib1, ib2, offset1, offset2);
+		RankedIterator rc = new MergingIterator(ib1, ib2, offset1, offset2);
 		return rc;
 	}
 

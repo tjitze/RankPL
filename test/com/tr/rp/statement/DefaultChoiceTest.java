@@ -24,7 +24,7 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 		// s1 [0] s2
 		Choose c = new Choose(s1, s2, 0);
-		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
+		RankedIterator result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getItem().getValue("b") == 11);
@@ -209,7 +209,7 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 		// {observe false [3] b = a + 10}
 		Choose c = new Choose(new Observe(new BoolLiteral(false)), s1, 3);
-		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
+		RankedIterator result = c.getIterator(getTestIterator());
 		
 		// Note: shifted down to 0
 		assert(result.next() == true);
@@ -233,7 +233,7 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 		// {observe b = a + 10 [3] false}
 		Choose c = new Choose(s1, new Observe(new BoolLiteral(false)), 3);
-		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
+		RankedIterator result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getItem().getValue("b") == 11);

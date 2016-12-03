@@ -11,25 +11,25 @@ import com.tr.rp.core.VarStore;
  * remember elements in case the consumption 
  * of one of the two copies overtakes the other.
  */
-public class IteratorSplitter<V> {
+public class IteratorSplitter {
 
-	private final RankedIterator<V> in;
-	private final LinkedList<V> vsA = new LinkedList<V>();
-	private final LinkedList<V> vsB = new LinkedList<V>();
+	private final RankedIterator in;
+	private final LinkedList<VarStore> vsA = new LinkedList<VarStore>();
+	private final LinkedList<VarStore> vsB = new LinkedList<VarStore>();
 	private final LinkedList<Integer> rsA = new LinkedList<Integer>();
 	private final LinkedList<Integer> rsB = new LinkedList<Integer>();
 
-	private V va = null;
+	private VarStore va = null;
 	private int ra = -1;
-	private V vb = null;
+	private VarStore vb = null;
 	private int rb = -1;
 	
-	public IteratorSplitter(RankedIterator<V> in) {
+	public IteratorSplitter(RankedIterator in) {
 		this.in = in;
 	}
 	
-	public RankedIterator<V> getA() {
-		return new RankedIterator<V>() {
+	public RankedIterator getA() {
+		return new RankedIterator() {
 
 			@Override
 			public boolean next() {
@@ -49,7 +49,7 @@ public class IteratorSplitter<V> {
 			}
 
 			@Override
-			public V getItem() {
+			public VarStore getItem() {
 				return va;
 			}
 
@@ -61,8 +61,8 @@ public class IteratorSplitter<V> {
 		};
 	}
 
-	public RankedIterator<V> getB() {
-		return new RankedIterator<V>() {
+	public RankedIterator getB() {
+		return new RankedIterator() {
 
 			@Override
 			public boolean next() {
@@ -82,7 +82,7 @@ public class IteratorSplitter<V> {
 			}
 
 			@Override
-			public V getItem() {
+			public VarStore getItem() {
 				return vb;
 			}
 

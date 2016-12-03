@@ -1,7 +1,7 @@
 package com.tr.rp.core.rankediterators;
 
-public interface IteratorProvider<V> {
+public interface IteratorProvider {
 
-	public RankedIterator<V> getIterator(RankedIterator<V> parent);
+	public RankedIterator getIterator(RankedIterator parent);
 	
 }

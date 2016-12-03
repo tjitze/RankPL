@@ -24,7 +24,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(new Equals("a",1), 
 				new Assign("b", new Plus(new Var("a"), 10)),
 				new Assign("b", new Plus(new Var("a"), 20)));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
 		assert(result.getItem().getValue("a") == 1);
@@ -73,7 +73,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(new BoolLiteral(true), 
 				new Assign("b", new Plus(new Var("a"), 10)),
 				new Assign("b", new Plus(new Var("a"), 20)));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
 		assert(result.getItem().getValue("a") == 1);
@@ -98,7 +98,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(new BoolLiteral(false), 
 				new Assign("b", new Plus(new Var("a"), 10)),
 				new Assign("b", new Plus(new Var("a"), 20)));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
 		assert(result.getItem().getValue("a") == 1);
@@ -123,7 +123,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(new BoolLiteral(false), 
 				new Assign("b", new Plus(new Var("a"), 10)),
 				new Assign("b", new Plus(new Var("a"), 20)));
-		RankedIterator<VarStore> result = ie.getIterator(new AbsurdIterator());
+		RankedIterator result = ie.getIterator(new AbsurdIterator());
 		assert(result.next() == false);
 
 		ie = new IfElse(new BoolLiteral(true), 
@@ -138,7 +138,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(new Equals("a",1), 
 				new Assign("b", new Plus(new Var("a"), 10)),
 				new Observe(new BoolLiteral(false)));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
 		assert(result.getItem().getValue("a") == 1);
@@ -173,7 +173,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(new Equals("a",1), 
 				new Observe(new BoolLiteral(false)),
 				new Assign("b", new Plus(new Var("a"), 20)));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator result = ie.getIterator(getTestIterator());
 
 		// Note: ranks shifted down by 1
 		assert(result.next() == true);
@@ -211,7 +211,7 @@ public class IfElseTest extends RPLBaseTest {
 						new Skip(),
 						new Skip()))
 				.build();
-		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator());
+		RankedIterator result = p.getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		assert(result.getItem().getValue("fx1") == 0);

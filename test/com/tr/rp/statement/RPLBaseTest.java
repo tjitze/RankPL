@@ -22,13 +22,13 @@ public abstract class RPLBaseTest extends TestCase {
 		v3.setValue("b", 5);
 	}
 
-	protected RankedIterator<VarStore> getTestIterator() {
+	protected RankedIterator getTestIterator() {
 		final LinkedList<VarStore> list = new LinkedList<VarStore>() {{
 			addLast(v1);
 			addLast(v2);
 			addLast(v3);
 		}};
-		return new RankedIterator<VarStore>() {
+		return new RankedIterator() {
 
 			private int c = -1;
 			

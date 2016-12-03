@@ -5,14 +5,14 @@ import java.util.LinkedList;
 import com.tr.rp.core.RankedVarStore;
 import com.tr.rp.core.VarStore;
 
-public class BufferingIterator implements RankedIterator<VarStore> {
+public class BufferingIterator implements RankedIterator {
 	
 	private LinkedList<RankedVarStore> queue = new LinkedList<RankedVarStore>();
 	private int index = -1;
-	private RankedIterator<VarStore> in;
+	private RankedIterator in;
 	private boolean stopped = false;
 	
-	public BufferingIterator(RankedIterator<VarStore> in) {
+	public BufferingIterator(RankedIterator in) {
 		this.in = in;
 	}
 	

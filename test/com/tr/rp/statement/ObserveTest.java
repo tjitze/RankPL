@@ -15,7 +15,7 @@ public class ObserveTest extends RPLBaseTest {
 
 	public void testPartiallyTrue() {
 		Observe obs = new Observe(new Equals("a",1)); 
-		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
+		RankedIterator result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getItem() == v1);
@@ -81,7 +81,7 @@ public class ObserveTest extends RPLBaseTest {
 	
 	public void testTrue() {
 		Observe obs = new Observe(new BoolLiteral(true)); 
-		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
+		RankedIterator result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getItem() == v1);
@@ -149,7 +149,7 @@ public class ObserveTest extends RPLBaseTest {
 	
 	public void testFalse() {
 		Observe obs = new Observe(new BoolLiteral(false)); 
-		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
+		RankedIterator result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == false);
 
@@ -164,7 +164,7 @@ public class ObserveTest extends RPLBaseTest {
 	
 	public void testEmptyInput() {
 		Observe obs = new Observe(new BoolLiteral(true)); 
-		RankedIterator<VarStore> result = obs.getIterator(new AbsurdIterator());
+		RankedIterator result = obs.getIterator(new AbsurdIterator());
 		
 		assert(result.next() == false);
 	}	

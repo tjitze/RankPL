@@ -14,10 +14,10 @@ import com.tr.rp.core.VarStore;
  * Accepts an optional offset for the two inputs, to adjust 
  * the rank of one of the two input iterators.
  */
-public class MergingIterator<V> implements RankedIterator<VarStore> {
+public class MergingIterator<V> implements RankedIterator {
 
-	private final RankedIterator<VarStore> in1;
-	private final RankedIterator<VarStore> in2;
+	private final RankedIterator in1;
+	private final RankedIterator in2;
 	private final int offset1;
 	private final int offset2;
 
@@ -31,7 +31,7 @@ public class MergingIterator<V> implements RankedIterator<VarStore> {
 	private boolean in1next = false;
 	private boolean in2next = false;
 
-	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, int offset1, int offset2) {
+	public MergingIterator(RankedIterator in1, RankedIterator in2, int offset1, int offset2) {
 		this.in1 = in1;
 		this.in2 = in2;
 		in1next = in1.next();
@@ -49,7 +49,7 @@ public class MergingIterator<V> implements RankedIterator<VarStore> {
 		}
 	}
 	
-	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2) {
+	public MergingIterator(RankedIterator in1, RankedIterator in2) {
 		this(in1, in2, 0, 0);
 	}
 	

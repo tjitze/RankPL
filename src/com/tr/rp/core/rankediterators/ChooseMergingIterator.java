@@ -15,10 +15,10 @@ import com.tr.rp.expressions.num.NumExpression;
  * Accepts an optional offset for the two inputs, to adjust 
  * the rank of one of the two input iterators.
  */
-public class ChooseMergingIterator<V> implements RankedIterator<VarStore> {
+public class ChooseMergingIterator implements RankedIterator {
 
-	private final RankedIterator<VarStore> in1;
-	private final RankedIterator<VarStore> in2;
+	private final RankedIterator in1;
+	private final RankedIterator in2;
 
 	private final PriorityQueue<RankedVarStore> pq = new PriorityQueue<RankedVarStore>(
 			new Comparator<RankedVarStore>() {
@@ -34,8 +34,8 @@ public class ChooseMergingIterator<V> implements RankedIterator<VarStore> {
 	
 	private int normalizationOffset = -1;
 	
-	public ChooseMergingIterator(RankedIterator<VarStore> in1, 
-			RankedIterator<VarStore> in2, NumExpression e) {
+	public ChooseMergingIterator(RankedIterator in1, 
+			RankedIterator in2, NumExpression e) {
 		this.in1 = in1;
 		this.in2 = in2;
 		in1next = in1.next();

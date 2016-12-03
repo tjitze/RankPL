@@ -2,7 +2,7 @@ package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.VarStore;
 
-public class InitialVarStoreIterator implements RankedIterator<VarStore> {
+public class InitialVarStoreIterator implements RankedIterator {
 	
 	private VarStore v = new VarStore();
 	private boolean initialized = false;

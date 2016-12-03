@@ -8,7 +8,7 @@ public class RankTransformIterator<T extends Expression<T>> extends BufferingIte
 
 	private T exp;
 	
-	public RankTransformIterator(RankedIterator<VarStore> in, T exp) {
+	public RankTransformIterator(RankedIterator in, T exp) {
 		super(in);
 		this.exp = transform(exp);
 		reset();

@@ -1,6 +1,8 @@
 package com.tr.rp.core;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VarStore {
 
@@ -39,7 +41,11 @@ public class VarStore {
 	}
 	
 	public String toString() {
-		return varStore.toString();
+		return
+			varStore.keySet().stream()
+				.sorted()
+				.map(var -> var.toString() + "=" + varStore.get(var))
+				.collect(Collectors.toList()).toString();
 	}
 	
 }

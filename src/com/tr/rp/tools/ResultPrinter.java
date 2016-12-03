@@ -5,8 +5,7 @@ import com.tr.rp.core.rankediterators.RankedIterator;
 
 public class ResultPrinter {
 
-	public static void print(RankedIterator<VarStore> i) {
-
+	public static void print(RankedIterator i) {
 		try {
 			int rank = i.getRank();
 			VarStore v = i.getItem();
@@ -15,7 +14,7 @@ public class ResultPrinter {
 			System.out.println("Initial: exception");
 		}
 		
-		while (i.next() && i.getRank() < 2147483647) {
+		while (i.next() && i.getRank() < 100) {
 			int rank = i.getRank();
 			VarStore v = i.getItem();
 			System.out.println(rank + ": " + v);

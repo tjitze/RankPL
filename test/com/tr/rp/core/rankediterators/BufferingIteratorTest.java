@@ -1,19 +1,10 @@
 package com.tr.rp.core.rankediterators;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.tr.rp.core.VarStore;
+import com.tr.rp.statement.RPLBaseTest;
 
-import junit.framework.TestCase;
+public class BufferingIteratorTest extends RPLBaseTest {
 
-public class BufferingIteratorTest extends TestCase {
-
-	private static final VarStore v1 = new VarStore();
-	private static final VarStore v2 = new VarStore();
-	private static final VarStore v3 = new VarStore();
-	
 	public void testReset() {
 		BufferingIterator bi = new BufferingIterator(getTestIterator());
 
@@ -102,33 +93,4 @@ public class BufferingIteratorTest extends TestCase {
 		assert(bi.getItem() == v);
 		assert(bi.getRank() == rank);
 	}
-	
-	private RankedIterator<VarStore> getTestIterator() {
-		final LinkedList<VarStore> list = new LinkedList<VarStore>() {{
-			addLast(v1);
-			addLast(v2);
-			addLast(v3);
-		}};
-		return new RankedIterator<VarStore>() {
-
-			private int c = -1;
-			
-			@Override
-			public boolean next() {
-				c++;
-				return c < list.size();
-			}
-
-			@Override
-			public VarStore getItem() {
-				if (c < 0 || c >= list.size()) return null;
-				return list.get(c);
-			}
-
-			@Override
-			public int getRank() {
-				return c;
-			}
-		};
 	}
-}

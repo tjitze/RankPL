@@ -14,7 +14,7 @@ public class Composition implements DStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) {
+	public RankedIterator getIterator(RankedIterator parent) {
 		return b.getIterator(a.getIterator(parent));
 	}
 

@@ -2,7 +2,7 @@ package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.VarStore;
 
-public class AbsurdIterator<V> implements RankedIterator<V> {
+public class AbsurdIterator implements RankedIterator {
 
 	@Override
 	public boolean next() {
@@ -10,7 +10,7 @@ public class AbsurdIterator<V> implements RankedIterator<V> {
 	}
 
 	@Override
-	public V getItem() {
+	public VarStore getItem() {
 		return null;
 	}
 

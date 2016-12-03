@@ -153,9 +153,9 @@ public class Choose implements DStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) {
+	public RankedIterator getIterator(RankedIterator parent) {
 		//RankExpressionTransformIterator rt = new RankExpressionTransformIterator(parent, rank);
-		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(parent);
+		IteratorSplitter split = new IteratorSplitter(parent);
 		return new ChooseMergingIterator(
 				s1.getIterator(split.getA()), 
 				s2.getIterator(split.getB()), 

@@ -16,7 +16,7 @@ import com.tr.rp.expressions.bool.BoolExpression;
  * anything valid before the first call of the next() 
  * method.
  */
-public interface RankedIterator<V> {
+public interface RankedIterator {
 
 	/**
 	 * Get next item of iterator (accessible via getValue/getRank).
@@ -29,7 +29,7 @@ public interface RankedIterator<V> {
 	/**
 	 * @return Current item
 	 */
-	public V getItem();
+	public VarStore getItem();
 
 	/**
 	 * @return Rank of current item

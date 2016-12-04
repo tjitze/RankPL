@@ -14,7 +14,7 @@ import com.tr.rp.core.VarStore;
  * Accepts an optional offset for the two inputs, to adjust 
  * the rank of one of the two input iterators.
  */
-public class MergingIterator<V> implements RankedIterator {
+public class MergingIterator implements RankedIterator {
 
 	private final RankedIterator in1;
 	private final RankedIterator in2;

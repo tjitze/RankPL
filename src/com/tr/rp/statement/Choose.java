@@ -8,6 +8,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.ChooseMergingIterator;
+import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
@@ -158,10 +159,11 @@ public class Choose implements DStatement {
 				new RankTransformIterator<NumExpression>(in, rank);
 		NumExpression rank2 = rt.getExpression();
 		IteratorSplitter split = new IteratorSplitter(rt);
-		return new ChooseMergingIterator(
+		RankedIterator merge = new ChooseMergingIterator(
 				s1.getIterator(split.getA()), 
 				s2.getIterator(split.getB()), 
 				rank2);
+		return new DuplicateRemovingIterator(merge);
 	}
 	
 	public String toString() {

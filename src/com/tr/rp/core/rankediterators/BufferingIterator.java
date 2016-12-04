@@ -52,19 +52,33 @@ public class BufferingIterator implements RankedIterator {
 	 * method will throw an illegal state exception.
 	 */
 	public void stopBuffering() {
-		// TODO: implement
+		stopped = true;
+		clearHistory();
+	}
+	
+	private void clearHistory() {
+		while (index > 0) {
+			queue.removeFirst();
+			index--;
+		}
 	}
 	
 	@Override
 	public boolean next() {
 		if (index < queue.size() - 1) {
 			index++;
+			if (stopped) {
+				clearHistory();
+			}
 			return true;
 		}
 		else if (index == queue.size() - 1) {
 			index++;
 			boolean v = in.next();
 			if (v) queue.addLast(new RankedVarStore(in.getItem(), in.getRank()));
+			if (stopped) {
+				clearHistory();
+			}
 			return index < queue.size();
 		}
 		else {

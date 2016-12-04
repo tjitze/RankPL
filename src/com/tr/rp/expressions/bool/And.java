@@ -22,4 +22,9 @@ public class And extends AbstractBoolOp {
 		return new And(b1, b2);
 	}
 
+	@Override
+	public String getOperator() {
+		return "&&";
+	}
+
 }

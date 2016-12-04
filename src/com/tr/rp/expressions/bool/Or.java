@@ -15,5 +15,10 @@ public class Or extends AbstractBoolOp {
 	protected AbstractBoolOp createInstance(BoolExpression b1, BoolExpression b2) {
 		return new Or(b1, b2);
 	}
+	@Override
+	public String getOperator() {
+		return "||&";
+	}
+
 
 }

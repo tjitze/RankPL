@@ -44,4 +44,9 @@ public class NumAnd extends AbstractNumOp {
 		return new NumAnd(e1, e2);
 	}
 
+	@Override
+	public String getOperator() {
+		return "&";
+	}
+
 }

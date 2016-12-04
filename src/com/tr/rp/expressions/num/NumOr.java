@@ -44,5 +44,9 @@ public class NumOr extends AbstractNumOp {
 		return new NumOr(e1, e2);
 	}
 
+	@Override
+	public String getOperator() {
+		return "|";
+	}
 
 }

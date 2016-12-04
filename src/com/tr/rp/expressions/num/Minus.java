@@ -44,4 +44,9 @@ public class Minus extends AbstractNumOp {
 		return new Minus(e1, e2);
 	}
 
+	@Override
+	public String getOperator() {
+		return "-";
+	}
+
 }

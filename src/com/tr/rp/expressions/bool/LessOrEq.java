@@ -62,4 +62,8 @@ public class LessOrEq extends BoolExpression {
 	public boolean hasRankExpression() {
 		return e1.hasRankExpression() || e2.hasRankExpression();
 	}
+	
+	public String toString() {
+		return e1 + "<=" + e2;
+	}
 }

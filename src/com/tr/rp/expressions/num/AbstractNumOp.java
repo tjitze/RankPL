@@ -45,8 +45,10 @@ public abstract class AbstractNumOp extends NumExpression {
 		return e1.hasRankExpression() || e2.hasRankExpression();
 	}
 	
+	public abstract String getOperator();
+	
 	public String toString() {
-		return e1 + " numOp " + e2;
+		return e1 + getOperator() + e2;
 	}
 
 }

@@ -45,4 +45,9 @@ public class Times extends AbstractNumOp {
 		return new Times(e1, e2);
 	}
 
+	@Override
+	public String getOperator() {
+		return "*";
+	}
+
 }

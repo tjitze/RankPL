@@ -36,7 +36,9 @@ public abstract class AbstractBoolOp extends BoolExpression {
 		return b1.hasRankExpression() || b2.hasRankExpression();
 	}
 
+	public abstract String getOperator();
+	
 	public String toString() {
-		return b1 + " boolOp " + b2;
+		return b1 + getOperator() + b2;
 	}
 }

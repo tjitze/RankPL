@@ -1,12 +1,13 @@
 package com.tr.rp.core;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class VarStore {
 
-	public final HashMap<String, Integer> varStore = new HashMap<String, Integer>();
+	public final LinkedHashMap<String, Integer> varStore = new LinkedHashMap<String, Integer>();
 	
 	public VarStore() {
 	}
@@ -48,4 +49,11 @@ public class VarStore {
 				.collect(Collectors.toList()).toString();
 	}
 	
+	public VarStore marginalize(List<String> vars) {
+		VarStore v = new VarStore();
+		varStore.keySet().stream()
+			.filter(var -> vars.contains(var))
+			.forEach(var -> v.varStore.put(var, varStore.get(var)));
+		return v;
+	}
 }

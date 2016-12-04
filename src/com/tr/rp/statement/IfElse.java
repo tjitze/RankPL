@@ -32,9 +32,9 @@ public class IfElse implements DStatement {
 		RankTransformIterator<BoolExpression> i = 
 				new RankTransformIterator<BoolExpression>(parent, this.exp);
 		BoolExpression exp2 = i.getExpression();
-		
+
 		// Split input
-		IteratorSplitter split = new IteratorSplitter(parent);
+		IteratorSplitter split = new IteratorSplitter(i);
 
 		// Apply condition 
 		RankedIterator ia1 = new Observe(exp2).getIterator(split.getA());

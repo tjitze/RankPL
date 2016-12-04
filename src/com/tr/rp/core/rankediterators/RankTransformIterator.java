@@ -23,7 +23,7 @@ public class RankTransformIterator<T extends Expression<T>> extends BufferingIte
 		while (e.hasRankExpression() && next()) {
 			e = e.transformRankExpressions(getItem(), getRank());
 		}
-		e.transformRankExpressions(Integer.MAX_VALUE);
+		e = e.transformRankExpressions(Integer.MAX_VALUE);
 		return e;
 	}
 	

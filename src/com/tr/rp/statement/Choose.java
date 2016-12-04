@@ -153,13 +153,15 @@ public class Choose implements DStatement {
 	}
 	
 	@Override
-	public RankedIterator getIterator(RankedIterator parent) {
-		//RankExpressionTransformIterator rt = new RankExpressionTransformIterator(parent, rank);
-		IteratorSplitter split = new IteratorSplitter(parent);
+	public RankedIterator getIterator(RankedIterator in) {
+		RankTransformIterator<NumExpression> rt = 
+				new RankTransformIterator<NumExpression>(in, rank);
+		NumExpression rank2 = rt.getExpression();
+		IteratorSplitter split = new IteratorSplitter(rt);
 		return new ChooseMergingIterator(
 				s1.getIterator(split.getA()), 
 				s2.getIterator(split.getB()), 
-				rank);
+				rank2);
 	}
 	
 	public String toString() {

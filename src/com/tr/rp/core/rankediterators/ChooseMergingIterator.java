@@ -40,8 +40,12 @@ public class ChooseMergingIterator implements RankedIterator {
 		this.in2 = in2;
 		in1next = in1.next();
 		in2next = in2.next();
-		// Correct offset in case one input fails
 		this.e = e;
+
+		// Check
+		if (e.hasRankExpression()) {
+			throw new IllegalArgumentException("Expression contains rank expressions");
+		}
 	}
 	
 	@Override

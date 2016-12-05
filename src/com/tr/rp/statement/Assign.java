@@ -39,9 +39,9 @@ public class Assign implements DStatement {
 			}
 
 			@Override
-			public VarStore getItem() {
-				if (rt.getItem() == null) return null;
-				return rt.getItem().create(var, exp2.getVal(rt.getItem()));
+			public VarStore getVarStore() {
+				if (rt.getVarStore() == null) return null;
+				return rt.getVarStore().create(var, exp2.getVal(rt.getVarStore()));
 			}
 
 			@Override

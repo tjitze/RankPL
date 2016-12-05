@@ -1,5 +1,11 @@
 package com.tr.rp.core;
 
+/**
+ * Some convenience methods to do calculations with ranks. In particular,
+ * implements addition and subtraction of ranks, which cannot be done using
+ * regular + and - operators, because of their integer overflow/underflow
+ * behaviour.
+ */
 public class Rank {
 
 	public static final int add(int r1, int r2) {

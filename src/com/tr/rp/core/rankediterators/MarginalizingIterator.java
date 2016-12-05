@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.tr.rp.core.VarStore;
 
+/**
+ * A ranked iterator that takes another ranked iterator as input,
+ * and yields a marginalization of this iterator to a given set of 
+ * variables.
+ */
 public class MarginalizingIterator extends DuplicateRemovingIterator {
 	
 	public MarginalizingIterator(final RankedIterator in, final List<String> vars) {
@@ -14,8 +19,8 @@ public class MarginalizingIterator extends DuplicateRemovingIterator {
 			}
 
 			@Override
-			public VarStore getItem() {
-				return in.getItem().marginalize(vars);
+			public VarStore getVarStore() {
+				return in.getVarStore().marginalize(vars);
 			}
 
 			@Override

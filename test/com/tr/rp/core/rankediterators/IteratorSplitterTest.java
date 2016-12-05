@@ -14,7 +14,7 @@ public class IteratorSplitterTest extends RPLBaseTest {
 		boolean done = false;
 		while (!done) {
 			assert(a.getRank() == b.getRank());
-			assert(a.getItem() == b.getItem());
+			assert(a.getVarStore() == b.getVarStore());
 			boolean aNext = a.next();
 			boolean bNext = b.next();
 			assert(aNext == bNext);

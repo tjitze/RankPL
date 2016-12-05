@@ -2,6 +2,7 @@ package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.ProgramBuilder;
+import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
 import com.tr.rp.expressions.bool.LessOrEq;
@@ -23,19 +24,30 @@ public class ObserveShenoy implements DStatement {
 
 	private BoolExpression b;
 	private DStatement statement;
-	private int rank;
+	private NumExpression rank;
 
 	public ObserveShenoy(BoolExpression b, int rank) {
 		this(b, new IntLiteral(rank));
 	}
 	
-	public ObserveShenoy(BoolExpression b, NumExpression x) {
+	public ObserveShenoy(BoolExpression b, NumExpression rank) {
 		this.b = b;
+		this.rank = rank;
+	}
+
+	@Override
+	public RankedIterator getIterator(RankedIterator in) {
 		NumExpression rb = new RankExpression(b);
 		NumExpression rnb = new RankExpression(b.negate());
-		BoolExpression cond = new LessOrEq(rb, x);
-		NumExpression r1 = new Minus(new Plus(x, rnb), rb);
-		NumExpression r2 = new Minus(rb, x);
+		// Do rank transformation here
+		NumExpression temp = new Plus(rb, rnb);
+		RankTransformIterator<NumExpression> rt = 
+				new RankTransformIterator<NumExpression>(in, temp);
+		rb = ((Plus)temp).getE1();
+		rnb = ((Plus)temp).getE2();
+		BoolExpression cond = new LessOrEq(rb, rank);
+		NumExpression r1 = new Minus(new Plus(rank, rnb), rb);
+		NumExpression r2 = new Minus(rb, rank);
 		DStatement c1 = new Choose(
 				new Observe(b),
 				new Observe(b.negate()),
@@ -47,11 +59,7 @@ public class ObserveShenoy implements DStatement {
 		statement = new ProgramBuilder()
 				.add(new IfElse(cond, c1, c2))
 				.build();
-	}
-
-	@Override
-	public RankedIterator getIterator(RankedIterator in) {
-		return statement.getIterator(in);
+		return statement.getIterator(rt);
 	}
 
 	public String toString() {

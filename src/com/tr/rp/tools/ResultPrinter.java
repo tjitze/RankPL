@@ -17,7 +17,7 @@ public class ResultPrinter {
 	public static void print(RankedIterator i, int maxRank) {
 		try {
 			int rank = i.getRank();
-			VarStore v = i.getItem();
+			VarStore v = i.getVarStore();
 			System.out.println("Initial: " + rank + ": " + v);
 		} catch (Exception e) {
 			System.out.println("Initial: exception");
@@ -25,7 +25,7 @@ public class ResultPrinter {
 		
 		while (i.next() && i.getRank() < maxRank) {
 			int rank = i.getRank();
-			VarStore v = i.getItem();
+			VarStore v = i.getVarStore();
 			System.out.println(rank + ": " + v);
 		}
 	}
@@ -34,7 +34,7 @@ public class ResultPrinter {
 		while (it.next() && found.size() < bs.length) {
 			for (int i = 0; i< bs.length; i++) {
 				if (!found.contains(i)) {
-					if (bs[i].isTrue(it.getItem())) {
+					if (bs[i].isTrue(it.getVarStore())) {
 						System.out.println("Rank of " + bs[i] + " is " + it.getRank());
 						found.add(i);
 					}

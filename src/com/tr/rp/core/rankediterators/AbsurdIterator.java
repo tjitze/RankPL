@@ -2,6 +2,9 @@ package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.VarStore;
 
+/**
+ * A ranked iterator that contains no items. Represents absurdity.
+ */
 public class AbsurdIterator implements RankedIterator {
 
 	@Override
@@ -10,7 +13,7 @@ public class AbsurdIterator implements RankedIterator {
 	}
 
 	@Override
-	public VarStore getItem() {
+	public VarStore getVarStore() {
 		return null;
 	}
 

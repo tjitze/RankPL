@@ -18,44 +18,44 @@ public class RankExpressionTest extends RPLBaseTest {
 		RankedIterator result = s.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 0);
+		assert(result.getVarStore().getValue("c") == 0);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 0);
+		assert(result.getVarStore().getValue("c") == 0);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 0);
+		assert(result.getVarStore().getValue("c") == 0);
 		assert(result.next() == false);
 
 		s = new Assign("c", new RankExpression(new Not(new Equals("a", 1))));
 		result = s.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 1);
+		assert(result.getVarStore().getValue("c") == 1);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 1);
+		assert(result.getVarStore().getValue("c") == 1);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 1);
+		assert(result.getVarStore().getValue("c") == 1);
 		assert(result.next() == false);
 
 		s = new Assign("c", new RankExpression(new Equals("a", 2)));
 		result = s.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 1);
+		assert(result.getVarStore().getValue("c") == 1);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 1);
+		assert(result.getVarStore().getValue("c") == 1);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 1);
+		assert(result.getVarStore().getValue("c") == 1);
 		assert(result.next() == false);
 
 		s = new Assign("c", new RankExpression(new Equals("a", 3)));
 		result = s.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 2);
+		assert(result.getVarStore().getValue("c") == 2);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 2);
+		assert(result.getVarStore().getValue("c") == 2);
 		assert(result.next() == true);
-		assert(result.getItem().getValue("c") == 2);
+		assert(result.getVarStore().getValue("c") == 2);
 		assert(result.next() == false);
 
 	}

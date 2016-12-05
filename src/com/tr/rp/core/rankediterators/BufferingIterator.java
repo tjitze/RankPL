@@ -5,6 +5,11 @@ import java.util.LinkedList;
 import com.tr.rp.core.RankedVarStore;
 import com.tr.rp.core.VarStore;
 
+/**
+ * A buffering iterator. Yields the same items and ranks as the
+ * ranked iterator provided at construction, except that it can
+ * be reset to iterate starting from an earlier item.
+ */
 public class BufferingIterator implements RankedIterator {
 	
 	private LinkedList<RankedVarStore> queue = new LinkedList<RankedVarStore>();
@@ -12,6 +17,11 @@ public class BufferingIterator implements RankedIterator {
 	private RankedIterator in;
 	private boolean stopped = false;
 	
+	/**
+	 * Construct buffering iterator.
+	 * 
+	 * @param in Iterator to use as input.
+	 */
 	public BufferingIterator(RankedIterator in) {
 		this.in = in;
 	}
@@ -30,8 +40,12 @@ public class BufferingIterator implements RankedIterator {
 	/**
 	 * Reset buffer. Doing a reset with -1 will bring
 	 * the iterator in uninitialized state, so that item
-	 * 0 will be returned after calling next().
-	 * @param newIndex
+	 * 0 will be returned after calling next(). Doing a
+	 * reset with 0 will make getVarStore()/getRank() 
+	 * return the first item, etc. Throws Exception if
+	 * index is illegal or if stopBuffering() was called.
+	 * 
+	 * @param newIndex The reset index
 	 */
 	public void reset(int newIndex) {
 		if (stopped) throw new IllegalStateException();
@@ -49,7 +63,9 @@ public class BufferingIterator implements RankedIterator {
 	 * Stop buffering elements. This will clear the history of
 	 * buffered items and prevent future calls to next() to 
 	 * be buffered. After calling this method, the reset() 
-	 * method will throw an illegal state exception.
+	 * method will throw an illegal state exception. This method
+	 * does not change the value returned by getVarStore() and
+	 * getRank().
 	 */
 	public void stopBuffering() {
 		stopped = true;
@@ -75,7 +91,7 @@ public class BufferingIterator implements RankedIterator {
 		else if (index == queue.size() - 1) {
 			index++;
 			boolean v = in.next();
-			if (v) queue.addLast(new RankedVarStore(in.getItem(), in.getRank()));
+			if (v) queue.addLast(new RankedVarStore(in.getVarStore(), in.getRank()));
 			if (stopped) {
 				clearHistory();
 			}
@@ -90,8 +106,8 @@ public class BufferingIterator implements RankedIterator {
 	}
 
 	@Override
-	public VarStore getItem() {
-		return index >= 0 && index < queue.size()? queue.get(index).v: null;
+	public VarStore getVarStore() {
+		return index >= 0 && index < queue.size()? queue.get(index).varStore: null;
 	}
 
 	@Override

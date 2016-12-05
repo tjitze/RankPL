@@ -18,7 +18,7 @@ public class ObserveTest extends RPLBaseTest {
 		RankedIterator result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getItem() == v1);
+		assert(result.getVarStore() == v1);
 		assert(result.getRank() == 0);
 		assert(result.next() == false);
 
@@ -26,7 +26,7 @@ public class ObserveTest extends RPLBaseTest {
 		result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getItem() == v2);
+		assert(result.getVarStore() == v2);
 		assert(result.getRank() == 0);
 		assert(result.next() == false);
 
@@ -34,7 +34,7 @@ public class ObserveTest extends RPLBaseTest {
 		result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getItem() == v3);
+		assert(result.getVarStore() == v3);
 		assert(result.getRank() == 0);
 		assert(result.next() == false);
 
@@ -42,11 +42,11 @@ public class ObserveTest extends RPLBaseTest {
 		result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getItem() == v2);
+		assert(result.getVarStore() == v2);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getItem() == v3);
+		assert(result.getVarStore() == v3);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == false);
@@ -55,11 +55,11 @@ public class ObserveTest extends RPLBaseTest {
 		result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getItem() == v1);
+		assert(result.getVarStore() == v1);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getItem() == v3);
+		assert(result.getVarStore() == v3);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);
@@ -68,11 +68,11 @@ public class ObserveTest extends RPLBaseTest {
 		result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getItem() == v1);
+		assert(result.getVarStore() == v1);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getItem() == v2);
+		assert(result.getVarStore() == v2);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == false);
@@ -84,15 +84,15 @@ public class ObserveTest extends RPLBaseTest {
 		RankedIterator result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getItem() == v1);
+		assert(result.getVarStore() == v1);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getItem() == v2);
+		assert(result.getVarStore() == v2);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getItem() == v3);
+		assert(result.getVarStore() == v3);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);
@@ -103,7 +103,7 @@ public class ObserveTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem() == v1);
+		assert(result.getVarStore() == v1);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == false);
@@ -114,7 +114,7 @@ public class ObserveTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem() == v2);
+		assert(result.getVarStore() == v2);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == false);
@@ -125,7 +125,7 @@ public class ObserveTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem() == v3);
+		assert(result.getVarStore() == v3);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == false);
@@ -136,11 +136,11 @@ public class ObserveTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getItem() == v2);
+		assert(result.getVarStore() == v2);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getItem() == v3);
+		assert(result.getVarStore() == v3);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == false);

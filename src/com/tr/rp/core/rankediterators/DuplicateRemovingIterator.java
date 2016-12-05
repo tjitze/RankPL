@@ -4,6 +4,13 @@ import java.util.HashSet;
 
 import com.tr.rp.core.VarStore;
 
+/**
+ * Ranked iterator that takes another ranked iterator as input and
+ * yields the same items except that duplicates are removed in the
+ * order in which they appear. For example, if the input iterator
+ * returns a variable store X first with a rank of n and later with
+ * a rank of n + m (m >= 0) then the latter will be skipped.
+ */
 public class DuplicateRemovingIterator implements RankedIterator {
 
 	private final HashSet<VarStore> seen = new HashSet<VarStore>();
@@ -16,19 +23,19 @@ public class DuplicateRemovingIterator implements RankedIterator {
 	@Override
 	public boolean next() {
 		boolean hasNext = in.next();
-		while (hasNext && seen.contains(in.getItem())) {
+		while (hasNext && seen.contains(in.getVarStore())) {
 			hasNext = in.next();
 		}
 		if (hasNext) {
-			seen.add(in.getItem());
+			seen.add(in.getVarStore());
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public VarStore getItem() {
-		return in.getItem();
+	public VarStore getVarStore() {
+		return in.getVarStore();
 	}
 
 	@Override

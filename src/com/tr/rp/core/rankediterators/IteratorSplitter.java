@@ -5,11 +5,11 @@ import java.util.LinkedList;
 import com.tr.rp.core.VarStore;
 
 /**
- * An IteratorSplitter takes an iterator as input
- * and produces two copies (getA(), getB()).
- * Each copy is backed by a FIFO buffer to 
- * remember elements in case the consumption 
- * of one of the two copies overtakes the other.
+ * An IteratorSplitter takes a ranked iterator as input
+ * and produces two copies (getA(), getB()). Each copy 
+ * is backed by a FIFO buffer to remember elements in 
+ * case the consumption of one of the two copies overtakes 
+ * the other.
  */
 public class IteratorSplitter {
 
@@ -28,6 +28,9 @@ public class IteratorSplitter {
 		this.in = in;
 	}
 	
+	/**
+	 * @return The first copy of the iterator provided at construction.
+	 */
 	public RankedIterator getA() {
 		return new RankedIterator() {
 
@@ -38,7 +41,7 @@ public class IteratorSplitter {
 					ra = rsA.removeFirst();
 					return true;
 				} else if (in.next()) {
-					va = in.getItem();
+					va = in.getVarStore();
 					ra = in.getRank();
 					vsB.addLast(va);
 					rsB.addLast(ra);
@@ -49,7 +52,7 @@ public class IteratorSplitter {
 			}
 
 			@Override
-			public VarStore getItem() {
+			public VarStore getVarStore() {
 				return va;
 			}
 
@@ -61,6 +64,9 @@ public class IteratorSplitter {
 		};
 	}
 
+	/**
+	 * @return The second copy of the iterator provided at construction.
+	 */
 	public RankedIterator getB() {
 		return new RankedIterator() {
 
@@ -71,7 +77,7 @@ public class IteratorSplitter {
 					rb = rsB.removeFirst();
 					return true;
 				} else if (in.next()) {
-					vb = in.getItem();
+					vb = in.getVarStore();
 					rb = in.getRank();
 					vsA.addLast(vb);
 					rsA.addLast(rb);
@@ -82,7 +88,7 @@ public class IteratorSplitter {
 			}
 
 			@Override
-			public VarStore getItem() {
+			public VarStore getVarStore() {
 				return vb;
 			}
 

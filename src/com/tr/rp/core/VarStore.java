@@ -5,24 +5,33 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a variable store: an assignment of values to variables.
+ */
 public class VarStore {
 
-	public final LinkedHashMap<String, Integer> varStore = new LinkedHashMap<String, Integer>();
+	private final LinkedHashMap<String, Integer> varStore = new LinkedHashMap<String, Integer>();
 	
-	public VarStore() {
-	}
-	
+	/**
+	 * @return Value of given variable (0 if not initialized).
+	 */
 	public int getValue(String var) {
 		if (varStore.containsKey(var)) {
 			return varStore.get(var);
 		}
 		return 0;
 	}
-		
+	
+	/**
+	 * Set value of given variable.
+	 */
 	public void setValue(String var, int value) {
 		varStore.put(var, value);
 	}
 	
+	/**
+	 * @return A new variable store where var is set to value.
+	 */
 	public VarStore create(String var, int value) {
 		if (getValue(var) == value) return this;
 		VarStore v = new VarStore();
@@ -31,6 +40,17 @@ public class VarStore {
 		return v;
 	}
 	
+	/**
+	 * @return A marginalization of this variable store to a given set of variables.
+	 */
+	public VarStore marginalize(List<String> vars) {
+		VarStore v = new VarStore();
+		varStore.keySet().stream()
+			.filter(var -> vars.contains(var))
+			.forEach(var -> v.varStore.put(var, varStore.get(var)));
+		return v;
+	}
+
 	public boolean equals(Object o) {
 		if (o instanceof VarStore) {
 			return ((VarStore)o).varStore.equals(varStore);
@@ -50,11 +70,4 @@ public class VarStore {
 				.collect(Collectors.toList()).toString();
 	}
 	
-	public VarStore marginalize(List<String> vars) {
-		VarStore v = new VarStore();
-		varStore.keySet().stream()
-			.filter(var -> vars.contains(var))
-			.forEach(var -> v.varStore.put(var, varStore.get(var)));
-		return v;
-	}
 }

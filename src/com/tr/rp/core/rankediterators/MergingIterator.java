@@ -9,10 +9,9 @@ import com.tr.rp.core.RankedVarStore;
 import com.tr.rp.core.VarStore;
 
 /**
- * Iterator that takes two iterators as input and produces
- * a merge of the two that respects the rank ordering. 
- * Accepts an optional offset for the two inputs, to adjust 
- * the rank of one of the two input iterators.
+ * A ranked iterator that takes two other ranked iterators as input and produces
+ * a merge of the two that respects the rank ordering. Accepts an optional offset 
+ * for the two inputs, to adjust the rank of one of the two input iterators.
  */
 public class MergingIterator implements RankedIterator {
 
@@ -58,22 +57,22 @@ public class MergingIterator implements RankedIterator {
 		if (!pq.isEmpty()) pq.remove();
 		if (pq.isEmpty()) {
 			if (in1next) {
-				pq.add(new RankedVarStore(in1.getItem(), Rank.add(in1.getRank(), offset1)));
+				pq.add(new RankedVarStore(in1.getVarStore(), Rank.add(in1.getRank(), offset1)));
 				in1next = in1.next();
 			}
 			if (in2next) {
-				pq.add(new RankedVarStore(in2.getItem(), Rank.add(in2.getRank(), offset2)));
+				pq.add(new RankedVarStore(in2.getVarStore(), Rank.add(in2.getRank(), offset2)));
 				in2next = in2.next();
 			}
 		} else {
 			// Fill pq
 			int currentRank = pq.peek().rank;
 			while (in1next && Rank.add(in1.getRank(), offset1) + offset1 < currentRank) {
-				pq.add(new RankedVarStore(in1.getItem(),Rank.add(in1.getRank(), offset1)));
+				pq.add(new RankedVarStore(in1.getVarStore(),Rank.add(in1.getRank(), offset1)));
 				in1next = in1.next();
 			}
 			while (in2next && Rank.add(in2.getRank(), offset2) < currentRank) {
-				pq.add(new RankedVarStore(in2.getItem(),Rank.add(in2.getRank(), offset2)));
+				pq.add(new RankedVarStore(in2.getVarStore(),Rank.add(in2.getRank(), offset2)));
 				in2next = in2.next();
 			}
 		}
@@ -81,8 +80,8 @@ public class MergingIterator implements RankedIterator {
 	}
 
 	@Override
-	public VarStore getItem() {
-		return pq.peek().v;
+	public VarStore getVarStore() {
+		return pq.peek().varStore;
 	}
 
 	@Override

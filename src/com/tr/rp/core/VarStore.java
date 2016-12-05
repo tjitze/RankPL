@@ -24,6 +24,7 @@ public class VarStore {
 	}
 	
 	public VarStore create(String var, int value) {
+		if (getValue(var) == value) return this;
 		VarStore v = new VarStore();
 		v.varStore.putAll(varStore);
 		v.setValue(var, value);

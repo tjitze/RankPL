@@ -22,7 +22,7 @@ import com.tr.rp.expressions.bool.BoolExpression;
  *    If next() returns false, their value is undefined.
  * 3: The first call to next() (unless it returns false) will
  *    make getRank() return 0.
- * 3: Every subsequent call to next() (unless it returns false) will
+ * 4: Every subsequent call to next() (unless it returns false) will
  *    make getRank() return a rank greater or equal than the 
  *    previously returned rank.
  *    

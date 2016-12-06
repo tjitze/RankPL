@@ -42,8 +42,11 @@ public class BufferingIterator implements RankedIterator {
 	 * the iterator in uninitialized state, so that item
 	 * 0 will be returned after calling next(). Doing a
 	 * reset with 0 will make getVarStore()/getRank() 
-	 * return the first item, etc. Throws Exception if
-	 * index is illegal or if stopBuffering() was called.
+	 * return the first item, etc. 
+	 * 
+	 * Throws IndexOutOfBoundsException if index is illegal.
+	 * 
+	 * Throws IllegalStateException if stopBuffering() was called.
 	 * 
 	 * @param newIndex The reset index
 	 */
@@ -55,6 +58,12 @@ public class BufferingIterator implements RankedIterator {
 		this.index = newIndex;
 	}
 
+	/**
+	 * The current buffer index. This is -1 if not initialized,
+	 * 0 for the first element, etc.
+     *
+	 * @return Current buffer index.
+	 */
 	public int getIndex() {
 		return index;
 	}

@@ -1,7 +1,7 @@
 package com.tr.rp.core;
 
 /**
- * A pair consistong of a variable store and a rank.
+ * A pair consisting of a variable store and a rank.
  */
 public class RankedVarStore {
 

@@ -2,6 +2,10 @@ package com.tr.rp.core;
 
 import com.tr.rp.statement.Composition;
 
+/**
+ * A convenience class for constructing a program
+ * consisting of a sequence of statements.
+ */
 public class ProgramBuilder {
 	private DStatement a, b;
 	public ProgramBuilder() {

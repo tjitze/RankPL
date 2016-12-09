@@ -50,5 +50,14 @@ public abstract class AbstractNumOp extends NumExpression {
 	public String toString() {
 		return e1 + getOperator() + e2;
 	}
+	
+	@Override
+	public final int getDefiniteValue() {
+		return apply(getE1().getDefiniteValue(), getE2().getDefiniteValue());
+	}
 
+	@Override
+	public final boolean hasDefiniteValue() {
+		return getE1().hasDefiniteValue() && getE2().hasDefiniteValue();
+	}
 }

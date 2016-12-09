@@ -37,4 +37,14 @@ public class Not extends BoolExpression {
 	public String toString() {
 		return "Not(" + e + ")";
 	}
-}
+
+
+	@Override
+	public boolean hasDefiniteValue() {
+		return e.hasDefiniteValue();
+	}
+
+	@Override
+	public boolean getDefiniteValue() {
+		return !e.getDefiniteValue();
+	}}

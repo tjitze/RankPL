@@ -25,7 +25,7 @@ public abstract class AbstractBoolOp extends BoolExpression {
 		BoolExpression t1 = b1.transformRankExpressions(v, rank);
 		BoolExpression t2 = b2.transformRankExpressions(v, rank);
 		if (t1 != b1 || t2 != b2) {
-			return createInstance(b1, b2);
+			return createInstance(t1, t2);
 		}
 		return this;
 	}
@@ -40,5 +40,13 @@ public abstract class AbstractBoolOp extends BoolExpression {
 	
 	public String toString() {
 		return b1 + getOperator() + b2;
+	}
+	
+	public final boolean getDefiniteValue() {
+		return apply(b1.getDefiniteValue(), b2.getDefiniteValue());
+	}
+
+	public final boolean hasDefiniteValue() {
+		return b1.hasDefiniteValue() && b2.hasDefiniteValue();
 	}
 }

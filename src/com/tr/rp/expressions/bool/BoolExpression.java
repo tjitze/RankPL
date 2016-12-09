@@ -13,4 +13,11 @@ public abstract class BoolExpression extends Expression<BoolExpression> {
 
 	public abstract BoolExpression transformRankExpressions(VarStore v, int rank);
 
+	public enum Result {
+		FALSE, TRUE, DONTKNOW;
+	}
+	
+	public abstract boolean hasDefiniteValue();
+	
+	public abstract boolean getDefiniteValue();
 }

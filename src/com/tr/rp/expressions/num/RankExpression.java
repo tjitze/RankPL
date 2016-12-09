@@ -33,4 +33,14 @@ public class RankExpression extends NumExpression {
 	public String toString() {
 		return "rank("+b+")";
 	}
+
+	@Override
+	public boolean hasDefiniteValue() {
+		return false;
+	}
+
+	@Override
+	public int getDefiniteValue() {
+		return 0;
+	}
 }

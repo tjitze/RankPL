@@ -29,5 +29,15 @@ public class IntLiteral extends NumExpression {
 	public String toString() {
 		return "" + value;
 	}
+
+	@Override
+	public boolean hasDefiniteValue() {
+		return true;
+	}
+
+	@Override
+	public int getDefiniteValue() {
+		return value;
+	}
 	
 }

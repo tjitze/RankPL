@@ -50,5 +50,5 @@ public class NumXor extends AbstractNumOp {
 	public String getOperator() {
 		return "X";
 	}
-
+	
 }

@@ -2,17 +2,15 @@ package com.tr.rp.expressions.bool;
 
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.bool.BoolExpression.Result;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Var;
 
-public class Equals extends BoolExpression {
-
-	public final NumExpression e1, e2;
+public class Equals extends AbstractNumBoolOp {
 
 	public Equals(NumExpression e1, NumExpression e2) {
-		this.e1 = e1;
-		this.e2 = e2;
+		super(e1, e2);
 	}
 	
 	public Equals(NumExpression e, String var) {
@@ -42,30 +40,20 @@ public class Equals extends BoolExpression {
 	public Equals(int val, String var) {
 		this(new IntLiteral(val), new Var(var));
 	}
-	
+
 	@Override
-	public boolean isTrue(VarStore e) {
-		return e1.getVal(e) == e2.getVal(e);
+	public boolean apply(int a, int b) {
+		return a == b;
 	}
 
 	@Override
-	public BoolExpression transformRankExpressions(VarStore v, int rank) {
-		NumExpression t1 = e1.transformRankExpressions(v, rank);
-		NumExpression t2 = e2.transformRankExpressions(v, rank);
-		if (t1 != e1 || t2 != e2) {
-			return new Equals(t1, t2);
-		} else {
-			return this;
-		}
+	protected AbstractNumBoolOp createInstance(NumExpression e1, NumExpression e2) {
+		return new Equals(e1, e2);
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return e1.hasRankExpression() || e2.hasRankExpression();
-	}
-	
-	public String toString() {
-		return e1 + " = " + e2;
+	public String getOperator() {
+		return "==";
 	}
 
 }

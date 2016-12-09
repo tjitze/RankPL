@@ -48,5 +48,4 @@ public class NumOr extends AbstractNumOp {
 	public String getOperator() {
 		return "|";
 	}
-
 }

@@ -29,5 +29,16 @@ public class Var extends NumExpression {
 	public String toString() {
 		return variable;
 	}
+
+	@Override
+	public boolean hasDefiniteValue() {
+		return false;
+	}
+
+	@Override
+	public int getDefiniteValue() {
+		return 0;
+	}
+
 	
 }

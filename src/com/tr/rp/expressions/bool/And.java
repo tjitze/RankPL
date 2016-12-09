@@ -27,14 +27,15 @@ public class And extends AbstractBoolOp {
 		return "&&";
 	}
 
-//	@Override
-//	public boolean hasDefiniteValue() {
-//		boolean b1Definite = b1.hasDefiniteValue();
-//		boolean b2Definite = b2.hasDefiniteValue();
-//		if (b1Definite && b2Definite) return true;
-//		if (b1Definite && !b1.getDefiniteValue()) return true;
-//		if (b2Definite && !b2.getDefiniteValue()) return true;
-//		return false;
-//	}
+	@Override
+	public boolean hasDefiniteValue() {
+		boolean b1Definite = b1.hasDefiniteValue();
+		boolean b2Definite = b2.hasDefiniteValue();
+		if (b1Definite && b2Definite) return true;
+		// AND If one operand is false, the result is definite
+		if (b1Definite && !b1.getDefiniteValue()) return true;
+		if (b2Definite && !b2.getDefiniteValue()) return true;
+		return false;
+	}
 
 }

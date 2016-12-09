@@ -48,5 +48,16 @@ public class NumAnd extends AbstractNumOp {
 	public String getOperator() {
 		return "&";
 	}
+	
+	@Override
+	public boolean hasDefiniteValue() {
+		boolean e1Definite = getE1().hasDefiniteValue();
+		boolean e2Definite = getE2().hasDefiniteValue();
+		if (e1Definite && e2Definite) return true;
+		// AND: If one operand is false, the result is definite
+		if (e1Definite && getE1().getDefiniteValue() == 0) return true;
+		if (e2Definite && getE2().getDefiniteValue() == 0) return true;
+		return false;
+	}
 
 }

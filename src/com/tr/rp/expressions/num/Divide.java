@@ -50,5 +50,15 @@ public class Divide extends AbstractNumOp {
 	public String getOperator() {
 		return "/";
 	}
+	
+	@Override
+	public boolean hasDefiniteValue() {
+		boolean e1Definite = getE1().hasDefiniteValue();
+		boolean e2Definite = getE2().hasDefiniteValue();
+		if (e1Definite && e2Definite) return true;
+		// Division: if numerator is zero, the result is definite
+		if (e1Definite && getE1().getDefiniteValue() == 0) return true;
+		return false;
+	}
 
 }

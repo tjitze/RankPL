@@ -62,8 +62,8 @@ public class ChooseMergingIterator implements RankedIterator {
 				in1next = in1.next();
 			}
 			// Here we may be adding items ranked higher than current rank,
-			// but that's ok. We just need to ensure that all items that are
-			// possibly ranked n are in pq.
+			// but that's OK. We just need to ensure that all items that are
+			// possibly ranked as low as the current rank are in pq.
 			while (in2next && in2.getRank() < currentRank) {
 				pq.add(new RankedVarStore(in2.getVarStore(),Rank.add(in2.getRank(), e.getVal(in2.getVarStore()))));
 				in2next = in2.next();
@@ -78,12 +78,12 @@ public class ChooseMergingIterator implements RankedIterator {
 
 	@Override
 	public VarStore getVarStore() {
-		return pq.peek().varStore;
+		return pq.isEmpty()? null: pq.peek().varStore;
 	}
 
 	@Override
 	public int getRank() {
-		return pq.peek().rank - normalizationOffset;
+		return pq.isEmpty()? 0: pq.peek().rank - normalizationOffset;
 	}
 
 }

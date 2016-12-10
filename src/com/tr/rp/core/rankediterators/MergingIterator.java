@@ -81,12 +81,12 @@ public class MergingIterator implements RankedIterator {
 
 	@Override
 	public VarStore getVarStore() {
-		return pq.peek().varStore;
+		return pq.isEmpty()? null: pq.peek().varStore;
 	}
 
 	@Override
 	public int getRank() {
-		return pq.peek().rank;
+		return pq.isEmpty()? 0: pq.peek().rank;
 	}
 
 }

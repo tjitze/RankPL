@@ -1,0 +1,35 @@
+<project name="dprogramming" default="check_antlr" basedir=".">
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" destdir="build/classes"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="RPL.jar" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="emu.ui.TMSX"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="RPL.jar" fork="true"/>
+    </target>
+
+    <path id="classpath">
+        <pathelement location="./antlr-4.5-complete.jar" />
+    </path>
+
+	<target name="compile_grammar">
+		<java classname="org.antlr.v4.Tool" classpathref="classpath" fork="true" failonerror="true">
+			<arg path="src/com/tr/rp/parser/DefProg.g"/>
+			<arg value="-visitor"/>
+		</java>
+	</target>
+	
+	</project>

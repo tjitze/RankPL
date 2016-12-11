@@ -1,6 +1,6 @@
-// Generated from /Users/tjitze/Documents/workspace/RankPL/src/com/tr/defaultprogramming/parser/DefProg.g by ANTLR 4.5
+// Generated from /Users/tjitze/Desktop/workspace/RankPL/src/com/tr/rp/parser/DefProg.g by ANTLR 4.5
 
-    package com.tr.rp.parser;
+package com.tr.rp.parser;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
@@ -42,13 +42,6 @@ public class DefProgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implement
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitRank_assign_stat(DefProgParser.Rank_assign_statContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitNondet_assign_stat(DefProgParser.Nondet_assign_statContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

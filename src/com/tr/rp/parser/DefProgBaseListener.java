@@ -1,6 +1,6 @@
-// Generated from /Users/tjitze/Documents/workspace/RankPL/src/com/tr/defaultprogramming/parser/DefProg.g by ANTLR 4.5
+// Generated from /Users/tjitze/Desktop/workspace/RankPL/src/com/tr/rp/parser/DefProg.g by ANTLR 4.5
 
-    package com.tr.rp.parser;
+package com.tr.rp.parser;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -62,18 +62,6 @@ public class DefProgBaseListener implements DefProgListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRank_assign_stat(DefProgParser.Rank_assign_statContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNondet_assign_stat(DefProgParser.Nondet_assign_statContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNondet_assign_stat(DefProgParser.Nondet_assign_statContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

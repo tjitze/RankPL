@@ -1,7 +1,7 @@
 grammar DefProg;
 
 @header {
-    package com.tr.defaultprogramming.parser;
+package com.tr.rp.parser;
 }
 
 parse
@@ -14,7 +14,6 @@ program
 
 statement
  : rank_assign_stat
- | nondet_assign_stat
  | assignment_stat
  | if_stat
  | while_stat
@@ -23,11 +22,7 @@ statement
  ;
 
 rank_assign_stat
- : 'RANKED' '(' VAR ',' numexpr ',' numexpr ')'
- ;
-
-nondet_assign_stat
- : 'NONDET' '(' VAR ',' numexpr ',' numexpr ')'
+ : 'RANK' numexpr 'DEF' statement 'ELSE' statement
  ;
 
 assignment_stat

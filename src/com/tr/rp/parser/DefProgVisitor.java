@@ -1,6 +1,6 @@
-// Generated from /Users/tjitze/Documents/workspace/RankPL/src/com/tr/defaultprogramming/parser/DefProg.g by ANTLR 4.5
+// Generated from /Users/tjitze/Desktop/workspace/RankPL/src/com/tr/rp/parser/DefProg.g by ANTLR 4.5
 
-    package com.tr.rp.parser;
+package com.tr.rp.parser;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -37,12 +37,6 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRank_assign_stat(DefProgParser.Rank_assign_statContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DefProgParser#nondet_assign_stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNondet_assign_stat(DefProgParser.Nondet_assign_statContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DefProgParser#assignment_stat}.
 	 * @param ctx the parse tree

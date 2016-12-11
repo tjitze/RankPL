@@ -1,6 +1,6 @@
-// Generated from /Users/tjitze/Documents/workspace/RankPL/src/com/tr/defaultprogramming/parser/DefProg.g by ANTLR 4.5
+// Generated from /Users/tjitze/Desktop/workspace/RankPL/src/com/tr/rp/parser/DefProg.g by ANTLR 4.5
 
-    package com.tr.rp.parser;
+package com.tr.rp.parser;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -50,16 +50,6 @@ public interface DefProgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRank_assign_stat(DefProgParser.Rank_assign_statContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#nondet_assign_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterNondet_assign_stat(DefProgParser.Nondet_assign_statContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#nondet_assign_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitNondet_assign_stat(DefProgParser.Nondet_assign_statContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DefProgParser#assignment_stat}.
 	 * @param ctx the parse tree

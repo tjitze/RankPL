@@ -1,11 +1,9 @@
 package com.tr.rp.core;
 
-import com.tr.rp.expressions.num.NumExpression;
-
 /**
  * Abstract class for expressions.
  */
-public abstract class Expression<T extends Expression> {
+public abstract class Expression<T extends Expression<T>> implements LanguageElement {
 
 	/**
 	 * @return True iff this expression contains a rank expression

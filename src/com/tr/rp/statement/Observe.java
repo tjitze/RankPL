@@ -5,8 +5,10 @@ import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
+import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
+import com.tr.rp.expressions.bool.BoolExpression.Result;
 import com.tr.rp.tools.ResultPrinter;
 
 public class Observe implements DStatement {
@@ -19,11 +21,28 @@ public class Observe implements DStatement {
 
 	@Override
 	public RankedIterator getIterator(final RankedIterator in) {
+		
+		// If exp is contradiction/tautology we
+		// can immediately return result.
+		if (exp.hasDefiniteValue()) {
+			return exp.getDefiniteValue()? in: new AbsurdIterator();
+		}
+
+		// Replace rank expressions in exp
+		RankTransformIterator<BoolExpression> rt = 
+				new RankTransformIterator<BoolExpression>(in, this.exp);
+		BoolExpression exp2 = rt.getExpression();
+		
+		// Check contradiction/tautology again.
+		if (exp2.hasDefiniteValue()) {
+			return exp2.getDefiniteValue()? rt: new AbsurdIterator();
+		}
+		
 		// Find first varstore satisfying condition
 		// (if there is no varstore then hasnext will be false)
-		final BufferingIterator bi = new BufferingIterator(in);
+		final BufferingIterator bi = new BufferingIterator(rt);
 		boolean hasNext = bi.next();
-		while (hasNext && !exp.isTrue(bi.getVarStore())) { 
+		while (hasNext && !exp2.isTrue(bi.getVarStore())) { 
 			hasNext = bi.next();
 		}
 		// Remember rank of this varstore
@@ -36,13 +55,9 @@ public class Observe implements DStatement {
 			public boolean next() {
 				// Find next varstore satisfying condition
 				boolean hasNext = bi.next();
-				//try {
-					while (hasNext && !exp.isTrue(bi.getVarStore())) { 
-						hasNext = bi.next();
-					}
-				//} catch (Exception e) {
-				//	System.out.println("Exception");
-				//}
+				while (hasNext && !exp2.isTrue(bi.getVarStore())) { 
+					hasNext = bi.next();
+				}
 				return hasNext;
 			}
 
@@ -63,7 +78,7 @@ public class Observe implements DStatement {
 			}
 			
 			public String toString() {
-				return "ObserveIterator(exp=" + exp + ", buffer=" + bi + ")";
+				return "ObserveIterator(exp=" + exp2 + ", buffer=" + bi + ")";
 			}
 		};
 	}

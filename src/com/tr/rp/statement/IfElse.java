@@ -5,12 +5,14 @@ import java.util.LinkedHashSet;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
+import com.tr.rp.expressions.bool.BoolExpression.Result;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.tools.ResultPrinter;
 
@@ -27,12 +29,27 @@ public class IfElse implements DStatement {
 
 	@Override
 	public RankedIterator getIterator(RankedIterator parent) {
-
-		// Process rank expressions
+		
+		// If exp is contradiction/tautology we
+		// can immediately pass the a/b iterator.
+		if (exp.hasDefiniteValue()) {
+			return exp.getDefiniteValue()? 
+					a.getIterator(parent):
+					b.getIterator(parent);
+		}
+		
+		// Replace rank expressions in exp
 		RankTransformIterator<BoolExpression> i = 
 				new RankTransformIterator<BoolExpression>(parent, this.exp);
 		BoolExpression exp2 = i.getExpression();
-
+		
+		// Check contradiction/tautology again.
+		if (exp2.hasDefiniteValue()) {
+			return exp2.getDefiniteValue()? 
+					a.getIterator(i):
+					b.getIterator(i);
+		}
+		
 		// Split input
 		IteratorSplitter split = new IteratorSplitter(i);
 

@@ -28,6 +28,7 @@ public class While implements DStatement {
 		int iterations = 0;
 		
 		while (iterations++ < maxIterations) {
+
 			// Do one iteration
 			in = generateIteration(in);
 			
@@ -40,7 +41,6 @@ public class While implements DStatement {
 			}
 			while (hasNext) {
 				if (exp.isTrue(bi.getVarStore())) {
-					System.out.println(bi.getVarStore());
 					expSatisfied = true;
 					break;
 				}

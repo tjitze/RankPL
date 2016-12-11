@@ -1,8 +1,11 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
 
+/**
+ * Abstract class for integer-valued expressions that 
+ * have two integer-valued operands.
+ */
 public abstract class AbstractNumOp extends NumExpression {
 
 	private NumExpression e1;
@@ -57,7 +60,7 @@ public abstract class AbstractNumOp extends NumExpression {
 	}
 
 	@Override
-	public final boolean hasDefiniteValue() {
+	public boolean hasDefiniteValue() {
 		return getE1().hasDefiniteValue() && getE2().hasDefiniteValue();
 	}
 }

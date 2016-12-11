@@ -3,6 +3,10 @@ package com.tr.rp.expressions.bool;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.num.NumExpression;
 
+/**
+ * Abstract class for boolean-valued expressions that 
+ * have two integer-valued operands.
+ */
 public abstract class AbstractNumBoolOp extends BoolExpression {
 
 	public final NumExpression e1, e2;

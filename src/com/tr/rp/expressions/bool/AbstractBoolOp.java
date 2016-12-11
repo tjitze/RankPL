@@ -1,9 +1,11 @@
 package com.tr.rp.expressions.bool;
 
-import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
-import com.tr.rp.expressions.num.NumExpression;
 
+/**
+ * Abstract class for boolean-valued expressions that 
+ * have two boolean-valued operands.
+ */
 public abstract class AbstractBoolOp extends BoolExpression {
 
 	public final BoolExpression b1, b2;
@@ -42,11 +44,11 @@ public abstract class AbstractBoolOp extends BoolExpression {
 		return b1 + getOperator() + b2;
 	}
 	
-	public final boolean getDefiniteValue() {
+	public boolean getDefiniteValue() {
 		return apply(b1.getDefiniteValue(), b2.getDefiniteValue());
 	}
 
-	public final boolean hasDefiniteValue() {
+	public boolean hasDefiniteValue() {
 		return b1.hasDefiniteValue() && b2.hasDefiniteValue();
 	}
 }

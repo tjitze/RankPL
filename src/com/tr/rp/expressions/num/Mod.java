@@ -24,7 +24,7 @@ public class Mod extends AbstractNumOp {
 		this(new IntLiteral(val), e);
 	}
 	
-	public Divide(String var1, String var2) {
+	public Mod(String var1, String var2) {
 		this(new Var(var1), new Var(var2));
 	}
 	

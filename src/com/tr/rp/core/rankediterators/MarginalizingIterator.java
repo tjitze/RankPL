@@ -20,12 +20,15 @@ public class MarginalizingIterator extends DuplicateRemovingIterator {
 
 			@Override
 			public VarStore getVarStore() {
-				return in.getVarStore().marginalize(vars);
+				if (in == null) return null;
+				VarStore v = in.getVarStore();
+				if (v == null) return null;
+				return v.marginalize(vars);
 			}
 
 			@Override
 			public int getRank() {
-				return in.getRank();
+				return in == null? 0: in.getRank();
 			}
 		});
 	}

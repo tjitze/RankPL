@@ -67,7 +67,7 @@ public class MergingIterator implements RankedIterator {
 		} else {
 			// Fill pq
 			int currentRank = pq.peek().rank;
-			while (in1next && Rank.add(in1.getRank(), offset1) + offset1 < currentRank) {
+			while (in1next && Rank.add(in1.getRank(), offset1) < currentRank) {
 				pq.add(new RankedVarStore(in1.getVarStore(),Rank.add(in1.getRank(), offset1)));
 				in1next = in1.next();
 			}

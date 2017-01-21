@@ -60,7 +60,12 @@ public class IfElse implements DStatement {
 		// Remember offsets (prior ranks of the conditions)
 		int offset1 = ia1.getConditioningOffset();
 		int offset2 = ia2.getConditioningOffset();
-				
+
+		// Following happens if input iterator is empty
+		if (offset1 == Integer.MAX_VALUE && offset2 == Integer.MAX_VALUE) {
+			return new AbsurdIterator();
+		}
+		
 		// Execute statements
 		RankedIterator ib1 = a.getIterator(ia1);
 		RankedIterator ib2 = b.getIterator(ia2);

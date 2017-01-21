@@ -1,5 +1,6 @@
 package com.tr.rp.statement;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -153,6 +154,30 @@ public class Choose implements DStatement {
 		this.rank = new IntLiteral(0);
 	}
 	
+	public Choose(String var, int[] values, int rankIncrement) {
+		this.rank = new IntLiteral(rankIncrement);
+		if (values.length == 2) {
+			this.s1 = new Assign(var, values[0]);
+			this.s2 = new Assign(var, values[1]);
+		} else {
+			this.s1 = new Assign(var, values[0]);
+			this.s2 = new Choose(var, Arrays.copyOfRange(values, 1, values.length), rankIncrement);
+		}
+	}
+
+	public Choose(String var, int[] values, int[] ranks) {
+		if (ranks.length == 0) throw new IllegalArgumentException();
+		if (values.length != ranks.length + 1) throw new IllegalArgumentException();
+		this.rank = new IntLiteral(ranks[0]);
+		this.s1 = new Assign(var, values[0]);
+		if (values.length == 2) {
+			this.s2 = new Assign(var, values[1]);
+		} else {
+			this.s2 = new Choose(var, Arrays.copyOfRange(values, 1, values.length), 
+					Arrays.copyOfRange(ranks, 1, ranks.length));
+		}
+	}
+
 	@Override
 	public RankedIterator getIterator(RankedIterator in) {
 		RankTransformIterator<NumExpression> rt = 

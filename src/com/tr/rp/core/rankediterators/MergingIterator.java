@@ -11,7 +11,9 @@ import com.tr.rp.core.VarStore;
 /**
  * A ranked iterator that takes two other ranked iterators as input and produces
  * a merge of the two that respects the rank ordering. Accepts an optional offset 
- * for the two inputs, to adjust the rank of one of the two input iterators.
+ * for the two inputs, to adjust the rank of one of the two input iterators. One
+ * of these offsets must be zero, to ensure that the resulting ranking is normalized
+ * (i.e., starts with a zero-ranked element).
  */
 public class MergingIterator implements RankedIterator {
 
@@ -35,6 +37,9 @@ public class MergingIterator implements RankedIterator {
 		this.in2 = in2;
 		in1next = in1.next();
 		in2next = in2.next();
+		if (offset1 != 0 && offset2 != 0) {
+			throw new IllegalArgumentException("Illegal offsets " + offset1 + ", " + offset2);
+		}
 		// Correct offset in case one input fails
 		if (in1next) {
 			this.offset2 = offset2;

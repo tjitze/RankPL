@@ -1,5 +1,6 @@
 package com.tr.rp.core.rankediterators;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.tr.rp.core.VarStore;
@@ -10,6 +11,10 @@ import com.tr.rp.core.VarStore;
  * variables.
  */
 public class MarginalizingIterator extends DuplicateRemovingIterator {
+	
+	public MarginalizingIterator(RankedIterator in, String ... vars) {
+		this(in, Arrays.asList(vars));
+	}
 	
 	public MarginalizingIterator(final RankedIterator in, final List<String> vars) {
 		super(new RankedIterator() {

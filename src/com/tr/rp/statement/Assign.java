@@ -41,7 +41,7 @@ public class Assign implements DStatement {
 			@Override
 			public VarStore getVarStore() {
 				if (rt.getVarStore() == null) return null;
-				return rt.getVarStore().create(var, exp2.getVal(rt.getVarStore()));
+				return rt.getVarStore().create(getVar(rt.getVarStore()), exp2.getVal(rt.getVarStore()));
 			}
 
 			@Override
@@ -55,4 +55,7 @@ public class Assign implements DStatement {
 		return var + " := " + exp;
 	}
 	
+	protected String getVar(VarStore v) {
+		return var;
+	}
 }

@@ -1,5 +1,6 @@
 package com.tr.rp.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,12 +29,58 @@ public class VarStore {
 	public void setValue(String var, int value) {
 		varStore.put(var, value);
 	}
+
+	/**
+	 * Initialize an array (sets all elements to 0).
+	 * 
+	 * @param var Array name
+	 * @param size size of array
+	 */
+	public void initArray(String var, int size) {
+		for (int i = 0; i < size; i++) {
+			varStore.put(getIndexedVar(var, i), 0);
+		}
+	}
+
+	/**
+	 * Set element of array.
+	 */
+	public void setElement(String var, int index, int value) {
+		setValue(getIndexedVar(var, index), value);
+	}
+
+	/**
+	 * Get element of array.
+	 */
+	public int getElement(String var, int index) {
+		return getValue(getIndexedVar(var, index));
+	}
+	
+	/**
+	 * Return array as list.
+	 */
+	public List<Integer> getArray(String var) {
+		List<Integer> res = new ArrayList<Integer>();
+		int i = 0;
+		while (varStore.containsKey("_"+var+"#"+i)) {
+			res.add(varStore.get("_"+var+"#"+i));
+			i++;
+		}
+		return res;
+	}
+
+	/**
+	 * @return Internal storage name used for element of array.
+	 */
+	public static final String getIndexedVar(String var, int index) {
+		return "_"+var+"#"+index;
+	}
 	
 	/**
 	 * @return A new variable store where var is set to value.
 	 */
 	public VarStore create(String var, int value) {
-		if (getValue(var) == value) return this;
+		if (value != 0 && getValue(var) == value) return this;
 		VarStore v = new VarStore();
 		v.varStore.putAll(varStore);
 		v.setValue(var, value);

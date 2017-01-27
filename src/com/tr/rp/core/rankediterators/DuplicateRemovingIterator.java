@@ -30,6 +30,8 @@ public class DuplicateRemovingIterator implements RankedIterator {
 			seen.add(in.getVarStore());
 			return true;
 		}
+		// No more items: we can free up used memory
+		seen.clear();
 		return false;
 	}
 

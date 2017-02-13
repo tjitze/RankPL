@@ -1,21 +1,39 @@
 package com.tr.rp.statement;
 
+import java.util.Arrays;
+
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.core.rankediterators.RestrictIterator;
 
 public class Composition implements DStatement {
 
-	private DStatement a, b;
+	private final DStatement a, b;
+	private final int maxRank;
 	
-	public Composition(DStatement a, DStatement b) {
-		this.a = a;
-		this.b = b;
+	public Composition(DStatement ... s) {
+		this(Integer.MAX_VALUE, s);
+	}
+	
+	public Composition(int maxRank, DStatement ... s) {
+		this.a = s[0];
+		this.maxRank = maxRank;
+		if (s.length > 2) {
+			this.b = new Composition(maxRank, Arrays.copyOfRange(s, 1, s.length));
+		} else {
+			this.b = s[1];
+		}
 	}
 	
 	@Override
-	public RankedIterator getIterator(RankedIterator parent) {
-		return b.getIterator(a.getIterator(parent));
+	public RankedIterator getIterator(RankedIterator in) {
+		in = new RestrictIterator(in, maxRank);
+		in = a.getIterator(in);
+		in = new RestrictIterator(in, maxRank);
+		in = b.getIterator(in);
+		return in;
 	}
 
 	public String toString() {

@@ -1,10 +1,14 @@
 package com.tr.rp.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.tr.rp.expressions.num.NumExpression;
 
 /**
  * Represents a variable store: an assignment of values to variables.
@@ -31,52 +35,6 @@ public class VarStore {
 	}
 
 	/**
-	 * Initialize an array (sets all elements to 0).
-	 * 
-	 * @param var Array name
-	 * @param size size of array
-	 */
-	public void initArray(String var, int size) {
-		for (int i = 0; i < size; i++) {
-			varStore.put(getIndexedVar(var, i), 0);
-		}
-	}
-
-	/**
-	 * Set element of array.
-	 */
-	public void setElement(String var, int index, int value) {
-		setValue(getIndexedVar(var, index), value);
-	}
-
-	/**
-	 * Get element of array.
-	 */
-	public int getElement(String var, int index) {
-		return getValue(getIndexedVar(var, index));
-	}
-	
-	/**
-	 * Return array as list.
-	 */
-	public List<Integer> getArray(String var) {
-		List<Integer> res = new ArrayList<Integer>();
-		int i = 0;
-		while (varStore.containsKey("_"+var+"#"+i)) {
-			res.add(varStore.get("_"+var+"#"+i));
-			i++;
-		}
-		return res;
-	}
-
-	/**
-	 * @return Internal storage name used for element of array.
-	 */
-	public static final String getIndexedVar(String var, int index) {
-		return "_"+var+"#"+index;
-	}
-	
-	/**
 	 * @return A new variable store where var is set to value.
 	 */
 	public VarStore create(String var, int value) {
@@ -84,6 +42,16 @@ public class VarStore {
 		VarStore v = new VarStore();
 		v.varStore.putAll(varStore);
 		v.setValue(var, value);
+		return v;
+	}
+	
+	public VarStore create(String varName, NumExpression[] indexedValues) {
+		if (indexedValues.length % 2 != 0) throw new IllegalArgumentException("Even number of index/value elements required");
+		VarStore v = new VarStore();
+		v.varStore.putAll(varStore);
+		for (int i = 0; i < indexedValues.length; i = i + 2) {
+			v.setElementOfArray(varName, indexedValues[i].getVal(this), indexedValues[i+1].getVal(this));
+		}
 		return v;
 	}
 	
@@ -117,4 +85,61 @@ public class VarStore {
 				.collect(Collectors.toList()).toString();
 	}
 	
+	/**
+	 * Get element of n-dimensional array, where n equals the number of
+	 * provided index arguments.
+	 */
+	public Optional<Integer> getElementOfArray(String varName, int ... index) {
+		for (int i: index) varName += "#" + i;
+		if (varStore.containsKey(varName)) {
+			return Optional.of(varStore.get(varName));
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * Set element of n-dimensional array, where n equals the number of 
+	 * provided index arguments.
+	 */
+	public void setElementOfArray(String varName, int value, int ... index) {
+		for (int i: index) varName += "#" + i;
+		varStore.put(varName, value);
+	}
+	
+	/**
+	 * Initialize array. The dimension array contains the number of
+	 * items that must be initialized for each dimension.
+	 */
+	public void initializeArray(String varName, int[] dimension) {
+		dimension = Arrays.copyOf(dimension, dimension.length);
+		for (int cx = 0; cx < dimension.length; cx++) {
+			while (dimension[cx] > 0) {
+				dimension[cx]--;
+				setElementOfArray(varName, 0, dimension);
+			}
+		}
+	}
+	
+	public int[] get1DArray(String varName, int length) {
+		int[] res = new int[length];
+		for (int i = 0; i < length; i++) {
+			res[i] = getElementOfArray(varName, i)
+					.orElseThrow(() -> new IndexOutOfBoundsException());
+		}
+		return res;
+	}
+
+	public int[][] get2DArray(String varName, int length1, int length2) {
+		int[][] res = new int[length1][length2];
+		for (int i = 0; i < length1; i++) {
+			for (int j = 0; j < length2; j++) {
+				res[i][j] = getElementOfArray(varName, i, j)
+						.orElseThrow(() -> new IndexOutOfBoundsException());
+			}
+		}
+		return res;
+	}
+
+
 }

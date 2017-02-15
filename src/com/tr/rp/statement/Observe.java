@@ -31,7 +31,7 @@ public class Observe implements DStatement {
 		// Replace rank expressions in exp
 		RankTransformIterator<BoolExpression> rt = 
 				new RankTransformIterator<BoolExpression>(in, this.exp);
-		BoolExpression exp2 = rt.getExpression();
+		BoolExpression exp2 = rt.getExpression(0);
 		
 		// Check contradiction/tautology again.
 		if (exp2.hasDefiniteValue()) {

@@ -1,26 +1,36 @@
 package com.tr.rp.expressions.num;
 
+import java.util.Objects;
+
 import com.tr.rp.core.VarStore;
 
 public class IndexedVar extends NumExpression {
 
 	public final String variable;
-	public final NumExpression index;
+	public final NumExpression[] indexExpressions;
 	
-	public IndexedVar(String variable, NumExpression index) {
+	public IndexedVar(String variable, NumExpression ... indexExpressions) {
 		this.variable = variable;
-		this.index = index;
+		this.indexExpressions = indexExpressions;
 	}
 
-	public IndexedVar(String variable, String indexVariable) {
+	public IndexedVar(String variable, String ... indexVariables) {
 		this.variable = variable;
-		this.index = new Var(indexVariable);
+		this.indexExpressions = new NumExpression[indexVariables.length];
+		for (int i = 0; i < indexVariables.length; i++) {
+			indexExpressions[i] = new Var(indexVariables[i]);
+		}
 	}
 
 	@Override
-	public int getVal(VarStore e) {
-		if (e == null) throw new NullPointerException();
-		return e.getElement(variable, index.getVal(e));
+	public int getVal(VarStore vs) {
+		Objects.requireNonNull(vs);
+		int[] indexValues = new int[indexExpressions.length];
+		for (int i = 0; i < indexExpressions.length; i++) {
+			indexValues[i] = indexExpressions[i].getVal(vs);
+		}
+		return vs.getElementOfArray(variable, indexValues)
+				.orElseThrow(()->new IndexOutOfBoundsException());
 	}
 
 	@Override

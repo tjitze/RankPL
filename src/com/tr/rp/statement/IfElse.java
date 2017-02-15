@@ -41,7 +41,7 @@ public class IfElse implements DStatement {
 		// Replace rank expressions in exp
 		RankTransformIterator<BoolExpression> i = 
 				new RankTransformIterator<BoolExpression>(parent, this.exp);
-		BoolExpression exp2 = i.getExpression();
+		BoolExpression exp2 = i.getExpression(0);
 		
 		// Check contradiction/tautology again.
 		if (exp2.hasDefiniteValue()) {

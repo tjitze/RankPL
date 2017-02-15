@@ -1,30 +1,43 @@
 package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.Expression;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.expressions.num.NumExpression;
 
 public class RankTransformIterator<T extends Expression<T>> extends BufferingIterator {
 
-	private T exp;
+	private final T[] es;
 	
-	public RankTransformIterator(RankedIterator in, T exp) {
+	public RankTransformIterator(RankedIterator in, T ... expressions) {
 		super(in);
-		this.exp = transform(exp);
+		this.es = expressions;
+		transform();
 		reset();
 		stopBuffering();
 	}
 
-	public T getExpression() {
-		return exp;
+	public T getExpression(int i) {
+		return es[i];
 	}
 	
-	private T transform(T e) {
-		while (e.hasRankExpression() && next()) {
-			e = e.transformRankExpressions(getVarStore(), getRank());
+	public T[] getExpressions() {
+		return es;
+	}
+	
+	private final void transform() {
+		while (hasRankExpression(es) && next()) {
+			for (int i = 0; i < es.length; i++) {
+				es[i] = es[i].transformRankExpressions(getVarStore(), getRank());
+			}
 		}
-		e = e.transformRankExpressions(Integer.MAX_VALUE);
-		return e;
+		for (int i = 0; i < es.length; i++) {
+			es[i] = es[i].transformRankExpressions(Integer.MAX_VALUE);
+		}
+	}
+	
+	private final boolean hasRankExpression(T[] e) {
+		for (int i = 0; i < es.length; i++) {
+			if (e[i].hasRankExpression()) return true;
+		}
+		return false;
 	}
 	
 

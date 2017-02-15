@@ -30,7 +30,7 @@ public class Assign implements DStatement {
 	public RankedIterator getIterator(final RankedIterator in) {
 		RankTransformIterator<NumExpression> rt = 
 				new RankTransformIterator<NumExpression>(in, this.exp);
-		NumExpression exp2 = rt.getExpression();
+		NumExpression exp2 = rt.getExpression(0);
 		return new RankedIterator() {
 
 			@Override

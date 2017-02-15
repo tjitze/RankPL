@@ -1,6 +1,9 @@
 package com.tr.rp.statement;
 
+import com.tr.rp.core.DStatement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.RankTransformIterator;
+import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Var;
@@ -9,47 +12,45 @@ import com.tr.rp.expressions.num.Var;
  * Array assignment. Sets value of element of an array, where
  * the index is determined by a numeric expression.
  */
-public class IndexedAssign extends Assign {
+public class IndexedAssign implements DStatement {
 
-	private NumExpression index;
+	private NumExpression[] indexedValues;
+	private String var;
 	
-	public IndexedAssign(String var, NumExpression index, NumExpression exp) {
-		super(var, exp);
-		this.index = index;
-	}
-	
-	public IndexedAssign(String var, NumExpression index, int value) {
-		super(var, value);
-		this.index = index;
-	}
-
-	public IndexedAssign(String a, NumExpression index, String b) {
-		super(a, b);
-		this.index = index;
-	}
-
-	public IndexedAssign(String a, String indexVar, NumExpression exp) {
-		super(a, exp);
-		this.index = new Var(indexVar);
+	public IndexedAssign(String var, NumExpression ... indexedValues) {
+		this.var = var;
+		this.indexedValues = indexedValues;
 	}
 	
-	public IndexedAssign(String a, String indexVar, int value) {
-		super(a, value);
-		this.index = new Var(indexVar);
+	@Override
+	public RankedIterator getIterator(final RankedIterator in) {
+		// Transform rank expressions
+		RankTransformIterator<NumExpression> rt = 
+				new RankTransformIterator<NumExpression>(in, indexedValues);
+		indexedValues = rt.getExpressions();
+
+		return new RankedIterator() {
+
+			@Override
+			public boolean next() {
+				return rt.next();
+			}
+
+			@Override
+			public VarStore getVarStore() {
+				if (rt.getVarStore() == null) return null;
+				return rt.getVarStore().create(var, indexedValues);
+			}
+
+			@Override
+			public int getRank() {
+				return rt.getRank();
+			}
+		};
+	}
+	
+	public String toString() {
+		return var + " := <indexed " + indexedValues + ">";
 	}
 
-	public IndexedAssign(String a, int index, int value) {
-		super(a, value);
-		this.index = new IntLiteral(index);
-	}
-
-
-	public IndexedAssign(String a, String indexVar, String b) {
-		super(a, b);
-		this.index = new Var(indexVar);
-	}
-
-	public String getVar(VarStore v) {
-		return VarStore.getIndexedVar(super.getVar(v), index.getVal(v));
-	}
 }

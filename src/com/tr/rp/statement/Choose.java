@@ -182,7 +182,7 @@ public class Choose implements DStatement {
 	public RankedIterator getIterator(RankedIterator in) {
 		RankTransformIterator<NumExpression> rt = 
 				new RankTransformIterator<NumExpression>(in, rank);
-		NumExpression rank2 = rt.getExpression();
+		NumExpression rank2 = rt.getExpression(0);
 		IteratorSplitter split = new IteratorSplitter(rt);
 		RankedIterator merge = new ChooseMergingIterator(
 				s1.getIterator(split.getA()), 

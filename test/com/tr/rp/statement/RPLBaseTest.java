@@ -20,6 +20,9 @@ public abstract class RPLBaseTest extends TestCase {
 		v1.setValue("b", 5);
 		v2.setValue("b", 5);
 		v3.setValue("b", 5);
+		v1.setValue("c", 0);
+		v2.setValue("c", 5);
+		v3.setValue("c", 10);
 	}
 
 	protected RankedIterator getTestIterator() {

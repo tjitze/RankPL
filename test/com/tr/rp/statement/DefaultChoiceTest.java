@@ -251,6 +251,55 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 	}
 
+	public void testVariableRanks() {
+		Choose c = new Choose(
+				new Observe(new BoolLiteral(false)), 
+				new Observe(new BoolLiteral(true)), 
+				new Var("c"));
+		RankedIterator result = c.getIterator(getTestIterator());
+		
+		assert(result.next() == true);
+		int value = result.getVarStore().getValue("c");
+		assert(value == 0);
+		int rank = result.getRank();
+		assert(rank == 0);
+		
+		assert(result.next() == true);
+		value = result.getVarStore().getValue("c");
+		assert(value == 5);
+		rank = result.getRank();
+		assert(rank == 5 + 1);
+		
+		assert(result.next() == true);
+		value = result.getVarStore().getValue("c");
+		assert(value == 10);
+		rank = result.getRank();
+		assert(rank == 10 + 2);
+		
+		assert(result.next() == false);
+		
+		c = new Choose(
+				new Observe(new BoolLiteral(false)), 
+				new Observe(new BoolLiteral(true)), 
+				new Var("b"));
+		result = c.getIterator(getTestIterator());
+		
+		assert(result.next() == true);
+		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getRank() == 0);
+		
+		assert(result.next() == true);
+		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getRank() == 1);
+		
+		assert(result.next() == true);
+		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getRank() == 2);
+
+		assert(result.next() == false);
+
+	}
+	
 //	public testVariableRank() {
 //
 //		DStatement s1 = new Assign("b", new Plus("a", 10));

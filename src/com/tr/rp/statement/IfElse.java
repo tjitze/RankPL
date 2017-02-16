@@ -13,6 +13,7 @@ import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
 import com.tr.rp.expressions.bool.BoolExpression.Result;
+import com.tr.rp.expressions.bool.Not;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.tools.ResultPrinter;
 
@@ -25,6 +26,10 @@ public class IfElse implements DStatement {
 		this.exp = exp;
 		this.a = a;
 		this.b = b;
+	}
+
+	public IfElse(BoolExpression exp, DStatement a) {
+		this(exp, a, new Skip());
 	}
 
 	@Override

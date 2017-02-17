@@ -10,22 +10,31 @@ import com.tr.rp.core.VarStore;
  */
 public class InitialVarStoreIterator implements RankedIterator {
 	
-	private VarStore v = new VarStore();
+	private VarStore vs;
 	private boolean initialized = false;
+	
+	public InitialVarStoreIterator(VarStore vs) {
+		this.vs = vs;
+	}
+	
+	public InitialVarStoreIterator() {
+		this(new VarStore());
+	}
+	
 	@Override
 	public boolean next() {
 		if (!initialized) {
 			initialized = true;
 			return true;
 		} else {
-			v = null;
+			vs = null;
 			return false;
 		}
 	}
 
 	@Override
 	public VarStore getVarStore() {
-		return v;
+		return vs;
 	}
 
 	@Override

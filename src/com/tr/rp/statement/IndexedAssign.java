@@ -20,6 +20,7 @@ public class IndexedAssign implements DStatement {
 	public IndexedAssign(String var, NumExpression ... indexedValues) {
 		this.var = var;
 		this.indexedValues = indexedValues;
+		if (indexedValues.length % 2 != 0) throw new IllegalArgumentException("Even number of index/value elements required");
 	}
 	
 	@Override

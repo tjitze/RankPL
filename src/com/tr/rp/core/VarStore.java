@@ -50,7 +50,7 @@ public class VarStore {
 		VarStore v = new VarStore();
 		v.varStore.putAll(varStore);
 		for (int i = 0; i < indexedValues.length; i = i + 2) {
-			v.setElementOfArray(varName, indexedValues[i].getVal(this), indexedValues[i+1].getVal(this));
+			v.setElementOfArray(varName, indexedValues[i+1].getVal(this), indexedValues[i].getVal(this));
 		}
 		return v;
 	}
@@ -111,7 +111,7 @@ public class VarStore {
 	 * Initialize array. The dimension array contains the number of
 	 * items that must be initialized for each dimension.
 	 */
-	public void initializeArray(String varName, int[] dimension) {
+	public void initializeArray(String varName, int ... dimension) {
 		dimension = Arrays.copyOf(dimension, dimension.length);
 		for (int cx = 0; cx < dimension.length; cx++) {
 			while (dimension[cx] > 0) {
@@ -125,7 +125,8 @@ public class VarStore {
 		int[] res = new int[length];
 		for (int i = 0; i < length; i++) {
 			res[i] = getElementOfArray(varName, i)
-					.orElseThrow(() -> new IndexOutOfBoundsException());
+					.orElseThrow(() -> new IndexOutOfBoundsException(
+							"Index " + length + " for variable " + varName));
 		}
 		return res;
 	}
@@ -135,7 +136,8 @@ public class VarStore {
 		for (int i = 0; i < length1; i++) {
 			for (int j = 0; j < length2; j++) {
 				res[i][j] = getElementOfArray(varName, i, j)
-						.orElseThrow(() -> new IndexOutOfBoundsException());
+						.orElseThrow(() -> new IndexOutOfBoundsException(
+								"Index (" + length1 + ", " + length2 + ") for variable " + varName));
 			}
 		}
 		return res;

@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.num;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import com.tr.rp.core.VarStore;
@@ -30,7 +31,8 @@ public class IndexedVar extends NumExpression {
 			indexValues[i] = indexExpressions[i].getVal(vs);
 		}
 		return vs.getElementOfArray(variable, indexValues)
-				.orElseThrow(()->new IndexOutOfBoundsException());
+				.orElseThrow(()->new IndexOutOfBoundsException(
+						"Index " + Arrays.toString(indexValues) + " for variable " + variable));
 	}
 
 	@Override

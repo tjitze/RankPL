@@ -1,5 +1,12 @@
 package com.tr.rp.core;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.TokenStream;
+
+import com.tr.rp.parser.DefProgLexer;
+import com.tr.rp.parser.DefProgParser;
 import com.tr.rp.statement.Composition;
 
 /**
@@ -22,6 +29,16 @@ public class ProgramBuilder {
 		}
 		return this;
 	}
+	
+	public ProgramBuilder add(String statement) {
+        CharStream charStream = new ANTLRInputStream(statement);
+        DefProgLexer lexer = new DefProgLexer(charStream);
+        TokenStream tokens = new CommonTokenStream(lexer);
+        DefProgParser parser = new DefProgParser(tokens);
+        ConcreteParser classVisitor = new ConcreteParser();
+        return add((DStatement)classVisitor.visit(parser.statement()));
+	}
+	
 	public DStatement build() {
 		if (a == null) {
 			throw new IllegalStateException();

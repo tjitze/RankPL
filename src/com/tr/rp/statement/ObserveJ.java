@@ -12,20 +12,19 @@ import com.tr.rp.expressions.num.Plus;
 import com.tr.rp.expressions.num.RankExpression;
 
 /**
- * Implements Alpha conditioning.
+ * Implements J-conditioning.
  * This is equivalent to 
  *   observe b [x] observe -b
  */
-public class ObserveAlpha implements DStatement {
+public class ObserveJ implements DStatement {
 
 	private BoolExpression b;
 	private DStatement statement;
-	private int rank;
 	
-	public ObserveAlpha(BoolExpression b, int x) {
+	public ObserveJ(BoolExpression b, int x) {
 		this(b, new IntLiteral(x));
 	}
-	public ObserveAlpha(BoolExpression b, NumExpression x) {
+	public ObserveJ(BoolExpression b, NumExpression x) {
 		//		observe b [rank] observe -b
 		this.b = b;
 		statement = new Choose(
@@ -40,13 +39,12 @@ public class ObserveAlpha implements DStatement {
 	}
 
 	public String toString() {
-		return "observeShenoy("+rank+") " + b;
+		return "observeShenoy("+b+") " + b;
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof ObserveAlpha &&
-				((ObserveAlpha)o).b.equals(b) &&
-				((ObserveAlpha)o).statement.equals(statement) &&
-				((ObserveAlpha)o).rank == rank;
+		return o instanceof ObserveJ &&
+				((ObserveJ)o).b.equals(b) &&
+				((ObserveJ)o).statement.equals(statement);
 	}	
 }

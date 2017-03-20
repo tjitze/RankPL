@@ -13,24 +13,24 @@ import com.tr.rp.expressions.num.Plus;
 import com.tr.rp.expressions.num.RankExpression;
 
 /**
- * Implements Shenoy conditioning (also called evidence-oriented conditioning).
+ * Implements L-conditioning.
  * This is equivalent to:
  * 	if rank(b) <= x then
  *		observe b [x-rank(b)+rank(-b)] observe -b
  *	else
  *		observe -b [rank(b)-x] observe b
  */
-public class ObserveShenoy implements DStatement {
+public class ObserveL implements DStatement {
 
 	private BoolExpression b;
 	private DStatement statement;
 	private NumExpression rank;
 
-	public ObserveShenoy(BoolExpression b, int rank) {
+	public ObserveL(BoolExpression b, int rank) {
 		this(b, new IntLiteral(rank));
 	}
 	
-	public ObserveShenoy(BoolExpression b, NumExpression rank) {
+	public ObserveL(BoolExpression b, NumExpression rank) {
 		this.b = b;
 		this.rank = rank;
 	}
@@ -67,10 +67,10 @@ public class ObserveShenoy implements DStatement {
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof ObserveShenoy &&
-				((ObserveShenoy)o).b.equals(b) &&
-				((ObserveShenoy)o).statement.equals(statement) &&
-				((ObserveShenoy)o).rank == rank;
+		return o instanceof ObserveL &&
+				((ObserveL)o).b.equals(b) &&
+				((ObserveL)o).statement.equals(statement) &&
+				((ObserveL)o).rank == rank;
 	}	
 
 }

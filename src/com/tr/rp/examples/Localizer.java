@@ -22,8 +22,8 @@ import com.tr.rp.statement.Choose;
 import com.tr.rp.statement.Composition;
 import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.Observe;
-import com.tr.rp.statement.ObserveAlpha;
-import com.tr.rp.statement.ObserveShenoy;
+import com.tr.rp.statement.ObserveJ;
+import com.tr.rp.statement.ObserveL;
 import com.tr.rp.statement.Skip;
 import com.tr.rp.statement.While;
 import com.tr.rp.tools.ResultPrinter;
@@ -78,14 +78,14 @@ public class Localizer {
 							new Equals(new Fun(vs -> map[vs.getValue("y") + vs.getValue("n")][vs.getValue("x")]), 0),
 							new LessThan(new Plus("y", "n"), 7)),
 						new Assign("n", new Plus("n", 1))))
-				.add(new ObserveAlpha(new Equals("n", new Fun(vs -> nd[vs.getValue("t")] + 1)),1))
+				.add(new ObserveJ(new Equals("n", new Fun(vs -> nd[vs.getValue("t")] + 1)),1))
 				// North sensor distance
 				.add(new Assign("s", 0))
 				.add(new While(new And(
 							new Equals(new Fun(vs -> map[vs.getValue("y") - vs.getValue("s")][vs.getValue("x")]), 0),
 							new LessThan(0, new Minus("y", "n"))),
 						new Assign("s", new Plus("s", 1))))
-				.add(new ObserveAlpha(new Equals("s", new Fun(vs -> sd[vs.getValue("t")] + 1)),1))
+				.add(new ObserveJ(new Equals("s", new Fun(vs -> sd[vs.getValue("t")] + 1)),1))
 				.add(new Assign("t", new Plus("t", 1)))
 				.build();
 		

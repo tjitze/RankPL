@@ -37,5 +37,4 @@ public class And extends AbstractBoolOp {
 		if (b2Definite && !b2.getDefiniteValue()) return true;
 		return false;
 	}
-
 }

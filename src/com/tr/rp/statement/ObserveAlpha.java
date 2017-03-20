@@ -42,4 +42,11 @@ public class ObserveAlpha implements DStatement {
 	public String toString() {
 		return "observeShenoy("+rank+") " + b;
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof ObserveAlpha &&
+				((ObserveAlpha)o).b.equals(b) &&
+				((ObserveAlpha)o).statement.equals(statement) &&
+				((ObserveAlpha)o).rank == rank;
+	}	
 }

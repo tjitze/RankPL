@@ -40,4 +40,8 @@ public class BoolLiteral extends BoolExpression {
 	public boolean getDefiniteValue() {
 		return value;
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof BoolLiteral && ((BoolLiteral)o).value == value;
+	}
 }

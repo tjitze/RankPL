@@ -53,4 +53,10 @@ public abstract class AbstractNumBoolOp extends BoolExpression {
 		return e1.hasDefiniteValue() && e2.hasDefiniteValue();
 	}
 
+	public final boolean equals(Object o) {
+		return o instanceof AbstractNumBoolOp &&
+				((AbstractNumBoolOp)o).e1.equals(e1) &&
+				((AbstractNumBoolOp)o).e2.equals(e2) &&
+				this.getClass().equals(o.getClass());
+	}
 }

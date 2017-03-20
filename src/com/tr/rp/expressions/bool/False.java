@@ -6,4 +6,7 @@ public final class False extends BoolLiteral {
 		super(false);
 	}
 
+	public boolean equals(Object o) {
+		return o instanceof False;
+	}
 }

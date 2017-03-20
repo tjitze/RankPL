@@ -54,5 +54,4 @@ public class LessThan extends AbstractNumBoolOp {
 	public String getOperator() {
 		return "<";
 	}
-
 }

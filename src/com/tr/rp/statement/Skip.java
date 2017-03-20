@@ -14,4 +14,8 @@ public class Skip implements DStatement {
 	public String toString() {
 		return "skip";
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof Skip;
+	}
 }

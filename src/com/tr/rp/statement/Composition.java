@@ -39,4 +39,11 @@ public class Composition implements DStatement {
 	public String toString() {
 		return a + ": " + b;
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof Composition &&
+				((Composition)o).a.equals(a) &&
+				((Composition)o).b.equals(b);
+	}
+
 }

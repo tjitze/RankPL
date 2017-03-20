@@ -86,4 +86,8 @@ public class Observe implements DStatement {
 	public String toString() {
 		return "observe " + exp;
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof Observe && ((Observe)o).exp.equals(exp);
+	}
 }

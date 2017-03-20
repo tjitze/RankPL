@@ -59,5 +59,10 @@ public class IndexedVar extends NumExpression {
 		return 0;
 	}
 
+	public boolean equals(Object o) {
+		return o instanceof IndexedVar && 
+				((IndexedVar)o).variable.equals(variable) &&
+				Arrays.equals(((IndexedVar)o).indexExpressions, indexExpressions);
+	}
 	
 }

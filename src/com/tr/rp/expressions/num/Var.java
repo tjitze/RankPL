@@ -40,5 +40,7 @@ public class Var extends NumExpression {
 		return 0;
 	}
 
-	
+	public boolean equals(Object o) {
+		return o instanceof Var && ((Var)o).variable.equals(variable);
+	}
 }

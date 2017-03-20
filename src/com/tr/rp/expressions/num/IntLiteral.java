@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.num;
 
+import java.util.Arrays;
+
 import com.tr.rp.core.VarStore;
 
 public class IntLiteral extends NumExpression {
@@ -38,6 +40,10 @@ public class IntLiteral extends NumExpression {
 	@Override
 	public int getDefiniteValue() {
 		return value;
+	}
+	
+	public boolean equals(Object o) {
+		return o instanceof IntLiteral && ((IntLiteral)o).value == value;
 	}
 	
 }

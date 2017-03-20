@@ -37,4 +37,8 @@ public class Pred extends BoolExpression {
 		return false;
 	}
 
+	public boolean equals(Object o) {
+		return o instanceof Pred && ((Pred)o).pred.equals(pred);
+	}
+
 }

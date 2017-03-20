@@ -47,4 +47,9 @@ public class Not extends BoolExpression {
 	@Override
 	public boolean getDefiniteValue() {
 		return !e.getDefiniteValue();
-	}}
+	}
+
+	public boolean equals(Object o) {
+		return o instanceof Not && ((Not)o).e.equals(e);
+	}
+}

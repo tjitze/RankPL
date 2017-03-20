@@ -37,4 +37,7 @@ public class Fun extends NumExpression {
 		return this;
 	}
 
+	public boolean equals(Object o) {
+		return o instanceof Fun && ((Fun)o).fun == fun;
+	}
 }

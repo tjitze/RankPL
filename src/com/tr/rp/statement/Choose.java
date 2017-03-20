@@ -195,4 +195,11 @@ public class Choose implements DStatement {
 		return "{" + s1 + " <" + rank + "> " + s2 + "}";
 	}
 	
+	public boolean equals(Object o) {
+		return o instanceof Choose &&
+				((Choose)o).s1.equals(s1) &&
+				((Choose)o).s2.equals(s2) &&
+				((Choose)o).rank.equals(rank);
+	}
+
 }

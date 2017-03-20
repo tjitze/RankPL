@@ -84,4 +84,10 @@ public class IfElse implements DStatement {
 		return "if " + exp + " then " + a + " else " + b;
 	}
 	
+	public boolean equals(Object o) {
+		return o instanceof IfElse &&
+				((IfElse)o).a.equals(a) &&
+				((IfElse)o).b.equals(b) &&
+				((IfElse)o).exp.equals(exp);
+	}
 }

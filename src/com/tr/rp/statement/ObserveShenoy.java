@@ -65,4 +65,12 @@ public class ObserveShenoy implements DStatement {
 	public String toString() {
 		return "observeShenoy("+rank+") " + b;
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof ObserveShenoy &&
+				((ObserveShenoy)o).b.equals(b) &&
+				((ObserveShenoy)o).statement.equals(statement) &&
+				((ObserveShenoy)o).rank == rank;
+	}	
+
 }

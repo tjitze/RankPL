@@ -63,4 +63,8 @@ public class RankExpression extends NumExpression {
 	public int getDefiniteValue() {
 		return 0;
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof RankExpression && ((RankExpression)o).b.equals(b);
+	}
 }

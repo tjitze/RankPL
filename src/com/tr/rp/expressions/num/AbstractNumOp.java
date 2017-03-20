@@ -1,6 +1,7 @@
 package com.tr.rp.expressions.num;
 
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.bool.AbstractNumBoolOp;
 
 /**
  * Abstract class for integer-valued expressions that 
@@ -62,5 +63,12 @@ public abstract class AbstractNumOp extends NumExpression {
 	@Override
 	public boolean hasDefiniteValue() {
 		return getE1().hasDefiniteValue() && getE2().hasDefiniteValue();
+	}
+	
+	public final boolean equals(Object o) {
+		return o instanceof AbstractNumOp &&
+				((AbstractNumOp)o).e1.equals(e1) &&
+				((AbstractNumOp)o).e2.equals(e2) &&
+				this.getClass().equals(o.getClass());
 	}
 }

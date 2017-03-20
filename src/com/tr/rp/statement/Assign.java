@@ -58,4 +58,10 @@ public class Assign implements DStatement {
 	protected String getVar(VarStore v) {
 		return var;
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof Assign &&
+				((Assign)o).var.equals(var) &&
+				((Assign)o).exp.equals(exp);
+	}
 }

@@ -66,4 +66,10 @@ public class While implements DStatement {
 	private RankedIterator generateIteration(RankedIterator in) {
 		return (new IfElse(exp, s, new Skip())).getIterator(in);
 	}
+	
+	public boolean equals(Object o) {
+		return o instanceof While &&
+				((While)o).exp.equals(exp) &&
+				((While)o).s.equals(s);
+	}
 }

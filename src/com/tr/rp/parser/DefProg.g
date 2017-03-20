@@ -13,7 +13,7 @@ program
  ;
 
 statement
- : rank_assign_stat
+ : ranked_choice
  | assignment_stat
  | if_stat
  | while_stat
@@ -21,8 +21,8 @@ statement
  | skip_stat
  ;
 
-rank_assign_stat
- : 'RANK' numexpr 'DEF' statement 'ELSE' statement
+ranked_choice
+ : 'CHOOSE' numexpr 'NORMALLY' statement 'EXCEPTIONALLY' statement
  ;
 
 assignment_stat

@@ -41,7 +41,7 @@ public class DefProgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implement
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitRank_assign_stat(DefProgParser.Rank_assign_statContext ctx) { return visitChildren(ctx); }
+	@Override public T visitRanked_choice(DefProgParser.Ranked_choiceContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -32,11 +32,11 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(DefProgParser.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#rank_assign_stat}.
+	 * Visit a parse tree produced by {@link DefProgParser#ranked_choice}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRank_assign_stat(DefProgParser.Rank_assign_statContext ctx);
+	T visitRanked_choice(DefProgParser.Ranked_choiceContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DefProgParser#assignment_stat}.
 	 * @param ctx the parse tree

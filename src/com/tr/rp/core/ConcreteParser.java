@@ -30,7 +30,7 @@ import com.tr.rp.parser.DefProgParser.NegateexprContext;
 import com.tr.rp.parser.DefProgParser.NumexprContext;
 import com.tr.rp.parser.DefProgParser.Observe_statContext;
 import com.tr.rp.parser.DefProgParser.ProgramContext;
-import com.tr.rp.parser.DefProgParser.Rank_assign_statContext;
+import com.tr.rp.parser.DefProgParser.Ranked_choiceContext;
 import com.tr.rp.parser.DefProgParser.Skip_statContext;
 import com.tr.rp.parser.DefProgParser.StatementContext;
 import com.tr.rp.parser.DefProgParser.VarnumexprContext;
@@ -70,7 +70,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitRank_assign_stat(Rank_assign_statContext ctx) {
+	public LanguageElement visitRanked_choice(Ranked_choiceContext ctx) {
 		NumexprContext nctx = ctx.numexpr();
 		NumExpression rank = (NumExpression)visitNumexpr(nctx);
 		DStatement a = (DStatement)visitStatement(ctx.statement().get(0));

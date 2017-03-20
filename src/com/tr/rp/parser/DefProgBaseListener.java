@@ -55,13 +55,13 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRank_assign_stat(DefProgParser.Rank_assign_statContext ctx) { }
+	@Override public void enterRanked_choice(DefProgParser.Ranked_choiceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRank_assign_stat(DefProgParser.Rank_assign_statContext ctx) { }
+	@Override public void exitRanked_choice(DefProgParser.Ranked_choiceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

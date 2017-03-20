@@ -1,0 +1,55 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem{DBLP:dblp_journals/ai/DarwicheP97}
+Darwiche, A., Pearl, J.: On the logic of iterated belief revision. Artificial
+  intelligence  89(1-2),  1--29 (1996)
+
+\bibitem{Gardenfors:1995:BR:216136.216138}
+G\"{a}rdenfors, P., Rott, H.: Handbook of logic in artificial intelligence and
+  logic programming (vol. 4). chap. Belief Revision, pp. 35--132. Oxford
+  University Press, Oxford, UK (1995)
+
+\bibitem{goldszmidt1996qualitative}
+Goldszmidt, M., Pearl, J.: Qualitative probabilities for default reasoning,
+  belief revision, and causal modeling. Artificial Intelligence  84(1),
+  57--112 (1996)
+
+\bibitem{DBLP:conf/uai/GoodmanMRBT08}
+Goodman, N.D., Mansinghka, V.K., Roy, D.M., Bonawitz, K., Tenenbaum, J.B.:
+  Church: a language for generative models. In: McAllester, D.A.,
+  Myllym{\"{a}}ki, P. (eds.) {UAI} 2008, Proceedings of the 24th Conference in
+  Uncertainty in Artificial Intelligence, Helsinki, Finland, July 9-12, 2008.
+  pp. 220--229. {AUAI} Press (2008)
+
+\bibitem{DBLP:books/daglib/0014219}
+Halpern, J.Y.: Reasoning about uncertainty. {MIT} Press (2005)
+
+\bibitem{DBLP:journals/jcss/Kozen81}
+Kozen, D.: Semantics of probabilistic programs. J. Comput. Syst. Sci.  22(3),
+  328--350 (1981)
+
+\bibitem{kyburg1961probability}
+Kyburg~Jr, H.E.: Probability and the logic of rational belief  (1961)
+
+\bibitem{DBLP:journals/corr/MansinghkaSP14}
+Mansinghka, V.K., Selsam, D., Perov, Y.N.: Venture: a higher-order
+  probabilistic programming platform with programmable inference. CoRR
+  abs/1404.0099 (2014)
+
+\bibitem{DBLP:conf/tark/Pearl90}
+Pearl, J.: System {Z:} {A} natural ordering of defaults with tractable
+  applications to nonmonotonic reasoning. In: Parikh, R. (ed.) Proceedings of
+  the 3rd Conference on Theoretical Aspects of Reasoning about Knowledge,
+  Pacific Grove, CA, March 1990. pp. 121--135. Morgan Kaufmann (1990)
+
+\bibitem{pfeffer2009figaro}
+Pfeffer, A.: Figaro: An object-oriented probabilistic programming language.
+  Charles River Analytics Technical Report  137 (2009)
+
+\bibitem{DBLP:books/daglib/0035277}
+Spohn, W.: The Laws of Belief - Ranking Theory and Its Philosophical
+  Applications. Oxford University Press (2014)
+
+\end{thebibliography}

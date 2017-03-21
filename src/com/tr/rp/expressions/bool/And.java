@@ -24,7 +24,7 @@ public class And extends AbstractBoolOp {
 
 	@Override
 	public String getOperator() {
-		return "&&";
+		return "&";
 	}
 
 	@Override

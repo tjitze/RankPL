@@ -9,11 +9,15 @@ import com.tr.rp.expressions.bool.LessOrEq;
 import com.tr.rp.expressions.bool.LessThan;
 import com.tr.rp.expressions.bool.Not;
 import com.tr.rp.expressions.bool.Or;
+import com.tr.rp.expressions.bool.Xor;
 import com.tr.rp.expressions.num.Divide;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.Minus;
 import com.tr.rp.expressions.num.Mod;
+import com.tr.rp.expressions.num.NumAnd;
 import com.tr.rp.expressions.num.NumExpression;
+import com.tr.rp.expressions.num.NumOr;
+import com.tr.rp.expressions.num.NumXor;
 import com.tr.rp.expressions.num.Plus;
 import com.tr.rp.expressions.num.Times;
 import com.tr.rp.expressions.num.Var;
@@ -110,6 +114,9 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		if (aop.equals("*")) return new Times(a, b);
 		if (aop.equals("/")) return new Divide(a, b);
 		if (aop.equals("%")) return new Mod(a, b);
+		if (aop.equals("&")) return new NumAnd(a, b);
+		if (aop.equals("|")) return new NumOr(a, b);
+		if (aop.equals("^")) return new NumXor(a, b);
 		return null;
 	}
 
@@ -132,6 +139,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		BoolExpression b = (BoolExpression)visitBoolexpr(ctx.boolexpr(1));
 		if (aop.equals("&")) return new And(a, b);
 		if (aop.equals("|")) return new Or(a, b);
+		if (aop.equals("^")) return new Xor(a, b);
 		return null;
 	}
 

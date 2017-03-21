@@ -17,7 +17,7 @@ public class Or extends AbstractBoolOp {
 	}
 	@Override
 	public String getOperator() {
-		return "||&";
+		return "|";
 	}
 
 	@Override

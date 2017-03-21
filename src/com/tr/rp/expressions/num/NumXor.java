@@ -48,7 +48,7 @@ public class NumXor extends AbstractNumOp {
 
 	@Override
 	public String getOperator() {
-		return "X";
+		return "^";
 	}
 	
 }

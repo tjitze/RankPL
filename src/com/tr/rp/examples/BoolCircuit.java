@@ -23,7 +23,16 @@ import com.tr.rp.tools.ResultPrinter;
 public class BoolCircuit {
 
 	public static void main(String[] args) {
-
+		String program = 
+			"{ a1 := 0 } << 0 >> { a1 := 1 };" +
+			"{ a2 := 0 } << 0 >> { a2 := 1 };" +
+			"{ a3 := 0 } << 0 >> { a3 := 1 };" +
+			"{ fx1 := 0 } << 0 >> { fx1 := 1 };" +
+			"{ fx2 := 0 } << 0 >> { fx2 := 1 };" +
+			"{ fa1 := 0 } << 0 >> { fa1 := 1 };" +
+			"{ fa2 := 0 } << 0 >> { fa2 := 1 };" +
+			"{ fo1 := 0 } << 0 >> { fo1 := 1 };" +
+			"IF (fx1 == 0) THEN (l1 := "
 		DStatement circuit = new ProgramBuilder()
 				.add(new Choose("a1", 0, 1, 0))
 				.add(new Choose("a2", 0, 1, 0))

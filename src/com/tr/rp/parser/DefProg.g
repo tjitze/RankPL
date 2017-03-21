@@ -59,7 +59,7 @@ boolexpr
 
 compareexpr : '(' numexpr cop=('<' | '<=' | '>' | '>=' | '==' | '!=') numexpr ')';
 
-booleanexpr : '(' boolexpr bop=('&' | '|') boolexpr ')';
+booleanexpr : '(' boolexpr bop=('&' | '|' | '^' ) boolexpr ')';
 
 negateexpr : '!' boolexpr;
 
@@ -72,7 +72,7 @@ numexpr
  | varnumexpr
  ;
  
-arithnumexpr:  '(' numexpr aop=('+' | '-' | '/' | '*') numexpr ')';
+arithnumexpr:  '(' numexpr aop=('+' | '-' | '/' | '%' | '*' | '&' | '|' | '^' ) numexpr ')';
 
 litnumexpr : INT;
 

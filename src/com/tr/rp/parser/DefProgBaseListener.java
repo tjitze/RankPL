@@ -67,6 +67,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAssignment_stat(DefProgParser.Assignment_statContext ctx) { }
 	/**
 	 * {@inheritDoc}

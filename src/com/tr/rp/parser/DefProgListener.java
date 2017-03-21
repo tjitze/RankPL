@@ -51,6 +51,16 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitRanked_choice(DefProgParser.Ranked_choiceContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DefProgParser#choice_assignment_stat}.
+	 * @param ctx the parse tree
+	 */
+	void enterChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DefProgParser#choice_assignment_stat}.
+	 * @param ctx the parse tree
+	 */
+	void exitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DefProgParser#assignment_stat}.
 	 * @param ctx the parse tree
 	 */

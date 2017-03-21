@@ -15,6 +15,7 @@ program
 statement
  : ranked_choice
  | assignment_stat
+ | choice_assignment_stat
  | if_stat
  | while_stat
  | observe_stat
@@ -22,7 +23,11 @@ statement
  ;
 
 ranked_choice
- : 'CHOOSE' numexpr 'NORMALLY' statement 'EXCEPTIONALLY' statement
+ : '{' statement '}' '<<' numexpr '>>' '{' statement '}'
+ ;
+
+choice_assignment_stat
+ : VAR ':=' numexpr '<<' numexpr '>>' numexpr
  ;
 
 assignment_stat
@@ -30,19 +35,19 @@ assignment_stat
  ;
 
 if_stat
- : 'IF' boolexpr 'THEN' statement 'ELSE' statement
+ : 'if' boolexpr 'then' statement 'else' statement
  ;
 
 while_stat
- : 'WHILE' boolexpr 'DO' statement
+ : 'while' boolexpr 'do' statement
  ;
 
 observe_stat
- : 'OBSERVE' boolexpr
+ : 'observe' boolexpr
  ;
 
 skip_stat
- : 'SKIP'
+ : 'skip'
  ;
  
 boolexpr
@@ -59,6 +64,7 @@ booleanexpr : '(' boolexpr bop=('&' | '|') boolexpr ')';
 negateexpr : '!' boolexpr;
 
 litboolexpr : 'true' | 'false';
+ 
  
 numexpr
  : arithnumexpr

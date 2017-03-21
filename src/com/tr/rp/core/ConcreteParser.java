@@ -22,6 +22,7 @@ import com.tr.rp.parser.DefProgParser.ArithnumexprContext;
 import com.tr.rp.parser.DefProgParser.Assignment_statContext;
 import com.tr.rp.parser.DefProgParser.BooleanexprContext;
 import com.tr.rp.parser.DefProgParser.BoolexprContext;
+import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.CompareexprContext;
 import com.tr.rp.parser.DefProgParser.If_statContext;
 import com.tr.rp.parser.DefProgParser.LitboolexprContext;
@@ -51,6 +52,15 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		String var = ctx.VAR().getText();
 		NumExpression value = (NumExpression)visitNumexpr(ctx.numexpr());
 		return new Assign(var, value);
+	}
+
+	@Override
+	public LanguageElement visitChoice_assignment_stat(Choice_assignment_statContext ctx) {
+		String var = ctx.VAR().getText();
+		NumExpression value1 = (NumExpression)visitNumexpr(ctx.numexpr(0));
+		NumExpression value2 = (NumExpression)visitNumexpr(ctx.numexpr(2));
+		NumExpression rank = (NumExpression)visitNumexpr(ctx.numexpr(1));
+		return new Choose(var, value1, value2, rank);
 	}
 
 	@Override

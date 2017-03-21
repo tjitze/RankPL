@@ -23,22 +23,28 @@ public class ParseTest extends RPLBaseTest {
 	}
 
 	public void testParseComposition() {
-		String program = "x := 20; x := 30";
+		String program = "x := 20; x := 30;";
 		assert(parse(program).equals(new Composition(
 				new Assign("x",20),
 				new Assign("x",30))));
 	}
 
 	public void testParseIfElse() {
-		String program = "IF (x == 10) THEN x := 20 ELSE x := 30";
+		String program = "IF (x == 10) THEN x := 20 ELSE x := 30;";
 		assert(parse(program).equals(new IfElse(
 				new Equals("x",10),
 				new Assign("x",20),
 				new Assign("x",30))));
 	}
 
+	public void testParseAssignChoose() {
+		String program = "x := 0 << 5 >> 20;";
+		assert(parse(program).equals(new Choose(
+				new Assign("x",0), new Assign("x",20), 5)));
+	}
+
 	public void testParseChoose() {
-		String program = "CHOOSE 5 NORMALLY x := 0 EXCEPTIONALLY x := 20;";
+		String program = "{ x := 0 } << 5 >> { x := 20 };";
 		assert(parse(program).equals(new Choose(
 				new Assign("x",0), new Assign("x",20), 5)));
 	}

@@ -17,6 +17,14 @@ import com.tr.rp.statement.RPLBaseTest;
 
 public class ParseTest extends RPLBaseTest {
 
+	public void testParseVariable() {
+		String program = "x := 0;";
+		assert(parse(program).equals(new Assign("x",0)));
+		program = "x1 := 0;";
+		DStatement s = (DStatement) parse(program);
+		assert(s.equals(new Assign("x1",0)));
+	}
+	
 	public void testParseAssign() {
 		String program = "x := 20;";
 		assert(parse(program).equals(new Assign("x",20)));

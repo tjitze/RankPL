@@ -38,8 +38,8 @@ public class DefProgParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "';'", "'{'", "'}'", "'<<'", "'>>'", "':='", "'if'", "'then'", "'else'", 
-		"'while'", "'do'", "'observe'", "'skip'", "'('", "'<'", "'<='", "'>'", 
+		null, "';'", "'{'", "'}'", "'<<'", "'>>'", "':='", "'IF'", "'THEN'", "'ELSE'", 
+		"'WHILE'", "'DO'", "'OBSERVE'", "'SKIP'", "'('", "'<'", "'<='", "'>'", 
 		"'>='", "'=='", "'!='", "')'", "'&'", "'|'", "'^'", "'!'", "'true'", "'false'", 
 		"'+'", "'-'", "'/'", "'%'", "'*'"
 	};

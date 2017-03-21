@@ -35,19 +35,19 @@ assignment_stat
  ;
 
 if_stat
- : 'if' boolexpr 'then' statement 'else' statement
+ : 'IF' boolexpr 'THEN' statement 'ELSE' statement
  ;
 
 while_stat
- : 'while' boolexpr 'do' statement
+ : 'WHILE' boolexpr 'DO' statement
  ;
 
 observe_stat
- : 'observe' boolexpr
+ : 'OBSERVE' boolexpr
  ;
 
 skip_stat
- : 'skip'
+ : 'SKIP'
  ;
  
 boolexpr
@@ -79,7 +79,7 @@ litnumexpr : INT;
 varnumexpr : VAR;
  
 VAR
- : [a-z]
+ : [a-z] ( [a-z] | [0-9] )*
  ;
 
 INT

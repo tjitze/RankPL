@@ -17,6 +17,9 @@ import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.ObserveL;
 import com.tr.rp.statement.While;
 
+/**
+ * The robot localization example from the paper.
+ */
 public class Localizer {
 
 	public static void main(String[] args) {

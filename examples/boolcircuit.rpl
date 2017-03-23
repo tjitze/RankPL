@@ -1,0 +1,20 @@
+# The boolean circuit example from the paper
+#
+# example of how to run (until two ranks, and only showing failure variables):
+#
+#   java -jar RankPL.jar boolcircuit.rpl 2 fx1 fx2 fa1 fa2 fo1
+
+{ a1 := 0 } << 0 >> { a1 := 1 };
+{ a2 := 0 } << 0 >> { a2 := 1 };
+{ a3 := 0 } << 0 >> { a3 := 1 };
+{ fx1 := 0 } << 1 >> { fx1 := 1 };
+{ fx2 := 0 } << 1 >> { fx2 := 1 };
+{ fa1 := 0 } << 1 >> { fa1 := 1 };
+{ fa2 := 0 } << 1 >> { fa2 := 1 };
+{ fo1 := 0 } << 1 >> { fo1 := 1 };
+IF (fx1 == 0) THEN l1 := (a1 ^ a2) ELSE l1 := 0 << 0 >> 1;
+IF (fa1 == 0) THEN l2 := (a1 & a2) ELSE l2 := 0 << 0 >> 1;
+IF (fa2 == 0) THEN l3 := (l1 & a3) ELSE l3 := 0 << 0 >> 1;
+IF (fx2 == 0) THEN b2 := (l1 ^ a3) ELSE b2 := 0 << 0 >> 1;
+IF (fo2 == 0) THEN b1 := (l3 | l2) ELSE b1 := 0 << 0 >> 1;
+OBSERVE ((a1 == 0) & (a2 == 0) & (a3 == 1) & (b1 == 1) & (b2 == 0));

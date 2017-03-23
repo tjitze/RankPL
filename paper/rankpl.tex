@@ -391,7 +391,7 @@ To execute the $\textbf{if }b\textbf{ then }s_1\textbf{ else }s_2$ statement we 
 \begin{align}
 \dn{s_1 \Rank{e} s_2}(\kappa)	& = || \lambda ||, \mbox{ where }\lambda(\sigma) = min \begin{pmatrix} \dn{s_1}(\kappa)(\sigma), \\ \dn{s_2}(\kappa)(\sigma) + \sigma_{\kappa}(e) \end{pmatrix} \tag{\textbf{D5}} 
 \end{align}
-	The semantics of the observe statement $\textbf{observe }b$ corresponds to conditioning on the valuations satisfying $b$, unless either the rank of this set is $\infty$ or the prior ranking equals $\kappa_{\infty}$ (i.e., represents failure).
+	The semantics of the observe statement $\textbf{observe }b$ corresponds to conditioning on the set of valuations satisfying $b$, unless either the rank of this set is $\infty$ or the prior ranking equals $\kappa_{\infty}$ (i.e., represents failure).
 \begin{align}
 \dn{\textbf{observe }b}(\kappa)  & = 
 		\left\{

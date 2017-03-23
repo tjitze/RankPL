@@ -6,14 +6,19 @@
 
     <target name="compile" depends="clean">
         <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes"/>
+        <javac srcdir="src" destdir="build/classes">
+	    	<classpath>
+		        <pathelement path="lib/antlr-4.5-complete.jar"/>
+	    	</classpath>
+	    </javac>
     </target>
 
-    <target name="jar" depends="compile">
-        <jar destfile="RPL.jar" basedir="build/classes">
+    <target name="jar" depends="compile,compile_grammar">
+        <jar destfile="RankPL.jar" basedir="build/classes">
             <manifest>
-                <attribute name="Main-Class" value="emu.ui.TMSX"/>
+                <attribute name="Main-Class" value="com.tr.rp.RankPL"/>
             </manifest>
+	        <zipgroupfileset dir="lib" includes="*.jar"/>
         </jar>
     </target>
 
@@ -22,7 +27,7 @@
     </target>
 
     <path id="classpath">
-        <pathelement location="./antlr-4.5-complete.jar" />
+        <pathelement location="lib/antlr-4.5-complete.jar" />
     </path>
 
 	<target name="compile_grammar">

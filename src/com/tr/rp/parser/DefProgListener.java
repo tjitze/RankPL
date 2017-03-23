@@ -111,93 +111,111 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitSkip_stat(DefProgParser.Skip_statContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#boolexpr}.
+	 * Enter a parse tree produced by the {@code CompareExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterBoolexpr(DefProgParser.BoolexprContext ctx);
+	void enterCompareExpr(DefProgParser.CompareExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#boolexpr}.
+	 * Exit a parse tree produced by the {@code CompareExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitBoolexpr(DefProgParser.BoolexprContext ctx);
+	void exitCompareExpr(DefProgParser.CompareExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#compareexpr}.
+	 * Enter a parse tree produced by the {@code LiteralBoolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterCompareexpr(DefProgParser.CompareexprContext ctx);
+	void enterLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#compareexpr}.
+	 * Exit a parse tree produced by the {@code LiteralBoolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitCompareexpr(DefProgParser.CompareexprContext ctx);
+	void exitLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#booleanexpr}.
+	 * Enter a parse tree produced by the {@code ParboolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterBooleanexpr(DefProgParser.BooleanexprContext ctx);
+	void enterParboolExpr(DefProgParser.ParboolExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#booleanexpr}.
+	 * Exit a parse tree produced by the {@code ParboolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitBooleanexpr(DefProgParser.BooleanexprContext ctx);
+	void exitParboolExpr(DefProgParser.ParboolExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#negateexpr}.
+	 * Enter a parse tree produced by the {@code BooleanExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterNegateexpr(DefProgParser.NegateexprContext ctx);
+	void enterBooleanExpr(DefProgParser.BooleanExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#negateexpr}.
+	 * Exit a parse tree produced by the {@code BooleanExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitNegateexpr(DefProgParser.NegateexprContext ctx);
+	void exitBooleanExpr(DefProgParser.BooleanExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#litboolexpr}.
+	 * Enter a parse tree produced by the {@code NegateExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterLitboolexpr(DefProgParser.LitboolexprContext ctx);
+	void enterNegateExpr(DefProgParser.NegateExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#litboolexpr}.
+	 * Exit a parse tree produced by the {@code NegateExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitLitboolexpr(DefProgParser.LitboolexprContext ctx);
+	void exitNegateExpr(DefProgParser.NegateExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#numexpr}.
+	 * Enter a parse tree produced by the {@code LiteralNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterNumexpr(DefProgParser.NumexprContext ctx);
+	void enterLiteralNumExpr(DefProgParser.LiteralNumExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#numexpr}.
+	 * Exit a parse tree produced by the {@code LiteralNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitNumexpr(DefProgParser.NumexprContext ctx);
+	void exitLiteralNumExpr(DefProgParser.LiteralNumExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#arithnumexpr}.
+	 * Enter a parse tree produced by the {@code VariableNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterArithnumexpr(DefProgParser.ArithnumexprContext ctx);
+	void enterVariableNumExpr(DefProgParser.VariableNumExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#arithnumexpr}.
+	 * Exit a parse tree produced by the {@code VariableNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitArithnumexpr(DefProgParser.ArithnumexprContext ctx);
+	void exitVariableNumExpr(DefProgParser.VariableNumExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#litnumexpr}.
+	 * Enter a parse tree produced by the {@code ArithmeticNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterLitnumexpr(DefProgParser.LitnumexprContext ctx);
+	void enterArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#litnumexpr}.
+	 * Exit a parse tree produced by the {@code ArithmeticNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitLitnumexpr(DefProgParser.LitnumexprContext ctx);
+	void exitArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#varnumexpr}.
+	 * Enter a parse tree produced by the {@code ParNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterVarnumexpr(DefProgParser.VarnumexprContext ctx);
+	void enterParNumExpr(DefProgParser.ParNumExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#varnumexpr}.
+	 * Exit a parse tree produced by the {@code ParNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitVarnumexpr(DefProgParser.VarnumexprContext ctx);
+	void exitParNumExpr(DefProgParser.ParNumExprContext ctx);
 }

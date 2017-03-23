@@ -36,7 +36,7 @@ public class ProgramBuilder {
         TokenStream tokens = new CommonTokenStream(lexer);
         DefProgParser parser = new DefProgParser(tokens);
         ConcreteParser classVisitor = new ConcreteParser();
-        return add((DStatement)classVisitor.visit(parser.statement()));
+        return add((DStatement)classVisitor.visit(parser.program()));
 	}
 	
 	public DStatement build() {

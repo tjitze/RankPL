@@ -22,23 +22,24 @@ import com.tr.rp.expressions.num.Plus;
 import com.tr.rp.expressions.num.Times;
 import com.tr.rp.expressions.num.Var;
 import com.tr.rp.parser.DefProgBaseVisitor;
-import com.tr.rp.parser.DefProgParser.ArithnumexprContext;
+import com.tr.rp.parser.DefProgParser;
+import com.tr.rp.parser.DefProgParser.ArithmeticNumExprContext;
 import com.tr.rp.parser.DefProgParser.Assignment_statContext;
-import com.tr.rp.parser.DefProgParser.BooleanexprContext;
+import com.tr.rp.parser.DefProgParser.BooleanExprContext;
 import com.tr.rp.parser.DefProgParser.BoolexprContext;
 import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
-import com.tr.rp.parser.DefProgParser.CompareexprContext;
+import com.tr.rp.parser.DefProgParser.CompareExprContext;
 import com.tr.rp.parser.DefProgParser.If_statContext;
-import com.tr.rp.parser.DefProgParser.LitboolexprContext;
-import com.tr.rp.parser.DefProgParser.LitnumexprContext;
-import com.tr.rp.parser.DefProgParser.NegateexprContext;
+import com.tr.rp.parser.DefProgParser.LiteralBoolExprContext;
+import com.tr.rp.parser.DefProgParser.LiteralNumExprContext;
+import com.tr.rp.parser.DefProgParser.NegateExprContext;
 import com.tr.rp.parser.DefProgParser.NumexprContext;
 import com.tr.rp.parser.DefProgParser.Observe_statContext;
 import com.tr.rp.parser.DefProgParser.ProgramContext;
 import com.tr.rp.parser.DefProgParser.Ranked_choiceContext;
 import com.tr.rp.parser.DefProgParser.Skip_statContext;
 import com.tr.rp.parser.DefProgParser.StatementContext;
-import com.tr.rp.parser.DefProgParser.VarnumexprContext;
+import com.tr.rp.parser.DefProgParser.VariableNumExprContext;
 import com.tr.rp.parser.DefProgParser.While_statContext;
 import com.tr.rp.statement.Assign;
 import com.tr.rp.statement.Choose;
@@ -54,23 +55,23 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitAssignment_stat(Assignment_statContext ctx) {
 		String var = ctx.VAR().getText();
-		NumExpression value = (NumExpression)visitNumexpr(ctx.numexpr());
+		NumExpression value = (NumExpression)visit(ctx.numexpr());
 		return new Assign(var, value);
 	}
 
 	@Override
 	public LanguageElement visitChoice_assignment_stat(Choice_assignment_statContext ctx) {
 		String var = ctx.VAR().getText();
-		NumExpression value1 = (NumExpression)visitNumexpr(ctx.numexpr(0));
-		NumExpression value2 = (NumExpression)visitNumexpr(ctx.numexpr(2));
-		NumExpression rank = (NumExpression)visitNumexpr(ctx.numexpr(1));
+		NumExpression value1 = (NumExpression)visit(ctx.numexpr(0));
+		NumExpression value2 = (NumExpression)visit(ctx.numexpr(2));
+		NumExpression rank = (NumExpression)visit(ctx.numexpr(1));
 		return new Choose(var, value1, value2, rank);
 	}
 
 	@Override
 	public LanguageElement visitIf_stat(If_statContext ctx) {
 		BoolexprContext bctx = ctx.boolexpr();
-		BoolExpression boolExpr = (BoolExpression)visitBoolexpr(bctx);
+		BoolExpression boolExpr = (BoolExpression)visit(bctx);
 		DStatement a = (DStatement)visitStatement(ctx.statement().get(0));
 		DStatement b = (DStatement)visitStatement(ctx.statement().get(1));
 		return new IfElse(boolExpr, a, b);
@@ -79,14 +80,14 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitObserve_stat(Observe_statContext ctx) {
 		BoolexprContext bctx = ctx.boolexpr();
-		BoolExpression boolExpr = (BoolExpression)visitBoolexpr(bctx);
+		BoolExpression boolExpr = (BoolExpression)visit(bctx);
 		return new Observe(boolExpr);
 	}
 
 	@Override
 	public LanguageElement visitRanked_choice(Ranked_choiceContext ctx) {
 		NumexprContext nctx = ctx.numexpr();
-		NumExpression rank = (NumExpression)visitNumexpr(nctx);
+		NumExpression rank = (NumExpression)visit(nctx);
 		DStatement a = (DStatement)visitStatement(ctx.statement().get(0));
 		DStatement b = (DStatement)visitStatement(ctx.statement().get(1));
 		return new Choose(a, b, rank);
@@ -99,16 +100,16 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitWhile_stat(While_statContext ctx) {
-		BoolExpression boolExpr = (BoolExpression)visitBoolexpr(ctx.boolexpr());
+		BoolExpression boolExpr = (BoolExpression)visit(ctx.boolexpr());
 		DStatement a = (DStatement)visitStatement(ctx.statement());
 		return new While(boolExpr, a);
 	}
 
 	@Override
-	public LanguageElement visitArithnumexpr(ArithnumexprContext ctx) {
+	public LanguageElement visitArithmeticNumExpr(ArithmeticNumExprContext ctx) {
 		String aop = ctx.aop.getText();
-		NumExpression a = (NumExpression)visitNumexpr(ctx.numexpr(0));
-		NumExpression b = (NumExpression)visitNumexpr(ctx.numexpr(1));
+		NumExpression a = (NumExpression)visit(ctx.numexpr(0));
+		NumExpression b = (NumExpression)visit(ctx.numexpr(1));
 		if (aop.equals("+")) return new Plus(a, b);
 		if (aop.equals("-")) return new Minus(a, b);
 		if (aop.equals("*")) return new Times(a, b);
@@ -121,22 +122,22 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitLitnumexpr(LitnumexprContext ctx) {
+	public LanguageElement visitLiteralNumExpr(LiteralNumExprContext ctx) {
 		String num = ctx.getText();
 		return new IntLiteral(Integer.parseInt(num));
 	}
 	
 	@Override
-	public LanguageElement visitVarnumexpr(VarnumexprContext ctx) {
+	public LanguageElement visitVariableNumExpr(VariableNumExprContext ctx) {
 		String var = ctx.getText();
 		return new Var(var);
 	}
 	
 	@Override
-	public LanguageElement visitBooleanexpr(BooleanexprContext ctx) {
+	public LanguageElement visitBooleanExpr(BooleanExprContext ctx) {
 		String aop = ctx.bop.getText();
-		BoolExpression a = (BoolExpression)visitBoolexpr(ctx.boolexpr(0));
-		BoolExpression b = (BoolExpression)visitBoolexpr(ctx.boolexpr(1));
+		BoolExpression a = (BoolExpression)visit(ctx.boolexpr(0));
+		BoolExpression b = (BoolExpression)visit(ctx.boolexpr(1));
 		if (aop.equals("&")) return new And(a, b);
 		if (aop.equals("|")) return new Or(a, b);
 		if (aop.equals("^")) return new Xor(a, b);
@@ -144,10 +145,10 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitCompareexpr(CompareexprContext ctx) {
+	public LanguageElement visitCompareExpr(CompareExprContext ctx) {
 		String aop = ctx.cop.getText();
-		NumExpression a = (NumExpression)visitNumexpr(ctx.numexpr(0));
-		NumExpression b = (NumExpression)visitNumexpr(ctx.numexpr(1));
+		NumExpression a = (NumExpression)this.visit(ctx.numexpr(0));
+		NumExpression b = (NumExpression)visit(ctx.numexpr(1));
 		if (aop.equals("<")) return new LessThan(a, b);
 		if (aop.equals("<=")) return new LessOrEq(a, b);
 		if (aop.equals("==")) return new Equals(a, b);
@@ -158,13 +159,13 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitNegateexpr(NegateexprContext ctx) {
-		BoolExpression a = (BoolExpression)visitBoolexpr(ctx.boolexpr());
+	public LanguageElement visitNegateExpr(NegateExprContext ctx) {
+		BoolExpression a = (BoolExpression)visit(ctx.getChild(1));
 		return new Not(a);
 	}
 
 	@Override
-	public LanguageElement visitLitboolexpr(LitboolexprContext ctx) {
+	public LanguageElement visitLiteralBoolExpr(LiteralBoolExprContext ctx) {
 		if (ctx.getText().equals("true")) {
 			return new BoolLiteral(true);
 		} else {
@@ -172,6 +173,14 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		}
 	}
 	
+	public LanguageElement visitParboolExpr(DefProgParser.ParboolExprContext ctx) { 
+		return visit(ctx.getChild(1));
+	}
+
+	public LanguageElement visitParNumExpr(DefProgParser.ParNumExprContext ctx) { 
+		return visit(ctx.getChild(1));
+	}
+
 	@Override
 	public LanguageElement visitProgram(ProgramContext ctx) {
 		return createList(ctx.statement(), 0);

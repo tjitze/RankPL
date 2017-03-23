@@ -90,61 +90,61 @@ public class DefProgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implement
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBoolexpr(DefProgParser.BoolexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitCompareExpr(DefProgParser.CompareExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCompareexpr(DefProgParser.CompareexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBooleanexpr(DefProgParser.BooleanexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParboolExpr(DefProgParser.ParboolExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNegateexpr(DefProgParser.NegateexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBooleanExpr(DefProgParser.BooleanExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLitboolexpr(DefProgParser.LitboolexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNegateExpr(DefProgParser.NegateExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNumexpr(DefProgParser.NumexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLiteralNumExpr(DefProgParser.LiteralNumExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitArithnumexpr(DefProgParser.ArithnumexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVariableNumExpr(DefProgParser.VariableNumExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLitnumexpr(DefProgParser.LitnumexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVarnumexpr(DefProgParser.VarnumexprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParNumExpr(DefProgParser.ParNumExprContext ctx) { return visitChildren(ctx); }
 }

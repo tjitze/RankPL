@@ -51,32 +51,29 @@ skip_stat
  ;
  
 boolexpr
- : compareexpr
- | booleanexpr
- | negateexpr
- | litboolexpr
- ;
-
-compareexpr : '(' numexpr cop=('<' | '<=' | '>' | '>=' | '==' | '!=') numexpr ')';
-
-booleanexpr : '(' boolexpr bop=('&' | '|' | '^' ) boolexpr ')';
-
-negateexpr : '!' boolexpr;
-
-litboolexpr : 'true' | 'false';
- 
+ : '(' boolexpr ')' # ParboolExpr
+ | '!' boolexpr # NegateExpr
+ | numexpr cop=('<' | '<=' | '>' | '>=' | '==' | '!=') numexpr # CompareExpr
+ | boolexpr bop='&' boolexpr # BooleanExpr
+ | boolexpr bop='|' boolexpr # BooleanExpr
+ | boolexpr bop='^' boolexpr # BooleanExpr
+ | 'true' # LiteralBoolExpr
+ | 'false' # LiteralBoolExpr
+ ; 
  
 numexpr
- : arithnumexpr
- | litnumexpr
- | varnumexpr
+ : '(' numexpr ')' # ParNumExpr
+ | numexpr aop='*' numexpr # ArithmeticNumExpr
+ | numexpr aop='/' numexpr # ArithmeticNumExpr
+ | numexpr aop='%' numexpr # ArithmeticNumExpr
+ | numexpr aop='+' numexpr # ArithmeticNumExpr
+ | numexpr aop='-' numexpr # ArithmeticNumExpr
+ | numexpr aop='&' numexpr # ArithmeticNumExpr
+ | numexpr aop='|' numexpr # ArithmeticNumExpr
+ | numexpr aop='^' numexpr # ArithmeticNumExpr
+ | INT # LiteralNumExpr
+ | VAR # VariableNumExpr
  ;
- 
-arithnumexpr:  '(' numexpr aop=('+' | '-' | '/' | '%' | '*' | '&' | '|' | '^' ) numexpr ')';
-
-litnumexpr : INT;
-
-varnumexpr : VAR;
  
 VAR
  : [a-z] ( [a-z] | [0-9] )*

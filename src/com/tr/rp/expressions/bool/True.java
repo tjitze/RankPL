@@ -6,7 +6,4 @@ public class True extends BoolLiteral {
 		super(true);
 	}
 
-	public boolean equals(Object o) {
-		return o instanceof True;
-	}
 }

@@ -74,57 +74,66 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSkip_stat(DefProgParser.Skip_statContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#boolexpr}.
+	 * Visit a parse tree produced by the {@code CompareExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBoolexpr(DefProgParser.BoolexprContext ctx);
+	T visitCompareExpr(DefProgParser.CompareExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#compareexpr}.
+	 * Visit a parse tree produced by the {@code LiteralBoolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCompareexpr(DefProgParser.CompareexprContext ctx);
+	T visitLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#booleanexpr}.
+	 * Visit a parse tree produced by the {@code ParboolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBooleanexpr(DefProgParser.BooleanexprContext ctx);
+	T visitParboolExpr(DefProgParser.ParboolExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#negateexpr}.
+	 * Visit a parse tree produced by the {@code BooleanExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNegateexpr(DefProgParser.NegateexprContext ctx);
+	T visitBooleanExpr(DefProgParser.BooleanExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#litboolexpr}.
+	 * Visit a parse tree produced by the {@code NegateExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLitboolexpr(DefProgParser.LitboolexprContext ctx);
+	T visitNegateExpr(DefProgParser.NegateExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#numexpr}.
+	 * Visit a parse tree produced by the {@code LiteralNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNumexpr(DefProgParser.NumexprContext ctx);
+	T visitLiteralNumExpr(DefProgParser.LiteralNumExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#arithnumexpr}.
+	 * Visit a parse tree produced by the {@code VariableNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArithnumexpr(DefProgParser.ArithnumexprContext ctx);
+	T visitVariableNumExpr(DefProgParser.VariableNumExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#litnumexpr}.
+	 * Visit a parse tree produced by the {@code ArithmeticNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLitnumexpr(DefProgParser.LitnumexprContext ctx);
+	T visitArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#varnumexpr}.
+	 * Visit a parse tree produced by the {@code ParNumExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVarnumexpr(DefProgParser.VarnumexprContext ctx);
+	T visitParNumExpr(DefProgParser.ParNumExprContext ctx);
 }

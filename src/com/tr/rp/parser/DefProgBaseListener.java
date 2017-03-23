@@ -139,109 +139,109 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBoolexpr(DefProgParser.BoolexprContext ctx) { }
+	@Override public void enterCompareExpr(DefProgParser.CompareExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBoolexpr(DefProgParser.BoolexprContext ctx) { }
+	@Override public void exitCompareExpr(DefProgParser.CompareExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCompareexpr(DefProgParser.CompareexprContext ctx) { }
+	@Override public void enterLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCompareexpr(DefProgParser.CompareexprContext ctx) { }
+	@Override public void exitLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBooleanexpr(DefProgParser.BooleanexprContext ctx) { }
+	@Override public void enterParboolExpr(DefProgParser.ParboolExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBooleanexpr(DefProgParser.BooleanexprContext ctx) { }
+	@Override public void exitParboolExpr(DefProgParser.ParboolExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNegateexpr(DefProgParser.NegateexprContext ctx) { }
+	@Override public void enterBooleanExpr(DefProgParser.BooleanExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNegateexpr(DefProgParser.NegateexprContext ctx) { }
+	@Override public void exitBooleanExpr(DefProgParser.BooleanExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLitboolexpr(DefProgParser.LitboolexprContext ctx) { }
+	@Override public void enterNegateExpr(DefProgParser.NegateExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLitboolexpr(DefProgParser.LitboolexprContext ctx) { }
+	@Override public void exitNegateExpr(DefProgParser.NegateExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNumexpr(DefProgParser.NumexprContext ctx) { }
+	@Override public void enterLiteralNumExpr(DefProgParser.LiteralNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNumexpr(DefProgParser.NumexprContext ctx) { }
+	@Override public void exitLiteralNumExpr(DefProgParser.LiteralNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArithnumexpr(DefProgParser.ArithnumexprContext ctx) { }
+	@Override public void enterVariableNumExpr(DefProgParser.VariableNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArithnumexpr(DefProgParser.ArithnumexprContext ctx) { }
+	@Override public void exitVariableNumExpr(DefProgParser.VariableNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLitnumexpr(DefProgParser.LitnumexprContext ctx) { }
+	@Override public void enterArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLitnumexpr(DefProgParser.LitnumexprContext ctx) { }
+	@Override public void exitArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarnumexpr(DefProgParser.VarnumexprContext ctx) { }
+	@Override public void enterParNumExpr(DefProgParser.ParNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarnumexpr(DefProgParser.VarnumexprContext ctx) { }
+	@Override public void exitParNumExpr(DefProgParser.ParNumExprContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -1,0 +1,16 @@
+#
+# RankPL encoding of a ranked network (see included figure rankingnetwork.tiff)
+#
+# Example of how to run:
+#
+#   java -jar RankPL.jar rankingnetwork.rpl 5
+#
+# Output is the ranking function represented by the ranking network.
+# Add an observe statement at the end to reason with the network.
+#
+
+r := 1 << 1 >> 0;
+IF (r == 0) THEN s := 1 << 1 >> 0 ELSE s := 0 << 3 >> 1;
+IF ((r == 0) & (s == 0)) THEN w := 0 
+ELSE IF ((r == 1) & (s == 1)) THEN w := 1 << 5 >> 0
+ELSE w := 1 << 2 >> 0;

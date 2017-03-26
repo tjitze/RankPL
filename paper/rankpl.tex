@@ -198,13 +198,13 @@ In section~\ref{sec:implementation} we discuss our RankPL implementation
 
 \section{Ranking Theory}\label{sec:rankingtheory}
 
-In this section we present the necessary basics of ranking theory, all of which is due to Spohn~\cite{DBLP:books/daglib/0035277}.
+Here we present the necessary basics of ranking theory, all of which is due to Spohn~\cite{DBLP:books/daglib/0035277}.
 The definition of a \emph{ranking function} presupposes a finite set $\Omega$ of possibilities
-	and a boolean algebra $\mathcal{A}$ over the subsets of $\Omega$, called \emph{propositions}.
+	and a boolean algebra $\mathcal{A}$ over subsets of $\Omega$, which we call \emph{events}.
 
 \begin{definition}
-A ranking function is a function $\kappa: \Omega \rightarrow \mathbb{N} \cup \{\infty\}$ that associates events with \emph{ranks}.
-$\kappa$ is extended to a function over propositions by defining $\kappa(\emptyset) = \infty$ and $\kappa(A) = min( \{ \kappa(w) \mid w \in A \} )$ for each $A \in \mathcal{A} \setminus \emptyset$.
+A ranking function is a function $\kappa: \Omega \rightarrow \mathbb{N} \cup \{\infty\}$ that associates every possibiltiy with a \emph{rank}.
+$\kappa$ is extended to a function over events by defining $\kappa(\emptyset) = \infty$ and $\kappa(A) = min( \{ \kappa(w) \mid w \in A \} )$ for each $A \in \mathcal{A} \setminus \emptyset$.
 A ranking function must satisfy $\kappa(\Omega) = 0$.
 \end{definition}
 
@@ -246,7 +246,7 @@ This correspondence also underlies notions such as (conditional) independence an
 
 \section{RankPL}\label{sec:rpl}
 
-Let start with a brief overview of the features of RankPL.
+We start with a brief overview of the features of RankPL.
 The basis is a minimal imperative language 
 	consisting of integer-typed variables, an \textbf{if}-\textbf{then}-\textbf{else} statement and a \textbf{while-do} construct.
 We extend it with the two special statements mentioned in the introduction.
@@ -272,7 +272,7 @@ To illustrate these statements, consider the program
 This program has three possible outcomes: $\texttt{x} = 10$, $\texttt{x} = 20$ and $\texttt{x} = 30$, ranked 0, 1 and 2, respectively.
 Now suppose we extend the program as follows: 
 	$$\texttt{x} := 10;\mbox{ } \{ \texttt{y} := 1 \} \Rank{1} \{ \{\texttt{y} := 2\} \Rank{1} \{\texttt{y} := 3\} \};\mbox{ } \textbf{observe } \texttt{y} > 1;\mbox{ } \texttt{x} := \texttt{x} \times \texttt{y};$$
-Here, the observation rules out the possibility $\texttt{y} = 1$,
+Here, the observation rules out the event $\texttt{y} = 1$,
 	and the ranks of the remaining possibilities are shifted down, 
 	resulting in two outcomes $\texttt{x} = 20$ and $\texttt{x} = 30$, ranked 0 and 1, respectively.
 
@@ -436,7 +436,7 @@ That is, the possible outcomes of a RankPL program can be iterated over in ascen
 Consider the \emph{two-bit full adder} circuit shown in figure~\ref{fig:adder}.
 It contains two \emph{XOR} gates $X_1, X_2$, two \emph{AND} gates $A_1, A_2$ and an \emph{OR} gate $O_1$.
 The 2-bit output $\texttt{b}_1\texttt{b}_2$ is a binary representation of the number of inputs $\texttt{a}_1\texttt{a}_2\texttt{a}_3$ that are high.
-The \emph{circuit diagnosis problem} is about explaining observed incorrect behavior by finding minimal sets of gates that, if faulty, cause this behavior.\footnote{See Halpern~\cite{DBLP:books/daglib/0014219} for a similar treatment of this example.}
+The \emph{circuit diagnosis problem} is about explaining observed incorrect behavior by finding minimal sets of gates that, if faulty, cause this behavior.\footnote{See Halpern~\cite[Chapter~9]{DBLP:books/daglib/0014219} for a similar treatment of this example.}
 
 \begin{figure}
 \centering

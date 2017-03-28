@@ -17,7 +17,7 @@ public abstract class BoolExpression extends Expression<BoolExpression> {
 		FALSE, TRUE, DONTKNOW;
 	}
 	
-	public abstract boolean hasDefiniteValue();
+	public abstract boolean isContradiction();
 	
-	public abstract boolean getDefiniteValue();
+	public abstract boolean isTautology();
 }

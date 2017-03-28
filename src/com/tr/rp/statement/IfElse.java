@@ -37,10 +37,11 @@ public class IfElse implements DStatement {
 		
 		// If exp is contradiction/tautology we
 		// can immediately pass the a/b iterator.
-		if (exp.hasDefiniteValue()) {
-			return exp.getDefiniteValue()? 
-					a.getIterator(parent):
-					b.getIterator(parent);
+		if (exp.isTautology()) {
+			return a.getIterator(parent);
+		}
+		if (exp.isContradiction()) {
+			return b.getIterator(parent);
 		}
 		
 		// Replace rank expressions in exp
@@ -49,11 +50,12 @@ public class IfElse implements DStatement {
 		BoolExpression exp2 = i.getExpression(0);
 		
 		// Check contradiction/tautology again.
-		if (exp2.hasDefiniteValue()) {
-			return exp2.getDefiniteValue()? 
-					a.getIterator(i):
-					b.getIterator(i);
+		if (exp2.isTautology()) {
+			return a.getIterator(i);
 		}
+		if (exp2.isContradiction()) {
+			return b.getIterator(i);
+		}	
 		
 		// Split input
 		IteratorSplitter split = new IteratorSplitter(i);

@@ -40,13 +40,13 @@ public class Not extends BoolExpression {
 
 
 	@Override
-	public boolean hasDefiniteValue() {
-		return e.hasDefiniteValue();
+	public boolean isContradiction() {
+		return e.isTautology();
 	}
 
 	@Override
-	public boolean getDefiniteValue() {
-		return !e.getDefiniteValue();
+	public boolean isTautology() {
+		return e.isContradiction();
 	}
 
 	public boolean equals(Object o) {

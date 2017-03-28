@@ -32,12 +32,12 @@ public class BoolLiteral extends BoolExpression {
 	}
 	
 	@Override
-	public boolean hasDefiniteValue() {
-		return true;
+	public boolean isContradiction() {
+		return !value;
 	}
 
 	@Override
-	public boolean getDefiniteValue() {
+	public boolean isTautology() {
 		return value;
 	}
 	

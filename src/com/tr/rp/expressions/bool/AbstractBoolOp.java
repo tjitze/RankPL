@@ -44,14 +44,6 @@ public abstract class AbstractBoolOp extends BoolExpression {
 		return "(" + b1 + getOperator() + b2 + ")";
 	}
 	
-	public boolean getDefiniteValue() {
-		return apply(b1.getDefiniteValue(), b2.getDefiniteValue());
-	}
-
-	public boolean hasDefiniteValue() {
-		return b1.hasDefiniteValue() && b2.hasDefiniteValue();
-	}
-	
 	public final boolean equals(Object o) {
 		return o instanceof AbstractBoolOp &&
 				((AbstractBoolOp)o).b1.equals(b1) &&

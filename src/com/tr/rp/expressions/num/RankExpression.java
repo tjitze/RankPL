@@ -30,12 +30,11 @@ public class RankExpression extends NumExpression {
 	public NumExpression transformRankExpressions(VarStore v, int rank) {
 		// b might be contradiction or tautology.
 		// If so, we can rewrite it immediately
-		if (b.hasDefiniteValue()) {
-			if (b.getDefiniteValue()) {
-				return new IntLiteral(0);
-			} else {
-				return new IntLiteral(Integer.MAX_VALUE);
-			}
+		if (b.isTautology()) {
+			return new IntLiteral(0);
+		}
+		if (b.isContradiction()) {
+			return new IntLiteral(Integer.MAX_VALUE);
 		}
 		// Otherwise, rewrite to rank if expression is true
 		if (v == null || b.isTrue(v)) {

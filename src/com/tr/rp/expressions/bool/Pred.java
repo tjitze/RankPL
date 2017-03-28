@@ -23,12 +23,12 @@ public class Pred extends BoolExpression {
 	}
 
 	@Override
-	public boolean hasDefiniteValue() {
+	public boolean isContradiction() {
 		return false;
 	}
 
 	@Override
-	public boolean getDefiniteValue() {
+	public boolean isTautology() {
 		return false;
 	}
 

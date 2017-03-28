@@ -45,12 +45,16 @@ public abstract class AbstractNumBoolOp extends BoolExpression {
 		return e1 + getOperator() + e2;
 	}
 
-	public final boolean getDefiniteValue() {
-		return apply(e1.getDefiniteValue(), e2.getDefiniteValue());
+	@Override
+	public boolean isContradiction() {
+		return e1.hasDefiniteValue() && e2.hasDefiniteValue()
+				&& !apply(e1.getDefiniteValue(), e2.getDefiniteValue());
 	}
 
-	public final boolean hasDefiniteValue() {
-		return e1.hasDefiniteValue() && e2.hasDefiniteValue();
+	@Override
+	public boolean isTautology() {
+		return e1.hasDefiniteValue() && e2.hasDefiniteValue()
+				&& apply(e1.getDefiniteValue(), e2.getDefiniteValue());
 	}
 
 	public final boolean equals(Object o) {

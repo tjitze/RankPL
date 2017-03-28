@@ -24,8 +24,11 @@ public class Observe implements DStatement {
 		
 		// If exp is contradiction/tautology we
 		// can immediately return result.
-		if (exp.hasDefiniteValue()) {
-			return exp.getDefiniteValue()? in: new AbsurdIterator();
+		if (exp.isTautology()) {
+			return in;
+		}
+		if (exp.isContradiction()) {
+			return new AbsurdIterator();
 		}
 
 		// Replace rank expressions in exp
@@ -34,10 +37,12 @@ public class Observe implements DStatement {
 		BoolExpression exp2 = rt.getExpression(0);
 		
 		// Check contradiction/tautology again.
-		if (exp2.hasDefiniteValue()) {
-			return exp2.getDefiniteValue()? rt: new AbsurdIterator();
+		if (exp2.isTautology()) {
+			return rt;
 		}
-		
+		if (exp2.isContradiction()) {
+			return new AbsurdIterator();
+		}		
 		// Find first varstore satisfying condition
 		// (if there is no varstore then hasnext will be false)
 		final BufferingIterator bi = new BufferingIterator(rt);

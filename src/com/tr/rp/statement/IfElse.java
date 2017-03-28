@@ -12,7 +12,6 @@ import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.bool.BoolExpression.Result;
 import com.tr.rp.expressions.bool.Not;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.tools.ResultPrinter;

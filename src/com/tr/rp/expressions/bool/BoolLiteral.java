@@ -1,7 +1,6 @@
 package com.tr.rp.expressions.bool;
 
 import com.tr.rp.core.VarStore;
-import com.tr.rp.expressions.bool.BoolExpression.Result;
 import com.tr.rp.expressions.num.NumExpression;
 
 public class BoolLiteral extends BoolExpression {

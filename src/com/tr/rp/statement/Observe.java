@@ -8,7 +8,6 @@ import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.bool.BoolExpression.Result;
 import com.tr.rp.tools.ResultPrinter;
 
 public class Observe implements DStatement {

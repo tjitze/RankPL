@@ -16,7 +16,7 @@ Ranking-theoretic conditioning is done using the *observe* statement. Example:
 
 Just like a probabilistic program represents a probability distribution over possible outcomes, a RankPL program represents a ranking function over possible outcomes. Thus, a program has outcomes ranked 0 (normal), ranked 1 (surprising), and so on. For example, the program consisting of just the statment (1) above has two outcomes: x = 10 (ranked 0) and x = 20 (ranked 1), whereas the program consisting of (1) followed by (2) has one outcome: x = 20 (ranked 0). 
 
-RankPL supported various reasoning tasks, including causal inference, abduction and (iterated) belief revision. 
+RankPL supports various reasoning tasks, including causal inference, abduction and (iterated) belief revision. 
 Let’s look at an example. Consider the *two-bit full adder* circuit shown in the figure below. It contains two *XOR* gates *X<sub>1</sub>, X<sub>2</sub>*, two *AND* gates *A<sub>1</sub>, A<sub>2</sub>* and an *OR* gate *O<sub>1</sub>*.
 The 2-bit output b<sub>1</sub>b<sub>2</sub> is a binary representation of the number of inputs a<sub>1</sub>a<sub>2</sub>a<sub>3</sub> that are high. The *circuit diagnosis problem* is about explaining observed incorrect behavior by finding minimal sets of gates that, if faulty, cause this behavior.
 

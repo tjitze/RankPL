@@ -24,7 +24,7 @@ The 2-bit output b<sub>1</sub>b<sub>2</sub> is a binary representation of the nu
 <img src=https://github.com/tjitze/RankPL/blob/master/examples/boolcircuit.jpg width=500px />
 </p>
 
-The listing below shows a RankPL solution. Lines 1-3 encode the space of possible inputs (0 or 1, equally likely). The failure variables fx<sub>1</sub>fx<sub>2</sub>fa<sub>1</sub>fa<sub>2</sub>fo<sub>1</sub> represent the events of individual gates failing and are set on lines 4-8 (0 = OK, 1 = failing). Here, we assume that failure is surprising to degree 1. The circuit's logic is encoded on lines 9-13, where the output of a failing gate is arbitrarily set to 0 or 1. At the end we observe that a<sub>1</sub>a<sub>2</sub>a<sub>3</sub>$ is valued 001 while the output $b<sub>1</sub>b<sub>2</sub>$ is incorrectly valued 10 instead of 01.
+The listing below shows a RankPL solution. Lines 1-3 encode the space of possible inputs (0 or 1, equally likely). The failure variables fx<sub>1</sub>fx<sub>2</sub>fa<sub>1</sub>fa<sub>2</sub>fo<sub>1</sub> represent the events of individual gates failing and are set on lines 4-8 (0 = OK, 1 = failing). Here, we assume that failure is surprising to degree 1. The circuit's logic is encoded on lines 9-13, where the output of a failing gate is arbitrarily set to 0 or 1. At the end we observe that a<sub>1</sub>a<sub>2</sub>a<sub>3</sub> is valued 001 while the output b<sub>1</sub>b<sub>2</sub> is incorrectly valued 10 instead of 01.
 
 ```
 1  { a1 := 0 } << 0 >> { a1 := 1 };
@@ -56,10 +56,9 @@ Rank 1: [fa1=1, fa2=0, fo1=0, fx1=0, fx2=1]
 Rank 1: [fa1=1, fa2=0, fo1=0, fx1=1, fx2=0]
 Rank 1: [fa1=0, fa2=1, fo1=0, fx1=0, fx2=1]
 Rank 1: [fa1=0, fa2=1, fo1=0, fx1=1, fx2=0]
-...
 ```
 
-That is, the observation is most plausibly explained by failure of X<sub>1</sub> (the single outcome ranked 0). Other explanations are ranked higher than 0 and involve more than one faulty gate, such as the second one, which states that X<sub>1</sub> and X<sub>2</sub> both fail.
+That is, the observation is most plausibly explained by failure of X<sub>1</sub> (the single outcome ranked 0). Other explanations are ranked higher than 0 and involve more than one faulty gate, such as the second one, which states that X<sub>1</sub> and X<sub>2</sub> both fail. Note that we did not have to assign any probability to the event of an individual gate failing. We only had to state that it is surprising.
 
 As opposed to probabilistic programming languages, which usually require the computation (whether exact or approximate) of the the complete probability distribution, RankPL uses a *most-plausible-first* strategy. That is, the possible outcomes of a RankPL program can be iterated over in ascending order with respect to rank, 	and higher-ranked alternatives do not need to be explored if knowing only the lowest-ranked outcomes is sufficient, which is often the case. RankPL programs can be written as above, but can also be expressed using the Java classes that map to its syntax. This makes it possible to embed RankPL code inside Java code and to make it interact with and use classes and methods written Java. 
 

@@ -21,7 +21,7 @@ Let’s look at an example. Consider the *two-bit full adder* circuit shown in t
 The 2-bit output b<sub>1</sub>b<sub>2</sub> is a binary representation of the number of inputs a<sub>1</sub>a<sub>2</sub>a<sub>3</sub> that are high. The *circuit diagnosis problem* is about explaining observed incorrect behavior by finding minimal sets of gates that, if faulty, cause this behavior.
 
 <p align=center>
-<img src=https://github.com/tjitze/RankPL/blob/master/examples/boolcircuit.tiff width=500px />
+<img src=https://github.com/tjitze/RankPL/blob/master/examples/boolcircuit.jpg width=500px />
 </p>
 
 The listing below shows a RankPL solution. Line 1 encodes the space of possible inputs (0 or 1, equally likely).

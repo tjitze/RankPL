@@ -24,7 +24,7 @@ The 2-bit output b<sub>1</sub>b<sub>2</sub> is a binary representation of the nu
 <img src=https://github.com/tjitze/RankPL/blob/master/examples/boolcircuit.jpg width=500px />
 </p>
 
-The listing below shows a RankPL solution. Lines 1-3 encode the space of possible inputs (0 or 1, equally likely). The failure variables fx<sub>1</sub>fx<sub>2</sub>fa<sub>1</sub>fa<sub>2</sub>fo<sub>1</sub> represent the events of individual gates failing and are set on lines 4-8 (0 = OK, 1 = failing). Here, we assume that failure is surprising to degree 1. The circuit's logic is encoded on lines 9-13, where the output of a failing gate is arbitrarily set to 0 or 1. At the end we observe that a<sub>1</sub>a<sub>2</sub>a<sub>3</sub> is valued 001 while the output b<sub>1</sub>b<sub>2</sub> is incorrectly valued 10 instead of 01.
+The listing below shows a RankPL solution. Lines 1-3 encode the space of possible inputs (0 or 1, equally likely). The failure variables fx<sub>1</sub>fx<sub>2</sub>fa<sub>1</sub>fa<sub>2</sub>fo<sub>1</sub> represent the events of individual gates failing and are set on lines 4-8 (0 = OK, 1 = failing). Here, we assume that failure is surprising to degree 1. The circuit's logic is encoded on lines 9-13, where the output of a failing gate is arbitrarily set to 0 or 1 (both equally likely). At the end we observe that a<sub>1</sub>a<sub>2</sub>a<sub>3</sub> is valued 001 while the output b<sub>1</sub>b<sub>2</sub> is incorrectly valued 10 instead of 01.
 
 ```
 1  { a1 := 0 } << 0 >> { a1 := 1 };
@@ -35,11 +35,11 @@ The listing below shows a RankPL solution. Lines 1-3 encode the space of possibl
 6  { fa1 := 0 } << 1 >> { fa1 := 1 };
 7  { fa2 := 0 } << 1 >> { fa2 := 1 };
 8  { fo1 := 0 } << 1 >> { fo1 := 1 };
-9  IF (fx1 == 0) THEN l1 := (a1 ^ a2) ELSE l1 := 0 << 0 >> 1;
-10 IF (fa1 == 0) THEN l2 := (a1 & a2) ELSE l2 := 0 << 0 >> 1;
-11 IF (fa2 == 0) THEN l3 := (l1 & a3) ELSE l3 := 0 << 0 >> 1;
-12 IF (fx2 == 0) THEN b2 := (l1 ^ a3) ELSE b2 := 0 << 0 >> 1;
-13 IF (fo2 == 0) THEN b1 := (l3 | l2) ELSE b1 := 0 << 0 >> 1;
+9  IF (fx1 == 0) THEN l1 := (a1 ^ a2) ELSE { l1 := 0 } << 0 >> { l1 := 1 };
+10 IF (fa1 == 0) THEN l2 := (a1 & a2) ELSE { l2 := 0 } << 0 >> { l2 := 1 };
+11 IF (fa2 == 0) THEN l3 := (l1 & a3) ELSE { l3 := 0 } << 0 >> { l3 := 1 };
+12 IF (fx2 == 0) THEN b2 := (l1 ^ a3) ELSE { b2 := 0 } << 0 >> { b2 := 1 };
+13 IF (fo2 == 0) THEN b1 := (l3 | l2) ELSE { b1 := 0 } << 0 >> { b1 := 1 };
 14 OBSERVE ((a1 == 0) & (a2 == 0) & (a3 == 1) & (b1 == 1) & (b2 == 0));
 ```
 The different valuations of the failure variables produced by this program represent explanations for the observation, ranked according to plausibility. We can run this program (called boolcircuit.rpl) as follows:

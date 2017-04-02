@@ -3,6 +3,7 @@ package com.tr.rp.statement;
 import java.util.Arrays;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -44,6 +45,17 @@ public class Composition implements DStatement {
 		return o instanceof Composition &&
 				((Composition)o).a.equals(a) &&
 				((Composition)o).b.equals(b);
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return a.containsVariable(var) || b.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new Composition(maxRank, (DStatement)this.a.replaceVariable(a, b),
+				(DStatement)this.b.replaceVariable(a, b));
 	}
 
 }

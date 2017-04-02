@@ -43,4 +43,14 @@ public class ObserveJ implements DStatement {
 		return o instanceof ObserveJ &&
 				((ObserveJ)o).b.equals(b);
 	}
+	
+	@Override
+	public boolean containsVariable(String var) {
+		return b.containsVariable(var) || rank.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new ObserveJ((BoolExpression)this.b.replaceVariable(a, b), (NumExpression)rank.replaceVariable(a, b));
+	}
 }

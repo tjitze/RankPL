@@ -1,6 +1,8 @@
 package com.tr.rp.expressions.bool;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.NumExpression;
 
 /**
  * Abstract class for boolean-valued expressions that 
@@ -49,5 +51,16 @@ public abstract class AbstractBoolOp extends BoolExpression {
 				((AbstractBoolOp)o).b1.equals(b1) &&
 				((AbstractBoolOp)o).b2.equals(b2) &&
 				this.getClass().equals(o.getClass());
+	}
+	
+
+	@Override
+	public boolean containsVariable(String var) {
+		return b1.containsVariable(var) || b2.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return createInstance((BoolExpression)b1.replaceVariable(a, b), (BoolExpression)b2.replaceVariable(a, b));
 	}
 }

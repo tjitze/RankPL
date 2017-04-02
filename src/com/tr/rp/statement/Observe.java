@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
@@ -93,5 +94,15 @@ public class Observe implements DStatement {
 	
 	public boolean equals(Object o) {
 		return o instanceof Observe && ((Observe)o).exp.equals(exp);
+	}
+	
+	@Override
+	public boolean containsVariable(String var) {
+		return exp.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new Observe((BoolExpression)exp.replaceVariable(a, b));
 	}
 }

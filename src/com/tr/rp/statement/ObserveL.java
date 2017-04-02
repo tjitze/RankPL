@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -71,4 +72,13 @@ public class ObserveL implements DStatement {
 				((ObserveL)o).rank == rank;
 	}	
 
+	@Override
+	public boolean containsVariable(String var) {
+		return b.containsVariable(var) || rank.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new ObserveL((BoolExpression)this.b.replaceVariable(a, b), (NumExpression)rank.replaceVariable(a, b));
+	}
 }

@@ -1,6 +1,7 @@
 package com.tr.rp.expressions.bool;
 
 import com.tr.rp.core.Expression;
+import com.tr.rp.core.LanguageElement;
 
 public class And extends AbstractBoolOp {
 

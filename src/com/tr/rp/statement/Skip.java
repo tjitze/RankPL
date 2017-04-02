@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
 
@@ -17,5 +18,15 @@ public class Skip implements DStatement {
 	
 	public boolean equals(Object o) {
 		return o instanceof Skip;
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return false;
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return this;
 	}
 }

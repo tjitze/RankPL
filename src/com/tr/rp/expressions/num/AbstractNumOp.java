@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.num;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.bool.AbstractNumBoolOp;
 
@@ -70,5 +71,15 @@ public abstract class AbstractNumOp extends NumExpression {
 				((AbstractNumOp)o).e1.equals(e1) &&
 				((AbstractNumOp)o).e2.equals(e2) &&
 				this.getClass().equals(o.getClass());
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return e1.containsVariable(var) || e2.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return createInstance((NumExpression)e1.replaceVariable(a, b), (NumExpression)e2.replaceVariable(a, b));
 	}
 }

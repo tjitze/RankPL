@@ -2,6 +2,7 @@ package com.tr.rp.expressions.num;
 
 import java.util.function.Function;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
 public class Fun extends NumExpression {
@@ -39,5 +40,15 @@ public class Fun extends NumExpression {
 
 	public boolean equals(Object o) {
 		return o instanceof Fun && ((Fun)o).fun == fun;
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		throw new UnsupportedOperationException("Cannot check for variable occurrence in Fun objects");
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		throw new UnsupportedOperationException("Cannot replace variables in Fun objects");
 	}
 }

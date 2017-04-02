@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.num;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
 public class Var extends NumExpression {
@@ -42,5 +43,19 @@ public class Var extends NumExpression {
 
 	public boolean equals(Object o) {
 		return o instanceof Var && ((Var)o).variable.equals(variable);
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return var.equals(variable);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		if (a.equals(variable)) {
+			return new Var(b);
+		} else {
+			return this;
+		}
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.ChooseMergingIterator;
@@ -200,6 +201,20 @@ public class Choose implements DStatement {
 				((Choose)o).s1.equals(s1) &&
 				((Choose)o).s2.equals(s2) &&
 				((Choose)o).rank.equals(rank);
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return s1.containsVariable(var) ||
+			s2.containsVariable(var) ||
+			rank.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new Choose((DStatement)s1.replaceVariable(a, b),
+				(DStatement)s2.replaceVariable(a, b),
+				(NumExpression)rank.replaceVariable(a, b));
 	}
 
 }

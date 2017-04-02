@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
@@ -71,5 +72,16 @@ public class While implements DStatement {
 		return o instanceof While &&
 				((While)o).exp.equals(exp) &&
 				((While)o).s.equals(s);
+	}
+	
+	@Override
+	public boolean containsVariable(String var) {
+		return s.containsVariable(var) || exp.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new IfElse((BoolExpression)exp.replaceVariable(a, b),
+				(DStatement)this.s.replaceVariable(a, b));
 	}
 }

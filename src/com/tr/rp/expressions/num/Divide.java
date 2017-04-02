@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.num;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
 public class Divide extends AbstractNumOp {

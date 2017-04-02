@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.num;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.bool.BoolExpression;
 
@@ -65,5 +66,15 @@ public class RankExpression extends NumExpression {
 	
 	public boolean equals(Object o) {
 		return o instanceof RankExpression && ((RankExpression)o).b.equals(b);
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return b.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new RankExpression((BoolExpression)this.b.replaceVariable(a, b));
 	}
 }

@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.bool;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
 public class Not extends BoolExpression {
@@ -51,5 +52,15 @@ public class Not extends BoolExpression {
 
 	public boolean equals(Object o) {
 		return o instanceof Not && ((Not)o).e.equals(e);
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return e.containsVariable(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return new Not((BoolExpression)e.replaceVariable(a, b));
 	}
 }

@@ -2,6 +2,7 @@ package com.tr.rp.expressions.num;
 
 import java.util.Arrays;
 
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
 public class IntLiteral extends NumExpression {
@@ -44,6 +45,16 @@ public class IntLiteral extends NumExpression {
 	
 	public boolean equals(Object o) {
 		return o instanceof IntLiteral && ((IntLiteral)o).value == value;
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return false;
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		return this;
 	}
 	
 }

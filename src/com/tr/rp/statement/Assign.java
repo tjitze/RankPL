@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -63,5 +64,19 @@ public class Assign implements DStatement {
 		return o instanceof Assign &&
 				((Assign)o).var.equals(var) &&
 				((Assign)o).exp.equals(exp);
+	}
+
+	@Override
+	public boolean containsVariable(String var) {
+		return this.var.equals(var);
+	}
+
+	@Override
+	public LanguageElement replaceVariable(String a, String b) {
+		if (var.equals(a)) {
+			return new Assign(b, exp);
+		} else {
+			return this;
+		}
 	}
 }

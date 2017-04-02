@@ -19,6 +19,7 @@ import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.NumOr;
 import com.tr.rp.expressions.num.NumXor;
 import com.tr.rp.expressions.num.Plus;
+import com.tr.rp.expressions.num.RankExpression;
 import com.tr.rp.expressions.num.Times;
 import com.tr.rp.expressions.num.Var;
 import com.tr.rp.parser.DefProgBaseVisitor;
@@ -36,6 +37,7 @@ import com.tr.rp.parser.DefProgParser.NegateExprContext;
 import com.tr.rp.parser.DefProgParser.NumexprContext;
 import com.tr.rp.parser.DefProgParser.Observe_statContext;
 import com.tr.rp.parser.DefProgParser.ProgramContext;
+import com.tr.rp.parser.DefProgParser.RankExprContext;
 import com.tr.rp.parser.DefProgParser.Ranked_choiceContext;
 import com.tr.rp.parser.DefProgParser.Skip_statContext;
 import com.tr.rp.parser.DefProgParser.StatementContext;
@@ -133,6 +135,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		return new Var(var);
 	}
 	
+	@Override
+	public LanguageElement visitRankExpr(RankExprContext ctx) {
+		return new RankExpression((BoolExpression)visit(ctx.boolexpr()));
+	}
+
+
 	@Override
 	public LanguageElement visitBooleanExpr(BooleanExprContext ctx) {
 		String aop = ctx.bop.getText();

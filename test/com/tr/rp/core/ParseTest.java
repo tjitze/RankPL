@@ -20,6 +20,7 @@ import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.Minus;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Plus;
+import com.tr.rp.expressions.num.RankExpression;
 import com.tr.rp.expressions.num.Times;
 import com.tr.rp.parser.DefProgLexer;
 import com.tr.rp.parser.DefProgParser;
@@ -110,6 +111,7 @@ public class ParseTest extends RPLBaseTest {
 		System.out.println(parseNumExpr("a + b * c"));
 		assert(parseNumExpr("a + b * c")).equals(new Plus("a", new Times("b", "c")));
 		assert(parseNumExpr("a / b + c")).equals(new Plus(new Divide("a", "b"), "c"));
+		assert(parseNumExpr("RANK(x == 0)")).equals(new RankExpression(new Equals("x", 0)));
 	}
 
 	private LanguageElement parseStatement(String code) {

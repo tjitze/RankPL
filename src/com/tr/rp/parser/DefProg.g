@@ -73,6 +73,7 @@ numexpr
  | numexpr aop='^' numexpr # ArithmeticNumExpr
  | INT # LiteralNumExpr
  | VAR # VariableNumExpr
+ | ('RANK' | 'rank') '(' boolexpr ')' # RankExpr
  ;
  
 VAR

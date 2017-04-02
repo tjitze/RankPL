@@ -32,6 +32,7 @@ import com.tr.rp.statement.Composition;
 import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.Observe;
 import com.tr.rp.statement.RPLBaseTest;
+import com.tr.rp.statement.While;
 
 public class ParseTest extends RPLBaseTest {
 
@@ -61,6 +62,13 @@ public class ParseTest extends RPLBaseTest {
 				new Equals("x",10),
 				new Assign("x",20),
 				new Assign("x",30))));
+	}
+
+	public void testParseWhile() {
+		String program = "while (x == 0) DO x := 0;";
+		assert(parseStatement(program).equals(new While(
+				new Equals("x",0),
+				new Assign("x",0))));
 	}
 
 	public void testParseAssignChoose() {

@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
@@ -19,23 +20,19 @@ import com.tr.rp.expressions.num.RankExpression;
 public class ObserveJ implements DStatement {
 
 	private BoolExpression b;
-	private DStatement statement;
+	private NumExpression rank;
 	
-	public ObserveJ(BoolExpression b, int x) {
-		this(b, new IntLiteral(x));
+	public ObserveJ(BoolExpression b, int rank) {
+		this(b, new IntLiteral(rank));
 	}
-	public ObserveJ(BoolExpression b, NumExpression x) {
-		//		observe b [rank] observe -b
+	public ObserveJ(BoolExpression b, NumExpression rank) {
 		this.b = b;
-		statement = new Choose(
-				new Observe(b),
-				new Observe(b.negate()),
-				x);
+		this.rank = rank;
 	}
 
 	@Override
 	public RankedIterator getIterator(RankedIterator in) {
-		return statement.getIterator(in);
+		return new Choose(new Observe(b), new Observe(b.negate()), rank).getIterator(in);
 	}
 
 	public String toString() {
@@ -44,7 +41,6 @@ public class ObserveJ implements DStatement {
 	
 	public boolean equals(Object o) {
 		return o instanceof ObserveJ &&
-				((ObserveJ)o).b.equals(b) &&
-				((ObserveJ)o).statement.equals(statement);
-	}	
+				((ObserveJ)o).b.equals(b);
+	}
 }

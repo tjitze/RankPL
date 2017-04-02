@@ -23,7 +23,6 @@ import com.tr.rp.expressions.num.RankExpression;
 public class ObserveL implements DStatement {
 
 	private BoolExpression b;
-	private DStatement statement;
 	private NumExpression rank;
 
 	public ObserveL(BoolExpression b, int rank) {
@@ -56,7 +55,7 @@ public class ObserveL implements DStatement {
 				new Observe(b.negate()),
 				new Observe(b),
 				r2);
-		statement = new ProgramBuilder()
+		DStatement statement = new ProgramBuilder()
 				.add(new IfElse(cond, c1, c2))
 				.build();
 		return statement.getIterator(rt);
@@ -69,7 +68,6 @@ public class ObserveL implements DStatement {
 	public boolean equals(Object o) {
 		return o instanceof ObserveL &&
 				((ObserveL)o).b.equals(b) &&
-				((ObserveL)o).statement.equals(statement) &&
 				((ObserveL)o).rank == rank;
 	}	
 

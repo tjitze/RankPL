@@ -56,7 +56,7 @@ public class ParseTest extends RPLBaseTest {
 	}
 
 	public void testParseIfElse() {
-		String program = "IF (x == 10) THEN x := 20 ELSE x := 30;";
+		String program = "if (x == 10) THEN x := 20 else x := 30;";
 		assert(parseStatement(program).equals(new IfElse(
 				new Equals("x",10),
 				new Assign("x",20),
@@ -90,9 +90,9 @@ public class ParseTest extends RPLBaseTest {
 		assert(parseBoolExpr("a < 0").equals(new LessThan("a", 0)));
 		assert(parseBoolExpr("true").equals(new True()));
 		assert(parseBoolExpr("false").equals(new False()));
-		assert(parseBoolExpr("! false").equals(parseBoolExpr("! false")));
+		assert(parseBoolExpr("! FALSE").equals(parseBoolExpr("! false")));
 		// Correct precedence!
-		assert(parseBoolExpr("true & false | true ^ false").equals(
+		assert(parseBoolExpr("TRUE & false | true ^ false").equals(
 				new Xor(new Or(new And(new True(), new False()), new True()), new False())));
 		System.out.println(parseBoolExpr("true ^ false | true & false"));
 		assert(parseBoolExpr("true ^ false | true & false").equals(

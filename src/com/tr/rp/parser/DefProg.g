@@ -35,19 +35,19 @@ assignment_stat
  ;
 
 if_stat
- : 'IF' boolexpr 'THEN' statement 'ELSE' statement
+ : ('IF'|'if') boolexpr ('THEN'|'then') statement ('ELSE'|'else') statement
  ;
 
 while_stat
- : 'WHILE' boolexpr 'DO' statement
+ : ('WHILE'|'while') boolexpr ('DO'|'do') statement
  ;
 
 observe_stat
- : 'OBSERVE' boolexpr
+ : ('OBSERVE'|'observe') boolexpr
  ;
 
 skip_stat
- : 'SKIP'
+ : ('SKIP'|'skip')
  ;
  
 boolexpr
@@ -57,8 +57,8 @@ boolexpr
  | boolexpr bop='&' boolexpr # BooleanExpr
  | boolexpr bop='|' boolexpr # BooleanExpr
  | boolexpr bop='^' boolexpr # BooleanExpr
- | 'true' # LiteralBoolExpr
- | 'false' # LiteralBoolExpr
+ | ('TRUE' | 'true') # LiteralBoolExpr
+ | ('FALSE' | 'false') # LiteralBoolExpr
  ; 
  
 numexpr

@@ -174,7 +174,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitLiteralBoolExpr(LiteralBoolExprContext ctx) {
-		if (ctx.getText().equals("true")) {
+		if (ctx.getText().toLowerCase().equals("true")) {
 			return new BoolLiteral(true);
 		} else {
 			return new BoolLiteral(false);

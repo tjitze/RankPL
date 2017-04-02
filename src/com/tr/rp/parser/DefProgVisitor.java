@@ -123,6 +123,13 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariableNumExpr(DefProgParser.VariableNumExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code RankExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRankExpr(DefProgParser.RankExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ArithmeticNumExpr}
 	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree

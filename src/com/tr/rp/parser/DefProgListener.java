@@ -195,6 +195,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitVariableNumExpr(DefProgParser.VariableNumExprContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code RankExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterRankExpr(DefProgParser.RankExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code RankExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitRankExpr(DefProgParser.RankExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ArithmeticNumExpr}
 	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree

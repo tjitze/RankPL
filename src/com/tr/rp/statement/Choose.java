@@ -35,6 +35,12 @@ public class Choose implements DStatement {
 		this.rank = rank;
 	}
 
+	public Choose(String var, NumExpression[] index, NumExpression v1, NumExpression v2, NumExpression rank) {
+		this.s1 = new Assign(var, index, v1);
+		this.s2 = new Assign(var, index, v2);
+		this.rank = rank;
+	}
+
 	public Choose(String var, NumExpression v1, NumExpression v2, int rank) {
 		this.s1 = new Assign(var, v1);
 		this.s2 = new Assign(var, v2);

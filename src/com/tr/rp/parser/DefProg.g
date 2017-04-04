@@ -27,11 +27,11 @@ ranked_choice
  ;
 
 choice_assignment_stat
- : VAR ':=' numexpr '<<' numexpr '>>' numexpr
+ : VAR index* ':=' numexpr '<<' numexpr '>>' numexpr
  ;
 
 assignment_stat
- : VAR ':=' numexpr
+ : VAR index* ':=' numexpr
  ;
 
 if_stat
@@ -72,10 +72,14 @@ numexpr
  | numexpr aop='|' numexpr # ArithmeticNumExpr
  | numexpr aop='^' numexpr # ArithmeticNumExpr
  | INT # LiteralNumExpr
- | VAR # VariableNumExpr
+ | VAR index* # VariableNumExpr
  | ('RANK' | 'rank') '(' boolexpr ')' # RankExpr
  ;
- 
+
+index
+ : '[' numexpr ']'
+ ;
+  
 VAR
  : [a-z] ( [a-z] | [0-9] )*
  ;

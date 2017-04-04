@@ -45,16 +45,6 @@ public class VarStore {
 		return v;
 	}
 	
-	public VarStore create(String varName, NumExpression[] indexedValues) {
-		if (indexedValues.length % 2 != 0) throw new IllegalArgumentException("Even number of index/value elements required");
-		VarStore v = new VarStore();
-		v.varStore.putAll(varStore);
-		for (int i = 0; i < indexedValues.length; i = i + 2) {
-			v.setElementOfArray(varName, indexedValues[i+1].getVal(this), indexedValues[i].getVal(this));
-		}
-		return v;
-	}
-	
 	/**
 	 * @return A marginalization of this variable store to a given set of variables.
 	 */
@@ -84,64 +74,5 @@ public class VarStore {
 				.map(var -> var.toString() + "=" + varStore.get(var))
 				.collect(Collectors.toList()).toString();
 	}
-	
-	/**
-	 * Get element of n-dimensional array, where n equals the number of
-	 * provided index arguments.
-	 */
-	public Optional<Integer> getElementOfArray(String varName, int ... index) {
-		for (int i: index) varName += "#" + i;
-		if (varStore.containsKey(varName)) {
-			return Optional.of(varStore.get(varName));
-		} else {
-			return Optional.empty();
-		}
-	}
-
-	/**
-	 * Set element of n-dimensional array, where n equals the number of 
-	 * provided index arguments.
-	 */
-	public void setElementOfArray(String varName, int value, int ... index) {
-		for (int i: index) varName += "#" + i;
-		varStore.put(varName, value);
-	}
-	
-	/**
-	 * Initialize array. The dimension array contains the number of
-	 * items that must be initialized for each dimension.
-	 */
-	public void initializeArray(String varName, int ... dimension) {
-		dimension = Arrays.copyOf(dimension, dimension.length);
-		for (int cx = 0; cx < dimension.length; cx++) {
-			while (dimension[cx] > 0) {
-				dimension[cx]--;
-				setElementOfArray(varName, 0, dimension);
-			}
-		}
-	}
-	
-	public int[] get1DArray(String varName, int length) {
-		int[] res = new int[length];
-		for (int i = 0; i < length; i++) {
-			res[i] = getElementOfArray(varName, i)
-					.orElseThrow(() -> new IndexOutOfBoundsException(
-							"Index " + length + " for variable " + varName));
-		}
-		return res;
-	}
-
-	public int[][] get2DArray(String varName, int length1, int length2) {
-		int[][] res = new int[length1][length2];
-		for (int i = 0; i < length1; i++) {
-			for (int j = 0; j < length2; j++) {
-				res[i][j] = getElementOfArray(varName, i, j)
-						.orElseThrow(() -> new IndexOutOfBoundsException(
-								"Index (" + length1 + ", " + length2 + ") for variable " + varName));
-			}
-		}
-		return res;
-	}
-
 
 }

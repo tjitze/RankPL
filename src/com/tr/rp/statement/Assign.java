@@ -12,19 +12,29 @@ import com.tr.rp.expressions.num.Var;
 public class Assign implements DStatement {
 
 	private NumExpression exp;
+	private NumExpression[] index;
 	private String var;
 	
-	public Assign(String var, NumExpression exp) {
+	public Assign(String var, NumExpression[] index, NumExpression exp) {
 		this.var = var;
 		this.exp = exp;
+		this.index = index;
 	}
-	
+
+	public Assign(String var, NumExpression[] index, int value) {
+		this(var, index, new IntLiteral(value));
+	}
+
 	public Assign(String var, int value) {
-		this(var, new IntLiteral(value));
+		this(var, new NumExpression[0], new IntLiteral(value));
 	}
 
 	public Assign(String var1, String var2) {
-		this(var1, new Var(var2));
+		this(var1, new NumExpression[0], new Var(var2));
+	}
+
+	public Assign(String var, NumExpression e) {
+		this(var, new NumExpression[0], e);
 	}
 
 	@Override
@@ -42,7 +52,8 @@ public class Assign implements DStatement {
 			@Override
 			public VarStore getVarStore() {
 				if (rt.getVarStore() == null) return null;
-				return rt.getVarStore().create(getVar(rt.getVarStore()), exp2.getVal(rt.getVarStore()));
+				String internalName = Var.getInternalName(var, index, rt.getVarStore());
+				return rt.getVarStore().create(internalName, exp2.getVal(rt.getVarStore()));
 			}
 
 			@Override
@@ -54,10 +65,6 @@ public class Assign implements DStatement {
 	
 	public String toString() {
 		return var + " := " + exp;
-	}
-	
-	protected String getVar(VarStore v) {
-		return var;
 	}
 	
 	public boolean equals(Object o) {
@@ -73,10 +80,10 @@ public class Assign implements DStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		if (var.equals(a)) {
-			return new Assign(b, exp);
-		} else {
-			return this;
+		NumExpression[] newIndex = new NumExpression[index.length];
+		for (int i = 0; i < index.length; i++) {
+			newIndex[i] = (NumExpression)index[i].replaceVariable(a, b);
 		}
+		return new Assign(var.equals(a)? b: var, newIndex, (NumExpression)exp.replaceVariable(a, b));
 	}
 }

@@ -31,6 +31,7 @@ import com.tr.rp.parser.DefProgParser.BoolexprContext;
 import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.CompareExprContext;
 import com.tr.rp.parser.DefProgParser.If_statContext;
+import com.tr.rp.parser.DefProgParser.IndexContext;
 import com.tr.rp.parser.DefProgParser.LiteralBoolExprContext;
 import com.tr.rp.parser.DefProgParser.LiteralNumExprContext;
 import com.tr.rp.parser.DefProgParser.NegateExprContext;
@@ -57,13 +58,26 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitAssignment_stat(Assignment_statContext ctx) {
 		String var = ctx.VAR().getText();
+		NumExpression[] index = new NumExpression[ctx.index().size()];
+		for (int i = 0; i < index.length; i++) {
+			index[i] = (NumExpression)visit(ctx.index(i));
+		}
 		NumExpression value = (NumExpression)visit(ctx.numexpr());
-		return new Assign(var, value);
+		return new Assign(var, index, value);
 	}
 
 	@Override
+	public LanguageElement visitIndex(IndexContext ctx) {
+		return this.visit(ctx.numexpr());
+	}
+	
+	@Override
 	public LanguageElement visitChoice_assignment_stat(Choice_assignment_statContext ctx) {
 		String var = ctx.VAR().getText();
+		NumExpression[] index = new NumExpression[ctx.index().size()];
+		for (int i = 0; i < index.length; i++) {
+			index[i] = (NumExpression)visit(ctx.index(i));
+		}
 		NumExpression value1 = (NumExpression)visit(ctx.numexpr(0));
 		NumExpression value2 = (NumExpression)visit(ctx.numexpr(2));
 		NumExpression rank = (NumExpression)visit(ctx.numexpr(1));
@@ -131,16 +145,19 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitVariableNumExpr(VariableNumExprContext ctx) {
-		String var = ctx.getText();
-		return new Var(var);
+		String var = ctx.VAR().getText();
+		NumExpression[] index = new NumExpression[ctx.index().size()];
+		for (int i = 0; i < index.length; i++) {
+			index[i] = (NumExpression)visit(ctx.index(i));
+		}
+		return new Var(var, index);
 	}
 	
 	@Override
 	public LanguageElement visitRankExpr(RankExprContext ctx) {
 		return new RankExpression((BoolExpression)visit(ctx.boolexpr()));
 	}
-
-
+	
 	@Override
 	public LanguageElement visitBooleanExpr(BooleanExprContext ctx) {
 		String aop = ctx.bop.getText();

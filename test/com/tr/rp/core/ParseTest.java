@@ -22,6 +22,7 @@ import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Plus;
 import com.tr.rp.expressions.num.RankExpression;
 import com.tr.rp.expressions.num.Times;
+import com.tr.rp.expressions.num.Var;
 import com.tr.rp.parser.DefProgLexer;
 import com.tr.rp.parser.DefProgParser;
 import com.tr.rp.parser.DefProgParser.BoolexprContext;
@@ -45,8 +46,11 @@ public class ParseTest extends RPLBaseTest {
 	}
 	
 	public void testParseAssign() {
-		String program = "x := 20;";
-		assert(parseStatement(program).equals(new Assign("x",20)));
+		assert(parseStatement("x := 20;").equals(new Assign("x",20)));
+		assert(parseStatement("x[1] := 20;").equals(new Assign("x", new NumExpression[] { new IntLiteral(1) }, 20)));
+		assert(parseStatement("x[1][2] := 20;").equals(new Assign("x", new NumExpression[] { new IntLiteral(1), new IntLiteral(2) }, 20)));
+		assert(parseStatement("x[x + y] := 20;").equals(new Assign("x", new NumExpression[] { new Plus("x", "y") }, 20)));
+		assert(parseStatement("x[x + y][p * q] := 20;").equals(new Assign("x", new NumExpression[] { new Plus("x", "y"), new Times("p", "q") }, 20)));
 	}
 
 	public void testParseComposition() {
@@ -78,9 +82,18 @@ public class ParseTest extends RPLBaseTest {
 	}
 
 	public void testParseChoose() {
-		String program = "{ x := 0 } << 5 >> { x := 20 };";
-		assert(parseStatement(program).equals(new Choose(
+		assert(parseStatement("{ x := 0 } << 5 >> { x := 20 };").equals(new Choose(
 				new Assign("x",0), new Assign("x",20), 5)));
+		assert(parseStatement("x := 0 << 5 >> 20;").equals(new Choose(
+				new Assign("x",0), new Assign("x",20), 5)));
+		assert(parseStatement("x[0] := 0 << 5 >> 20;").equals(new Choose(
+				new Assign("x", new NumExpression[] { new IntLiteral(0) }, 0), new Assign("x",20), 5)));
+		assert(parseStatement("x[1][2] := 1 << 5 >> 20;").equals(new Choose(
+				new Assign("x", new NumExpression[] { new IntLiteral(1), new IntLiteral(2) }, 1), new Assign("x",20), 5)));
+		assert(parseStatement("x[x + y] := 2 << 5 >> 20;").equals(new Choose(
+				new Assign("x", new NumExpression[] { new Plus("x", "y") }, 2), new Assign("x",20), 5)));
+		assert(parseStatement("x[x + y][p * q] := 3 << 5 >> 20;").equals(new Choose(
+				new Assign("x", new NumExpression[] { new Plus("x", "y"), new Times("p", "q") }, 3), new Assign("x",20), 5)));
 	}
 
 	public void testParseObserve() {
@@ -120,6 +133,15 @@ public class ParseTest extends RPLBaseTest {
 		assert(parseNumExpr("a + b * c")).equals(new Plus("a", new Times("b", "c")));
 		assert(parseNumExpr("a / b + c")).equals(new Plus(new Divide("a", "b"), "c"));
 		assert(parseNumExpr("RANK(x == 0)")).equals(new RankExpression(new Equals("x", 0)));
+	}
+
+	public void testParseArrayExpr() {
+		assert(parseNumExpr("a[0]")).equals(new Var("a", new IntLiteral(0)));
+		assert(parseNumExpr("a[100]")).equals(new Var("a", new IntLiteral(100)));
+		assert(parseNumExpr("a[x + y]")).equals(new Var("a", new Plus("x", "y")));
+		assert(parseNumExpr("a[0][1]")).equals(new Var("a", new IntLiteral(0), new IntLiteral(1)));
+		assert(parseNumExpr("a[100][200]")).equals(new Var("a", new IntLiteral(100), new IntLiteral(200)));
+		assert(parseNumExpr("a[x + y][p * q]")).equals(new Var("a", new Plus("x", "y"), new Times("p", "q")));
 	}
 
 	private LanguageElement parseStatement(String code) {

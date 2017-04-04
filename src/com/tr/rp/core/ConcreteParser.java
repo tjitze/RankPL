@@ -38,6 +38,9 @@ import com.tr.rp.parser.DefProgParser.LiteralBoolExprContext;
 import com.tr.rp.parser.DefProgParser.LiteralNumExprContext;
 import com.tr.rp.parser.DefProgParser.NegateExprContext;
 import com.tr.rp.parser.DefProgParser.NumexprContext;
+import com.tr.rp.parser.DefProgParser.ObserveContext;
+import com.tr.rp.parser.DefProgParser.ObserveJContext;
+import com.tr.rp.parser.DefProgParser.ObserveLContext;
 import com.tr.rp.parser.DefProgParser.Observe_statContext;
 import com.tr.rp.parser.DefProgParser.ProgramContext;
 import com.tr.rp.parser.DefProgParser.RankExprContext;
@@ -51,6 +54,8 @@ import com.tr.rp.statement.Choose;
 import com.tr.rp.statement.Composition;
 import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.Observe;
+import com.tr.rp.statement.ObserveJ;
+import com.tr.rp.statement.ObserveL;
 import com.tr.rp.statement.Skip;
 import com.tr.rp.statement.While;
 
@@ -112,10 +117,23 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitObserve_stat(Observe_statContext ctx) {
-		BoolexprContext bctx = ctx.boolexpr();
-		BoolExpression boolExpr = (BoolExpression)visit(bctx);
+	public LanguageElement visitObserve(ObserveContext ctx) {
+		BoolExpression boolExpr = (BoolExpression)visit(ctx.boolexpr());
 		return new Observe(boolExpr);
+	}
+
+	@Override
+	public LanguageElement visitObserveJ(ObserveJContext ctx) {
+		NumExpression rank = (NumExpression)visit(ctx.numexpr());
+		BoolExpression boolExpr = (BoolExpression)visit(ctx.boolexpr());
+		return new ObserveJ(boolExpr, rank);
+	}
+
+	@Override
+	public LanguageElement visitObserveL(ObserveLContext ctx) {
+		NumExpression rank = (NumExpression)visit(ctx.numexpr());
+		BoolExpression boolExpr = (BoolExpression)visit(ctx.boolexpr());
+		return new ObserveL(boolExpr, rank);
 	}
 
 	@Override

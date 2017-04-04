@@ -48,7 +48,9 @@ while_stat
  ;
 
 observe_stat
- : ('OBSERVE'|'observe') boolexpr
+ : ('OBSERVE'|'observe') boolexpr # Observe
+ | ('OBSERVE-L'|'observe-l') '(' numexpr ')' boolexpr # ObserveL
+ | ('OBSERVE-J'|'observe-j') '(' numexpr ')' boolexpr # ObserveJ
  ;
 
 skip_stat

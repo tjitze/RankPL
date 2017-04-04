@@ -91,6 +91,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIf_stat(DefProgParser.If_statContext ctx) { }
 	/**
 	 * {@inheritDoc}

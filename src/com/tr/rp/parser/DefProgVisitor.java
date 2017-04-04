@@ -50,6 +50,12 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignment_stat(DefProgParser.Assignment_statContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DefProgParser#array_assignment_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DefProgParser#if_stat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

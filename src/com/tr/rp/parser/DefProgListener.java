@@ -71,6 +71,16 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitAssignment_stat(DefProgParser.Assignment_statContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DefProgParser#array_assignment_stat}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DefProgParser#array_assignment_stat}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DefProgParser#if_stat}.
 	 * @param ctx the parse tree
 	 */

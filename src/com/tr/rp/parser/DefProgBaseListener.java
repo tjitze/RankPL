@@ -127,13 +127,37 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterObserve_stat(DefProgParser.Observe_statContext ctx) { }
+	@Override public void enterObserve(DefProgParser.ObserveContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitObserve_stat(DefProgParser.Observe_statContext ctx) { }
+	@Override public void exitObserve(DefProgParser.ObserveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObserveL(DefProgParser.ObserveLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObserveL(DefProgParser.ObserveLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObserveJ(DefProgParser.ObserveJContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObserveJ(DefProgParser.ObserveJContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

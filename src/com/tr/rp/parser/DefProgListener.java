@@ -101,15 +101,41 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitWhile_stat(DefProgParser.While_statContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#observe_stat}.
+	 * Enter a parse tree produced by the {@code Observe}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
 	 * @param ctx the parse tree
 	 */
-	void enterObserve_stat(DefProgParser.Observe_statContext ctx);
+	void enterObserve(DefProgParser.ObserveContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#observe_stat}.
+	 * Exit a parse tree produced by the {@code Observe}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
 	 * @param ctx the parse tree
 	 */
-	void exitObserve_stat(DefProgParser.Observe_statContext ctx);
+	void exitObserve(DefProgParser.ObserveContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ObserveL}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * @param ctx the parse tree
+	 */
+	void enterObserveL(DefProgParser.ObserveLContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ObserveL}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * @param ctx the parse tree
+	 */
+	void exitObserveL(DefProgParser.ObserveLContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ObserveJ}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * @param ctx the parse tree
+	 */
+	void enterObserveJ(DefProgParser.ObserveJContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ObserveJ}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * @param ctx the parse tree
+	 */
+	void exitObserveJ(DefProgParser.ObserveJContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DefProgParser#skip_stat}.
 	 * @param ctx the parse tree

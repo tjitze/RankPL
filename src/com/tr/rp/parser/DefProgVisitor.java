@@ -68,11 +68,26 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhile_stat(DefProgParser.While_statContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#observe_stat}.
+	 * Visit a parse tree produced by the {@code Observe}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitObserve_stat(DefProgParser.Observe_statContext ctx);
+	T visitObserve(DefProgParser.ObserveContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ObserveL}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObserveL(DefProgParser.ObserveLContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ObserveJ}
+	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObserveJ(DefProgParser.ObserveJContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DefProgParser#skip_stat}.
 	 * @param ctx the parse tree

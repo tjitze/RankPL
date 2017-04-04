@@ -1,5 +1,6 @@
 package com.tr.rp.core;
 
+import java.util.Arrays;
 import java.util.List;
 import com.tr.rp.expressions.bool.And;
 import com.tr.rp.expressions.bool.BoolExpression;
@@ -25,6 +26,7 @@ import com.tr.rp.expressions.num.Var;
 import com.tr.rp.parser.DefProgBaseVisitor;
 import com.tr.rp.parser.DefProgParser;
 import com.tr.rp.parser.DefProgParser.ArithmeticNumExprContext;
+import com.tr.rp.parser.DefProgParser.Array_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.Assignment_statContext;
 import com.tr.rp.parser.DefProgParser.BooleanExprContext;
 import com.tr.rp.parser.DefProgParser.BoolexprContext;
@@ -71,6 +73,22 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		return this.visit(ctx.numexpr());
 	}
 	
+	@Override
+	public LanguageElement visitArray_assignment_stat(Array_assignment_statContext ctx) {
+		String var = ctx.VAR().getText();
+		NumExpression[] index = new NumExpression[ctx.index().size()];
+		for (int i = 0; i < index.length; i++) {
+			index[i] = (NumExpression)visit(ctx.index(i));
+		}
+		ProgramBuilder b = new ProgramBuilder();
+		for (int i = 0; i < ctx.numexpr().size(); i++) {
+			NumExpression[] subIndex = Arrays.copyOf(index, index.length + 1);
+			subIndex[index.length] = new IntLiteral(i);
+			b.add(new Assign(var, subIndex, (NumExpression)visit(ctx.numexpr(i))));
+		}
+		return b.build();
+	}
+
 	@Override
 	public LanguageElement visitChoice_assignment_stat(Choice_assignment_statContext ctx) {
 		String var = ctx.VAR().getText();

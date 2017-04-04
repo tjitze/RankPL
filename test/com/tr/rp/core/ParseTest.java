@@ -53,6 +53,38 @@ public class ParseTest extends RPLBaseTest {
 		assert(parseStatement("x[x + y][p * q] := 20;").equals(new Assign("x", new NumExpression[] { new Plus("x", "y"), new Times("p", "q") }, 20)));
 	}
 
+	public void testParseArrayAssign() {
+		ProgramBuilder b = new ProgramBuilder();
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(0) }, 10));
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(1) }, 11));
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(2) }, 12));
+		assert(parseStatement("x := [10, 11, 12];").equals(b.build()));
+
+		b = new ProgramBuilder();
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(0) }, new Plus("x","y")));
+		assert(parseStatement("x := [x + y];").equals(b.build()));
+
+		b = new ProgramBuilder();
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(0) }, new Plus("x","y")));
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(0) }, new Times("p","q")));
+		assert(parseStatement("x := [x + y, p * q];").equals(b.build()));
+
+		b = new ProgramBuilder();
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(1), new IntLiteral(0) }, 10));
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(1), new IntLiteral(1) }, 11));
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(1), new IntLiteral(2) }, 12));
+		assert(parseStatement("x[1] := [10, 11, 12];").equals(b.build()));
+
+		b = new ProgramBuilder();
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(10), new IntLiteral(20), new IntLiteral(0) }, new Plus("x","y")));
+		assert(parseStatement("x[10][20] := [x + y];").equals(b.build()));
+
+		b = new ProgramBuilder();
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(10), new IntLiteral(20), new IntLiteral(0) }, new Plus("x","y")));
+		b.add(new Assign("x", new NumExpression[] { new IntLiteral(10), new IntLiteral(20), new IntLiteral(1) }, new Times("p","q")));
+		assert(parseStatement("x[10][20] := [x + y, p * q];").equals(b.build()));
+	}
+	
 	public void testParseComposition() {
 		String program = "x := 20; x := 30;";
 		assert(parseStatement(program).equals(new Composition(

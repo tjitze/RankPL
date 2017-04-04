@@ -15,6 +15,7 @@ program
 statement
  : ranked_choice
  | assignment_stat
+ | array_assignment_stat
  | choice_assignment_stat
  | if_stat
  | while_stat
@@ -32,6 +33,10 @@ choice_assignment_stat
 
 assignment_stat
  : VAR index* ':=' numexpr
+ ;
+
+array_assignment_stat
+ : VAR index* ':=' '[' (numexpr ','?)* ']'
  ;
 
 if_stat

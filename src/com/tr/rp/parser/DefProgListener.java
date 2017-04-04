@@ -230,4 +230,14 @@ public interface DefProgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParNumExpr(DefProgParser.ParNumExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DefProgParser#index}.
+	 * @param ctx the parse tree
+	 */
+	void enterIndex(DefProgParser.IndexContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DefProgParser#index}.
+	 * @param ctx the parse tree
+	 */
+	void exitIndex(DefProgParser.IndexContext ctx);
 }

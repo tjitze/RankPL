@@ -143,4 +143,10 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParNumExpr(DefProgParser.ParNumExprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DefProgParser#index}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndex(DefProgParser.IndexContext ctx);
 }

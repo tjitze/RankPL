@@ -2,7 +2,6 @@
 
 package com.tr.rp.parser;
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -26,74 +25,82 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(DefProgParser.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatement(DefProgParser.StatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DefProgParser#ranked_choice}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRanked_choice(DefProgParser.Ranked_choiceContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DefProgParser#choice_assignment_stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DefProgParser#assignment_stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignment_stat(DefProgParser.Assignment_statContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DefProgParser#array_assignment_stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DefProgParser#if_stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIf_stat(DefProgParser.If_statContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DefProgParser#while_stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhile_stat(DefProgParser.While_statContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Observe}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitObserve(DefProgParser.ObserveContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code ObserveL}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitObserveL(DefProgParser.ObserveLContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ObserveJ}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * Visit a parse tree produced by the {@code array_assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitObserveJ(DefProgParser.ObserveJContext ctx);
+	T visitArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DefProgParser#skip_stat}.
+	 * Visit a parse tree produced by the {@code while_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_stat(DefProgParser.While_statContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code statement_sequence}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement_sequence(DefProgParser.Statement_sequenceContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Observe}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObserve(DefProgParser.ObserveContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ranked_choice}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRanked_choice(DefProgParser.Ranked_choiceContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code choice_assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code if_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_stat(DefProgParser.If_statContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignment_stat(DefProgParser.Assignment_statContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code skip_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitSkip_stat(DefProgParser.Skip_statContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ObserveJ}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObserveJ(DefProgParser.ObserveJContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code CompareExpr}
 	 * labeled alternative in {@link DefProgParser#boolexpr}.

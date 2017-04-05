@@ -49,6 +49,7 @@ numexpr
  | numexpr aop='^' numexpr # ArithmeticNumExpr
  | INT # LiteralNumExpr
  | VAR index* # VariableNumExpr
+ | boolexpr '?' numexpr: numexpr # ConditionalExpr
  | ('RANK' | 'rank') '(' boolexpr ')' # RankExpr
  ;
 

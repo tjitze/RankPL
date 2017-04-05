@@ -31,121 +31,137 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitProgram(DefProgParser.ProgramContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterStatement(DefProgParser.StatementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitStatement(DefProgParser.StatementContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#ranked_choice}.
-	 * @param ctx the parse tree
-	 */
-	void enterRanked_choice(DefProgParser.Ranked_choiceContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#ranked_choice}.
-	 * @param ctx the parse tree
-	 */
-	void exitRanked_choice(DefProgParser.Ranked_choiceContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#choice_assignment_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#choice_assignment_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#assignment_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssignment_stat(DefProgParser.Assignment_statContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#assignment_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssignment_stat(DefProgParser.Assignment_statContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#array_assignment_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#array_assignment_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#if_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterIf_stat(DefProgParser.If_statContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#if_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitIf_stat(DefProgParser.If_statContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#while_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterWhile_stat(DefProgParser.While_statContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#while_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitWhile_stat(DefProgParser.While_statContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code Observe}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterObserve(DefProgParser.ObserveContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Observe}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitObserve(DefProgParser.ObserveContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code ObserveL}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 */
 	void enterObserveL(DefProgParser.ObserveLContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ObserveL}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 */
 	void exitObserveL(DefProgParser.ObserveLContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code array_assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code array_assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray_assignment_stat(DefProgParser.Array_assignment_statContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code while_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_stat(DefProgParser.While_statContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code while_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_stat(DefProgParser.While_statContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code statement_sequence}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement_sequence(DefProgParser.Statement_sequenceContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code statement_sequence}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement_sequence(DefProgParser.Statement_sequenceContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Observe}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterObserve(DefProgParser.ObserveContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Observe}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitObserve(DefProgParser.ObserveContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ranked_choice}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterRanked_choice(DefProgParser.Ranked_choiceContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ranked_choice}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitRanked_choice(DefProgParser.Ranked_choiceContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code choice_assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code choice_assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code if_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_stat(DefProgParser.If_statContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code if_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_stat(DefProgParser.If_statContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignment_stat(DefProgParser.Assignment_statContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code assignment_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignment_stat(DefProgParser.Assignment_statContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code skip_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSkip_stat(DefProgParser.Skip_statContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code skip_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSkip_stat(DefProgParser.Skip_statContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ObserveJ}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 */
 	void enterObserveJ(DefProgParser.ObserveJContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ObserveJ}
-	 * labeled alternative in {@link DefProgParser#observe_stat}.
+	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 */
 	void exitObserveJ(DefProgParser.ObserveJContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DefProgParser#skip_stat}.
-	 * @param ctx the parse tree
-	 */
-	void enterSkip_stat(DefProgParser.Skip_statContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DefProgParser#skip_stat}.
-	 * @param ctx the parse tree
-	 */
-	void exitSkip_stat(DefProgParser.Skip_statContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code CompareExpr}
 	 * labeled alternative in {@link DefProgParser#boolexpr}.

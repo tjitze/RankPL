@@ -86,10 +86,28 @@ public class ParseTest extends RPLBaseTest {
 	}
 	
 	public void testParseComposition() {
-		String program = "x := 20; x := 30;";
+		String program = "{x := 20; x := 30; x := 40}";
 		assert(parseStatement(program).equals(new Composition(
 				new Assign("x",20),
-				new Assign("x",30))));
+				new Assign("x",30),
+				new Assign("x",40))));
+		program = "{{x := 20; x := 30 }; x := 40}";
+		assert(parseStatement(program).equals(new Composition(
+				new Composition(
+						new Assign("x",20),
+						new Assign("x",30)),
+				new Assign("x",40))));
+		program = "{x := 20; {x := 30; x := 40}}";
+		assert(parseStatement(program).equals(new Composition(
+				new Assign("x",20),
+				new Composition(
+						new Assign("x",30),
+						new Assign("x",40)))));
+		program = "{{x := 20}; {x := 30}; {x := 40}}";
+		assert(parseStatement(program).equals(new Composition(
+				new Assign("x",20),
+				new Assign("x",30),
+				new Assign("x",40))));
 	}
 
 	public void testParseIfElse() {
@@ -98,6 +116,27 @@ public class ParseTest extends RPLBaseTest {
 				new Equals("x",10),
 				new Assign("x",20),
 				new Assign("x",30))));
+		program = "if (x == 10) THEN { x := 20 } ELSE { x := 30 };";
+		assert(parseStatement(program).equals(new IfElse(
+				new Equals("x",10),
+				new Assign("x",20),
+				new Assign("x",30))));
+		program = "{ if (x == 10) THEN { x := 20 } ELSE x := 30; x := 40; }";
+		assert(parseStatement(program).equals(
+				new Composition(
+					new IfElse(
+							new Equals("x",10),
+							new Assign("x",20),
+							new Assign("x",30)),
+					new Assign("x", 40))));
+		program = "{ if (x == 10) THEN { x := 20 } ELSE { x := 30 } <<1>> {x := 40}; x := 50; }";
+		assert(parseStatement(program).equals(
+				new Composition(
+					new IfElse(
+							new Equals("x",10),
+							new Assign("x",20),
+							new Choose(new Assign("x",30), new Assign("x", 40), 1)),
+					new Assign("x", 50))));
 	}
 
 	public void testParseWhile() {
@@ -114,7 +153,7 @@ public class ParseTest extends RPLBaseTest {
 	}
 
 	public void testParseChoose() {
-		assert(parseStatement("{ x := 0 } << 5 >> { x := 20 };").equals(new Choose(
+		assert(parseStatement("{ x := 0; } << 5 >> { x := 20; }").equals(new Choose(
 				new Assign("x",0), new Assign("x",20), 5)));
 		assert(parseStatement("x := 0 << 5 >> 20;").equals(new Choose(
 				new Assign("x",0), new Assign("x",20), 5)));

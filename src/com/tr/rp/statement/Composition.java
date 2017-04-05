@@ -38,7 +38,15 @@ public class Composition implements DStatement {
 	}
 
 	public String toString() {
-		return a + ": " + b;
+		String as = a.toString();
+		String bs = b.toString();
+		if (as.startsWith("{") && as.endsWith("}") && as.length() > 2) {
+			as = as.substring(1, as.length() - 1);
+		}
+		if (bs.startsWith("{") && bs.endsWith("}") && bs.length() > 2) {
+			bs = bs.substring(1, bs.length() - 1);
+		}
+		return "{" + a + ";" + b + "}";
 	}
 	
 	public boolean equals(Object o) {

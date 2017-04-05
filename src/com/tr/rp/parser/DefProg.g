@@ -9,54 +9,23 @@ parse
  ;
  
 program
- : (statement ';')+ EOF
+ : statement (';' statement)* ';'? EOF
  ;
 
 statement
- : ranked_choice
- | assignment_stat
- | array_assignment_stat
- | choice_assignment_stat
- | if_stat
- | while_stat
- | observe_stat
- | skip_stat
+ : VAR index* ':=' numexpr                           							# assignment_stat
+ | VAR index* ':=' '[' (numexpr ','?)* ']'           							# array_assignment_stat
+ | VAR index* ':=' numexpr '<<' numexpr '>>' numexpr 							# choice_assignment_stat
+ | ('IF'|'if') boolexpr ('THEN'|'then') statement ('ELSE'|'else') statement     # if_stat
+ | ('WHILE'|'while') boolexpr ('DO'|'do') statement                             # while_stat
+ | ('OBSERVE'|'observe') boolexpr 												# Observe
+ | ('OBSERVE-L'|'observe-l') '(' numexpr ')' boolexpr 							# ObserveL
+ | ('OBSERVE-J'|'observe-j') '(' numexpr ')' boolexpr 							# ObserveJ
+ | ('SKIP'|'skip')																# skip_stat
+ | statement '<<' numexpr '>>' statement             							# ranked_choice
+ | '{' statement (';' statement)* ';'? '}'										# statement_sequence
  ;
 
-ranked_choice
- : '{' statement '}' '<<' numexpr '>>' '{' statement '}'
- ;
-
-choice_assignment_stat
- : VAR index* ':=' numexpr '<<' numexpr '>>' numexpr
- ;
-
-assignment_stat
- : VAR index* ':=' numexpr
- ;
-
-array_assignment_stat
- : VAR index* ':=' '[' (numexpr ','?)* ']'
- ;
-
-if_stat
- : ('IF'|'if') boolexpr ('THEN'|'then') statement ('ELSE'|'else') statement
- ;
-
-while_stat
- : ('WHILE'|'while') boolexpr ('DO'|'do') statement
- ;
-
-observe_stat
- : ('OBSERVE'|'observe') boolexpr # Observe
- | ('OBSERVE-L'|'observe-l') '(' numexpr ')' boolexpr # ObserveL
- | ('OBSERVE-J'|'observe-j') '(' numexpr ')' boolexpr # ObserveJ
- ;
-
-skip_stat
- : ('SKIP'|'skip')
- ;
- 
 boolexpr
  : '(' boolexpr ')' # ParboolExpr
  | '!' boolexpr # NegateExpr

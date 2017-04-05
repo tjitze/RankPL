@@ -84,4 +84,9 @@ public class While implements DStatement {
 		return new IfElse((BoolExpression)exp.replaceVariable(a, b),
 				(DStatement)this.s.replaceVariable(a, b));
 	}
+	
+	public String toString() {
+		return "WHILE (" + exp + ") DO " + s;
+	}
+	
 }

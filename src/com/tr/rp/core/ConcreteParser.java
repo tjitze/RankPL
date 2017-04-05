@@ -41,12 +41,12 @@ import com.tr.rp.parser.DefProgParser.NumexprContext;
 import com.tr.rp.parser.DefProgParser.ObserveContext;
 import com.tr.rp.parser.DefProgParser.ObserveJContext;
 import com.tr.rp.parser.DefProgParser.ObserveLContext;
-import com.tr.rp.parser.DefProgParser.Observe_statContext;
 import com.tr.rp.parser.DefProgParser.ProgramContext;
 import com.tr.rp.parser.DefProgParser.RankExprContext;
 import com.tr.rp.parser.DefProgParser.Ranked_choiceContext;
 import com.tr.rp.parser.DefProgParser.Skip_statContext;
 import com.tr.rp.parser.DefProgParser.StatementContext;
+import com.tr.rp.parser.DefProgParser.Statement_sequenceContext;
 import com.tr.rp.parser.DefProgParser.VariableNumExprContext;
 import com.tr.rp.parser.DefProgParser.While_statContext;
 import com.tr.rp.statement.Assign;
@@ -111,8 +111,8 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitIf_stat(If_statContext ctx) {
 		BoolexprContext bctx = ctx.boolexpr();
 		BoolExpression boolExpr = (BoolExpression)visit(bctx);
-		DStatement a = (DStatement)visitStatement(ctx.statement().get(0));
-		DStatement b = (DStatement)visitStatement(ctx.statement().get(1));
+		DStatement a = (DStatement)visit(ctx.statement().get(0));
+		DStatement b = (DStatement)visit(ctx.statement().get(1));
 		return new IfElse(boolExpr, a, b);
 	}
 
@@ -140,8 +140,8 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitRanked_choice(Ranked_choiceContext ctx) {
 		NumexprContext nctx = ctx.numexpr();
 		NumExpression rank = (NumExpression)visit(nctx);
-		DStatement a = (DStatement)visitStatement(ctx.statement().get(0));
-		DStatement b = (DStatement)visitStatement(ctx.statement().get(1));
+		DStatement a = (DStatement)visit(ctx.statement().get(0));
+		DStatement b = (DStatement)visit(ctx.statement().get(1));
 		return new Choose(a, b, rank);
 	}
 
@@ -153,7 +153,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitWhile_stat(While_statContext ctx) {
 		BoolExpression boolExpr = (BoolExpression)visit(ctx.boolexpr());
-		DStatement a = (DStatement)visitStatement(ctx.statement());
+		DStatement a = (DStatement)visit(ctx.statement());
 		return new While(boolExpr, a);
 	}
 
@@ -244,6 +244,10 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitProgram(ProgramContext ctx) {
+		return createList(ctx.statement(), 0);
+	}
+
+	public LanguageElement visitStatement_sequence(Statement_sequenceContext ctx) {
 		return createList(ctx.statement(), 0);
 	}
 

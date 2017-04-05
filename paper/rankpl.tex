@@ -127,14 +127,14 @@ We start with a minimal imperative programming language (\textbf{if-then-else}, 
 Analogous to probabilistic programs, RankPL programs represent ranking functions over possible outcomes.
 
 Broadly speaking, RankPL can be used to represent and reason about processes
-	whose input or behavior exhibits uncertainty expressible% in terms of rankings, or expressible 
+	whose input or behavior exhibits uncertainty expressible % in terms of rankings, or expressible 
 	by distinguishing normal (rank $0$) from surprising (rank $> 0$) events.
 %This includes ranking networks (i.e., the ranking-based counterpart of Bayesian networks),
 %Examples are systems based on ranking networks 
 %	(the ranking-based counterpart of Bayesian networks) and ranking-based Markov chains.
 %A high degree of modelling flexibility is provided TODO: improve
 %	such as those involving a temporal dimension or large state spaces.
-Reasoning tasks that are supported include causal inference, abduction and and different types of (iterated) belief revision.
+Reasoning tasks that are supported include causal inference, abduction and different types of (iterated) belief revision.
 The latter are consistent with the AGM postulates for belief revision and DP postulates for iterated belief revision~\cite{DBLP:dblp_journals/ai/DarwicheP97,Gardenfors:1995:BR:216136.216138}.
 Just as PPLs provide a high degree of flexibility in reasoning about rich probabilistic models, RankPL does so for ranking-theoretic models.
 %These tasks can be implemented without having to write inference-specific code.
@@ -549,10 +549,10 @@ This permits iterated belief change, because the rank of $\overline A$ is shifte
 %	and that J-conditioning can be represented by combining 
 %		two \textbf{observe} statements and a default choice construct.
 %Let us state this formally.
-%In what follows we write $\kappa_{b \rightarrow x}$ as shorthand for $\kappa_{\beta_\kappa(b) \rightarrow x}$.
+%In what follows we write $\kappa_{b \rightarrow x}$ as shorthand for $\kappa_{\mods{\kappa}{b} \rightarrow x}$.
 Instead of introducing a special statement representing J-conditioning, 
 	we show that we can already express it in RankPL.
-Below we write $\kappa_{b \rightarrow x}$ as shorthand for $\kappa_{\beta_\kappa(b) \rightarrow x}$.
+Below we write $\kappa_{b \rightarrow x}$ as shorthand for $\kappa_{\mods{\kappa}{b} \rightarrow x}$.
 Proofs are omitted due to space constraints.
 
 \begin{theorem}
@@ -583,7 +583,7 @@ L-conditioning satisfies two intuitively desirable properties not satisfied by J
 	it is \textit{reversible} ($(\kappa_{A \uparrow x})_{\overline{A} \uparrow x} = \kappa$) and 
 	\textit{commutative} ($(\kappa_{A \uparrow x})_{B \uparrow x} = (\kappa_{B \uparrow x})_{A \uparrow x}$)~\cite{DBLP:books/daglib/0035277}.
 Again, we will show how to express it in RankPL.
-Like before, we will write $\kappa_{b \uparrow x}$ as shorthand for $\kappa_{\beta_\kappa(b) \uparrow x}$.
+Like before, we will write $\kappa_{b \uparrow x}$ as shorthand for $\kappa_{\mods{\kappa}{b} \uparrow x}$.
 
 \begin{theorem}\label{thm:evidenceoriented}
 Let $b$ be a boolean expression, $\kappa$ a ranking function over $\States$ such that $\kappa(b), \kappa(\neg b) < \infty$, and $x$ a rank.
@@ -623,8 +623,8 @@ In what follows we use the statement $\textbf{observe}_{\textbf{L}}(b, x)$ as sh
 
 The following problem involves both iterated revision and noisy observation.
 A robot navigates a grid world and has to determine its location using a map and two distance sensors.
-The grids in figure~\ref{fig:localization} depict the map, 
-	where a gray cell represents a wall and all other cells are empty (ignoring, for now, the red cells and dots).
+The grids in figure~\ref{fig:localization} depict the map that we use.
+Gray cells represents walls and other cells are empty (ignoring, for now, the red cells and dots).
 The sensors (oriented north and south) measure the distance to the nearest wall or obstacle.
 To complicate matters, the sensor readings might not match the map.
 For example, the $X$ in figure~\ref{fig:localization} marks an obstacle that affects sensor readings, but as far as the robot knows, this cell is empty.\looseness=-1
@@ -662,7 +662,7 @@ On line 1 the robot's location $\texttt{x}$, $\texttt{y}$ is initialized to rang
 The \textbf{while} loop iterates over the time point $\texttt{t}$ 
 	and first processes the movement $\texttt{mv}[\texttt{t}]$ (lines 3-6).
 On lines 7-8 the north sensor reading is processed
-	by counting the empty cells between the robot and nearest wall,
+	by counting empty cells between the robot and nearest wall,
 	the result of which is observed to equal $\texttt{ns}[\texttt{t}]$---and likewise for the south sensor (lines 9-10).
 Here, we use L-conditioning with strength 1, to account for possible incorrect observations.
 We then update $\texttt{t}$.\looseness=-1

@@ -294,14 +294,14 @@ $\textit{e}$	& $:=$ 	& $n \mid x \mid \textbf{rank }b \mid (e_1 \hspace{2pt} \ar
 
 $\textit{b}$	& $:=$ 	& $\neg b \mid (b_1 \vee b_2) \mid (e_1 \hspace{2pt} \comp \hspace{2pt} e_2)$ (for $\comp \in \{ =, < \}$)\\
 
-$\textit{s}$		& $:=$ 	& $\{ s \} \mid s_0; s_1 \mid x := e \mid \textbf{if }b\textbf{ then } s_1\textbf{ else }s_2 \mid $\\
-			& 		& $\textbf{while } b \textbf{ do } s \mid s_1 \Rank{e} s_2 \mid \textbf{observe }b \mid \textbf{skip}$\\
+$\textit{s}$		& $:=$ 	& $\{s_0; s_1 \} \mid x := e \mid \textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else } \{ s_2 \} \mid $\\
+			& 		& $\textbf{while } b \textbf{ do } \{ s \} \mid \{ s_1 \} \Rank{e} \{ s_2 \} \mid \textbf{observe }b \mid \textbf{skip}$\\
 \end{tabular}
 \end{center}
 Some syntactical shortcuts: 
-Brackets and parentheses will be omitted unless this leads to ambiguity.
+We omit parentheses and curly brackets unless this leads to ambiguity.
 We define $\wedge$ in terms of $\vee$ and $\neg$.
-We write $\textbf{if }b\textbf{ then } s$ instead of $\textbf{if }b\textbf{ then } s$ $\textbf{else skip}$,
+We write $\textbf{if }b\textbf{ then } \{ s \}$ instead of $\textbf{if }b\textbf{ then } \{ s \}$ $\textbf{else }\{\textbf{skip}\}$,
 	and abbreviate statements of the form $\{x := e_1\} \Rank{e} \{x := e_2\}$ to $x := e_1 \Rank{e} e_2$.
 Note that the \textbf{skip} statement does nothing and is added for technical convenience.
 
@@ -333,8 +333,8 @@ Secondly, observe statements may rule out all possibilities.
 A program whose outcome is empty because of this is said to \emph{fail}.
 We denote failure with a special ranking $\kappa_{\infty}$ that assigns $\infty$ to all valuations.
 Since $\kappa_{\infty} \not \in K$, we define the range of $\dn{s}$ by $K^{*} = K \cup \{\kappa_{\infty}\}$.
-Thus, the semantics will be defined by a partial function
-	$$D: S \rightarrow (K^{*} \nrightarrow K^{*}).$$
+Thus, the semantics of a statement $s$ is defined by a partial function $\dn{s}$ from $K^{*}$ to $K^{*}$.
+
 But first, we define the semantics of expressions.
 A numerical expression is evaluated with respect to both a ranking function (to determine values of \textbf{rank} expressions) and a valuation (to determine values of variables).
 Boolean expressions may also contain \textbf{rank} expressions and therefore also depend on a ranking function.
@@ -359,7 +359,8 @@ These functions are defined as follows.\looseness=-1\footnote{We omit explicit t
 \end{minipage}
 
 Given a boolean expression $b$ we will write $\kappa(b)$ as shorthand for $\kappa(\mods{\kappa}{b})$ and $\kappa_{b}$ as shorthand for $\kappa_{\mods{\kappa}{b}}$.
-We are now ready to define the semantics of statements, which is captured by seven rules, numbered \textbf{D1} to \textbf{D7}.
+We are now ready to define the semantics of statements. 
+It is captured by seven rules, numbered \textbf{D1} to \textbf{D7}.
 The first deals with the \textbf{skip} statement, which does nothing and therefore maps to the identity function.
 \begin{align}
 \dn{\textbf{skip}}(\kappa) 		& = \kappa \tag{\textbf{D1}}. 
@@ -374,14 +375,14 @@ The rank of a valuation $\sigma$ after executing an assignment $x := e$
 \dn{x := e}(\kappa)(\sigma) 	& = \kappa( \{ \sigma' \in \States \mid \sigma = \sigma'[x \rightarrow \sigma'_\kappa(e)] \})\tag{\textbf{D3}} 
 \end{align}
 
-To execute the $\textbf{if }b\textbf{ then }s_1\textbf{ else }s_2$ statement we first 
+To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we first 
 	execute $s_1$ and $s_2$ conditional on $b$ and $\neg b$, respectively, 
 		yielding the rankings $\dn{s_1}(\kappa_{b})$ and $\dn{s_2}(\kappa_{\neg b})$.
 	These are then adjusted by adding the prior ranks of $b$ and $\neg b$, and
 		combined by taking the minimum of the two.
 	The result is normalized to account for the case where one branch fails.
 \begin{align*}
-\dn{\textbf{if }e\textbf{ then }s_1\textbf{ else }s_2}(\kappa)	& = || \lambda ||,   \\
+\dn{\textbf{if }e\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}}(\kappa)	& = || \lambda ||,   \\
 			&  \hspace{-30pt} \mbox{ where }\lambda(\sigma) = min\begin{pmatrix} \dn{s_1}(\kappa_{b})(\sigma) + \kappa(b), \tag{\textbf{D4}} \\ \dn{s_2}(\kappa_{\neg b})(\sigma) + \kappa(\neg b) \end{pmatrix}  
 \end{align*}
 	Given a prior $\kappa$, the rank of a valuation after executing $s_1 \Rank{e} s_2$
@@ -389,7 +390,7 @@ To execute the $\textbf{if }b\textbf{ then }s_1\textbf{ else }s_2$ statement we 
 			where the latter is increased by $e$.
 	The result is normalized to account for the case where one branch fails.\looseness=-1
 \begin{align}
-\dn{s_1 \Rank{e} s_2}(\kappa)	& = || \lambda ||, \mbox{ where }\lambda(\sigma) = min \begin{pmatrix} \dn{s_1}(\kappa)(\sigma), \\ \dn{s_2}(\kappa)(\sigma) + \sigma_{\kappa}(e) \end{pmatrix} \tag{\textbf{D5}} 
+\dn{\{ s_1 \} \Rank{e} \{ s_2 \}}(\kappa)	& = || \lambda ||, \mbox{ where }\lambda(\sigma) = min \begin{pmatrix} \dn{s_1}(\kappa)(\sigma), \\ \dn{s_2}(\kappa)(\sigma) + \sigma_{\kappa}(e) \end{pmatrix} \tag{\textbf{D5}} 
 \end{align}
 	The semantics of the observe statement $\textbf{observe }b$ corresponds to conditioning on the set of valuations satisfying $b$, unless either the rank of this set is $\infty$ or the prior ranking equals $\kappa_{\infty}$ (i.e., represents failure).
 \begin{align}
@@ -401,12 +402,12 @@ To execute the $\textbf{if }b\textbf{ then }s_1\textbf{ else }s_2$ statement we 
 			\end{array}
 		\right. 
 \end{align}
-	We define the semantics of $\textbf{while }b\textbf{ do }s$
-		as the iterative execution of $\textbf{if }b\textbf{ then }s$ $\textbf{else skip}$
+	We define the semantics of $\textbf{while }b\textbf{ do }\{s\}$
+		as the iterative execution of $\textbf{if }b\textbf{ then }\{s\}$ $\textbf{else} \{\textbf{skip}\}$
 		until the rank of $b$ is $\infty$ (the loop terminates normally) or the result is undefined ($s$ does not terminate).
 	If neither of these conditions is ever met (i.e., if the $\textbf{while}$ statement loops endlessly) then the result is undefined.
 \begin{align}
-\hspace{-5pt}\dn{\textbf{while }b\textbf{ do }s}(\kappa) &=
+\hspace{-5pt}\dn{\textbf{while }b\textbf{ do }\{ s \}}(\kappa) &=
 		\left\{
 			\begin{array}{ll}
 				F_{b,s}^{n}(\kappa)		& \mbox{for the first }n\mbox{ s.t. }F_{b,s}^{n}(\kappa)(b) = \infty \mbox{, or }\\
@@ -440,7 +441,7 @@ The \emph{circuit diagnosis problem} is about explaining observed incorrect beha
 
 \begin{figure}
 \centering
-\begin{tikzpicture}[circuit logic US, minimum height=6mm]
+\begin{tikzpicture}[circuit logic US, minimum height=5mm]
 \matrix[column sep=10mm]
 { \node[yshift=3pt] (i0) {$\texttt{a}_1$};& \node [xor gate] (xor1) {\small$X_1$};	& \node[yshift=-3pt,xor gate] (xor2) {\small$X_2$};	& 	& \node[yshift=-3pt] (o1) {$\texttt{b}_2$}; \\
 \node[yshift=2pt] (i1) {$\texttt{a}_2$};&	& \node (cin) {};	&	&  \\

@@ -35,6 +35,7 @@ boolexpr
  | boolexpr bop='^' boolexpr # BooleanExpr
  | ('TRUE' | 'true') # LiteralBoolExpr
  | ('FALSE' | 'false') # LiteralBoolExpr
+ | numexpr # NumBoolExpr
  ; 
  
 numexpr
@@ -49,7 +50,6 @@ numexpr
  | numexpr aop='^' numexpr # ArithmeticNumExpr
  | INT # LiteralNumExpr
  | VAR index* # VariableNumExpr
- | boolexpr '?' numexpr: numexpr # ConditionalExpr
  | ('RANK' | 'rank') '(' boolexpr ')' # RankExpr
  ;
 

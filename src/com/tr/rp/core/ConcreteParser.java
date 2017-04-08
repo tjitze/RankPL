@@ -9,6 +9,7 @@ import com.tr.rp.expressions.bool.Equals;
 import com.tr.rp.expressions.bool.LessOrEq;
 import com.tr.rp.expressions.bool.LessThan;
 import com.tr.rp.expressions.bool.Not;
+import com.tr.rp.expressions.bool.NumBoolExpr;
 import com.tr.rp.expressions.bool.Or;
 import com.tr.rp.expressions.bool.Xor;
 import com.tr.rp.expressions.num.Divide;
@@ -37,6 +38,7 @@ import com.tr.rp.parser.DefProgParser.IndexContext;
 import com.tr.rp.parser.DefProgParser.LiteralBoolExprContext;
 import com.tr.rp.parser.DefProgParser.LiteralNumExprContext;
 import com.tr.rp.parser.DefProgParser.NegateExprContext;
+import com.tr.rp.parser.DefProgParser.NumBoolExprContext;
 import com.tr.rp.parser.DefProgParser.NumexprContext;
 import com.tr.rp.parser.DefProgParser.ObserveContext;
 import com.tr.rp.parser.DefProgParser.ObserveJContext;
@@ -240,6 +242,10 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	public LanguageElement visitParNumExpr(DefProgParser.ParNumExprContext ctx) { 
 		return visit(ctx.getChild(1));
+	}
+
+	public LanguageElement visitNumBoolExpr(NumBoolExprContext ctx) { 
+		return new NumBoolExpr((NumExpression)visit(ctx.getChild(1)));
 	}
 
 	@Override

@@ -187,6 +187,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNumBoolExpr(DefProgParser.NumBoolExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNumBoolExpr(DefProgParser.NumBoolExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -230,6 +242,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNegateExpr(DefProgParser.NegateExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAbsExpr(DefProgParser.AbsExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAbsExpr(DefProgParser.AbsExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

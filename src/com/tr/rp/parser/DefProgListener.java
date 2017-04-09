@@ -175,6 +175,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitCompareExpr(DefProgParser.CompareExprContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code NumBoolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumBoolExpr(DefProgParser.NumBoolExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NumBoolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumBoolExpr(DefProgParser.NumBoolExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code LiteralBoolExpr}
 	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
@@ -222,6 +234,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNegateExpr(DefProgParser.NegateExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AbsExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterAbsExpr(DefProgParser.AbsExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AbsExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitAbsExpr(DefProgParser.AbsExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code LiteralNumExpr}
 	 * labeled alternative in {@link DefProgParser#numexpr}.

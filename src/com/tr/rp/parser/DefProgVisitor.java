@@ -2,6 +2,7 @@
 
 package com.tr.rp.parser;
 
+import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -109,6 +110,13 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCompareExpr(DefProgParser.CompareExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code NumBoolExpr}
+	 * labeled alternative in {@link DefProgParser#boolexpr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumBoolExpr(DefProgParser.NumBoolExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code LiteralBoolExpr}
 	 * labeled alternative in {@link DefProgParser#boolexpr}.
 	 * @param ctx the parse tree
@@ -136,6 +144,13 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNegateExpr(DefProgParser.NegateExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AbsExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAbsExpr(DefProgParser.AbsExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LiteralNumExpr}
 	 * labeled alternative in {@link DefProgParser#numexpr}.

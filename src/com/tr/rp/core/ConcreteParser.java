@@ -12,6 +12,7 @@ import com.tr.rp.expressions.bool.Not;
 import com.tr.rp.expressions.bool.NumBoolExpr;
 import com.tr.rp.expressions.bool.Or;
 import com.tr.rp.expressions.bool.Xor;
+import com.tr.rp.expressions.num.Abs;
 import com.tr.rp.expressions.num.Divide;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.Minus;
@@ -26,6 +27,7 @@ import com.tr.rp.expressions.num.Times;
 import com.tr.rp.expressions.num.Var;
 import com.tr.rp.parser.DefProgBaseVisitor;
 import com.tr.rp.parser.DefProgParser;
+import com.tr.rp.parser.DefProgParser.AbsExprContext;
 import com.tr.rp.parser.DefProgParser.ArithmeticNumExprContext;
 import com.tr.rp.parser.DefProgParser.Array_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.Assignment_statContext;
@@ -173,6 +175,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		if (aop.equals("|")) return new NumOr(a, b);
 		if (aop.equals("^")) return new NumXor(a, b);
 		return null;
+	}
+
+	@Override
+	public LanguageElement visitAbsExpr(AbsExprContext ctx) {
+		NumExpression num = (NumExpression)visit(ctx.numexpr());
+		return new Abs(num);
 	}
 
 	@Override

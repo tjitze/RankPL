@@ -295,6 +295,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterLenExpr(DefProgParser.LenExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLenExpr(DefProgParser.LenExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}

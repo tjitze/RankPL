@@ -173,6 +173,13 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRankExpr(DefProgParser.RankExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code LenExpr}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLenExpr(DefProgParser.LenExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ArithmeticNumExpr}
 	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree

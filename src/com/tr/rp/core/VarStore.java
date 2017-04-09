@@ -38,7 +38,7 @@ public class VarStore {
 	 * @return A new variable store where var is set to value.
 	 */
 	public VarStore create(String var, int value) {
-		if (value != 0 && getValue(var) == value) return this;
+		if (getValue(var) == value) return this;
 		VarStore v = new VarStore();
 		v.varStore.putAll(varStore);
 		v.setValue(var, value);
@@ -73,6 +73,20 @@ public class VarStore {
 				.sorted()
 				.map(var -> var.toString() + "=" + varStore.get(var))
 				.collect(Collectors.toList()).toString();
+	}
+
+	/**
+	 * @return Number of assigned variables
+	 */
+	public int getSize() {
+		return varStore.size();
+	}
+
+	/**
+	 * @return True if var is assigned a value.
+	 */
+	public boolean containsVar(String var) {
+		return varStore.containsKey(var);
 	}
 
 }

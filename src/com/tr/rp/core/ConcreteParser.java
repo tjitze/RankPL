@@ -15,6 +15,7 @@ import com.tr.rp.expressions.bool.Xor;
 import com.tr.rp.expressions.num.Abs;
 import com.tr.rp.expressions.num.Divide;
 import com.tr.rp.expressions.num.IntLiteral;
+import com.tr.rp.expressions.num.Len;
 import com.tr.rp.expressions.num.Minus;
 import com.tr.rp.expressions.num.Mod;
 import com.tr.rp.expressions.num.NumAnd;
@@ -37,6 +38,7 @@ import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.CompareExprContext;
 import com.tr.rp.parser.DefProgParser.If_statContext;
 import com.tr.rp.parser.DefProgParser.IndexContext;
+import com.tr.rp.parser.DefProgParser.LenExprContext;
 import com.tr.rp.parser.DefProgParser.LiteralBoolExprContext;
 import com.tr.rp.parser.DefProgParser.LiteralNumExprContext;
 import com.tr.rp.parser.DefProgParser.NegateExprContext;
@@ -181,6 +183,16 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitAbsExpr(AbsExprContext ctx) {
 		NumExpression num = (NumExpression)visit(ctx.numexpr());
 		return new Abs(num);
+	}
+
+	@Override
+	public LanguageElement visitLenExpr(LenExprContext ctx) {
+		String var = ctx.VAR().getText();
+		NumExpression[] index = new NumExpression[ctx.index().size()];
+		for (int i = 0; i < index.length; i++) {
+			index[i] = (NumExpression)visit(ctx.index(i));
+		}
+		return new Len(var, index);
 	}
 
 	@Override

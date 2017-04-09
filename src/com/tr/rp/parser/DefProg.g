@@ -49,6 +49,7 @@ numexpr
  | numexpr aop='|' numexpr # ArithmeticNumExpr
  | numexpr aop='^' numexpr # ArithmeticNumExpr
  | ('ABS'|'abs') '(' numexpr ')' # AbsExpr
+ | ('LEN'|'len') '(' VAR index* ')' # LenExpr
  | INT # LiteralNumExpr
  | VAR index* # VariableNumExpr
  | ('RANK' | 'rank') '(' boolexpr ')' # RankExpr

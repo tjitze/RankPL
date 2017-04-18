@@ -376,11 +376,11 @@ The rank of a valuation $\sigma$ after executing an assignment $x := e$
 \end{align}
 
 To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we first 
-	execute $s_1$ and $s_2$ conditional on $b$ and $\neg b$, respectively, 
+	execute $s_1$ and $s_2$ conditional on $b$ and $\neg b$,
 		yielding the rankings $\dn{s_1}(\kappa_{b})$ and $\dn{s_2}(\kappa_{\neg b})$.
-	These are then adjusted by adding the prior ranks of $b$ and $\neg b$, and
+	These are adjusted by adding the prior ranks of $b$ and $\neg b$ and
 		combined by taking the minimum of the two.
-	The result is normalized to account for the case where one branch fails.
+	The result is normalized to account for the case where one branch fails.\looseness=-1
 \begin{align*}
 \dn{\textbf{if }e\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}}(\kappa)	& = || \lambda ||,   \\
 			&  \hspace{-30pt} \mbox{ where }\lambda(\sigma) = min\begin{pmatrix} \dn{s_1}(\kappa_{b})(\sigma) + \kappa(b), \tag{\textbf{D4}} \\ \dn{s_2}(\kappa_{\neg b})(\sigma) + \kappa(\neg b) \end{pmatrix}  
@@ -514,19 +514,19 @@ Other explanations are ranked higher than 0 and involve more than one faulty gat
 %To address this, a number of generalized forms of ranking-based conditioning have been proposed.
 %In this section we discuss the two most prominent ones and we show how they can be expressed in RankPL,
 %	using the \textbf{rank}, \textbf{observe} and default choice constructs as basic building blocks.
-Conditioning by $A$ means that $A$ is afterwards believed with absolute certainty.
+Conditioning by $A$ means that $A$ becomes believed with infinite firmness.
 This is undesirable if we have to deal with iterated belief change or noisy or untrustworthy observations,
-	since we cannot afterwards condition on something inconsistent with $A$.
-There are a number of generalized forms of ranking-based conditioning that address this problem.
-In this section we discuss two of them, and show how they can be expressed in RankPL.
-
+	since we cannot, after conditioning on $A$, condition on events inconsistent with $A$.
+%There are a number of generalized forms of ranking-based conditioning that address this problem.
+%In this section we discuss two of them, and show how they can be expressed in RankPL.
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %\subsection{J-conditioning}
 %%%%%%%%%%%%%%%%%%%%%%%%%
-The first is \emph{J-conditioning}~\cite{goldszmidt1996qualitative} (also called \emph{result-oriented} conditioning~\cite{DBLP:books/daglib/0035277}).
+\emph{J-conditioning}~\cite{goldszmidt1996qualitative} is a more general form of conditioning that addresses this problem.
+% (also called \emph{result-oriented} conditioning~\cite{DBLP:books/daglib/0035277}).
 %It the ranking-based counterpart of the \emph{Jeffrey update rule} known from probability theory~\cite{goldszmidt1996qualitative}.
 It is parametrized by a rank $x$ that indicates the firmness with which the evidence must be believed.
-It satisfies the DP postulates of iterated belief revision~\cite{DBLP:dblp_journals/ai/DarwicheP97}.\looseness=-1
+%It satisfies the DP postulates of iterated belief revision~\cite{DBLP:dblp_journals/ai/DarwicheP97}.\looseness=-1
 %In the following definition we borrow notation from Spohn ~\cite{DBLP:books/daglib/0035277}.
 
 \begin{definition}\label{defn:resultoriented}
@@ -582,8 +582,8 @@ Unlike J-conditioning, L-conditioning satisfies two properties
 that are desirable for modeling noisy observation:
 	\textit{reversibility} ($(\kappa_{A \uparrow x})_{\overline{A} \uparrow x} = \kappa$) and 
 	\textit{commutativity} ($(\kappa_{A \uparrow x})_{B \uparrow x} = (\kappa_{B \uparrow x})_{A \uparrow x}$)~\cite{DBLP:books/daglib/0035277}.
-We now show how to express this in RankPL.
-Like before, we write $\kappa_{b \uparrow x}$ as shorthand for $\kappa_{\mods{\kappa}{b} \uparrow x}$.
+We now show how to express L-conditioning in RankPL.
+Like before, we write $\kappa_{b \uparrow x}$ to denote $\kappa_{\mods{\kappa}{b} \uparrow x}$.
 \begin{theorem}\label{thm:evidenceoriented}
 Let $b$ be a boolean expression, $\kappa$ a ranking function over $\States$ such that $\kappa(b), \kappa(\neg b) < \infty$, and $x$ a rank.
 We then have:

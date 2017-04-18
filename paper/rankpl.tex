@@ -67,11 +67,12 @@
 
 \begin{abstract}
 In this paper we introduce \emph{RankPL}, a modeling language
-	that can be thought of as a qualitative variant of a probabilistic programming language.
-It has a semantics based on Spohn's ranking theory and can be used,
-	broadly speaking, to represent and reason about processes that exhibit 
+	that can be thought of as a qualitative variant of a probabilistic programming language
+	with a semantics based on Spohn's ranking theory.
+Broadly speaking, RankPL can be used to represent and reason about processes that exhibit 
 	uncertainty expressible by distinguishing ``normal'' from ``surprising'' events.
-It supports various types of reasoning, including causal inference, abduction and (iterated) belief revision.
+RankPL allows (iterated) revision of rankings over alternative program traces and
+	supports various types of reasoning, including abduction and causal inference.
 We present syntax and semantics, 
 	demonstrate the language with practical examples,
 	and discuss an implementation that we made available for download.
@@ -82,7 +83,7 @@ We present syntax and semantics,
 \emph{Probabilistic programming languages} (PPLs) are regular programming languages extended with statements to 
 	(1) draw values at random from a given probability distribution, and 
 	(2) condition values of variables due to observation.
-Rather than a deterministic outcome, a probabilistic program represents a probability distribution over different possible outcomes.
+Running a probabilistic program yields, instead of a deterministic outcome, a probability distribution over possible outcomes.
 PPLs greatly simplify the problem of representing and reasoning with rich probabilistic models 
 	and have received increasing attention in recent years, mainly in the context of Bayesian machine learning.
 Examples of PPLs include Church~\cite{DBLP:conf/uai/GoodmanMRBT08}, 
@@ -100,7 +101,7 @@ Early work on PPLs goes back to Kozen~\cite{DBLP:journals/jcss/Kozen81}.
 %Early work on PPLs goes back to Kozen~\cite{DBLP:journals/jcss/Kozen81}, 
 
 \emph{Ranking theory} is a qualitative abstraction of probability theory in which events receive discrete degrees of surprise called \emph{ranks}~\cite{DBLP:books/daglib/0035277}.
-That is, event can be ranked 0 (not surprising), 1 (surprising), 2 (very surprising), and so on, or $\infty$ if impossible.
+That is, events can be ranked 0 (not surprising), 1 (surprising), 2 (very surprising), and so on, or $\infty$ if impossible.
 Ranking theory is computationally simpler than probability theory and does not require precise probabilities to perform meaningful inference. 
 Still, it provides analogues to many powerful probabilistic notions, including conditioning and independence.
 Ranking theory has been applied in logic-based AI approaches 
@@ -121,7 +122,7 @@ Ranking theory has been applied in logic-based AI approaches
 In this paper we develop a language called RankPL.
 Semantically, the language draws a parallel with probabilistic programming in terms of ranking theory.
 We start with a minimal imperative programming language (\textbf{if-then-else}, \textbf{while}, etc.)
-	and extended it with statements to
+	and extend it with statements to
 	(1) draw choices at random from a given ranking function and
 	(2) perform ranking-theoretic conditioning on values of variables due to observation.
 Analogous to probabilistic programs, RankPL programs represent ranking functions over possible outcomes.
@@ -285,7 +286,6 @@ Its use will be demonstrated later.
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 We fix a set $\vars$ of variables (ranged over by $x$) and denote by $\values$ the set of integers including $\infty$ (ranged over by $n$).
-We include $\infty$ to be able to express ranks.
 We use $e$, $b$ and $s$ to range over the numerical expressions, boolean expressions, and statements.
 They are defined by the following BNF rules:
 \noindent \begin{center}
@@ -403,28 +403,28 @@ To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we fi
 		\right. 
 \end{align}
 	We define the semantics of $\textbf{while }b\textbf{ do }\{s\}$
-		as the iterative execution of $\textbf{if }b\textbf{ then }\{s\}$ $\textbf{else} \{\textbf{skip}\}$
+		as the iterative execution of $\textbf{if }b$ $\textbf{ then }$ $\{s\}$ $\textbf{else} \{\textbf{skip}\}$
 		until the rank of $b$ is $\infty$ (the loop terminates normally) or the result is undefined ($s$ does not terminate).
 	If neither of these conditions is ever met (i.e., if the $\textbf{while}$ statement loops endlessly) then the result is undefined.
 \begin{align}
-\hspace{-5pt}\dn{\textbf{while }b\textbf{ do }\{ s \}}(\kappa) &=
+\hspace{-5pt}\dn{\textbf{while }b\textbf{ do }\hspace{-2pt}\{ s \}}(\kappa) &=
 		\left\{
 			\begin{array}{ll}
-				F_{b,s}^{n}(\kappa)		& \mbox{for the first }n\mbox{ s.t. }F_{b,s}^{n}(\kappa)(b) = \infty \mbox{, or }\\
-				\mbox{undefined}		& \mbox{if there is no such }n.
+				F_{b,s}^{n}(\kappa)	\hspace{4pt}	& \mbox{for the first }n\mbox{ s.t. }F_{b,s}^{n}(\kappa)(b) = \infty \mbox{, or }\\
+				\mbox{undef.}		& \mbox{if there is no such }n.
 			\end{array}\hspace{-5pt}\tag{\textbf{D7}}
 		\right.
 \end{align}
-where $F_{b,s}: K_{\bot} \rightarrow K_{\bot}$ is defined by 
-\begin{equation*}
-F_{b,s}(\kappa) = \dn{\textbf{if }b\textbf{ then }\{ s \}\textbf{ else } \{ \textbf{skip} \}}(\kappa).
-\end{equation*}
+where $F_{b,s}: K_{\bot} \rightarrow K_{\bot}$ is defined by $F_{b,s}(\kappa) = \dn{\textbf{if }b\textbf{ then }\{ s \}\textbf{ else } \{ \textbf{skip} \}}(\kappa)$.
+%\begin{equation*}
+%F_{b,s}(\kappa) = \dn{\textbf{if }b\textbf{ then }\{ s \}\textbf{ else } \{ \textbf{skip} \}}(\kappa).
+%\end{equation*}
 
 Some remarks.
 First of all, the semantics described here can be thought of as a ranking-based variation of the 
 	semantics of probabilistic programs due to Kozen~\cite{DBLP:journals/jcss/Kozen81}.
 That is, if we replace $+$ with $\times$ and $min$ with $+$, then our definitions are very similar to their probabilistic counterparts.
-Secondly, is not necessary to compute complete rankings to execute a program.
+Secondly, it is not necessary to compute complete rankings to execute a program.
 Our implementation (discussed in section~\ref{sec:implementation}) follows a \emph{most-plausible-first} execution strategy.
 That is, the possible outcomes of a RankPL program can be iterated over in ascending order with respect to rank,
 	and higher-ranked alternatives do not need to be explored if knowing only the lowest-ranked outcomes is sufficient, 

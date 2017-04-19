@@ -554,13 +554,11 @@ This permits iterated belief change, because the rank of $\overline A$ is shifte
 Instead of introducing a special statement representing J-conditioning, we show that we can already express it in RankPL.
 Below we write $\kappa_{b \rightarrow x}$ as shorthand for $\kappa_{\mods{\kappa}{b} \rightarrow x}$.
 Proofs are omitted due to space constraints.
-
 \begin{theorem}
 Let $b$ be a boolean expression and $\kappa$ a ranking function s.t. $\kappa(b) < \infty$ and $\kappa(\neg b) < \infty$.
 We then have
-$\kappa_{b \rightarrow x} = \dn{\textbf{observe }b \Rank{x} \textbf{observe }\neg b}(\kappa).$ % removed: inline
+$\kappa_{b \rightarrow x} = \dn{\textbf{observe }b \Rank{x} \textbf{observe }\neg b}(\kappa).$ % removed: inline TODO: why is this cursive?
 \end{theorem}
-
 \emph{L-conditioning}~\cite{goldszmidt1996qualitative} %(also called \emph{evidence-oriented} conditioning~\cite{DBLP:books/daglib/0035277}) 
 is another kind of generalized conditioning.
 %It was first proposed by Shenoy~\cite{DBLP:journals/ijar/Shenoy91}.
@@ -571,7 +569,7 @@ Here, the parameter $x$ characterizes the `impact' of the evidence. %, rather th
 \begin{definition}\label{defn:evidenceoriented}
 Let $A \in \Omega$, $\kappa$ a ranking function over $\Omega$ such that $\kappa(A), \kappa(\overline A) < \infty$, and $x$ a rank.
 The \emph{L-conditioning} of $\kappa$ is denoted by $\kappa_{A \uparrow x}$ and is defined by
-	$\kappa_{A \uparrow x}(B) = min ( \kappa(A \cap B) - y, \kappa(\neg A \cap B) + x - y ),$ % removed: inline
+	$\kappa_{A \uparrow x}(B) = min ( \kappa(A \cap B) - y, \kappa(\neg A \cap B) + x - y ),$ % removed: inline 
 where $y = min(\kappa(A), x).$
 \end{definition}
 Thus, L-conditioning by $A$ with strength $x$ means that $A$ improves by $x$ ranks w.r.t. the rank of $\neg A$.
@@ -589,7 +587,7 @@ Let $b$ be a boolean expression, $\kappa$ a ranking function over $\States$ such
 We then have:
 	$$\kappa_{b \uparrow x} = D
 	\left\llbracket\begin{tabular}{c} 
-	\mbox{$\textbf{if rank}(b) \leq x\textbf{ then}$} \\
+	\mbox{$\textbf{if rank}(b) \leq x\textbf{ then}$} \\ % TODO: why is this cursive?
 	\mbox{$\textbf{observe }b \Rank{x - \textbf{rank}(b) + \textbf{rank}(\neg b)} \textbf{observe }\neg b$} \\
 	\mbox{$\textbf{else}$} \\
 	\mbox{$\textbf{observe }\neg b \Rank{\textbf{rank}(b) - x} \textbf{observe }b$} \\
@@ -640,8 +638,8 @@ Note that, semantically, arrays are just indexed variables.\looseness=-1
 \begin{tabular}{rl}
 \hline
 Input:	&  $\texttt{k}$: number of steps to simulate\\
-Input:	&  $\texttt{mv}$: array (size $>= \texttt{k}$) of movements (\texttt{N}/\texttt{E}/\texttt{S}/\texttt{W})  \\
-Input:	&  \texttt{ns} and \texttt{ss}: arrays (size $>= \texttt{k}$) of north and south sensor readings \\
+Input:	&  $\texttt{mv}$: array (size $\geq \texttt{k}$) of movements (\texttt{N}/\texttt{E}/\texttt{S}/\texttt{W})  \\
+Input:	&  \texttt{ns} and \texttt{ss}: arrays (size $\geq \texttt{k}$) of north and south sensor readings \\
 Input:	&  $\texttt{map}$: 2D array (size \texttt{m} $\times$ \texttt{n}) encoding the map \\
 1	& $\texttt{t} := 0; \texttt{ x} := 0 \Rank{0} \{1 \Rank{0} \{ 2 \Rank{0} \ldots \texttt{m}\} \}; \texttt{ y} := 0 \Rank{0} \{1 \Rank{0} \{ 2 \Rank{0} \ldots \texttt{n}\} \};$ \\
 2	& $\textbf{while }(\texttt{t} < \texttt{k})\textbf{ do } \{$ \\
@@ -660,15 +658,14 @@ Input:	&  $\texttt{map}$: 2D array (size \texttt{m} $\times$ \texttt{n}) encodin
 \end{center} 
 
 The program works as follows.
-On line 1 the time point $t$ is initialized and the robot's location $\texttt{x}$, $\texttt{y}$ is initialized to a randomly chosen coordinate 
-	using nested ranked choice statements (all equally likely).
-The \textbf{while} loop iterates over the time point $\texttt{t}$ 
-	and first processes the movement $\texttt{mv}[\texttt{t}]$ (lines 3-6).
-On lines 7-8 the north sensor reading is processed
+On line 1 the time point $\texttt{t}$ is set to 0 and the robot's location $(\texttt{x}$, $\texttt{y})$ is set to a randomly chosen coordinate (all equally likely) using nested ranked choice statements.
+Inside the \textbf{while} loop, which iterates over $\texttt{t}$,
+	we first process the movement $\texttt{mv}[\texttt{t}]$ (lines 3-6).
+We then process (lines 7-8) the north sensor reading,
 	by counting empty cells between the robot and nearest wall,
 	the result of which is observed to equal $\texttt{ns}[\texttt{t}]$---and likewise for the south sensor (lines 9-10).
-Here, we use L-conditioning with strength 1, to account for possible incorrect observations.
-We then update $\texttt{t}$.\looseness=-1
+We use L-conditioning with strength 1 to account for possible incorrect observations.
+On line 11 we update $\texttt{t}$.\looseness=-1
 \noindent \begin{figure}[t]
 \centering
 \begin{subfigure}[t]{0.24\columnwidth}
@@ -686,7 +683,7 @@ We then update $\texttt{t}$.\looseness=-1
 \node[box,fill=red] at (1,5){};\node[box,fill=red] at (5,4){};\node[box,fill=red] at (2,5){};\node[box,fill=red] at (3,5){};
 	\fill (1,5) circle[radius=5pt] node {}; % \draw[->] (0,5) -- (1,5);
 	\end{tikzpicture}
-	\caption{$t = 1$}
+	\caption{$k = 1$}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\columnwidth}
 	\label{fig:localizationB}
@@ -703,7 +700,7 @@ We then update $\texttt{t}$.\looseness=-1
 \node[box,fill=red] at (6,4){};
 	\fill (2,5) circle[radius=5pt] node {}; % \draw[->] (0,5) -- (2,5);
 	\end{tikzpicture}
-	\caption{$t = 2$}
+	\caption{$k = 2$}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\columnwidth}
 	\label{fig:localizationC}
@@ -720,7 +717,7 @@ We then update $\texttt{t}$.\looseness=-1
 \node[box,fill=red] at (3,5){};\node[box,fill=red] at (7,4){};
 	\fill (3,5) circle[radius=5pt] node {}; % \draw[->] (0,5) -- (3,5);
 	\end{tikzpicture}
-	\caption{$t = 3$}
+	\caption{$k = 3$}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\columnwidth}
 	\label{fig:localizationD}
@@ -737,7 +734,7 @@ We then update $\texttt{t}$.\looseness=-1
 \node[box,fill=red] at (4,5){};
 	\fill (4,5) circle[radius=5pt] node {}; % \draw[->] (0,5) -- (4,5);
 	\end{tikzpicture}
-	\caption{$t = 4$}
+	\caption{$k = 4$}
 \end{subfigure}
 \caption{Most plausible inferred locations during four iterations}
 \label{fig:localization}

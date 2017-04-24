@@ -6,12 +6,12 @@ import com.tr.rp.core.VarStore;
  * A ranked iterator that reproduces its input but ends once
  * a given maximum rank has been reached.
  */
-public class RestrictIterator implements RankedIterator {
+public class RestrictIterator implements RankedIterator<VarStore> {
 
 	public final int maxRank;
-	private final RankedIterator in;
+	private final RankedIterator<VarStore> in;
 	
-	public RestrictIterator(RankedIterator in, int maxRank) {
+	public RestrictIterator(RankedIterator<VarStore> in, int maxRank) {
 		this.in = in;
 		this.maxRank = maxRank;
 	}

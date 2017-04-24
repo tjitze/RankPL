@@ -33,7 +33,7 @@ public class IfElse implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(RankedIterator parent) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) {
 		
 		// If exp is contradiction/tautology we
 		// can immediately pass the a/b iterator.
@@ -61,8 +61,8 @@ public class IfElse implements DStatement {
 		IteratorSplitter split = new IteratorSplitter(i);
 
 		// Apply condition 
-		RankedIterator ia1 = new Observe(exp2).getIterator(split.getA());
-		RankedIterator ia2 = new Observe(exp2.negate()).getIterator(split.getB());
+		RankedIterator<VarStore> ia1 = new Observe(exp2).getIterator(split.getA());
+		RankedIterator<VarStore> ia2 = new Observe(exp2.negate()).getIterator(split.getB());
 		
 		// Remember offsets (prior ranks of the conditions)
 		int offset1 = ia1.getConditioningOffset();
@@ -70,15 +70,15 @@ public class IfElse implements DStatement {
 
 		// Following happens if input iterator is empty
 		if (offset1 == Integer.MAX_VALUE && offset2 == Integer.MAX_VALUE) {
-			return new AbsurdIterator();
+			return new AbsurdIterator<VarStore>();
 		}
 		
 		// Execute statements
-		RankedIterator ib1 = a.getIterator(ia1);
-		RankedIterator ib2 = b.getIterator(ia2);
+		RankedIterator<VarStore> ib1 = a.getIterator(ia1);
+		RankedIterator<VarStore> ib2 = b.getIterator(ia2);
 
 		// Merge result
-		RankedIterator rc = new MergingIterator(ib1, ib2, offset1, offset2);
+		RankedIterator<VarStore> rc = new MergingIterator(ib1, ib2, offset1, offset2);
 		return rc;
 	}
 

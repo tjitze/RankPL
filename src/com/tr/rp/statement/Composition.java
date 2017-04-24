@@ -29,7 +29,7 @@ public class Composition implements DStatement {
 	}
 	
 	@Override
-	public RankedIterator getIterator(RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
 		in = new RestrictIterator(in, maxRank);
 		in = a.getIterator(in);
 		in = new RestrictIterator(in, maxRank);

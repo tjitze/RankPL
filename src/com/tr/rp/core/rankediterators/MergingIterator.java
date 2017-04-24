@@ -15,10 +15,10 @@ import com.tr.rp.core.VarStore;
  * of these offsets must be zero, to ensure that the resulting ranking is normalized
  * (i.e., starts with a zero-ranked element).
  */
-public class MergingIterator implements RankedIterator {
+public class MergingIterator implements RankedIterator<VarStore> {
 
-	private final RankedIterator in1;
-	private final RankedIterator in2;
+	private final RankedIterator<VarStore> in1;
+	private final RankedIterator<VarStore> in2;
 	private final int offset1;
 	private final int offset2;
 
@@ -32,7 +32,7 @@ public class MergingIterator implements RankedIterator {
 	private boolean in1next = false;
 	private boolean in2next = false;
 
-	public MergingIterator(RankedIterator in1, RankedIterator in2, int offset1, int offset2) {
+	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, int offset1, int offset2) {
 		this.in1 = in1;
 		this.in2 = in2;
 		in1next = in1.next();
@@ -53,7 +53,7 @@ public class MergingIterator implements RankedIterator {
 		}
 	}
 	
-	public MergingIterator(RankedIterator in1, RankedIterator in2) {
+	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2) {
 		this(in1, in2, 0, 0);
 	}
 	

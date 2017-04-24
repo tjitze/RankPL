@@ -13,7 +13,7 @@ import com.tr.rp.core.VarStore;
  */
 public class IteratorSplitter {
 
-	private final RankedIterator in;
+	private final RankedIterator<VarStore> in;
 	private final LinkedList<VarStore> vsA = new LinkedList<VarStore>();
 	private final LinkedList<VarStore> vsB = new LinkedList<VarStore>();
 	private final LinkedList<Integer> rsA = new LinkedList<Integer>();
@@ -24,15 +24,15 @@ public class IteratorSplitter {
 	private VarStore vb = null;
 	private int rb = -1;
 	
-	public IteratorSplitter(RankedIterator in) {
+	public IteratorSplitter(RankedIterator<VarStore> in) {
 		this.in = in;
 	}
 	
 	/**
 	 * @return The first copy of the iterator provided at construction.
 	 */
-	public RankedIterator getA() {
-		return new RankedIterator() {
+	public RankedIterator<VarStore> getA() {
+		return new RankedIterator<VarStore>() {
 
 			@Override
 			public boolean next() {
@@ -67,8 +67,8 @@ public class IteratorSplitter {
 	/**
 	 * @return The second copy of the iterator provided at construction.
 	 */
-	public RankedIterator getB() {
-		return new RankedIterator() {
+	public RankedIterator<VarStore> getB() {
+		return new RankedIterator<VarStore>() {
 
 			@Override
 			public boolean next() {

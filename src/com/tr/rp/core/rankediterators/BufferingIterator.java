@@ -10,11 +10,11 @@ import com.tr.rp.core.VarStore;
  * ranked iterator provided at construction, except that it can
  * be reset to iterate starting from an earlier item.
  */
-public class BufferingIterator implements RankedIterator {
+public class BufferingIterator implements RankedIterator<VarStore> {
 	
 	private LinkedList<RankedVarStore> queue = new LinkedList<RankedVarStore>();
 	private int index = -1;
-	private RankedIterator in;
+	private RankedIterator<VarStore> in;
 	private boolean stopped = false;
 	
 	/**
@@ -22,7 +22,7 @@ public class BufferingIterator implements RankedIterator {
 	 * 
 	 * @param in Iterator to use as input.
 	 */
-	public BufferingIterator(RankedIterator in) {
+	public BufferingIterator(RankedIterator<VarStore> in) {
 		this.in = in;
 	}
 	

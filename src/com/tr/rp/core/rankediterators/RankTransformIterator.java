@@ -1,12 +1,13 @@
 package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.Expression;
+import com.tr.rp.core.VarStore;
 
 public class RankTransformIterator<T extends Expression<T>> extends BufferingIterator {
 
 	private final T[] es;
 	
-	public RankTransformIterator(RankedIterator in, T ... expressions) {
+	public RankTransformIterator(RankedIterator<VarStore> in, T ... expressions) {
 		super(in);
 		this.es = expressions;
 		transform();

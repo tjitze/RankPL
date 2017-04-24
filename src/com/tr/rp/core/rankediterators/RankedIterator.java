@@ -30,7 +30,7 @@ import com.tr.rp.expressions.bool.BoolExpression;
  * the same variable store more than once. To filter out duplicates,
  * use the DuplicateRemovingIterator.
  */
-public interface RankedIterator {
+public interface RankedIterator<T> {
 
 	/**
 	 * Get next item of iterator (accessible via getVarStore()/getRank()).
@@ -42,7 +42,7 @@ public interface RankedIterator {
 	/**
 	 * @return Current item
 	 */
-	public VarStore getVarStore();
+	public T getVarStore();
 
 	/**
 	 * @return Rank of current item

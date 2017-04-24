@@ -3,8 +3,8 @@ package com.tr.rp.core.rankediterators;
 /**
  * An interface for objects that provide a ranked iterator.
  */
-public interface IteratorProvider {
+public interface IteratorProvider<T> {
 
-	public RankedIterator getIterator(RankedIterator parent);
+	public RankedIterator<T> getIterator(RankedIterator<T> parent);
 	
 }

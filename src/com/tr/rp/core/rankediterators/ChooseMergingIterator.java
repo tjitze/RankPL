@@ -8,11 +8,12 @@ import com.tr.rp.core.Rank;
 import com.tr.rp.core.RankedVarStore;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.num.NumExpression;
+import com.tr.rp.statement.Choose;
 
-public class ChooseMergingIterator implements RankedIterator {
+public class ChooseMergingIterator implements RankedIterator<VarStore> {
 
-	private final RankedIterator in1;
-	private final RankedIterator in2;
+	private final RankedIterator<VarStore> in1;
+	private final RankedIterator<VarStore> in2;
 
 	private final PriorityQueue<RankedVarStore> pq = new PriorityQueue<RankedVarStore>(
 			new Comparator<RankedVarStore>() {
@@ -28,14 +29,17 @@ public class ChooseMergingIterator implements RankedIterator {
 	
 	private int normalizationOffset = -1;
 	
-	public ChooseMergingIterator(RankedIterator in1, 
-			RankedIterator in2, NumExpression e) {
+	private Choose choose;
+	
+	public ChooseMergingIterator(RankedIterator<VarStore> in1, 
+			RankedIterator<VarStore> in2, NumExpression e, Choose choose) {
 		this.in1 = in1;
 		this.in2 = in2;
 		in1next = in1.next();
 		in2next = in2.next();
 		this.e = e;
-
+		this.choose = choose;
+		
 		// Check
 		if (e.hasRankExpression()) {
 			throw new IllegalArgumentException("Expression contains rank expressions");
@@ -51,7 +55,7 @@ public class ChooseMergingIterator implements RankedIterator {
 				in1next = in1.next();
 			}
 			if (in2next) {
-				pq.add(new RankedVarStore(in2.getVarStore(), Rank.add(in2.getRank(), e.getVal(in2.getVarStore()))));
+				pq.add(new RankedVarStore(in2.getVarStore(), Rank.add(in2.getRank(), e.getSingletonResult(in2.getVarStore(), choose.toString()))));
 				in2next = in2.next();
 			}
 		} else {
@@ -65,7 +69,7 @@ public class ChooseMergingIterator implements RankedIterator {
 			// but that's OK. We just need to ensure that all items that are
 			// possibly ranked as low as the current rank are in pq.
 			while (in2next && in2.getRank() < currentRank) {
-				pq.add(new RankedVarStore(in2.getVarStore(),Rank.add(in2.getRank(), e.getVal(in2.getVarStore()))));
+				pq.add(new RankedVarStore(in2.getVarStore(),Rank.add(in2.getRank(), e.getSingletonResult(in2.getVarStore(), choose.toString()))));
 				in2next = in2.next();
 			}
 		}

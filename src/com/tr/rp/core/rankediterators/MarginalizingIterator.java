@@ -12,12 +12,12 @@ import com.tr.rp.core.VarStore;
  */
 public class MarginalizingIterator extends DuplicateRemovingIterator {
 	
-	public MarginalizingIterator(RankedIterator in, String ... vars) {
+	public MarginalizingIterator(RankedIterator<VarStore> in, String ... vars) {
 		this(in, Arrays.asList(vars));
 	}
 	
-	public MarginalizingIterator(final RankedIterator in, final List<String> vars) {
-		super(new RankedIterator() {
+	public MarginalizingIterator(final RankedIterator<VarStore> in, final List<String> vars) {
+		super(new RankedIterator<VarStore>() {
 			@Override
 			public boolean next() {
 				return in.next();

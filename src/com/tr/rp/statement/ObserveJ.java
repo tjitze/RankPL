@@ -3,6 +3,7 @@ package com.tr.rp.statement;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.ProgramBuilder;
+import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
 import com.tr.rp.expressions.bool.LessOrEq;
@@ -31,7 +32,7 @@ public class ObserveJ implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
 		return new Choose(new Observe(b), new Observe(b.negate()), rank).getIterator(in);
 	}
 

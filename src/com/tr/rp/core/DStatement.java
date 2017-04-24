@@ -7,6 +7,6 @@ import com.tr.rp.core.rankediterators.IteratorProvider;
  * the IteratorProvider interface: every statement must
  * provide an iterator that implements its semantics.
  */
-public interface DStatement extends IteratorProvider, LanguageElement {
+public interface DStatement extends IteratorProvider<VarStore>, LanguageElement {
 
 }

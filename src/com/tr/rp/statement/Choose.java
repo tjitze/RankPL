@@ -186,15 +186,15 @@ public class Choose implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
 		RankTransformIterator<NumExpression> rt = 
 				new RankTransformIterator<NumExpression>(in, rank);
 		NumExpression rank2 = rt.getExpression(0);
 		IteratorSplitter split = new IteratorSplitter(rt);
-		RankedIterator merge = new ChooseMergingIterator(
+		RankedIterator<VarStore> merge = new ChooseMergingIterator(
 				s1.getIterator(split.getA()), 
 				s2.getIterator(split.getB()), 
-				rank2);
+				rank2, this);
 		return new DuplicateRemovingIterator(merge);
 	}
 	

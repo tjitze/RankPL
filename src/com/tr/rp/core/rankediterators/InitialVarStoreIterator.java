@@ -8,7 +8,7 @@ import com.tr.rp.core.VarStore;
  * variable store assigning 0 to all variables) that is ranked 0, 
  * and nothing else.
  */
-public class InitialVarStoreIterator implements RankedIterator {
+public class InitialVarStoreIterator implements RankedIterator<VarStore> {
 	
 	private VarStore vs;
 	private boolean initialized = false;

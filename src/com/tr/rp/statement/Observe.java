@@ -20,7 +20,7 @@ public class Observe implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(final RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
 		
 		// If exp is contradiction/tautology we
 		// can immediately return result.

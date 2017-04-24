@@ -22,9 +22,9 @@ public class Cut implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(final RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
 		
-		return new RankedIterator() {
+		return new RankedIterator<VarStore>() {
 
 			@Override
 			public boolean next() {

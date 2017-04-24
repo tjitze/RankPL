@@ -21,8 +21,8 @@ public class Break implements DStatement {
 	}
 	
 	@Override
-	public RankedIterator getIterator(final RankedIterator in) {
-		return new RankedIterator() {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
+		return new RankedIterator<VarStore>() {
 
 			@Override
 			public boolean next() {

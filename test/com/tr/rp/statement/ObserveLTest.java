@@ -13,13 +13,13 @@ public class ObserveLTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = o.getIterator(this.getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
+		assert(result.getItem().getValue("a") == 1);
 		assert(result.getRank() == 0);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
+		assert(result.getItem().getValue("a") == 2);
 		assert(result.getRank() == 1);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
+		assert(result.getItem().getValue("a") == 3);
 		assert(result.getRank() == 2);
 		assert(result.next() == false);
 
@@ -27,13 +27,13 @@ public class ObserveLTest extends RPLBaseTest {
 		result = o.getIterator(this.getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
+		assert(result.getItem().getValue("a") == 1);
 		assert(result.getRank() == 0);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
+		assert(result.getItem().getValue("a") == 3);
 		assert(result.getRank() == 1);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
+		assert(result.getItem().getValue("a") == 2);
 		assert(result.getRank() == 1);
 		assert(result.next() == false);
 
@@ -41,13 +41,13 @@ public class ObserveLTest extends RPLBaseTest {
 		result = o.getIterator(this.getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
+		assert(result.getItem().getValue("a") == 3);
 		assert(result.getRank() == 0);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
+		assert(result.getItem().getValue("a") == 1);
 		assert(result.getRank() == 0);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
+		assert(result.getItem().getValue("a") == 2);
 		assert(result.getRank() == 1);
 		assert(result.next() == false);
 
@@ -55,13 +55,13 @@ public class ObserveLTest extends RPLBaseTest {
 		result = o.getIterator(this.getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
+		assert(result.getItem().getValue("a") == 3);
 		assert(result.getRank() == 0);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
+		assert(result.getItem().getValue("a") == 1);
 		assert(result.getRank() == 1);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
+		assert(result.getItem().getValue("a") == 2);
 		assert(result.getRank() == 2);
 		assert(result.next() == false);
 
@@ -69,13 +69,13 @@ public class ObserveLTest extends RPLBaseTest {
 		result = o.getIterator(this.getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
+		assert(result.getItem().getValue("a") == 3);
 		assert(result.getRank() == 0);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
+		assert(result.getItem().getValue("a") == 1);
 		assert(result.getRank() == 2);
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
+		assert(result.getItem().getValue("a") == 2);
 		assert(result.getRank() == 3);
 		assert(result.next() == false);
 	}

@@ -33,8 +33,8 @@ public class Cut implements DStatement {
 			}
 
 			@Override
-			public VarStore getVarStore() {
-				return in.getVarStore();
+			public VarStore getItem() {
+				return in.getItem();
 			}
 
 			@Override

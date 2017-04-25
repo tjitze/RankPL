@@ -26,7 +26,7 @@ public class Break implements DStatement {
 			}
 
 			@Override
-			public VarStore getVarStore() {
+			public VarStore getItem() {
 				return null;
 			}
 

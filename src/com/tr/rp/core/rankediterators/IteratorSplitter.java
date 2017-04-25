@@ -41,7 +41,7 @@ public class IteratorSplitter<T> {
 					ra = rsA.removeFirst();
 					return true;
 				} else if (in.next()) {
-					va = in.getVarStore();
+					va = in.getItem();
 					ra = in.getRank();
 					vsB.addLast(va);
 					rsB.addLast(ra);
@@ -52,7 +52,7 @@ public class IteratorSplitter<T> {
 			}
 
 			@Override
-			public T getVarStore() {
+			public T getItem() {
 				return va;
 			}
 
@@ -77,7 +77,7 @@ public class IteratorSplitter<T> {
 					rb = rsB.removeFirst();
 					return true;
 				} else if (in.next()) {
-					vb = in.getVarStore();
+					vb = in.getItem();
 					rb = in.getRank();
 					vsA.addLast(vb);
 					rsA.addLast(rb);
@@ -88,7 +88,7 @@ public class IteratorSplitter<T> {
 			}
 
 			@Override
-			public T getVarStore() {
+			public T getItem() {
 				return vb;
 			}
 

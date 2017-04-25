@@ -32,35 +32,35 @@ public class WhileTest extends RPLBaseTest {
 		//					30		3
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 3);
+		assert(result.getItem().getValue("y") == 3);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 11);
+		assert(result.getItem().getValue("y") == 11);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 12);
+		assert(result.getItem().getValue("y") == 12);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 13);
+		assert(result.getItem().getValue("y") == 13);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 21);
+		assert(result.getItem().getValue("y") == 21);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 20);
+		assert(result.getItem().getValue("y") == 20);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 22);
+		assert(result.getItem().getValue("y") == 22);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("y") == 30);
+		assert(result.getItem().getValue("y") == 30);
 		assert(result.getRank() == 3);
 
 		assert(result.next() == false);

@@ -24,9 +24,9 @@ public class MarginalizingIterator extends DuplicateRemovingIterator<VarStore> {
 			}
 
 			@Override
-			public VarStore getVarStore() {
+			public VarStore getItem() {
 				if (in == null) return null;
-				VarStore v = in.getVarStore();
+				VarStore v = in.getItem();
 				if (v == null) return null;
 				return v.marginalize(vars);
 			}

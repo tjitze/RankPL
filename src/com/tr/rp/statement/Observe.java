@@ -46,7 +46,7 @@ public class Observe implements DStatement {
 		// (if there is no varstore then hasnext will be false)
 		final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(rt);
 		boolean hasNext = bi.next();
-		while (hasNext && !exp2.isTrue(bi.getVarStore())) { 
+		while (hasNext && !exp2.isTrue(bi.getItem())) { 
 			hasNext = bi.next();
 		}
 		// Remember rank of this varstore
@@ -59,15 +59,15 @@ public class Observe implements DStatement {
 			public boolean next() {
 				// Find next varstore satisfying condition
 				boolean hasNext = bi.next();
-				while (hasNext && !exp2.isTrue(bi.getVarStore())) { 
+				while (hasNext && !exp2.isTrue(bi.getItem())) { 
 					hasNext = bi.next();
 				}
 				return hasNext;
 			}
 
 			@Override
-			public VarStore getVarStore() {
-				return bi.getVarStore();
+			public VarStore getItem() {
+				return bi.getItem();
 			}
 
 			@Override

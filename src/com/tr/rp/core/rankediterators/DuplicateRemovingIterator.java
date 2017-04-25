@@ -23,11 +23,11 @@ public class DuplicateRemovingIterator<T> implements RankedIterator<T> {
 	@Override
 	public boolean next() {
 		boolean hasNext = in.next();
-		while (hasNext && seen.contains(in.getVarStore())) {
+		while (hasNext && seen.contains(in.getItem())) {
 			hasNext = in.next();
 		}
 		if (hasNext) {
-			seen.add(in.getVarStore());
+			seen.add(in.getItem());
 			return true;
 		}
 		// No more items: we can free up used memory
@@ -36,8 +36,8 @@ public class DuplicateRemovingIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public T getVarStore() {
-		return in.getVarStore();
+	public T getItem() {
+		return in.getItem();
 	}
 
 	@Override

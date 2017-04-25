@@ -11,28 +11,28 @@ public class BufferingIteratorTest extends RPLBaseTest {
 		// Iterate and reset a couple of times.
 		// Perform reset at different states (before init, middle, after end)
 		for (int i = 0; i < 5; i++) {
-			assert(bi.getVarStore() == null);
+			assert(bi.getItem() == null);
 			assert(bi.getRank() == Integer.MAX_VALUE);
 			if (i == 0) {
 				bi.reset();
 				continue;
 			}
 			assert(bi.next() == true);
-			assert(bi.getVarStore() == v1);
+			assert(bi.getItem() == v1);
 			assert(bi.getRank() == 0);
 			if (i == 1) {
 				bi.reset();
 				continue;
 			}
 			assert(bi.next() == true);
-			assert(bi.getVarStore() == v2);
+			assert(bi.getItem() == v2);
 			assert(bi.getRank() == 1);
 			if (i == 2) {
 				bi.reset();
 				continue;
 			}
 			assert(bi.next() == true);
-			assert(bi.getVarStore() == v3);
+			assert(bi.getItem() == v3);
 			assert(bi.getRank() == 2);
 			if (i == 3) {
 				bi.reset();
@@ -48,25 +48,25 @@ public class BufferingIteratorTest extends RPLBaseTest {
 		for (int i = 0; i < 4; i++) {
 			BufferingIterator bi = new BufferingIterator(getTestIterator());
 	
-			assert(bi.getVarStore() == null);
+			assert(bi.getItem() == null);
 			assert(bi.getRank() == Integer.MAX_VALUE);
 			if (i == 0) {
 				bi.stopBuffering();
 			}
 			assert(bi.next() == true);
-			assert(bi.getVarStore() == v1);
+			assert(bi.getItem() == v1);
 			assert(bi.getRank() == 0);
 			if (i == 1) {
 				bi.stopBuffering();
 			}
 			assert(bi.next() == true);
-			assert(bi.getVarStore() == v2);
+			assert(bi.getItem() == v2);
 			assert(bi.getRank() == 1);
 			if (i == 2) {
 				bi.stopBuffering();
 			}
 			assert(bi.next() == true);
-			assert(bi.getVarStore() == v3);
+			assert(bi.getItem() == v3);
 			assert(bi.getRank() == 2);
 			if (i == 3) {
 				bi.stopBuffering();
@@ -87,10 +87,10 @@ public class BufferingIteratorTest extends RPLBaseTest {
 	public void testIfThenElseScenario() {
 		BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(getTestIterator());
 		bi.next();
-		VarStore v = bi.getVarStore();
+		VarStore v = bi.getItem();
 		int rank = bi.getRank();
 		bi.stopBuffering();
-		assert(bi.getVarStore() == v);
+		assert(bi.getItem() == v);
 		assert(bi.getRank() == rank);
 	}
 	}

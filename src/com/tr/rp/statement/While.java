@@ -41,7 +41,7 @@ public class While implements DStatement {
 				return new AbsurdIterator<VarStore>(); 
 			}
 			while (hasNext) {
-				if (exp.isTrue(bi.getVarStore())) {
+				if (exp.isTrue(bi.getItem())) {
 					expSatisfied = true;
 					break;
 				}

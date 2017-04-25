@@ -26,7 +26,7 @@ public class RankTransformIterator<T extends Expression<T>> extends BufferingIte
 	private final void transform() {
 		while (hasRankExpression(es) && next()) {
 			for (int i = 0; i < es.length; i++) {
-				es[i] = es[i].transformRankExpressions(getVarStore(), getRank());
+				es[i] = es[i].transformRankExpressions(getItem(), getRank());
 			}
 		}
 		for (int i = 0; i < es.length; i++) {

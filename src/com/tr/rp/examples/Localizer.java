@@ -78,7 +78,7 @@ public class Localizer {
 		VarStore vs = new VarStore();
 		RankedIterator it = prog.getIterator(new InitialVarStoreIterator(vs));
 		while (it.next() && it.getRank() == 0) {
-			System.out.println(it.getVarStore());
+			System.out.println(it.getItem());
 		}
 
 	}

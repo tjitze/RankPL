@@ -2,7 +2,7 @@ package com.tr.rp.core.rankediterators;
 
 import java.util.LinkedList;
 
-import com.tr.rp.core.RankedVarStore;
+import com.tr.rp.core.RankedItem;
 import com.tr.rp.core.VarStore;
 
 /**
@@ -12,7 +12,7 @@ import com.tr.rp.core.VarStore;
  */
 public class BufferingIterator<T> implements RankedIterator<T> {
 	
-	private LinkedList<RankedVarStore<T>> queue = new LinkedList<RankedVarStore<T>>();
+	private LinkedList<RankedItem<T>> queue = new LinkedList<RankedItem<T>>();
 	private int index = -1;
 	private RankedIterator<T> in;
 	private boolean stopped = false;
@@ -100,7 +100,7 @@ public class BufferingIterator<T> implements RankedIterator<T> {
 		else if (index == queue.size() - 1) {
 			index++;
 			boolean v = in.next();
-			if (v) queue.addLast(new RankedVarStore<T>(in.getVarStore(), in.getRank()));
+			if (v) queue.addLast(new RankedItem<T>(in.getItem(), in.getRank()));
 			if (stopped) {
 				clearHistory();
 			}
@@ -115,8 +115,8 @@ public class BufferingIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public T getVarStore() {
-		return index >= 0 && index < queue.size()? queue.get(index).varStore: null;
+	public T getItem() {
+		return index >= 0 && index < queue.size()? queue.get(index).item: null;
 	}
 
 	@Override

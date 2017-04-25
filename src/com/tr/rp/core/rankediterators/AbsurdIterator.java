@@ -11,7 +11,7 @@ public class AbsurdIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public T getVarStore() {
+	public T getItem() {
 		return null;
 	}
 

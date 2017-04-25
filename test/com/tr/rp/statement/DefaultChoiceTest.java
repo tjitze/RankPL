@@ -18,27 +18,27 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 21);
+		assert(result.getItem().getValue("b") == 21);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 22);
+		assert(result.getItem().getValue("b") == 22);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 23);
+		assert(result.getItem().getValue("b") == 23);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);
@@ -48,27 +48,27 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 21);
+		assert(result.getItem().getValue("b") == 21);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 22);
+		assert(result.getItem().getValue("b") == 22);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 23);
+		assert(result.getItem().getValue("b") == 23);
 		assert(result.getRank() == 3);
 
 		assert(result.next() == false);
@@ -78,27 +78,27 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 21);
+		assert(result.getItem().getValue("b") == 21);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 22);
+		assert(result.getItem().getValue("b") == 22);
 		assert(result.getRank() == 3);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 23);
+		assert(result.getItem().getValue("b") == 23);
 		assert(result.getRank() == 4);
 
 		assert(result.next() == false);
@@ -108,27 +108,27 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 21);
+		assert(result.getItem().getValue("b") == 21);
 		assert(result.getRank() == 3);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 22);
+		assert(result.getItem().getValue("b") == 22);
 		assert(result.getRank() == 4);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 23);
+		assert(result.getItem().getValue("b") == 23);
 		assert(result.getRank() == 5);
 
 		assert(result.next() == false);
@@ -138,27 +138,27 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 2);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 3);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 4);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 5);
 
 		assert(result.next() == false);
@@ -168,27 +168,27 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 3);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 4);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 5);
 
 		assert(result.next() == false);
@@ -204,15 +204,15 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 		// Note: shifted down to 0
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 		
 		assert(result.next() == false);
@@ -227,15 +227,15 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 		
 		assert(result.next() == false);
@@ -250,19 +250,19 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		int value = result.getVarStore().getValue("c");
+		int value = result.getItem().getValue("c");
 		assert(value == 0);
 		int rank = result.getRank();
 		assert(rank == 0);
 		
 		assert(result.next() == true);
-		value = result.getVarStore().getValue("c");
+		value = result.getItem().getValue("c");
 		assert(value == 5);
 		rank = result.getRank();
 		assert(rank == 5 + 1);
 		
 		assert(result.next() == true);
-		value = result.getVarStore().getValue("c");
+		value = result.getItem().getValue("c");
 		assert(value == 10);
 		rank = result.getRank();
 		assert(rank == 10 + 2);
@@ -276,15 +276,15 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 1);
 		
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("b") == 5);
+		assert(result.getItem().getValue("b") == 5);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);

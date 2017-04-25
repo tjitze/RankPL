@@ -50,10 +50,10 @@ public class Assign implements DStatement {
 			}
 
 			@Override
-			public VarStore getVarStore() {
-				if (rt.getVarStore() == null) return null;
-				String internalName = Var.getInternalName(var, index, rt.getVarStore());
-				return rt.getVarStore().create(internalName, exp2.getVal(rt.getVarStore()));
+			public VarStore getItem() {
+				if (rt.getItem() == null) return null;
+				String internalName = Var.getInternalName(var, index, rt.getItem());
+				return rt.getItem().create(internalName, exp2.getVal(rt.getItem()));
 			}
 
 			@Override

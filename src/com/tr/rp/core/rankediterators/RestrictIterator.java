@@ -26,8 +26,8 @@ public class RestrictIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public T getVarStore() {
-		return in.getVarStore();
+	public T getItem() {
+		return in.getItem();
 	}
 
 	@Override

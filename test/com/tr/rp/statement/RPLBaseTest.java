@@ -42,7 +42,7 @@ public abstract class RPLBaseTest extends TestCase {
 			}
 
 			@Override
-			public VarStore getVarStore() {
+			public VarStore getItem() {
 				if (c < 0 || c >= list.size()) return null;
 				return list.get(c);
 			}

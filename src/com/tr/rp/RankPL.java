@@ -63,7 +63,7 @@ public class RankPL {
         DefProgParser parser = new DefProgParser(tokens);
         ConcreteParser classVisitor = new ConcreteParser();
         DStatement program = (DStatement)classVisitor.visit(parser.program());
-		RankedIterator it = program.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> it = program.getIterator(new InitialVarStoreIterator());
 
 		// Apply variable list
 		if (variables.length > 0) {
@@ -73,7 +73,7 @@ public class RankPL {
 		// Print outcomes
 		boolean emptyResult = false;
 		while (it.next() && it.getRank() <= maxRank) {
-			VarStore v = it.getVarStore();
+			VarStore v = it.getItem();
 			if (v.toString().equals("[]")) {
 				emptyResult = true;
 			}

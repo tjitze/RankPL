@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 import com.tr.rp.core.Rank;
-import com.tr.rp.core.RankedVarStore;
+import com.tr.rp.core.RankedItem;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.statement.Choose;
@@ -15,10 +15,10 @@ public class ChooseMergingIterator implements RankedIterator<VarStore> {
 	private final RankedIterator<VarStore> in1;
 	private final RankedIterator<VarStore> in2;
 
-	private final PriorityQueue<RankedVarStore<VarStore>> pq = new PriorityQueue<RankedVarStore<VarStore>>(
-			new Comparator<RankedVarStore<VarStore>>() {
+	private final PriorityQueue<RankedItem<VarStore>> pq = new PriorityQueue<RankedItem<VarStore>>(
+			new Comparator<RankedItem<VarStore>>() {
 				@Override
-				public int compare(RankedVarStore<VarStore> o1, RankedVarStore<VarStore> o2) {
+				public int compare(RankedItem<VarStore> o1, RankedItem<VarStore> o2) {
 					return Rank.sub(o1.rank, o2.rank);
 				}
 			});
@@ -51,25 +51,25 @@ public class ChooseMergingIterator implements RankedIterator<VarStore> {
 		if (!pq.isEmpty()) pq.remove();
 		if (pq.isEmpty()) {
 			if (in1next) {
-				pq.add(new RankedVarStore<VarStore>(in1.getVarStore(), in1.getRank()));
+				pq.add(new RankedItem<VarStore>(in1.getItem(), in1.getRank()));
 				in1next = in1.next();
 			}
 			if (in2next) {
-				pq.add(new RankedVarStore<VarStore>(in2.getVarStore(), Rank.add(in2.getRank(), e.getSingletonResult(in2.getVarStore(), choose.toString()))));
+				pq.add(new RankedItem<VarStore>(in2.getItem(), Rank.add(in2.getRank(), e.getSingletonResult(in2.getItem(), choose.toString()))));
 				in2next = in2.next();
 			}
 		} else {
 			// Make sure we don't skip any item
 			int currentRank = pq.peek().rank;
 			while (in1next && in1.getRank() < currentRank) {
-				pq.add(new RankedVarStore<VarStore>(in1.getVarStore(),in1.getRank()));
+				pq.add(new RankedItem<VarStore>(in1.getItem(),in1.getRank()));
 				in1next = in1.next();
 			}
 			// Here we may be adding items ranked higher than current rank,
 			// but that's OK. We just need to ensure that all items that are
 			// possibly ranked as low as the current rank are in pq.
 			while (in2next && in2.getRank() < currentRank) {
-				pq.add(new RankedVarStore<VarStore>(in2.getVarStore(),Rank.add(in2.getRank(), e.getSingletonResult(in2.getVarStore(), choose.toString()))));
+				pq.add(new RankedItem<VarStore>(in2.getItem(),Rank.add(in2.getRank(), e.getSingletonResult(in2.getItem(), choose.toString()))));
 				in2next = in2.next();
 			}
 		}
@@ -81,8 +81,8 @@ public class ChooseMergingIterator implements RankedIterator<VarStore> {
 	}
 
 	@Override
-	public VarStore getVarStore() {
-		return pq.isEmpty()? null: pq.peek().varStore;
+	public VarStore getItem() {
+		return pq.isEmpty()? null: pq.peek().item;
 	}
 
 	@Override

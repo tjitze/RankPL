@@ -27,18 +27,18 @@ public class IfElseTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("a") == 1);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
-		assert(result.getVarStore().getValue("b") == 22);
+		assert(result.getItem().getValue("a") == 2);
+		assert(result.getItem().getValue("b") == 22);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
-		assert(result.getVarStore().getValue("b") == 23);
+		assert(result.getItem().getValue("a") == 3);
+		assert(result.getItem().getValue("b") == 23);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);
@@ -50,18 +50,18 @@ public class IfElseTest extends RPLBaseTest {
 		result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
-		assert(result.getVarStore().getValue("b") == 21);
+		assert(result.getItem().getValue("a") == 1);
+		assert(result.getItem().getValue("b") == 21);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("a") == 2);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("a") == 3);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);
@@ -76,18 +76,18 @@ public class IfElseTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("a") == 1);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("a") == 2);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("a") == 3);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);
@@ -101,18 +101,18 @@ public class IfElseTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
-		assert(result.getVarStore().getValue("b") == 21);
+		assert(result.getItem().getValue("a") == 1);
+		assert(result.getItem().getValue("b") == 21);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
-		assert(result.getVarStore().getValue("b") == 22);
+		assert(result.getItem().getValue("a") == 2);
+		assert(result.getItem().getValue("b") == 22);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
-		assert(result.getVarStore().getValue("b") == 23);
+		assert(result.getItem().getValue("a") == 3);
+		assert(result.getItem().getValue("b") == 23);
 		assert(result.getRank() == 2);
 
 		assert(result.next() == false);
@@ -141,8 +141,8 @@ public class IfElseTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
-		assert(result.getVarStore().getValue("b") == 11);
+		assert(result.getItem().getValue("a") == 1);
+		assert(result.getItem().getValue("b") == 11);
 		assert(result.getRank() == 0);
 		
 		assert(result.next() == false);
@@ -155,13 +155,13 @@ public class IfElseTest extends RPLBaseTest {
 
 		// Note: ranks shifted down by 1
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
-		assert(result.getVarStore().getValue("b") == 12);
+		assert(result.getItem().getValue("a") == 2);
+		assert(result.getItem().getValue("b") == 12);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
-		assert(result.getVarStore().getValue("b") == 13);
+		assert(result.getItem().getValue("a") == 3);
+		assert(result.getItem().getValue("b") == 13);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == false);
@@ -177,13 +177,13 @@ public class IfElseTest extends RPLBaseTest {
 
 		// Note: ranks shifted down by 1
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 2);
-		assert(result.getVarStore().getValue("b") == 22);
+		assert(result.getItem().getValue("a") == 2);
+		assert(result.getItem().getValue("b") == 22);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 3);
-		assert(result.getVarStore().getValue("b") == 23);
+		assert(result.getItem().getValue("a") == 3);
+		assert(result.getItem().getValue("b") == 23);
 		assert(result.getRank() == 1);
 
 		assert(result.next() == false);
@@ -195,8 +195,8 @@ public class IfElseTest extends RPLBaseTest {
 		result = ie.getIterator(getTestIterator());
 
 		assert(result.next() == true);
-		assert(result.getVarStore().getValue("a") == 1);
-		assert(result.getVarStore().getValue("b") == 21);
+		assert(result.getItem().getValue("a") == 1);
+		assert(result.getItem().getValue("b") == 21);
 		assert(result.getRank() == 0);
 
 		assert(result.next() == false);
@@ -214,23 +214,23 @@ public class IfElseTest extends RPLBaseTest {
 		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
-		assert(result.getVarStore().getValue("fx1") == 0);
-		assert(result.getVarStore().getValue("a1") == 0);
+		assert(result.getItem().getValue("fx1") == 0);
+		assert(result.getItem().getValue("a1") == 0);
 		assert(result.getRank() == 0);
 
 		assert(result.next());
-		assert(result.getVarStore().getValue("fx1") == 0);
-		assert(result.getVarStore().getValue("a1") == 1);
+		assert(result.getItem().getValue("fx1") == 0);
+		assert(result.getItem().getValue("a1") == 1);
 		assert(result.getRank() == 0);
 
 		assert(result.next());
-		assert(result.getVarStore().getValue("fx1") == 1);
-		assert(result.getVarStore().getValue("a1") == 0);
+		assert(result.getItem().getValue("fx1") == 1);
+		assert(result.getItem().getValue("a1") == 0);
 		assert(result.getRank() == 5);
 
 		assert(result.next());
-		assert(result.getVarStore().getValue("fx1") == 1);
-		assert(result.getVarStore().getValue("a1") == 1);
+		assert(result.getItem().getValue("fx1") == 1);
+		assert(result.getItem().getValue("a1") == 1);
 		assert(result.getRank() == 5);
 	}
 }

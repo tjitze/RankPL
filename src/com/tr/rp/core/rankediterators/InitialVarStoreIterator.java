@@ -33,7 +33,7 @@ public class InitialVarStoreIterator implements RankedIterator<VarStore> {
 	}
 
 	@Override
-	public VarStore getVarStore() {
+	public VarStore getItem() {
 		return vs;
 	}
 

@@ -1,24 +1,17 @@
 package com.tr.rp.core.rankediterators;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Optional;
-
-import com.tr.rp.core.VarStore;
-import com.tr.rp.expressions.bool.BoolExpression;
-
 /**
- * Iterator that returns variable stores associated with 
- * a rank, in a low-to-high order. This represents a ranking
- * function over variable stores that can be iterated through
- * from most plausible (rank 0) to least plausible.
+ * Iterator that returns items associated with ranks in a 
+ * low-to-high order. This represents a ranking function 
+ * over items that can be iterated through from most 
+ * plausible (rank 0) to least plausible.
  * 
  * The following rules must be satisfied:
  * 1: When a ranked iterator is constructed, its state is
- *    "not initialized". The methods getVarStore() and getRank()
+ *    "not initialized". The methods getItem() and getRank()
  *    will return an undefined value.
- * 2: If calling next() returns true then getVarStore() and
- *    getRank() return the next variable store and associated rank.
+ * 2: If calling next() returns true then getItem() and
+ *    getRank() return the next item and associated rank.
  *    If next() returns false, their value is undefined.
  * 3: The first call to next() (unless it returns false) will
  *    make getRank() return 0.
@@ -27,13 +20,13 @@ import com.tr.rp.expressions.bool.BoolExpression;
  *    previously returned rank.
  *    
  * Note that it is allowed (although generally not desired) to return
- * the same variable store more than once. To filter out duplicates,
- * use the DuplicateRemovingIterator.
+ * the same item more than once. To filter out duplicates, use the 
+ * DuplicateRemovingIterator.
  */
 public interface RankedIterator<T> {
 
 	/**
-	 * Get next item of iterator (accessible via getVarStore()/getRank()).
+	 * Get next item of iterator (accessible via getItem()/getRank()).
 	 *
 	 * @return False if there is no more item.
 	 */
@@ -42,7 +35,7 @@ public interface RankedIterator<T> {
 	/**
 	 * @return Current item
 	 */
-	public T getVarStore();
+	public T getItem();
 
 	/**
 	 * @return Rank of current item

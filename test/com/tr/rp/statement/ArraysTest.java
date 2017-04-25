@@ -24,7 +24,7 @@ public class ArraysTest extends RPLBaseTest {
 				.add(new Assign("x", 
 						new NumExpression[] { new IntLiteral(2) }, 
 						new IntLiteral(100)));
-		RankedIterator result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getVarStore();
@@ -49,7 +49,7 @@ public class ArraysTest extends RPLBaseTest {
 				.add(new Assign("x", 
 						new NumExpression[] { new IntLiteral(2), new IntLiteral(3) }, 
 						new IntLiteral(100)));
-		RankedIterator result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getVarStore();
@@ -67,7 +67,7 @@ public class ArraysTest extends RPLBaseTest {
 						new IntLiteral(100)))
 				.add(new Assign("y", new Var("x", 
 						new NumExpression[] { new IntLiteral(2) })));
-		RankedIterator result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getVarStore();
@@ -83,7 +83,7 @@ public class ArraysTest extends RPLBaseTest {
 						new IntLiteral(100)))
 				.add(new Assign("x", new Var("x", 
 						new NumExpression[] { new IntLiteral(2), new IntLiteral(3) })));
-		RankedIterator result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getVarStore();

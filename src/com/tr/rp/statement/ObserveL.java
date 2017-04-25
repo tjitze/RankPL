@@ -3,6 +3,7 @@ package com.tr.rp.statement;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.ProgramBuilder;
+import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
@@ -36,7 +37,7 @@ public class ObserveL implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
 		NumExpression rb = new RankExpression(b);
 		NumExpression rnb = new RankExpression(b.negate());
 		// Do rank transformation here

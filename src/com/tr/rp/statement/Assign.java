@@ -38,11 +38,11 @@ public class Assign implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(final RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
 		RankTransformIterator<NumExpression> rt = 
 				new RankTransformIterator<NumExpression>(in, this.exp);
 		NumExpression exp2 = rt.getExpression(0);
-		return new RankedIterator() {
+		return new RankedIterator<VarStore>() {
 
 			@Override
 			public boolean next() {

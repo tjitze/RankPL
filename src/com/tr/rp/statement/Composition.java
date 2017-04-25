@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
-import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.core.rankediterators.RestrictIterator;
@@ -30,9 +29,9 @@ public class Composition implements DStatement {
 	
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
-		in = new RestrictIterator(in, maxRank);
+		in = new RestrictIterator<VarStore>(in, maxRank);
 		in = a.getIterator(in);
-		in = new RestrictIterator(in, maxRank);
+		in = new RestrictIterator<VarStore>(in, maxRank);
 		in = b.getIterator(in);
 		return in;
 	}

@@ -2,7 +2,6 @@ package com.tr.rp.expressions.num;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
-import com.tr.rp.expressions.bool.AbstractNumBoolOp;
 
 /**
  * Abstract class for integer-valued expressions that 

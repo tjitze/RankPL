@@ -6,7 +6,7 @@ import com.tr.rp.statement.RPLBaseTest;
 public class BufferingIteratorTest extends RPLBaseTest {
 
 	public void testReset() {
-		BufferingIterator bi = new BufferingIterator(getTestIterator());
+		BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(getTestIterator());
 
 		// Iterate and reset a couple of times.
 		// Perform reset at different states (before init, middle, after end)
@@ -85,7 +85,7 @@ public class BufferingIteratorTest extends RPLBaseTest {
 	}
 
 	public void testIfThenElseScenario() {
-		BufferingIterator bi = new BufferingIterator(getTestIterator());
+		BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(getTestIterator());
 		bi.next();
 		VarStore v = bi.getVarStore();
 		int rank = bi.getRank();

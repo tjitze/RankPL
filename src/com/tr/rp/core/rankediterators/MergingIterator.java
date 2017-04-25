@@ -22,10 +22,10 @@ public class MergingIterator implements RankedIterator<VarStore> {
 	private final int offset1;
 	private final int offset2;
 
-	private final PriorityQueue<RankedVarStore> pq = new PriorityQueue<RankedVarStore>(
-			new Comparator<RankedVarStore>() {
+	private final PriorityQueue<RankedVarStore<VarStore>> pq = new PriorityQueue<RankedVarStore<VarStore>>(
+			new Comparator<RankedVarStore<VarStore>>() {
 				@Override
-				public int compare(RankedVarStore o1, RankedVarStore o2) {
+				public int compare(RankedVarStore<VarStore> o1, RankedVarStore<VarStore> o2) {
 					return Rank.sub(o1.rank, o2.rank);
 				}
 			});
@@ -62,22 +62,22 @@ public class MergingIterator implements RankedIterator<VarStore> {
 		if (!pq.isEmpty()) pq.remove();
 		if (pq.isEmpty()) {
 			if (in1next) {
-				pq.add(new RankedVarStore(in1.getVarStore(), Rank.add(in1.getRank(), offset1)));
+				pq.add(new RankedVarStore<VarStore>(in1.getVarStore(), Rank.add(in1.getRank(), offset1)));
 				in1next = in1.next();
 			}
 			if (in2next) {
-				pq.add(new RankedVarStore(in2.getVarStore(), Rank.add(in2.getRank(), offset2)));
+				pq.add(new RankedVarStore<VarStore>(in2.getVarStore(), Rank.add(in2.getRank(), offset2)));
 				in2next = in2.next();
 			}
 		} else {
 			// Fill pq
 			int currentRank = pq.peek().rank;
 			while (in1next && Rank.add(in1.getRank(), offset1) < currentRank) {
-				pq.add(new RankedVarStore(in1.getVarStore(),Rank.add(in1.getRank(), offset1)));
+				pq.add(new RankedVarStore<VarStore>(in1.getVarStore(),Rank.add(in1.getRank(), offset1)));
 				in1next = in1.next();
 			}
 			while (in2next && Rank.add(in2.getRank(), offset2) < currentRank) {
-				pq.add(new RankedVarStore(in2.getVarStore(),Rank.add(in2.getRank(), offset2)));
+				pq.add(new RankedVarStore<VarStore>(in2.getVarStore(),Rank.add(in2.getRank(), offset2)));
 				in2next = in2.next();
 			}
 		}

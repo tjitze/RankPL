@@ -25,7 +25,7 @@ public class While implements DStatement {
 	}
 
 	@Override
-	public RankedIterator getIterator(RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
 		int iterations = 0;
 		
 		while (iterations++ < maxIterations) {
@@ -34,11 +34,11 @@ public class While implements DStatement {
 			in = generateIteration(in);
 			
 			// Check if exp is still satisfied
-			BufferingIterator bi = new BufferingIterator(in);
+			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
 			boolean expSatisfied = false;
 			boolean hasNext = bi.next();
 			if (!hasNext) { // Undefined
-				return new AbsurdIterator(); 
+				return new AbsurdIterator<VarStore>(); 
 			}
 			while (hasNext) {
 				if (exp.isTrue(bi.getVarStore())) {
@@ -64,7 +64,7 @@ public class While implements DStatement {
 
 	}
 	
-	private RankedIterator generateIteration(RankedIterator in) {
+	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in) {
 		return (new IfElse(exp, s, new Skip())).getIterator(in);
 	}
 	

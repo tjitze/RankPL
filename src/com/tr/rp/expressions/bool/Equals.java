@@ -1,8 +1,5 @@
 package com.tr.rp.expressions.bool;
 
-import com.tr.rp.core.Expression;
-import com.tr.rp.core.LanguageElement;
-import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Var;

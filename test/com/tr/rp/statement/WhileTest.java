@@ -20,7 +20,7 @@ public class WhileTest extends RPLBaseTest {
 				.add(new Assign("x", new Plus("x", 1)))
 				.build();
 		While w = new While(c, s);
-		RankedIterator result = w.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = w.getIterator(new InitialVarStoreIterator());
 		//	x = 0	x = 1	x = 2	rank
 		//	0		1		3		0
 		//					11		1

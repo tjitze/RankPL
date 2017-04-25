@@ -12,7 +12,7 @@ import com.tr.rp.core.rankediterators.RankedIterator;
  */
 public class Cut implements DStatement {
 	
-	int rank;
+	private int rank;
 	
 	/**
 	 * Construct Cut statement with given rank.

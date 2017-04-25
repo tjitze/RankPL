@@ -9,7 +9,6 @@ import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.tools.ResultPrinter;
 
 public class Observe implements DStatement {
 
@@ -28,7 +27,7 @@ public class Observe implements DStatement {
 			return in;
 		}
 		if (exp.isContradiction()) {
-			return new AbsurdIterator();
+			return new AbsurdIterator<VarStore>();
 		}
 
 		// Replace rank expressions in exp
@@ -41,11 +40,11 @@ public class Observe implements DStatement {
 			return rt;
 		}
 		if (exp2.isContradiction()) {
-			return new AbsurdIterator();
+			return new AbsurdIterator<VarStore>();
 		}		
 		// Find first varstore satisfying condition
 		// (if there is no varstore then hasnext will be false)
-		final BufferingIterator bi = new BufferingIterator(rt);
+		final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(rt);
 		boolean hasNext = bi.next();
 		while (hasNext && !exp2.isTrue(bi.getVarStore())) { 
 			hasNext = bi.next();
@@ -54,7 +53,7 @@ public class Observe implements DStatement {
 		final int conditioningOffset = hasNext? bi.getRank(): Integer.MAX_VALUE;
 		// Move back one item so that we can reuse the buffering iterator
 		if (hasNext) bi.reset(bi.getIndex() - 1);
-		return new RankedIterator() {
+		return new RankedIterator<VarStore>() {
 			
 			@Override
 			public boolean next() {

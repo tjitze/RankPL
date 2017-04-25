@@ -2,16 +2,11 @@ package com.tr.rp.statement;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
-import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.bool.LessOrEq;
 import com.tr.rp.expressions.num.IntLiteral;
-import com.tr.rp.expressions.num.Minus;
 import com.tr.rp.expressions.num.NumExpression;
-import com.tr.rp.expressions.num.Plus;
-import com.tr.rp.expressions.num.RankExpression;
 
 /**
  * Implements J-conditioning.

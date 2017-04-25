@@ -3,19 +3,16 @@ package com.tr.rp.statement;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolExpression;
 import com.tr.rp.expressions.bool.Equals;
 import com.tr.rp.expressions.bool.Not;
 import com.tr.rp.expressions.num.RankExpression;
-import com.tr.rp.expressions.num.Var;
-import com.tr.rp.tools.ResultPrinter;
 
 public class RankExpressionTest extends RPLBaseTest {
 
 	public void testSimpleRankExpressions() {
 
 		DStatement s = new Assign("c", new RankExpression(new Equals("a", 1)));
-		RankedIterator result = s.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = s.getIterator(getTestIterator());
 
 		assert(result.next() == true);
 		assert(result.getVarStore().getValue("c") == 0);

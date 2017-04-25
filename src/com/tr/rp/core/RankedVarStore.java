@@ -3,12 +3,12 @@ package com.tr.rp.core;
 /**
  * A pair consisting of a variable store and a rank.
  */
-public class RankedVarStore {
+public class RankedVarStore<T> {
 
-	public final VarStore varStore;
+	public final T varStore;
 	public final int rank;
 	
-	public RankedVarStore(VarStore v, int rank) {
+	public RankedVarStore(T v, int rank) {
 		this.varStore = v;
 		this.rank = rank;
 	}

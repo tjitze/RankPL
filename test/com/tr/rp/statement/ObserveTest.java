@@ -1,7 +1,5 @@
 package com.tr.rp.statement;
 
-import java.util.LinkedList;
-
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -9,13 +7,11 @@ import com.tr.rp.expressions.bool.BoolLiteral;
 import com.tr.rp.expressions.bool.Equals;
 import com.tr.rp.expressions.bool.Not;
 
-import junit.framework.TestCase;
-
 public class ObserveTest extends RPLBaseTest {
 
 	public void testPartiallyTrue() {
 		Observe obs = new Observe(new Equals("a",1)); 
-		RankedIterator result = obs.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getVarStore() == v1);
@@ -81,7 +77,7 @@ public class ObserveTest extends RPLBaseTest {
 	
 	public void testTrue() {
 		Observe obs = new Observe(new BoolLiteral(true)); 
-		RankedIterator result = obs.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getVarStore() == v1);
@@ -149,7 +145,7 @@ public class ObserveTest extends RPLBaseTest {
 	
 	public void testFalse() {
 		Observe obs = new Observe(new BoolLiteral(false)); 
-		RankedIterator result = obs.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
 		
 		assert(result.next() == false);
 
@@ -164,7 +160,7 @@ public class ObserveTest extends RPLBaseTest {
 	
 	public void testEmptyInput() {
 		Observe obs = new Observe(new BoolLiteral(true)); 
-		RankedIterator result = obs.getIterator(new AbsurdIterator());
+		RankedIterator<VarStore> result = obs.getIterator(new AbsurdIterator<VarStore>());
 		
 		assert(result.next() == false);
 	}	

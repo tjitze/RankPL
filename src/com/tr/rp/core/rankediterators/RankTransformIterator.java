@@ -3,7 +3,7 @@ package com.tr.rp.core.rankediterators;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
 
-public class RankTransformIterator<T extends Expression<T>> extends BufferingIterator {
+public class RankTransformIterator<T extends Expression<T>> extends BufferingIterator<VarStore> {
 
 	private final T[] es;
 	

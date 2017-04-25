@@ -11,10 +11,10 @@ import com.tr.rp.expressions.bool.BoolExpression;
 
 public class ResultPrinter {
 
-	public static void print(RankedIterator i) {
+	public static void print(RankedIterator<VarStore> i) {
 		print(i, 5);
 	}
-	public static void print(RankedIterator i, int maxRank) {
+	public static void print(RankedIterator<VarStore> i, int maxRank) {
 		try {
 			int rank = i.getRank();
 			VarStore v = i.getVarStore();
@@ -29,7 +29,7 @@ public class ResultPrinter {
 			System.out.println(rank + ": " + v);
 		}
 	}
-	public static void printRanks(RankedIterator it, BoolExpression...bs) {
+	public static void printRanks(RankedIterator<VarStore> it, BoolExpression...bs) {
 		Set<Integer> found = new HashSet<Integer>();
 		while (it.next() && found.size() < bs.length) {
 			for (int i = 0; i< bs.length; i++) {

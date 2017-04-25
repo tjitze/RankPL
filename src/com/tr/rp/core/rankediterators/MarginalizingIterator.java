@@ -10,7 +10,7 @@ import com.tr.rp.core.VarStore;
  * and yields a marginalization of this iterator to a given set of 
  * variables.
  */
-public class MarginalizingIterator extends DuplicateRemovingIterator {
+public class MarginalizingIterator extends DuplicateRemovingIterator<VarStore> {
 	
 	public MarginalizingIterator(RankedIterator<VarStore> in, String ... vars) {
 		this(in, Arrays.asList(vars));

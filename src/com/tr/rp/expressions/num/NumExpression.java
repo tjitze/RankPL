@@ -11,4 +11,8 @@ public abstract class NumExpression extends Expression<NumExpression> {
 
 	public abstract int getDefiniteValue();
 
+	public int getSingletonResult(VarStore varStore, String string) {
+		return getVal(varStore);
+	}
+
 }

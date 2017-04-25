@@ -11,12 +11,12 @@ import com.tr.rp.core.VarStore;
  * returns a variable store X first with a rank of n and later with
  * a rank of n + m (m >= 0) then the latter will be skipped.
  */
-public class DuplicateRemovingIterator implements RankedIterator<VarStore> {
+public class DuplicateRemovingIterator<T> implements RankedIterator<T> {
 
-	private final HashSet<VarStore> seen = new HashSet<VarStore>();
-	private final RankedIterator<VarStore> in;
+	private final HashSet<T> seen = new HashSet<T>();
+	private final RankedIterator<T> in;
 	
-	public DuplicateRemovingIterator(RankedIterator<VarStore> in) {
+	public DuplicateRemovingIterator(RankedIterator<T> in) {
 		this.in = in;
 	}
 
@@ -36,7 +36,7 @@ public class DuplicateRemovingIterator implements RankedIterator<VarStore> {
 	}
 
 	@Override
-	public VarStore getVarStore() {
+	public T getVarStore() {
 		return in.getVarStore();
 	}
 

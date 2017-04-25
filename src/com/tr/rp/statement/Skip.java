@@ -8,7 +8,7 @@ import com.tr.rp.core.rankediterators.RankedIterator;
 public class Skip implements DStatement {
 
 	@Override
-	public RankedIterator getIterator(RankedIterator in) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
 		return in;
 	}
 

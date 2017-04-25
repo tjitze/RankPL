@@ -1,8 +1,8 @@
 package com.tr.rp.statement;
 
+import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.Equals;
-import com.tr.rp.tools.ResultPrinter;
 
 public class ObserveLTest extends RPLBaseTest {
 
@@ -10,7 +10,7 @@ public class ObserveLTest extends RPLBaseTest {
 	public void testObserveShenoy() {
 		
 		ObserveL o = new ObserveL(new Equals("a", 3), 0);
-		RankedIterator result = o.getIterator(this.getTestIterator());
+		RankedIterator<VarStore> result = o.getIterator(this.getTestIterator());
 
 		assert(result.next() == true);
 		assert(result.getVarStore().getValue("a") == 1);

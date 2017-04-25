@@ -3,11 +3,7 @@ package com.tr.rp.statement;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.num.IntLiteral;
-import com.tr.rp.expressions.num.NumExpression;
-import com.tr.rp.expressions.num.Var;
 
 /**
  * Terminates execution with run time exception

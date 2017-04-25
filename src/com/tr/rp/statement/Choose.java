@@ -1,18 +1,13 @@
 package com.tr.rp.statement;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
-import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.ChooseMergingIterator;
 import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
-import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.num.IntLiteral;
@@ -190,12 +185,12 @@ public class Choose implements DStatement {
 		RankTransformIterator<NumExpression> rt = 
 				new RankTransformIterator<NumExpression>(in, rank);
 		NumExpression rank2 = rt.getExpression(0);
-		IteratorSplitter split = new IteratorSplitter(rt);
+		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(rt);
 		RankedIterator<VarStore> merge = new ChooseMergingIterator(
 				s1.getIterator(split.getA()), 
 				s2.getIterator(split.getB()), 
 				rank2, this);
-		return new DuplicateRemovingIterator(merge);
+		return new DuplicateRemovingIterator<VarStore>(merge);
 	}
 	
 	public String toString() {

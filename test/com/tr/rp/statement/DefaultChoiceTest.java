@@ -1,20 +1,11 @@
 package com.tr.rp.statement;
 
-import java.util.LinkedList;
-
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolLiteral;
-import com.tr.rp.expressions.bool.Equals;
-import com.tr.rp.expressions.bool.Not;
-import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Plus;
 import com.tr.rp.expressions.num.Var;
-import com.tr.rp.tools.ResultPrinter;
-
-import junit.framework.TestCase;
 
 public class DefaultChoiceTest extends RPLBaseTest {
 	
@@ -24,7 +15,7 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 		// s1 [0] s2
 		Choose c = new Choose(s1, s2, 0);
-		RankedIterator result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getVarStore().getValue("b") == 11);
@@ -209,7 +200,7 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 		// {observe false [3] b = a + 10}
 		Choose c = new Choose(new Observe(new BoolLiteral(false)), s1, 3);
-		RankedIterator result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
 		
 		// Note: shifted down to 0
 		assert(result.next() == true);
@@ -233,7 +224,7 @@ public class DefaultChoiceTest extends RPLBaseTest {
 		
 		// {observe b = a + 10 [3] false}
 		Choose c = new Choose(s1, new Observe(new BoolLiteral(false)), 3);
-		RankedIterator result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		assert(result.getVarStore().getValue("b") == 11);
@@ -256,7 +247,7 @@ public class DefaultChoiceTest extends RPLBaseTest {
 				new Observe(new BoolLiteral(false)), 
 				new Observe(new BoolLiteral(true)), 
 				new Var("c"));
-		RankedIterator result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
 		
 		assert(result.next() == true);
 		int value = result.getVarStore().getValue("c");

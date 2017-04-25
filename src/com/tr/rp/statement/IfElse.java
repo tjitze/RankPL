@@ -1,21 +1,14 @@
 package com.tr.rp.statement;
 
-import java.util.LinkedHashSet;
-
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
-import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
-import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.bool.Not;
-import com.tr.rp.expressions.num.NumExpression;
-import com.tr.rp.tools.ResultPrinter;
 
 public class IfElse implements DStatement {
 
@@ -58,7 +51,7 @@ public class IfElse implements DStatement {
 		}	
 		
 		// Split input
-		IteratorSplitter split = new IteratorSplitter(i);
+		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
 
 		// Apply condition 
 		RankedIterator<VarStore> ia1 = new Observe(exp2).getIterator(split.getA());

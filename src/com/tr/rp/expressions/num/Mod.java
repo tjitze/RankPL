@@ -1,7 +1,5 @@
 package com.tr.rp.expressions.num;
 
-import com.tr.rp.core.VarStore;
-
 public class Mod extends AbstractNumOp {
 
 	public Mod(NumExpression e1, NumExpression e2) {

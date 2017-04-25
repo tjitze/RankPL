@@ -68,37 +68,26 @@ public class Len extends NumExpression {
         return -1;
 	}
 
-
-	private void getLen(VarStore e, String var) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 	@Override
 	public boolean hasDefiniteValue() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
 	public int getDefiniteValue() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
 	public boolean hasRankExpression() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
 	public NumExpression transformRankExpressions(VarStore v, int rank) {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 }

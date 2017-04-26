@@ -81,7 +81,7 @@ public class While implements DStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new IfElse((BoolExpression)exp.replaceVariable(a, b),
+		return new While((BoolExpression)exp.replaceVariable(a, b),
 				(DStatement)this.s.replaceVariable(a, b));
 	}
 	

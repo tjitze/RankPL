@@ -71,24 +71,23 @@ In this paper we introduce \emph{RankPL}, a modeling language
 	with a semantics based on Spohn's ranking theory.
 Broadly speaking, RankPL can be used to represent and reason about processes that exhibit 
 	uncertainty expressible by distinguishing ``normal'' from ``surprising'' events.
-RankPL allows (iterated) revision of rankings over alternative program traces and
+RankPL allows (iterated) revision of rankings over alternative program states and
 	supports various types of reasoning, including abduction and causal inference.
-We present syntax and semantics, 
-	demonstrate the language with practical examples,
-	and discuss an implementation that we made available for download.
+We present the language, its denotational semantics, and a number of practical examples.
+We also discuss an implementation of RankPL that is available for download.
 \end{abstract}
 
 \section{Introduction}
 
-\emph{Probabilistic programming languages} (PPLs) are regular programming languages extended with statements to 
+\emph{Probabilistic programming languages} (PPLs) are programming languages extended with statements to 
 	(1) draw values at random from a given probability distribution, and 
-	(2) condition values of variables due to observation.
-Running a probabilistic program yields, instead of a deterministic outcome, a probability distribution over possible outcomes.
-PPLs greatly simplify the problem of representing and reasoning with rich probabilistic models 
-	and have received increasing attention in recent years, mainly in the context of Bayesian machine learning.
-Examples of PPLs include Church~\cite{DBLP:conf/uai/GoodmanMRBT08}, 
-	Venture~\cite{DBLP:journals/corr/MansinghkaSP14} and Figaro~\cite{pfeffer2009figaro}.
-Early work on PPLs goes back to Kozen~\cite{DBLP:journals/jcss/Kozen81}.
+	(2) perform conditioning due to observation.
+Probabilistic programs yield, instead of a deterministic outcome, a probability distribution over possible outcomes.
+PPLs greatly simplify representation of, and reasoning with rich probabilistic models.
+Interest in PPLs has increased in recent years,
+		mainly in the context of Bayesian machine learning.
+Examples of modern PPLs include \emph{Church}, \emph{Venture} and \emph{Figaro}~\cite{DBLP:conf/uai/GoodmanMRBT08,DBLP:journals/corr/MansinghkaSP14,pfeffer2009figaro}, 	
+		while early work goes back to Kozen~\cite{DBLP:journals/jcss/Kozen81}.\looseness=-1
 %\emph{Probabilistic programming languages} (PPLs) are general purpose programming languages extended with statements to 
 %	(1) draw values at random from a given probability distribution, and 
 %	(2) condition values of variables due to observation.
@@ -101,11 +100,11 @@ Early work on PPLs goes back to Kozen~\cite{DBLP:journals/jcss/Kozen81}.
 %Early work on PPLs goes back to Kozen~\cite{DBLP:journals/jcss/Kozen81}, 
 
 \emph{Ranking theory} is a qualitative abstraction of probability theory in which events receive discrete degrees of surprise called \emph{ranks}~\cite{DBLP:books/daglib/0035277}.
-That is, events can be ranked 0 (not surprising), 1 (surprising), 2 (very surprising), and so on, or $\infty$ if impossible.
-Ranking theory is computationally simpler than probability theory and does not require precise probabilities to perform meaningful inference. 
-Still, it provides analogues to many powerful probabilistic notions, including conditioning and independence.
-Ranking theory has been applied in logic-based AI approaches 
-		such as belief revision and non-monotonic reasoning~\cite{DBLP:dblp_journals/ai/DarwicheP97,goldszmidt1996qualitative} 
+That is, events are ranked 0 (not surprising), 1 (surprising), 2 (very surprising), and so on, or $\infty$ if impossible.
+Apart from being computationally simpler,
+	ranking theory permits meaningful inference without requiring precise probabilities.
+Still, it provides analogues to powerful notions known from probability theory, like conditioning and independence.
+Ranking theory has been applied in logic-based AI (e.g. belief revision and non-monotonic reasoning~\cite{DBLP:dblp_journals/ai/DarwicheP97,goldszmidt1996qualitative})
 		as well as formal epistemology~\cite{DBLP:books/daglib/0035277}.\looseness=-1
 %\emph{Ranking theory} is a qualitative abstraction of probability theory in which events are associated with discrete \emph{ranks}
 %	that represent degrees of surprise or inverse degrees of plausibility.
@@ -119,13 +118,13 @@ Ranking theory has been applied in logic-based AI approaches
 %	such as belief revision and non-monotonic reasoning~\cite{DBLP:dblp_journals/ai/DarwicheP97,goldszmidt1996qualitative},
 %	as well as mathematical philosophy~\cite{DBLP:books/daglib/0035277}.
 
-In this paper we develop a language called RankPL.
+In this paper we develop a language called \emph{RankPL}.
 Semantically, the language draws a parallel with probabilistic programming in terms of ranking theory.
 We start with a minimal imperative programming language (\textbf{if-then-else}, \textbf{while}, etc.)
 	and extend it with statements to
 	(1) draw choices at random from a given ranking function and
-	(2) perform ranking-theoretic conditioning on values of variables due to observation.
-Analogous to probabilistic programs, RankPL programs represent ranking functions over possible outcomes.
+	(2) perform ranking-theoretic conditioning due to observation.
+Analogous to probabilistic programs, a RankPL programs yields, instead of a deterministic outcome, a ranking function over possible outcomes.
 
 Broadly speaking, RankPL can be used to represent and reason about processes
 	whose input or behavior exhibits uncertainty expressible % in terms of rankings, or expressible 
@@ -134,20 +133,19 @@ Broadly speaking, RankPL can be used to represent and reason about processes
 %Examples are systems based on ranking networks 
 %	(the ranking-based counterpart of Bayesian networks) and ranking-based Markov chains.
 %A high degree of modelling flexibility is provided TODO: improve
-%	such as those involving a temporal dimension or large state spaces.
-Reasoning tasks that are supported include causal inference, abduction and different types of (iterated) belief revision.
-The latter are consistent with the AGM postulates for belief revision and DP postulates for iterated belief revision~\cite{DBLP:dblp_journals/ai/DarwicheP97,Gardenfors:1995:BR:216136.216138}.
-Just as PPLs provide a high degree of flexibility in reasoning about rich probabilistic models, RankPL does so for ranking-theoretic models.
-%These tasks can be implemented without having to write inference-specific code.
+%	such as those involving a temporal dimension or large state spaces.xxxx
+Conditioning in RankPL amounts to the (iterated) revision of rankings over alternative program states.
+This is a form of revision consistent with the well-known AGM and DP postulates for (iterated) revision~\cite{DBLP:dblp_journals/ai/DarwicheP97,Gardenfors:1995:BR:216136.216138}.
+Various types of reasoning can be modeled, including abduction and causal inference.
+Like with PPLs, these reasoning tasks can be modeled without having to write inference-specific code.
 
 The overview of this paper is as follows.
-Section~\ref{sec:rankingtheory} deals with basics of ranking theory.
-In section~\ref{sec:rpl} we introduce RankPL and present its syntax and semantics.
-This is a \emph{denotational} semantics, which defines the meaning of a statement in terms of a ranking transformation function.
+Section~\ref{sec:rankingtheory} deals with the basics of ranking theory.
+In section~\ref{sec:rpl} we introduce RankPL and present its syntax and formal semantics.
 In section~\ref{sec:noisy} we discuss two generalized conditioning schemes (L-conditioning and J-conditioning) and show how they can be implemented in RankPL.
-All the above will be demonstrated by practical examples of RankPL programs.
-In section~\ref{sec:implementation} we discuss our RankPL implementation 
-	and conclude in section~\ref{sec:conclusion}.
+All the above will be demonstrated by practical examples.
+In section~\ref{sec:implementation} we discuss our RankPL implementation.
+We conclude in section~\ref{sec:conclusion}.
 %These two special constructs are, of course, very similar to those used to define PPLs,
 %	except that they work with ranks instead of probabilities.
 %Any ranking function over valuations (i.e., assignments of values to variables of the program) can be represented by a ranked program.
@@ -240,7 +238,7 @@ More precisely, if we say that $A$ is believed with firmness $x$ (for some $x > 
 A similar notion of belief does not exist for probabilities, as is demonstrated by the Lottery paradox~\cite{kyburg1961probability}.
 
 Finally, note that $\infty$ and $0$ in ranking theory can be thought of as playing the role of $0$ and $1$ in probability,
-	while $min$, subtraction and addition play the role, respectively, of addition, division and multiplication.
+	while $min$, $-$ and $+$ play the role, respectively, of $+$, $\div$ and $\times$.
 Recall, for example, the definition of conditional probability, and compare it with definition~\ref{def:conditional}.
 This correspondence also underlies notions such as (conditional) independence and ranking nets (the ranking-based counterpart of Bayesian networks)
 	that have been defined in terms of rankings~\cite{DBLP:books/daglib/0035277}.
@@ -267,8 +265,7 @@ The second special statement is called the \emph{observe} statement
 	$\textbf{observe }b.$
 It states that the condition $b$ is observed to hold.
 Its semantics corresponds to ranking-theoretic conditioning.
-
-To illustrate these statements, consider the program
+To illustrate, consider the program
 	$$\texttt{x} := 10;\mbox{ } \{ \texttt{y} := 1 \} \Rank{1} \{ \{\texttt{y} := 2\} \Rank{1} \{\texttt{y} := 3\} \};\mbox{ } \texttt{x} := \texttt{x} \times \texttt{y};$$
 This program has three possible outcomes: $\texttt{x} = 10$, $\texttt{x} = 20$ and $\texttt{x} = 30$, ranked 0, 1 and 2, respectively.
 Now suppose we extend the program as follows: 
@@ -277,8 +274,7 @@ Here, the observation rules out the event $\texttt{y} = 1$,
 	and the ranks of the remaining possibilities are shifted down, 
 	resulting in two outcomes $\texttt{x} = 20$ and $\texttt{x} = 30$, ranked 0 and 1, respectively.
 
-Finally, the language also includes the \emph{rank expression} $\textbf{rank }b.$
-This is an integer expression that evaluates to the rank of the boolean expression $b$.
+A third special construct is the \emph{rank expression} $\textbf{rank }b.$, which evaluates to the rank of the boolean expression $b$.
 Its use will be demonstrated later.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -298,9 +294,8 @@ $\textit{s}$		& $:=$ 	& $\{s_0; s_1 \} \mid x := e \mid \textbf{if }b\textbf{ th
 			& 		& $\textbf{while } b \textbf{ do } \{ s \} \mid \{ s_1 \} \Rank{e} \{ s_2 \} \mid \textbf{observe }b \mid \textbf{skip}$\\
 \end{tabular}
 \end{center}
-Some syntactical shortcuts: 
-We omit parentheses and curly brackets unless this leads to ambiguity.
-We define $\wedge$ in terms of $\vee$ and $\neg$.
+
+We omit parentheses and curly brackets when possible and define $\wedge$ in terms of $\vee$ and $\neg$.
 We write $\textbf{if }b\textbf{ then } \{ s \}$ instead of $\textbf{if }b\textbf{ then } \{ s \}$ $\textbf{else }\{\textbf{skip}\}$,
 	and abbreviate statements of the form $\{x := e_1\} \Rank{e} \{x := e_2\}$ to $x := e_1 \Rank{e} e_2$.
 Note that the \textbf{skip} statement does nothing and is added for technical convenience.
@@ -311,21 +306,18 @@ Note that the \textbf{skip} statement does nothing and is added for technical co
 \label{sec:formalsemantics}
 
 The denotational semantics of RankPL defines the meaning of a statement $s$ as a function $\dn{s}$ that maps prior rankings into posterior rankings.
-The objects of these rankings are \emph{valuations}, i.e., functions denoted by $\sigma$ that assign values to all variables.
-The \emph{initial valuation} sets all variables to 0 and is denoted by $\sigma_0$.
-The \emph{initial ranking} assigns 0 to $\sigma_0$ and $\infty$ to all others, and is denoted by $\kappa_0$.
+The subjects of these rankings are program states represented by \emph{valuations}, i.e., functions that assign values to all variables.
+The \emph{initial valuation}, denoted by $\sigma_0$, sets all variables to 0.
+The \emph{initial ranking}, denoted by $\kappa_0$, assigns 0 to $\sigma_0$ and $\infty$ to others.
 We denote by $\sigma[x \rightarrow n]$ the valuation equivalent to $\sigma$ except for assigning $n$ to $x$.\looseness=-1
 
 From now on we associate $\States$ with the set of valuations and denote the set of rankings over $\States$ by $K$.
-Intuitively, if %a prior ranking $\kappa \in K$ 
-		$\kappa$ yields the degree of surprise 
-	that a given valuation is the actual valuation \emph{before} executing $s$,
-	then % the posterior ranking 
-		$\dn{s}(\kappa)$ yields the degree of surprise 
-	that a given valuation is the actual valuation \emph{after} executing $s$.
-If we refer to the result of running the \emph{program} $s$, we refer to the ranking $\dn{s}(\kappa_0)$.\looseness=-1
-
-Because a statement $s$ might not execute successfully, $\dn{s}$ is not a total function over $K$.
+Intuitively, if $\kappa(\sigma)$ is the degree of surprise 
+	that $\sigma$ is the actual valuation \emph{before} executing $s$,
+	then $\dn{s}(\kappa)(\sigma)$ is the degree of surprise 
+	that $\sigma$ is the actual valuation \emph{after} executing $s$.
+If we refer to the result of running the \emph{program} $s$, we refer to the ranking $\dn{s}(\kappa_0)$.
+Because $s$ might not execute successfully, $\dn{s}$ is not a total function over $K$.
 There are two issues to deal with.
 First of all, non-termination of a loop leads to an undefined outcome.
 Therefore $\dn{s}$ is a partial function whose value $\dn{s}(\kappa)$ is defined only if $s$ terminates given $\kappa$.
@@ -333,10 +325,10 @@ Secondly, observe statements may rule out all possibilities.
 A program whose outcome is empty because of this is said to \emph{fail}.
 We denote failure with a special ranking $\kappa_{\infty}$ that assigns $\infty$ to all valuations.
 Since $\kappa_{\infty} \not \in K$, we define the range of $\dn{s}$ by $K^{*} = K \cup \{\kappa_{\infty}\}$.
-Thus, the semantics of a statement $s$ is defined by a partial function $\dn{s}$ from $K^{*}$ to $K^{*}$.
+Thus, the semantics of a statement $s$ is defined by a partial function $\dn{s}$ from $K^{*}$ to $K^{*}$.\looseness=-1
 
 But first, we define the semantics of expressions.
-A numerical expression is evaluated with respect to both a ranking function (to determine values of \textbf{rank} expressions) and a valuation (to determine values of variables).
+A numerical expression is evaluated w.r.t. both a ranking function (to determine values of \textbf{rank} expressions) and a valuation (to determine values of variables).
 Boolean expressions may also contain \textbf{rank} expressions and therefore also depend on a ranking function.
 Given a valuation $\sigma$ and ranking $\kappa$, we denote by $\sigma_{\kappa}(e)$ the value of the numerical expression $e$ w.r.t. $\sigma$ and $\kappa$,	
 	and by $\mods{\kappa}{b}$ the set of valuations satisfying the boolean expression $b$ w.r.t. $\kappa$.
@@ -382,7 +374,7 @@ To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we fi
 		combined by taking the minimum of the two.
 	The result is normalized to account for the case where one branch fails.\looseness=-1
 \begin{align*}
-\dn{\textbf{if }e\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}}(\kappa)	& = || \lambda ||,   \\
+\dn{\textbf{if }e\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}}(\kappa)	& = || \lambda ||,   \\ 
 			&  \hspace{-30pt} \mbox{ where }\lambda(\sigma) = min\begin{pmatrix} \dn{s_1}(\kappa_{b})(\sigma) + \kappa(b), \tag{\textbf{D4}} \\ \dn{s_2}(\kappa_{\neg b})(\sigma) + \kappa(\neg b) \end{pmatrix}  
 \end{align*}
 	Given a prior $\kappa$, the rank of a valuation after executing $s_1 \Rank{e} s_2$
@@ -392,7 +384,8 @@ To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we fi
 \begin{align}
 \dn{\{ s_1 \} \Rank{e} \{ s_2 \}}(\kappa)	& = || \lambda ||, \mbox{ where }\lambda(\sigma) = min \begin{pmatrix} \dn{s_1}(\kappa)(\sigma), \\ \dn{s_2}(\kappa)(\sigma) + \sigma_{\kappa}(e) \end{pmatrix} \tag{\textbf{D5}} 
 \end{align}
-	The semantics of the observe statement $\textbf{observe }b$ corresponds to conditioning on the set of valuations satisfying $b$, unless either the rank of this set is $\infty$ or the prior ranking equals $\kappa_{\infty}$ (i.e., represents failure).
+	The semantics of $\textbf{observe }b$ corresponds to conditioning on the set of valuations satisfying $b$, 
+		unless the rank of this set is $\infty$ or the prior ranking equals $\kappa_{\infty}$.
 \begin{align}
 \dn{\textbf{observe }b}(\kappa)  & = 
 		\left\{
@@ -403,7 +396,7 @@ To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we fi
 		\right. 
 \end{align}
 	We define the semantics of $\textbf{while }b\textbf{ do }\{s\}$
-		as the iterative execution of $\textbf{if }b$ $\textbf{ then }$ $\{s\}$ $\textbf{else} \{\textbf{skip}\}$
+		as the iterative execution of $\textbf{if }b$ $\textbf{then}$ $\{s\}$ $\textbf{else } \{\textbf{skip}\}$
 		until the rank of $b$ is $\infty$ (the loop terminates normally) or the result is undefined ($s$ does not terminate).
 	If neither of these conditions is ever met (i.e., if the $\textbf{while}$ statement loops endlessly) then the result is undefined.
 \begin{align}
@@ -411,7 +404,7 @@ To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we fi
 		\left\{
 			\begin{array}{ll}
 				F_{b,s}^{n}(\kappa)	\hspace{4pt}	& \mbox{for the first }n\mbox{ s.t. }F_{b,s}^{n}(\kappa)(b) = \infty \mbox{, or }\\
-				\mbox{undef.}		& \mbox{if there is no such }n.
+				\mbox{undef.}		& \mbox{if there is no such }n,
 			\end{array}\hspace{-5pt}\tag{\textbf{D7}}
 		\right.
 \end{align}
@@ -421,14 +414,13 @@ where $F_{b,s}: K_{\bot} \rightarrow K_{\bot}$ is defined by $F_{b,s}(\kappa) = 
 %\end{equation*}
 
 Some remarks.
-First of all, the semantics described here can be thought of as a ranking-based variation of the 
-	semantics of probabilistic programs due to Kozen~\cite{DBLP:journals/jcss/Kozen81}.
-That is, if we replace $+$ with $\times$ and $min$ with $+$, then our definitions are very similar to their probabilistic counterparts.
-Secondly, it is not necessary to compute complete rankings to execute a program.
-Our implementation (discussed in section~\ref{sec:implementation}) follows a \emph{most-plausible-first} execution strategy.
-That is, the possible outcomes of a RankPL program can be iterated over in ascending order with respect to rank,
-	and higher-ranked alternatives do not need to be explored if knowing only the lowest-ranked outcomes is sufficient, 
-	which is often the case.\looseness=-1
+Firstly, the semantics of RankPL can be thought of as a ranking-based variation of the 
+	Kozen's semantics of probabistic programs~\cite{DBLP:journals/jcss/Kozen81} (i.e., replacing $\times$ with $+$ and $+$ with $min$).
+Secondly, a RankPL implementation does not need to compute complete rankings.
+Our implementation discussed in section~\ref{sec:implementation} follows a \emph{most-plausible-first} execution strategy:
+	different alternatives are explored in ascending order w.r.t. rank,
+	and higher-ranked alternatives need not be explored if knowing the lowest-ranked outcomes is enough, 
+	as is often the case.\looseness=-1
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Example}
@@ -436,13 +428,14 @@ That is, the possible outcomes of a RankPL program can be iterated over in ascen
 
 Consider the \emph{two-bit full adder} circuit shown in figure~\ref{fig:adder}.
 It contains two \emph{XOR} gates $X_1, X_2$, two \emph{AND} gates $A_1, A_2$ and an \emph{OR} gate $O_1$.
-The 2-bit output $\texttt{b}_1\texttt{b}_2$ is a binary representation of the number of inputs $\texttt{a}_1\texttt{a}_2\texttt{a}_3$ that are high.
+The function of this circuit is to generate a binary representation $(\texttt{b}_1,\texttt{b}_2)$ 
+	of the number of inputs among $\texttt{a}_1$, $\texttt{a}_2$, $\texttt{a}_3$ that are high.
 The \emph{circuit diagnosis problem} is about explaining observed incorrect behavior by finding minimal sets of gates that, if faulty, cause this behavior.\footnote{See Halpern~\cite[Chapter~9]{DBLP:books/daglib/0014219} for a similar treatment of this example.}
 
 \begin{figure}
 \centering
-\begin{tikzpicture}[circuit logic US, minimum height=5mm]
-\matrix[column sep=10mm]
+\begin{tikzpicture}[circuit logic US, minimum height=4mm]
+\matrix[column sep=10mm,row sep=-1.5mm]
 { \node[yshift=3pt] (i0) {$\texttt{a}_1$};& \node [xor gate] (xor1) {\small$X_1$};	& \node[yshift=-3pt,xor gate] (xor2) {\small$X_2$};	& 	& \node[yshift=-3pt] (o1) {$\texttt{b}_2$}; \\
 \node[yshift=2pt] (i1) {$\texttt{a}_2$};&	& \node (cin) {};	&	&  \\
 \node[yshift=-3pt] (i2) {$\texttt{a}_3$};&	& \node[and gate] (and1) {\small$A_2$};	&	& \\
@@ -465,10 +458,11 @@ The \emph{circuit diagnosis problem} is about explaining observed incorrect beha
 \end{figure}
 
 The listing below shows a RankPL solution.
-Line 1 encodes the space of possible inputs (0 or 1, equally likely).
-The failure variables $\texttt{fa}_1$, $\texttt{fa}_2$, $\texttt{fo}_1$, $\texttt{fx}_2$ and $\texttt{fx}_2$ represent the events of individual gates failing and are set on line 2 (0 = OK, 1 = failing).
+On line 1 we set the constants \texttt{L} and \texttt{H} (representing a \emph{low} and \emph{high} signal); and $\texttt{OK}$ and $\texttt{FAIL}$ (to represent the state of a gate).
+Line 2 encodes the space of possible inputs (\texttt{L} or \texttt{H}, equally likely).
+The failure variables $\texttt{fa}_1$, $\texttt{fa}_2$, $\texttt{fo}_1$, $\texttt{fx}_2$ and $\texttt{fx}_2$ represent the events of individual gates failing and are set on line 3.
 Here, we assume that failure is surprising to degree 1.
-The circuit's logic is encoded on lines 3-7, where the output of a failing gate is arbitrarily set to 0 or 1.
+The circuit's logic is encoded on lines 4-8, where the output of a failing gate is arbitrarily set to \texttt{L} or \texttt{H}.
 Note that $\oplus$ stands for XOR.
 At the end we observe $\phi$.
 
@@ -476,25 +470,27 @@ At the end we observe $\phi$.
 \small
 \begin{tabular}{rl}
 \hline
-1 & $\texttt{a}_1 := (0 \Rank{0} 1); \texttt{a}_2 := (0 \Rank{0} 1); \texttt{a}_3 := (0 \Rank{0} 1);$ \\
-2 & $\texttt{fx}_1 := (0 \Rank{1} 1); \texttt{fx}_2 := (0 \Rank{1} 1); \texttt{fa}_1 := (0 \Rank{1} 1); \texttt{fa}_2 := (0 \Rank{1} 1); \texttt{fo}_1 := (0 \Rank{1} 1); $ \\
-3 & $\textbf{if }\texttt{fx}_1 = 0\textbf{ then }\texttt{l}_1 := \texttt{a}_1 \oplus \texttt{a}_2\textbf{ else } \texttt{l}_1 := (0 \Rank{0} 1);$ \\
-4 & $\textbf{if }\texttt{fa}_1 = 0\textbf{ then }\texttt{l}_2 := \texttt{a}_1 \wedge \texttt{a}_2\textbf{ else } \texttt{l}_2 := (0 \Rank{0} 1);$ \\
-5 & $\textbf{if }\texttt{fa}_2 = 0\textbf{ then }\texttt{l}_3 := \texttt{l}_1 \wedge \texttt{a}_3\textbf{ else } \texttt{l}_3 := (0 \Rank{0} 1);$ \\
-6 & $\textbf{if }\texttt{fx}_2 = 0\textbf{ then }\texttt{b}_2 := \texttt{l}_1 \oplus \texttt{a}_3\textbf{ else } \texttt{b}_2 := (0 \Rank{0} 1);$ \\
-7 & $\textbf{if }\texttt{fo}_1 = 0\textbf{ then }\texttt{b}_1 := \texttt{l}_3 \vee \texttt{l}_2\textbf{ else } \texttt{b}_1 := (0 \Rank{0} 1);$ \\
-8 & $\textbf{observe}\textbf{ }\phi;$\\
+1 & $\texttt{L} := 0; \texttt{H} := 1; \texttt{OK} := 0; \texttt{FAIL} := 1;$ \\
+2 & $\texttt{a}_1 := (\texttt{L} \Rank{0} \texttt{H}); \texttt{a}_2 := (\texttt{L} \Rank{0} \texttt{H}); \texttt{a}_3 := (\texttt{L} \Rank{0} \texttt{H});$ \\
+3 & $\texttt{fx}_1 := (\texttt{OK} \Rank{1} \texttt{FAIL}); \texttt{fx}_2 := (\texttt{OK} \Rank{1} \texttt{FAIL}); \texttt{fa}_1 := (\texttt{OK} \Rank{1} \texttt{FAIL}); $ \\
+   & \hspace{20pt}$\texttt{fa}_2 := (\texttt{OK} \Rank{1} \texttt{FAIL}); \texttt{fo}_1 := (\texttt{OK} \Rank{1} \texttt{FAIL}); $ \\
+4 & $\textbf{if }\texttt{fx}_1 = \texttt{OK}\textbf{ then }\texttt{l}_1 := \texttt{a}_1 \oplus \texttt{a}_2\textbf{ else } \texttt{l}_1 := (\texttt{L} \Rank{0} \texttt{H});$ \\
+5 & $\textbf{if }\texttt{fa}_1 = \texttt{OK}\textbf{ then }\texttt{l}_2 := \texttt{a}_1 \wedge \texttt{a}_2\textbf{ else } \texttt{l}_2 := (\texttt{L} \Rank{0} \texttt{H});$ \\
+6 & $\textbf{if }\texttt{fa}_2 = \texttt{OK}\textbf{ then }\texttt{l}_3 := \texttt{l}_1 \wedge \texttt{a}_3\textbf{ else } \texttt{l}_3 := (\texttt{L} \Rank{0} \texttt{H});$ \\
+7 & $\textbf{if }\texttt{fx}_2 = \texttt{OK}\textbf{ then }\texttt{b}_2 := \texttt{l}_1 \oplus \texttt{a}_3\textbf{ else } \texttt{b}_2 := (\texttt{L} \Rank{0} \texttt{H});$ \\
+8 & $\textbf{if }\texttt{fo}_1 = \texttt{OK}\textbf{ then }\texttt{b}_1 := \texttt{l}_3 \vee \texttt{l}_2\textbf{ else } \texttt{b}_1 := (\texttt{L} \Rank{0} \texttt{H});$ \\
+9 & $\textbf{observe}\textbf{ }\phi;$\\
 \hline
 \end{tabular} \end{center} 
 
 The different valuations of the failure variables produced by this program  
 	represent explanations for the observation $\phi$, ranked according to plausibility.
-Suppose we observe that the input $\texttt{a}_1\texttt{a}_2\texttt{a}_3$ is valued 001 while the output $\texttt{b}_1\texttt{b}_2$ is incorrectly valued 10 instead of 01.
-Thus, we set $\phi$ to $\texttt{a}_1 = 0 \wedge \texttt{a}_2 = 0 \wedge \texttt{a}_3 = 1 \wedge \texttt{b}_1 = 1 \wedge \texttt{b}_2 = 0$.
-This results in one outcome ranked 0, namely 
-	$\texttt{fa}_1\texttt{fa}_2\texttt{fo}_1\texttt{fx}_2\texttt{fx}_2 = 00010$. % removed: inline
+Suppose we observe that the input $(\texttt{a}_1,\texttt{a}_2,\texttt{a}_3)$ is valued (\texttt{L},\texttt{L},\texttt{H}) while the output $(\texttt{b}_1,\texttt{b}_2)$ is incorrectly valued (\texttt{H},\texttt{L}) instead of (\texttt{L},\texttt{H}).
+Thus, we set $\phi$ to $\texttt{a}_1 = \texttt{L} \wedge \texttt{a}_2 = \texttt{L} \wedge \texttt{a}_3 = \texttt{H} \wedge \texttt{b}_1 = \texttt{H} \wedge \texttt{b}_2 = \texttt{L}$.
+The program then produces one outcome ranked 0, namely 
+	$(\texttt{fa}_1,\texttt{fa}_2,\texttt{fo}_1,\texttt{fx}_2,\texttt{fx}_2) = (\texttt{OK},\texttt{OK},\texttt{OK},\texttt{FAIL},\texttt{OK})$. % removed: inline
 That is, $\phi$ is most plausibly explained by failure of $X_1$.
-Other explanations are ranked higher than 0 and involve more than one faulty gate.\looseness=-1
+Other outcomes are ranked higher than 0 and represent explanations involving more than one faulty gate.\looseness=-1
 % TODO: if space permits, elaborate on this example (belief revision, abduction)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -551,13 +547,14 @@ This permits iterated belief change, because the rank of $\overline A$ is shifte
 %		two \textbf{observe} statements and a default choice construct.
 %Let us state this formally.
 %In what follows we write $\kappa_{b \rightarrow x}$ as shorthand for $\kappa_{\mods{\kappa}{b} \rightarrow x}$.
-Instead of introducing a special statement representing J-conditioning, we show that we can already express it in RankPL.
+Instead of introducing a special statement representing J-conditioning, we show that we can already express it in RankPL, 
+	using ranked choice and observation as basic building blocks.
 Below we write $\kappa_{b \rightarrow x}$ as shorthand for $\kappa_{\mods{\kappa}{b} \rightarrow x}$.
 Proofs are omitted due to space constraints.
 \begin{theorem}
 Let $b$ be a boolean expression and $\kappa$ a ranking function s.t. $\kappa(b) < \infty$ and $\kappa(\neg b) < \infty$.
 We then have
-$\kappa_{b \rightarrow x} = \dn{\textbf{observe }b \Rank{x} \textbf{observe }\neg b}(\kappa).$ % removed: inline TODO: why is this cursive?
+$\kappa_{b \rightarrow x} = \dn{\{\emph{\textbf{observe }}b \}\Rank{x} \{\emph{\textbf{observe }}\neg b}(\kappa)\}.$ % removed: inline TODO: why is this cursive?
 \end{theorem}
 \emph{L-conditioning}~\cite{goldszmidt1996qualitative} %(also called \emph{evidence-oriented} conditioning~\cite{DBLP:books/daglib/0035277}) 
 is another kind of generalized conditioning.
@@ -580,17 +577,17 @@ Unlike J-conditioning, L-conditioning satisfies two properties
 that are desirable for modeling noisy observation:
 	\textit{reversibility} ($(\kappa_{A \uparrow x})_{\overline{A} \uparrow x} = \kappa$) and 
 	\textit{commutativity} ($(\kappa_{A \uparrow x})_{B \uparrow x} = (\kappa_{B \uparrow x})_{A \uparrow x}$)~\cite{DBLP:books/daglib/0035277}.
-We now show how to express L-conditioning in RankPL.
+We can expression L-conditioning in RankPL using ranked choice, observation and the rank expression as basic building blocks.
 Like before, we write $\kappa_{b \uparrow x}$ to denote $\kappa_{\mods{\kappa}{b} \uparrow x}$.
 \begin{theorem}\label{thm:evidenceoriented}
 Let $b$ be a boolean expression, $\kappa$ a ranking function over $\States$ such that $\kappa(b), \kappa(\neg b) < \infty$, and $x$ a rank.
 We then have:
 	$$\kappa_{b \uparrow x} = D
 	\left\llbracket\begin{tabular}{c} 
-	\mbox{$\textbf{if rank}(b) \leq x\textbf{ then}$} \\ % TODO: why is this cursive?
-	\mbox{$\textbf{observe }b \Rank{x - \textbf{rank}(b) + \textbf{rank}(\neg b)} \textbf{observe }\neg b$} \\
-	\mbox{$\textbf{else}$} \\
-	\mbox{$\textbf{observe }\neg b \Rank{\textbf{rank}(b) - x} \textbf{observe }b$} \\
+	\mbox{$\emph{\textbf{if }}(\emph{\textbf{rank}}(b) \leq x)\emph{\textbf{ then}}$} \\ % TODO: why is this cursive?
+	\mbox{$\{\emph{\textbf{observe }}b \} \Rank{x - \emph{\textbf{rank}}(b) + \emph{\textbf{rank}}(\neg b)} \{ \emph{\textbf{observe }}\neg b\}$} \\
+	\mbox{$\emph{\textbf{else}}$} \\
+	\mbox{$\{\emph{\textbf{observe }}\neg b\} \Rank{\emph{\textbf{rank}}(b) - x} \{\emph{\textbf{observe }}b\}$} \\
 	\end{tabular}\right\rrbracket(\kappa)$$
 \end{theorem}
 In what follows we use the statement $\textbf{observe}_{\textbf{L}}(b, x)$ as shorthand for the statement that represents L-conditioning as defined in theorem~\ref{thm:evidenceoriented}.
@@ -627,7 +624,7 @@ For example, the $X$ in figure~\ref{fig:localization} marks an obstacle that aff
 
 The listing below shows a RankPL solution.
 The program takes as input:
-(1) A map, held by an array $\texttt{map}$ of size $\texttt{n}\times \texttt{m}$, 
+(1) A map, held by an array $\texttt{map}$ of size $\texttt{m}\times \texttt{n}$, 
 	storing the content of each cell (0 = empty, 1 = wall);
 (2) An array $\texttt{mv}$ (length $\texttt{k}$) of movements (\texttt{N}/\texttt{E}/\texttt{S}/\texttt{W} for north/east/south/west) at given time points; and 
 (3) Two arrays $\texttt{ns}$ and $\texttt{ss}$ (length $\texttt{k}$) with distances read by the north and south sensor at given time points.
@@ -647,10 +644,10 @@ Input:	&  $\texttt{map}$: 2D array (size \texttt{m} $\times$ \texttt{n}) encodin
 4	& \hspace{20pt}	$\textbf{else if }(\texttt{mv}[\texttt{t}] = \texttt{S})\textbf{ then } \texttt{y} := \texttt{y} - 1$ \\
 5	& \hspace{20pt}	$\textbf{else if }(\texttt{mv}[\texttt{t}] = \texttt{W})\textbf{ then } \texttt{x} := \texttt{x} - 1$ \\
 6	& \hspace{20pt}	$\textbf{else if }(\texttt{mv}[\texttt{t}] = \texttt{E})\textbf{ then } \texttt{x} := \texttt{x} + 1 \textbf{ else skip;}$ \\
-7	& \hspace{20pt}	$\texttt{n} := 0; \textbf{ while }\texttt{map}[\texttt{x}][\texttt{y} + \texttt{n} + 1] = 0\textbf{ do }\texttt{n} := \texttt{n} + 1;$ \\
-8	& \hspace{20pt}	$\textbf{observe}_{\textbf{L}}(1, \texttt{n} = \texttt{ns}[\texttt{t}]);$ \\
-9	& \hspace{20pt}	$\texttt{s} := 0; \textbf{ while }\texttt{map}[\texttt{x}][\texttt{y} - \texttt{s} - 1] = 0\textbf{ do }\texttt{s} := \texttt{s} + 1;$ \\
-10	& \hspace{20pt}	$\textbf{observe}_{\textbf{L}}(1, \texttt{s} = \texttt{ss}[\texttt{t}]);$ \\
+7	& \hspace{20pt}	$\texttt{nd} := 0; \textbf{ while }\texttt{map}[\texttt{x}][\texttt{y} + \texttt{nd} + 1] = 0\textbf{ do }\texttt{nd} := \texttt{nd} + 1;$ \\
+8	& \hspace{20pt}	$\textbf{observe}_{\textbf{L}}(1, \texttt{nd} = \texttt{ns}[\texttt{t}]);$ \\
+9	& \hspace{20pt}	$\texttt{sd} := 0; \textbf{ while }\texttt{map}[\texttt{x}][\texttt{y} - \texttt{sd} - 1] = 0\textbf{ do }\texttt{sd} := \texttt{sd} + 1;$ \\
+10	& \hspace{20pt}	$\textbf{observe}_{\textbf{L}}(1, \texttt{sd} = \texttt{ss}[\texttt{t}]);$ \\
 11	& \hspace{20pt}	$\texttt{t} := \texttt{t} + 1;$\\
 12	& $\}$ \\
 \hline
@@ -748,9 +745,9 @@ Note that the observed distances stored in $\texttt{ns}$ and $\texttt{ss}$ are c
 
 The different values of $\texttt{x},\texttt{y}$ generated by this program encode possible locations of the robot, ranked according to plausibility.
 The dots in figure~\ref{fig:localization} show the actual locations, while the red cells represent the inferred most plausible (i.e., rank zero) locations generated by the program.
-Terminating after the first step (i.e., setting $k$ to $1$) yields four locations, all consistent with the observed distances 1 (north) and 2 (south).
-After two iterations (i.e., if we set $k$ to $2$) the robot wrongly believes to be at (6, 4), due to having observed the obstacle.
-However, after two more iterations (i.e., if we set $k$ to $4$), the program produces the actual location.\looseness=-1
+Terminating after $t = 0$ (i.e., setting $k$ to $1$) yields four locations, all consistent with the observed distances 1 (north) and 2 (south).
+If we terminate after $t = 1$, the robot wrongly believes to be at (6, 4), due to having observed the obstacle.
+However, if we terminate after $t = 3$, the program produces the actual location.\looseness=-1
 
 Note that using L-conditioning here is essential.
 Regular conditioning would cause failure after the third iteration. 

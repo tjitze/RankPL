@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.bool;
 
+import java.util.Set;
 import java.util.function.Predicate;
 
 import com.tr.rp.core.LanguageElement;
@@ -51,5 +52,8 @@ public class Pred extends BoolExpression {
 	public LanguageElement replaceVariable(String a, String b) {
 		throw new UnsupportedOperationException("Cannot replace variables in Pred objects");
 	}
+
+	@Override
+	public void getVariables(Set<String> list) { }
 
 }

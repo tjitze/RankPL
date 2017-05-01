@@ -1,5 +1,7 @@
 package com.tr.rp.statement;
 
+import java.util.Set;
+
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -56,5 +58,11 @@ public class ObserveJ implements DStatement {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new ObserveJ((BoolExpression)this.b.replaceVariable(a, b), (NumExpression)rank.replaceVariable(a, b));
+	}
+
+	@Override
+	public void getVariables(Set<String> list) {
+		b.getVariables(list);
+		rank.getVariables(list);
 	}
 }

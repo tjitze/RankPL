@@ -1,5 +1,7 @@
 package com.tr.rp.statement;
 
+import java.util.Set;
+
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -63,5 +65,8 @@ public class Cut implements DStatement {
 	public LanguageElement replaceVariable(String a, String b) {
 		return this;
 	}
+
+	@Override
+	public void getVariables(Set<String> list) { }
 
 }

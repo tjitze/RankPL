@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.num;
 
+import java.util.Set;
+
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.bool.BoolExpression;
@@ -76,5 +78,12 @@ public class RankExpression extends NumExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new RankExpression((BoolExpression)this.b.replaceVariable(a, b));
+	}
+
+	@Override
+
+	@Override
+	public void getVariables(Set<String> list) {
+		b.getVariables(list);
 	}
 }

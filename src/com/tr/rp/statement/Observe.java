@@ -1,5 +1,7 @@
 package com.tr.rp.statement;
 
+import java.util.Set;
+
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.Rank;
@@ -107,5 +109,10 @@ public class Observe implements DStatement {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Observe((BoolExpression)exp.replaceVariable(a, b));
+	}
+	
+	@Override
+	public void getVariables(Set<String> list) {
+		exp.getVariables(list);
 	}
 }

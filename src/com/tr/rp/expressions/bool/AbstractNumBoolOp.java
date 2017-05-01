@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.bool;
 
+import java.util.Set;
+
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.num.NumExpression;
@@ -73,5 +75,11 @@ public abstract class AbstractNumBoolOp extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return createInstance((NumExpression)e1.replaceVariable(a, b), (NumExpression)e2.replaceVariable(a, b));
+	}
+	
+	@Override
+	public void getVariables(Set<String> list) {
+		e1.getVariables(list);
+		e2.getVariables(list);
 	}
 }

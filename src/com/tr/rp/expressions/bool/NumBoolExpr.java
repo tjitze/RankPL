@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.bool;
 
+import java.util.Set;
+
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.expressions.num.IntLiteral;
@@ -56,5 +58,10 @@ public class NumBoolExpr extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new NumBoolExpr((NumExpression)e.replaceVariable(a, b));
+	}
+
+	@Override
+	public void getVariables(Set<String> list) {
+		e.getVariables(list);
 	}
 }

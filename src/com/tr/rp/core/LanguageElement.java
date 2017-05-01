@@ -1,5 +1,7 @@
 package com.tr.rp.core;
 
+import java.util.Set;
+
 public interface LanguageElement {
 
 	/**
@@ -7,6 +9,8 @@ public interface LanguageElement {
 	 * a variable with given name.
 	 */
 	public boolean containsVariable(String var);
+	
+	public void getVariables(Set<String> list);
 	
 	/**
 	 * Return a copy of this element where all occurrences of the variable

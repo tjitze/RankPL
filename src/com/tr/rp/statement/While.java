@@ -1,5 +1,7 @@
 package com.tr.rp.statement;
 
+import java.util.Set;
+
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -93,4 +95,9 @@ public class While implements DStatement {
 		return "while " + expString + " do " + s;
 	}
 	
+	@Override
+	public void getVariables(Set<String> list) {
+		s.getVariables(list);
+		exp.getVariables(list);
+	}
 }

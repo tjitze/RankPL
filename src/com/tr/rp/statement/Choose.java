@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
@@ -222,4 +223,10 @@ public class Choose implements DStatement {
 				(NumExpression)rank.replaceVariable(a, b));
 	}
 
+	@Override
+	public void getVariables(Set<String> list) {
+		s1.getVariables(list);
+		s2.getVariables(list);
+		rank.getVariables(list);
+	}
 }

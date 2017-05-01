@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.bool;
 
+import java.util.Set;
+
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
@@ -62,5 +64,10 @@ public class Not extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Not((BoolExpression)e.replaceVariable(a, b));
+	}
+
+	@Override
+	public void getVariables(Set<String> list) {
+		e.getVariables(list);
 	}
 }

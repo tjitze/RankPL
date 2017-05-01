@@ -1,6 +1,7 @@
 package com.tr.rp.expressions.num;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -91,5 +92,10 @@ public class Var extends NumExpression {
 			newIndex[i] = (NumExpression)index[i].replaceVariable(a, b);
 		}
 		return new Var(variable.equals(a)? b: variable, newIndex);
+	}
+
+	@Override
+	public void getVariables(Set<String> list) {
+		list.add(variable);
 	}
 }

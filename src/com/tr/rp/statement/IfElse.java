@@ -1,5 +1,7 @@
 package com.tr.rp.statement;
 
+import java.util.Set;
+
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -102,5 +104,12 @@ public class IfElse implements DStatement {
 		return new IfElse((BoolExpression)exp.replaceVariable(a, b),
 				(DStatement)this.a.replaceVariable(a, b),
 				(DStatement)this.b.replaceVariable(a, b));
+	}
+
+	@Override
+	public void getVariables(Set<String> list) {
+		a.getVariables(list);
+		b.getVariables(list);
+		exp.getVariables(list);
 	}
 }

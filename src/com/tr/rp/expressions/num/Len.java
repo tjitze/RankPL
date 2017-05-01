@@ -1,6 +1,7 @@
 package com.tr.rp.expressions.num;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -89,5 +90,11 @@ public class Len extends NumExpression {
 	@Override
 	public NumExpression transformRankExpressions(VarStore v, int rank) {
 		return this;
+	}
+
+	@Override
+	public void getVariables(Set<String> list) {
+		list.add(variable);
+		Arrays.stream(index).forEach(e -> e.getVariables(list));
 	}
 }

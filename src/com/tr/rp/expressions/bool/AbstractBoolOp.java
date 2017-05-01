@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.bool;
 
+import java.util.Set;
+
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
@@ -61,5 +63,11 @@ public abstract class AbstractBoolOp extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return createInstance((BoolExpression)b1.replaceVariable(a, b), (BoolExpression)b2.replaceVariable(a, b));
+	}
+	
+	@Override
+	public void getVariables(Set<String> list) {
+		b1.getVariables(list);
+		b2.getVariables(list);
 	}
 }

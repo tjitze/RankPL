@@ -1,5 +1,6 @@
 package com.tr.rp.expressions.num;
 
+import java.util.Set;
 import java.util.function.Function;
 
 import com.tr.rp.core.LanguageElement;
@@ -51,4 +52,7 @@ public class Fun extends NumExpression {
 	public LanguageElement replaceVariable(String a, String b) {
 		throw new UnsupportedOperationException("Cannot replace variables in Fun objects");
 	}
+
+	@Override
+	public void getVariables(Set<String> list) { }
 }

@@ -1,5 +1,7 @@
 package com.tr.rp.expressions.bool;
 
+import java.util.Set;
+
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 
@@ -53,4 +55,7 @@ public class BoolLiteral extends BoolExpression {
 	public LanguageElement replaceVariable(String a, String b) {
 		return this;
 	}
+
+	@Override
+	public void getVariables(Set<String> list) { }
 }

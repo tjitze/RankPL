@@ -1,5 +1,6 @@
 package com.tr.rp.statement;
 
+import java.util.Set;
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -89,5 +90,12 @@ public class Assign implements DStatement {
 			newIndex[i] = (NumExpression)index[i].replaceVariable(a, b);
 		}
 		return new Assign(var.equals(a)? b: var, newIndex, (NumExpression)exp.replaceVariable(a, b));
+	}
+
+	@Override
+	public void getVariables(Set<String> list) {
+		list.add(var);
+		Arrays.stream(index).forEach(e -> e.getVariables(list));
+		exp.getVariables(list);
 	}
 }

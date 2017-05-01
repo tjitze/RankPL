@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
@@ -65,4 +66,9 @@ public class Composition implements DStatement {
 				(DStatement)this.b.replaceVariable(a, b));
 	}
 
+	@Override
+	public void getVariables(Set<String> list) {
+		a.getVariables(list);
+		b.getVariables(list);
+	}
 }

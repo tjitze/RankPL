@@ -42,7 +42,7 @@ public abstract class AbstractBoolOp extends BoolExpression {
 	public abstract String getOperator();
 	
 	public String toString() {
-		return "(" + b1 + getOperator() + b2 + ")";
+		return "(" + b1 + " " + getOperator() + " " + b2 + ")";
 	}
 	
 	public final boolean equals(Object o) {

@@ -43,7 +43,7 @@ public abstract class AbstractNumBoolOp extends BoolExpression {
 	public abstract String getOperator();
 	
 	public final String toString() {
-		return e1 + getOperator() + e2;
+		return "(" + e1 + " " + getOperator() + " " + e2 + ")";
 	}
 
 	@Override

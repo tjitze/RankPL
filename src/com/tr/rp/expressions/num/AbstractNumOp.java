@@ -52,7 +52,7 @@ public abstract class AbstractNumOp extends NumExpression {
 	public abstract String getOperator();
 	
 	public String toString() {
-		return "(" + e1 + getOperator() + e2 + ")";
+		return "(" + e1 + " " + getOperator() + " " + e2 + ")";
 	}
 	
 	@Override

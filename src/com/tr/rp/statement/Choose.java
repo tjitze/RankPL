@@ -194,7 +194,11 @@ public class Choose implements DStatement {
 	}
 	
 	public String toString() {
-		return "{" + s1 + " <" + rank + "> " + s2 + "}";
+		String rankString = rank.toString();
+		if (rankString.startsWith("(") && rankString.endsWith(")")) {
+			rankString = rankString.substring(1, rankString.length()-1);
+		}
+		return "{" + s1 + "} <<" + rankString + ">> {" + s2 + "}";
 	}
 	
 	public boolean equals(Object o) {

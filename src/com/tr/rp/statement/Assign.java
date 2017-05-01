@@ -64,7 +64,11 @@ public class Assign implements DStatement {
 	}
 	
 	public String toString() {
-		return var + " := " + exp;
+		String expString = exp.toString();
+		if (expString.startsWith("(") && expString.endsWith(")")) {
+			expString = expString.substring(1, expString.length()-1);
+		}
+		return var + " := " + expString;
 	}
 	
 	public boolean equals(Object o) {

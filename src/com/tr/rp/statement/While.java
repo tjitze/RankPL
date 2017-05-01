@@ -86,7 +86,11 @@ public class While implements DStatement {
 	}
 	
 	public String toString() {
-		return "WHILE (" + exp + ") DO " + s;
+		String expString = exp.toString();
+		if (!(expString.startsWith("(") && expString.endsWith(")"))) {
+			expString = "(" + expString + ")";
+		}
+		return "while " + expString + " do " + s;
 	}
 	
 }

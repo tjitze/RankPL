@@ -64,7 +64,15 @@ public class ObserveL implements DStatement {
 	}
 
 	public String toString() {
-		return "observeShenoy("+rank+") " + b;
+		String bString = b.toString();
+		if (bString.startsWith("(") && bString.endsWith(")")) {
+			bString = bString.substring(1, bString.length()-1);
+		}
+		String rankString = rank.toString();
+		if (!(rankString.startsWith("(") && rankString.endsWith(")"))) {
+			rankString = "(" + rankString + ")";
+		}
+		return "observe-l " + rankString + " " + bString;
 	}
 	
 	public boolean equals(Object o) {

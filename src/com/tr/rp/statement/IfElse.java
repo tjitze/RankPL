@@ -76,7 +76,11 @@ public class IfElse implements DStatement {
 	}
 
 	public String toString() {
-		return "if " + exp + " then " + a + " else " + b;
+		String expString = exp.toString();
+		if (!(expString.startsWith("(") && expString.endsWith(")"))) {
+			expString = "(" + expString + ")";
+		}
+		return "if " + expString + " then " + a + " else " + b;
 	}
 	
 	public boolean equals(Object o) {

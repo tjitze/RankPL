@@ -32,7 +32,15 @@ public class ObserveJ implements DStatement {
 	}
 
 	public String toString() {
-		return "observeShenoy("+b+") " + b;
+		String bString = b.toString();
+		if (bString.startsWith("(") && bString.endsWith(")")) {
+			bString = bString.substring(1, bString.length()-1);
+		}
+		String rankString = rank.toString();
+		if (!(rankString.startsWith("(") && rankString.endsWith(")"))) {
+			rankString = "(" + rankString + ")";
+		}
+		return "observe-j " + rankString + " " + bString;
 	}
 	
 	public boolean equals(Object o) {

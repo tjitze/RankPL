@@ -59,4 +59,10 @@ public class Break implements DStatement {
 
 	@Override
 	public void getVariables(Set<String> list) { }
+
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		return this;
+	}
+
 }

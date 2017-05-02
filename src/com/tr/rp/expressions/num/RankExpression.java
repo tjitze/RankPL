@@ -81,6 +81,14 @@ public class RankExpression extends NumExpression {
 	}
 
 	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		return b.getEmbeddedFunctionCall();
+	}
+
+	@Override
+	public NumExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return new RankExpression(b.replaceEmbeddedFunctionCall(fc, var));
+	}
 
 	@Override
 	public void getVariables(Set<String> list) {

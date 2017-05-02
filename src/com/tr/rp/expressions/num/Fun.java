@@ -52,6 +52,16 @@ public class Fun extends NumExpression {
 	public LanguageElement replaceVariable(String a, String b) {
 		throw new UnsupportedOperationException("Cannot replace variables in Fun objects");
 	}
+	
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		return null;
+	}
+
+	@Override
+	public NumExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return this;
+	}
 
 	@Override
 	public void getVariables(Set<String> list) { }

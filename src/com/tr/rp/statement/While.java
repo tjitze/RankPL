@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import java.util.Set;
+import java.util.List;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
@@ -9,16 +10,26 @@ import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
+import com.tr.rp.expressions.num.FunctionCall;
+import com.tr.rp.tools.Pair;
 
 public class While implements DStatement {
 
 	private BoolExpression exp;
+	private DStatement pre;
 	private DStatement s;
 	private int maxIterations = Integer.MAX_VALUE;
 	
 	public While(BoolExpression exp, DStatement s) {
 		this.exp = exp;
 		this.s = s;
+		this.pre = null;
+	}
+	
+	private While(BoolExpression exp, DStatement s, DStatement pre) {
+		this.exp = exp;
+		this.s = s;
+		this.pre = pre;
 	}
 		
 	public While setMaxDepth(int maxIterations) {
@@ -67,7 +78,11 @@ public class While implements DStatement {
 	}
 	
 	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in) {
-		return (new IfElse(exp, s, new Skip())).getIterator(in);
+		if (pre == null) {
+			return (new IfElse(exp, s, new Skip())).getIterator(in);
+		} else {
+			return new Composition(pre, (new IfElse(exp, s, new Skip()))).getIterator(in);
+		}
 	}
 	
 	public boolean equals(Object o) {
@@ -100,4 +115,18 @@ public class While implements DStatement {
 		s.getVariables(list);
 		exp.getVariables(list);
 	}
+
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		if (pre != null) {
+			throw new UnsupportedOperationException();
+		}
+		DStatement sr = s.rewriteEmbeddedFunctionCalls();
+		Pair<List<Pair<String, FunctionCall>>, BoolExpression> rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
+		if (rewrittenExp.a.isEmpty()) {
+			return new While(exp, sr);
+		}
+		return new While(rewrittenExp.b, sr, new FunctionCallForm(new Skip(), rewrittenExp.a));
+	}	
+
 }

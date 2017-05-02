@@ -71,4 +71,9 @@ public class Composition implements DStatement {
 		a.getVariables(list);
 		b.getVariables(list);
 	}
+	
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		return new Composition(maxRank, a.rewriteEmbeddedFunctionCalls(), b.rewriteEmbeddedFunctionCalls());
+	}
 }

@@ -1,6 +1,8 @@
 package com.tr.rp.statement;
 
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.List;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
@@ -10,11 +12,13 @@ import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
 import com.tr.rp.expressions.bool.LessOrEq;
+import com.tr.rp.expressions.num.FunctionCall;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.Minus;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Plus;
 import com.tr.rp.expressions.num.RankExpression;
+import com.tr.rp.tools.Pair;
 
 /**
  * Implements L-conditioning.
@@ -98,4 +102,20 @@ public class ObserveL implements DStatement {
 		b.getVariables(list);
 		rank.getVariables(list);
 	}
+
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		Pair<List<Pair<String, FunctionCall>>, BoolExpression> rewrittenB
+			= FunctionCallForm.extractFunctionCalls(b);
+		Pair<List<Pair<String, FunctionCall>>, NumExpression> rewrittenRank
+			= FunctionCallForm.extractFunctionCalls(rank);
+		List<Pair<String, FunctionCall>> combined = new ArrayList<Pair<String, FunctionCall>>();
+		combined.addAll(rewrittenB.a);
+		combined.addAll(rewrittenRank.a);
+		if (combined.isEmpty()) {
+			return this;
+		}
+		return new FunctionCallForm(new ObserveL(rewrittenB.b, rewrittenRank.b), combined);
+	}
+
 }

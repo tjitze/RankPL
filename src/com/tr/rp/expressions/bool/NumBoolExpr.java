@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.FunctionCall;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
 
@@ -58,6 +59,16 @@ public class NumBoolExpr extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new NumBoolExpr((NumExpression)e.replaceVariable(a, b));
+	}
+	
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		return e.getEmbeddedFunctionCall();
+	}
+
+	@Override
+	public BoolExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return new NumBoolExpr(e.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override

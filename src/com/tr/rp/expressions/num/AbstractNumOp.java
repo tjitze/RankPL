@@ -83,6 +83,19 @@ public abstract class AbstractNumOp extends NumExpression {
 	public LanguageElement replaceVariable(String a, String b) {
 		return createInstance((NumExpression)e1.replaceVariable(a, b), (NumExpression)e2.replaceVariable(a, b));
 	}
+	
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		FunctionCall fc = e1.getEmbeddedFunctionCall();
+		if (e1 != null) return fc;
+		return e2.getEmbeddedFunctionCall();
+	}
+
+
+	@Override
+	public NumExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return createInstance(e1.replaceEmbeddedFunctionCall(fc, var), e2.replaceEmbeddedFunctionCall(fc, var));
+	}
 
 	@Override
 	public void getVariables(Set<String> list) {

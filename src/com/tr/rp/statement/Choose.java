@@ -2,6 +2,7 @@ package com.tr.rp.statement;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.List;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
@@ -229,4 +230,15 @@ public class Choose implements DStatement {
 		s2.getVariables(list);
 		rank.getVariables(list);
 	}
+
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		DStatement s1r = s1.rewriteEmbeddedFunctionCalls();
+		DStatement s2r = s2.rewriteEmbeddedFunctionCalls();
+		Pair<List<Pair<String, FunctionCall>>, NumExpression> rewrittenExp = FunctionCallForm.extractFunctionCalls(rank);
+		if (rewrittenExp.a.isEmpty()) {
+			return new Choose(s1r, s2r, rank);
+		}
+		return new FunctionCallForm(new Choose(s1r, s2r, rewrittenExp.b), rewrittenExp.a);
+	}	
 }

@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import java.util.Set;
+import java.util.List;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
@@ -11,6 +12,8 @@ import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
+import com.tr.rp.expressions.num.FunctionCall;
+import com.tr.rp.tools.Pair;
 
 public class IfElse implements DStatement {
 
@@ -112,4 +115,15 @@ public class IfElse implements DStatement {
 		b.getVariables(list);
 		exp.getVariables(list);
 	}
+
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		DStatement ar = a.rewriteEmbeddedFunctionCalls();
+		DStatement br = b.rewriteEmbeddedFunctionCalls();
+		Pair<List<Pair<String, FunctionCall>>, BoolExpression> rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
+		if (rewrittenExp.a.isEmpty()) {
+			return new IfElse(exp, ar, br);
+		}
+		return new FunctionCallForm(new IfElse(rewrittenExp.b, ar, br), rewrittenExp.a);
+	}	
 }

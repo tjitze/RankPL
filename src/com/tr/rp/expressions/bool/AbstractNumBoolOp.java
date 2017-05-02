@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.FunctionCall;
 import com.tr.rp.expressions.num.NumExpression;
 
 /**
@@ -75,6 +76,18 @@ public abstract class AbstractNumBoolOp extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return createInstance((NumExpression)e1.replaceVariable(a, b), (NumExpression)e2.replaceVariable(a, b));
+	}
+	
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		FunctionCall fc = e1.getEmbeddedFunctionCall();
+		if (e1 != null) return fc;
+		return e2.getEmbeddedFunctionCall();
+	}
+
+	@Override
+	public BoolExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return createInstance(e1.replaceEmbeddedFunctionCall(fc, var), e2.replaceEmbeddedFunctionCall(fc, var));
 	}
 	
 	@Override

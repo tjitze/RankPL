@@ -95,6 +95,16 @@ public class Var extends NumExpression {
 	}
 
 	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		return null;
+	}
+
+	@Override
+	public NumExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return this;
+	}
+
+	@Override
 	public void getVariables(Set<String> list) {
 		list.add(variable);
 	}

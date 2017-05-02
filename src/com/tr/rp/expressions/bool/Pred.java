@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.FunctionCall;
 
 public class Pred extends BoolExpression {
 
@@ -51,6 +52,16 @@ public class Pred extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		throw new UnsupportedOperationException("Cannot replace variables in Pred objects");
+	}
+	
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		return null;
+	}
+
+	@Override
+	public BoolExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return this;
 	}
 
 	@Override

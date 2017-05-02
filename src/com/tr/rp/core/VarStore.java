@@ -17,6 +17,8 @@ public class VarStore {
 
 	private final LinkedHashMap<String, Integer> varStore = new LinkedHashMap<String, Integer>();
 	
+	private volatile static long rwCounter = 0;
+	
 	/**
 	 * @return Value of given variable (0 if not initialized).
 	 */
@@ -89,4 +91,18 @@ public class VarStore {
 		return varStore.containsKey(var);
 	}
 
+	/**
+	 * Returns a unique variable name based on the original variable name.
+	 * This uses an internal static counter, whose value is included in the
+	 * variable name, to avoid collisions. It is guaranteed that this method
+	 * never returns the same name (except possibly in case of counter 
+	 * overflow, which should not occur in practice). All names returned
+	 * start with "$".
+	 * 
+	 * @param original Original variable name
+	 * @return A unique variable name based on original
+	 */
+	public static String getFreeVariable(String original) {
+		return "$" + (rwCounter++) + "_" + original;
+	}
 }

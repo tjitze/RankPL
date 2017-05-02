@@ -80,7 +80,10 @@ public class Assign implements DStatement {
 
 	@Override
 	public boolean containsVariable(String var) {
-		return this.var.equals(var);
+		for (int i = 0; i < index.length; i++) {
+			if (index[i].containsVariable(var)) return true;
+		}
+		return exp.containsVariable(var) || var.equals(var);
 	}
 
 	@Override
@@ -98,4 +101,14 @@ public class Assign implements DStatement {
 		Arrays.stream(index).forEach(e -> e.getVariables(list));
 		exp.getVariables(list);
 	}
+
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		Pair<List<Pair<String, FunctionCall>>, NumExpression> rewrittenExp
+			= FunctionCallForm.extractFunctionCalls(exp);
+		if (rewrittenExp.a.isEmpty()) {
+			return this;
+		}
+		return new FunctionCallForm(new Assign(var, rewrittenExp.b), rewrittenExp.a);
+	}	
 }

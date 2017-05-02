@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import java.util.Set;
+import java.util.List;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
@@ -11,6 +12,8 @@ import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.expressions.bool.BoolExpression;
+import com.tr.rp.expressions.num.FunctionCall;
+import com.tr.rp.tools.Pair;
 
 public class Observe implements DStatement {
 
@@ -115,4 +118,13 @@ public class Observe implements DStatement {
 	public void getVariables(Set<String> list) {
 		exp.getVariables(list);
 	}
+
+	@Override
+	public DStatement rewriteEmbeddedFunctionCalls() {
+		Pair<List<Pair<String, FunctionCall>>, BoolExpression> rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
+		if (rewrittenExp.a.isEmpty()) {
+			return this;
+		}
+		return new FunctionCallForm(new Observe(rewrittenExp.b), rewrittenExp.a);
+	}	
 }

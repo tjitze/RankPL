@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.FunctionCall;
 
 /**
  * Abstract class for boolean-valued expressions that 
@@ -64,6 +65,19 @@ public abstract class AbstractBoolOp extends BoolExpression {
 	public LanguageElement replaceVariable(String a, String b) {
 		return createInstance((BoolExpression)b1.replaceVariable(a, b), (BoolExpression)b2.replaceVariable(a, b));
 	}
+
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		FunctionCall fc = b1.getEmbeddedFunctionCall();
+		if (b1 != null) return fc;
+		return b2.getEmbeddedFunctionCall();
+	}
+
+	@Override
+	public BoolExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return createInstance(b1.replaceEmbeddedFunctionCall(fc, var), b2.replaceEmbeddedFunctionCall(fc, var));
+	}
+
 	
 	@Override
 	public void getVariables(Set<String> list) {

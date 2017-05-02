@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.expressions.num.FunctionCall;
 
 public class Not extends BoolExpression {
 
@@ -64,6 +65,16 @@ public class Not extends BoolExpression {
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Not((BoolExpression)e.replaceVariable(a, b));
+	}
+	
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		return e.getEmbeddedFunctionCall();
+	}
+
+	@Override
+	public BoolExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		return new Not((BoolExpression)e.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override

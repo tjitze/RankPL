@@ -46,6 +46,26 @@ public class Len extends NumExpression {
 		}
 		return new Len(variable.equals(a)? b: variable, newIndex);
 	}
+	
+	@Override
+	public FunctionCall getEmbeddedFunctionCall() {
+		for (NumExpression e: index) {
+			FunctionCall fc = e.getEmbeddedFunctionCall();
+			if (fc != null) {
+				return fc;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public NumExpression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+		NumExpression[] newIndex = new NumExpression[index.length];
+		for (int i = 0; i < index.length; i++) {
+			newIndex[i] = (NumExpression)index[i].replaceEmbeddedFunctionCall(fc, var);
+		}
+		return new Len(variable, newIndex);
+	}
 
 	@Override
 	public int getVal(VarStore e) {

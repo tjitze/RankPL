@@ -8,7 +8,7 @@ import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
 
 /**
- * Terminates execution with run time exception
+ * The break statement terminates execution with a runtime exception.
  */
 public class Break implements DStatement {
 

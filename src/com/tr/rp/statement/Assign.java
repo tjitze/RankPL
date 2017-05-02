@@ -1,20 +1,35 @@
 package com.tr.rp.statement;
 
+import java.util.Arrays;
 import java.util.Set;
+import java.util.List;
+
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.expressions.num.FunctionCall;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
 import com.tr.rp.expressions.num.Var;
+import com.tr.rp.tools.Pair;
 
+/**
+ * The assign statement takes as input a variable, an (optional) list
+ * of array indices, and an expression. 
+ * 
+ * If the list of array indices is empty, the effect of this statement
+ * is that the given variable is assigned the value of the given 
+ * expression. If the list of array indices is nonempty, the effect is
+ * that the array associated with the variable name (indexed by the 
+ * array indices) is assigned the value of the given expression.
+ */
 public class Assign implements DStatement {
 
-	private NumExpression exp;
-	private NumExpression[] index;
-	private String var;
+	private final NumExpression exp;
+	private final NumExpression[] index;
+	private final String var;
 	
 	public Assign(String var, NumExpression[] index, NumExpression exp) {
 		this.var = var;

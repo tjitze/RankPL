@@ -12,13 +12,22 @@ import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.expressions.num.FunctionCall;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.NumExpression;
+import com.tr.rp.tools.Pair;
 
+/**
+ * The choose statement takes as input two statements (s1, s2) and a rank r. It
+ * implements the ranked choice construct, where "normally" (with rank 0) s1
+ * is executed, and "exceptionally" (with rank r) s2 is executed. Different
+ * constructors are provided for ease of use.
+ */
 public class Choose implements DStatement {
 
-	public DStatement s1, s2;
-	public NumExpression rank;
+	public final DStatement s1;
+	public final DStatement s2;
+	public final NumExpression rank;
 
 	public Choose(DStatement s1, DStatement s2, NumExpression rank) {
 		this.s1 = s1;

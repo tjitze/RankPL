@@ -31,6 +31,16 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitProgram(DefProgParser.ProgramContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DefProgParser#functiondef}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctiondef(DefProgParser.FunctiondefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DefProgParser#functiondef}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctiondef(DefProgParser.FunctiondefContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ObserveL}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
@@ -307,6 +317,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code FunctionCall}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCall(DefProgParser.FunctionCallContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code FunctionCall}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCall(DefProgParser.FunctionCallContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ParNumExpr}
 	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
@@ -318,6 +340,16 @@ public interface DefProgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParNumExpr(DefProgParser.ParNumExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DefProgParser#variable}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariable(DefProgParser.VariableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DefProgParser#variable}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariable(DefProgParser.VariableContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DefProgParser#index}.
 	 * @param ctx the parse tree

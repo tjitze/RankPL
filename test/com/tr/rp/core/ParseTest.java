@@ -1,5 +1,7 @@
 package com.tr.rp.core;
 
+import java.util.ArrayList;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -16,6 +18,7 @@ import com.tr.rp.expressions.bool.Or;
 import com.tr.rp.expressions.bool.True;
 import com.tr.rp.expressions.bool.Xor;
 import com.tr.rp.expressions.num.Divide;
+import com.tr.rp.expressions.num.FunctionCall;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.Minus;
 import com.tr.rp.expressions.num.NumExpression;
@@ -26,13 +29,16 @@ import com.tr.rp.expressions.num.Var;
 import com.tr.rp.parser.DefProgLexer;
 import com.tr.rp.parser.DefProgParser;
 import com.tr.rp.parser.DefProgParser.BoolexprContext;
+import com.tr.rp.parser.DefProgParser.FunctiondefContext;
 import com.tr.rp.parser.DefProgParser.NumexprContext;
 import com.tr.rp.statement.Assign;
 import com.tr.rp.statement.Choose;
 import com.tr.rp.statement.Composition;
+import com.tr.rp.statement.FunctionCallForm;
 import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.Observe;
 import com.tr.rp.statement.RPLBaseTest;
+import com.tr.rp.statement.Skip;
 import com.tr.rp.statement.While;
 
 public class ParseTest extends RPLBaseTest {
@@ -215,6 +221,29 @@ public class ParseTest extends RPLBaseTest {
 		assert(parseNumExpr("a[x + y][p * q]")).equals(new Var("a", new Plus("x", "y"), new Times("p", "q")));
 	}
 
+	public void testParseFunctionDefinition() {
+		assert(parseFunctionDef("define fun() { return 0; }").equals(new Function("fun", new Skip(), new IntLiteral(0), new String[]{})));
+		assert(parseFunctionDef("define fun(a) { return a; }").equals(new Function("fun", new Skip(), new Var("a"), new String[]{"a"})));
+		assert(parseFunctionDef("define fun(a) { skip; skip; return a; }").equals(new Function("fun", new Composition(new Skip(), new Skip()), new Var("a"), new String[]{"a"})));
+		assert(parseFunctionDef("define fun(a) { skip; {skip;}; return a; }").equals(new Function("fun", new Composition(new Skip(), new Skip()), new Var("a"), new String[]{"a"})));
+		assert(parseFunctionDef("define fun(a, b) { return a + b; }").equals(new Function("fun", new Skip(), new Plus(new Var("a"), new Var("b")), new String[]{"a", "b"})));
+	}
+	
+	public void testParseFunctionCall() {
+		assert(parseStatement("x := fun()").toString().equals("x := fun()"));
+		assert(parseStatement("x := fun(a, b)").toString().equals("x := fun(a, b)"));
+		assert(parseStatement("x := fun(fun(a, b), c)").toString().equals("x := fun(fun(a, b), c)"));
+		assert(parseStatement("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)").toString().equals("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)"));
+		assert(parseStatement("while (x == fun1(y)) do y := fun2(z)").toString().equals("while (x == fun1(y)) do y := fun2(z)"));
+		assert(parseStatement("{x := fun1()} <<fun2()>> {x := fun3()}").toString().equals("{x := fun1()} <<fun2()>> {x := fun3()}"));
+		assert(parseStatement("observe fun()").toString().equals("observe fun()"));
+		assert(parseStatement("observe fun1() == fun2()").toString().equals("observe fun1() == fun2()"));
+		assert(parseStatement("observe-j (fun1()) fun2()").toString().equals("observe-j (fun1()) fun2()"));
+		assert(parseStatement("observe-j (fun1()) fun2() == fun3()").toString().equals("observe-j (fun1()) fun2() == fun3()"));
+		assert(parseStatement("observe-l (fun1()) fun2()").toString().equals("observe-l (fun1()) fun2()"));
+		assert(parseStatement("observe-l (fun1()) fun2() == fun3()").toString().equals("observe-l (fun1()) fun2() == fun3()"));
+	}
+	
 	private LanguageElement parseStatement(String code) {
         CharStream charStream = new ANTLRInputStream(code);
         DefProgLexer lexer = new DefProgLexer(charStream);
@@ -246,6 +275,18 @@ public class ParseTest extends RPLBaseTest {
         ConcreteParser classVisitor = new ConcreteParser();
         NumexprContext ctx = parser.numexpr();
         NumExpression res = (NumExpression)classVisitor.visit(ctx);
+        return res;
+	}
+
+	private Function parseFunctionDef(String code) {
+        CharStream charStream = new ANTLRInputStream(code);
+        DefProgLexer lexer = new DefProgLexer(charStream);
+        TokenStream tokens = new CommonTokenStream(lexer);
+        DefProgParser parser = new DefProgParser(tokens);
+
+        ConcreteParser classVisitor = new ConcreteParser();
+        FunctiondefContext ctx = parser.functiondef();
+        Function res = (Function)classVisitor.visit(ctx);
         return res;
 	}
 }

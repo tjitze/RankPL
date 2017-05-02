@@ -9,13 +9,17 @@ parse
  ;
  
 program
- : statement (';' statement)* ';'? EOF
+ : functiondef* statement (';' statement)* ';'? EOF
+ ;
+
+functiondef
+ : ('DEFINE'|'define') variable ('()' | '(' variable (',' variable)* ')') '{' (statement ';')* ('RETURN'|'return') numexpr ';' '}'
  ;
 
 statement
- : VAR index* ':=' numexpr                           							# assignment_stat
- | VAR index* ':=' '[' (numexpr ','?)* ']'           							# array_assignment_stat
- | VAR index* ':=' numexpr '<<' numexpr '>>' numexpr 							# choice_assignment_stat
+ : variable index* ':=' numexpr                           						# assignment_stat
+ | variable index* ':=' '[' (numexpr ','?)* ']'           						# array_assignment_stat
+ | variable index* ':=' numexpr '<<' numexpr '>>' numexpr 						# choice_assignment_stat
  | ('IF'|'if') boolexpr ('THEN'|'then') statement ('ELSE'|'else') statement     # if_stat
  | ('WHILE'|'while') boolexpr ('DO'|'do') statement                             # while_stat
  | ('OBSERVE'|'observe') boolexpr 												# Observe
@@ -49,10 +53,15 @@ numexpr
  | numexpr aop='|' numexpr # ArithmeticNumExpr
  | numexpr aop='^' numexpr # ArithmeticNumExpr
  | ('ABS'|'abs') '(' numexpr ')' # AbsExpr
- | ('LEN'|'len') '(' VAR index* ')' # LenExpr
+ | ('LEN'|'len') '(' variable index* ')' # LenExpr
  | INT # LiteralNumExpr
- | VAR index* # VariableNumExpr
+ | variable index* # VariableNumExpr
  | ('RANK' | 'rank') '(' boolexpr ')' # RankExpr
+ | variable ('()' | '(' numexpr (',' numexpr)* ')') # FunctionCall
+ ;
+
+variable
+ : VAR 
  ;
 
 index

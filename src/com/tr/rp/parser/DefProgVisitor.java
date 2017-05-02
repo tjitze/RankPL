@@ -26,6 +26,12 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(DefProgParser.ProgramContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DefProgParser#functiondef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctiondef(DefProgParser.FunctiondefContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ObserveL}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
@@ -187,12 +193,25 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArithmeticNumExpr(DefProgParser.ArithmeticNumExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code FunctionCall}
+	 * labeled alternative in {@link DefProgParser#numexpr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCall(DefProgParser.FunctionCallContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ParNumExpr}
 	 * labeled alternative in {@link DefProgParser#numexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParNumExpr(DefProgParser.ParNumExprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DefProgParser#variable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariable(DefProgParser.VariableContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DefProgParser#index}.
 	 * @param ctx the parse tree

@@ -43,6 +43,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunctiondef(DefProgParser.FunctiondefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctiondef(DefProgParser.FunctiondefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterObserveL(DefProgParser.ObserveLContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -319,6 +331,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunctionCall(DefProgParser.FunctionCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionCall(DefProgParser.FunctionCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterParNumExpr(DefProgParser.ParNumExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -326,6 +350,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParNumExpr(DefProgParser.ParNumExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVariable(DefProgParser.VariableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariable(DefProgParser.VariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

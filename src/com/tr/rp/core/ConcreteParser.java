@@ -1,7 +1,12 @@
 package com.tr.rp.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.tr.rp.expressions.bool.And;
 import com.tr.rp.expressions.bool.BoolExpression;
 import com.tr.rp.expressions.bool.BoolLiteral;
@@ -14,6 +19,7 @@ import com.tr.rp.expressions.bool.Or;
 import com.tr.rp.expressions.bool.Xor;
 import com.tr.rp.expressions.num.Abs;
 import com.tr.rp.expressions.num.Divide;
+import com.tr.rp.expressions.num.FunctionCall;
 import com.tr.rp.expressions.num.IntLiteral;
 import com.tr.rp.expressions.num.Len;
 import com.tr.rp.expressions.num.Minus;
@@ -36,6 +42,8 @@ import com.tr.rp.parser.DefProgParser.BooleanExprContext;
 import com.tr.rp.parser.DefProgParser.BoolexprContext;
 import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.CompareExprContext;
+import com.tr.rp.parser.DefProgParser.FunctionCallContext;
+import com.tr.rp.parser.DefProgParser.FunctiondefContext;
 import com.tr.rp.parser.DefProgParser.If_statContext;
 import com.tr.rp.parser.DefProgParser.IndexContext;
 import com.tr.rp.parser.DefProgParser.LenExprContext;
@@ -53,6 +61,7 @@ import com.tr.rp.parser.DefProgParser.Ranked_choiceContext;
 import com.tr.rp.parser.DefProgParser.Skip_statContext;
 import com.tr.rp.parser.DefProgParser.StatementContext;
 import com.tr.rp.parser.DefProgParser.Statement_sequenceContext;
+import com.tr.rp.parser.DefProgParser.VariableContext;
 import com.tr.rp.parser.DefProgParser.VariableNumExprContext;
 import com.tr.rp.parser.DefProgParser.While_statContext;
 import com.tr.rp.statement.Assign;
@@ -66,17 +75,19 @@ import com.tr.rp.statement.Skip;
 import com.tr.rp.statement.While;
 
 
-public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
+public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> implements FunctionScope {
 
+	private Map<String, Function> definedFunctions = new LinkedHashMap<String, Function>();
+	
 	@Override
 	public LanguageElement visitAssignment_stat(Assignment_statContext ctx) {
-		String var = ctx.VAR().getText();
+		Var var = (Var)visit(ctx.variable());
 		NumExpression[] index = new NumExpression[ctx.index().size()];
 		for (int i = 0; i < index.length; i++) {
 			index[i] = (NumExpression)visit(ctx.index(i));
 		}
 		NumExpression value = (NumExpression)visit(ctx.numexpr());
-		return new Assign(var, index, value);
+		return new Assign(var.toString(), index, value);
 	}
 
 	@Override
@@ -86,7 +97,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitArray_assignment_stat(Array_assignment_statContext ctx) {
-		String var = ctx.VAR().getText();
+		Var var = (Var)visit(ctx.variable());
 		NumExpression[] index = new NumExpression[ctx.index().size()];
 		for (int i = 0; i < index.length; i++) {
 			index[i] = (NumExpression)visit(ctx.index(i));
@@ -95,14 +106,14 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		for (int i = 0; i < ctx.numexpr().size(); i++) {
 			NumExpression[] subIndex = Arrays.copyOf(index, index.length + 1);
 			subIndex[index.length] = new IntLiteral(i);
-			b.add(new Assign(var, subIndex, (NumExpression)visit(ctx.numexpr(i))));
+			b.add(new Assign(var.toString(), subIndex, (NumExpression)visit(ctx.numexpr(i))));
 		}
 		return b.build();
 	}
 
 	@Override
 	public LanguageElement visitChoice_assignment_stat(Choice_assignment_statContext ctx) {
-		String var = ctx.VAR().getText();
+		Var var = (Var)visit(ctx.variable());
 		NumExpression[] index = new NumExpression[ctx.index().size()];
 		for (int i = 0; i < index.length; i++) {
 			index[i] = (NumExpression)visit(ctx.index(i));
@@ -110,7 +121,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		NumExpression value1 = (NumExpression)visit(ctx.numexpr(0));
 		NumExpression value2 = (NumExpression)visit(ctx.numexpr(2));
 		NumExpression rank = (NumExpression)visit(ctx.numexpr(1));
-		return new Choose(var, value1, value2, rank);
+		return new Choose(var.toString(), value1, value2, rank);
 	}
 
 	@Override
@@ -187,12 +198,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitLenExpr(LenExprContext ctx) {
-		String var = ctx.VAR().getText();
+		Var var = (Var)visit(ctx.variable());
 		NumExpression[] index = new NumExpression[ctx.index().size()];
 		for (int i = 0; i < index.length; i++) {
 			index[i] = (NumExpression)visit(ctx.index(i));
 		}
-		return new Len(var, index);
+		return new Len(var.toString(), index);
 	}
 
 	@Override
@@ -203,17 +214,27 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitVariableNumExpr(VariableNumExprContext ctx) {
-		String var = ctx.VAR().getText();
+		Var var = (Var)visit(ctx.variable());
 		NumExpression[] index = new NumExpression[ctx.index().size()];
 		for (int i = 0; i < index.length; i++) {
 			index[i] = (NumExpression)visit(ctx.index(i));
 		}
-		return new Var(var, index);
+		return new Var(var.toString(), index);
 	}
 	
 	@Override
 	public LanguageElement visitRankExpr(RankExprContext ctx) {
 		return new RankExpression((BoolExpression)visit(ctx.boolexpr()));
+	}
+	
+	@Override
+	public LanguageElement visitFunctionCall(FunctionCallContext ctx) {
+		String functionName = visit(ctx.variable()).toString();
+		NumExpression[] args = new NumExpression[ctx.numexpr().size()];
+		for (int i = 0; i < args.length; i++) {
+			args[i] = (NumExpression)visit(ctx.numexpr(i));
+		}
+		return new FunctionCall(functionName, this, args);
 	}
 	
 	@Override
@@ -265,26 +286,64 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	public LanguageElement visitNumBoolExpr(NumBoolExprContext ctx) { 
-		return new NumBoolExpr((NumExpression)visit(ctx.getChild(1)));
+		return new NumBoolExpr((NumExpression)visit(ctx.numexpr()));
 	}
 
 	@Override
 	public LanguageElement visitProgram(ProgramContext ctx) {
-		return createList(ctx.statement(), 0);
+		return parseProgram(ctx.statement(), 0);
 	}
 
 	public LanguageElement visitStatement_sequence(Statement_sequenceContext ctx) {
-		return createList(ctx.statement(), 0);
+		return parseProgram(ctx.statement(), 0);
 	}
 
-	public DStatement createList(List<StatementContext> sc, int idx) {
+	public DStatement parseProgram(List<StatementContext> sc, int idx) {
 		if (idx >= sc.size()) return null;
-		DStatement s = (DStatement)visit(sc.get(idx));
+		LanguageElement e = visit(sc.get(idx));
 		idx++;
 		if (idx == sc.size()) {
-			return s;
+			if (e instanceof DStatement) {
+				return ((DStatement)e).rewriteEmbeddedFunctionCalls();
+			} else {
+				return null;
+			}
 		} else {
-			return new Composition(s, createList(sc, idx));
+			if (e instanceof DStatement) {
+				return new Composition((DStatement)e, parseProgram(sc, idx)).rewriteEmbeddedFunctionCalls();
+			} else {
+				return parseProgram(sc, idx).rewriteEmbeddedFunctionCalls();
+			}
 		}
 	}
+
+	@Override
+	public LanguageElement visitVariable(VariableContext ctx) {
+		return new Var(ctx.VAR().getText());
+	}
+	
+	public LanguageElement visitFunctiondef(FunctiondefContext ctx) {
+		String functionName = ctx.variable(0).getText();
+		String[] parameters = new String[ctx.variable().size()-1];
+		for (int i = 0; i < parameters.length; i++) {
+			parameters[i] = ctx.variable(i+1).getText();
+		}
+		NumExpression returnVal = (NumExpression)visit(ctx.numexpr());
+		Function function = new Function(functionName, returnVal, parameters);
+		definedFunctions.put(functionName, function);
+		DStatement body = parseProgram(ctx.statement(), 0);
+		if (body == null) {
+			body = new Skip();
+		}
+		function.setBody(body);
+		return function;
+	}
+
+	public Function getFunction(String name) {
+		if (!definedFunctions.containsKey(name)) {
+			throw new RuntimeException("Function " + name + " not defined");
+		}
+		return definedFunctions.get(name);
+	}
+
 }

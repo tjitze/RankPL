@@ -1,6 +1,8 @@
 # RankPL
 
-*This work is described in the paper ["RankPL: A Qualitative Probabilistic Programming Language"](https://github.com/tjitze/RankPL/tree/master/paper/rankpl.pdf) (under submission)*
+*This work is described in the paper ["RankPL: A Qualitative Probabilistic Programming Language"](https://github.com/tjitze/RankPL/tree/master/paper/rankpl.pdf) (to be presented at [ECSQARU 2017](http://www2.idsia.ch/cms/isipta-ecsqaru/))*
+
+*WATCH THIS SPACE: UPDATED VERSION WITH EXTENDED DOCUMENTATION COMING SOON*
 
 RankPL is a modelling language aimed at representing and reasoning about processes that exhibit uncertainty expressible by distinguishing "normal" from "surprising" events. It can be thought of as a qualitative variant of a *probabilistic programming language*, which is a regular programming language extended with statements to draw values at random from a given probability distribution and condition values of variables due to observation. Rather than a deterministic outcome,  probabilistic programs represent probability distributions over different possible outcomes. 
 

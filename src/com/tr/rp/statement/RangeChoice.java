@@ -1,19 +1,13 @@
 package com.tr.rp.statement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.List;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.ChooseMergingIterator;
-import com.tr.rp.core.rankediterators.ConcatIterator;
-import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
-import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;

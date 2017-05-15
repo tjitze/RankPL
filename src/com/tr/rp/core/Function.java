@@ -5,25 +5,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.tr.rp.expressions.num.NumExpression;
-
-public class Function implements LanguageElement, FunctionScope {
+public class Function implements LanguageElement {
 
 	private final String name;
 	private DStatement body;
-	private final NumExpression returnValue;
 	private final String[] parameters;
+	private int lineNumber = -1;
 	
-	public Function(String name, DStatement body, NumExpression returnValue, String ... parameters) {
+	public Function(String name, DStatement body, String ... parameters) {
 		this.name = name;
 		this.body = body;
-		this.returnValue = returnValue;
 		this.parameters = parameters;
 	}
 
-	public Function(String name, NumExpression returnValue, String ... parameters) {
+	public Function(String name, String ... parameters) {
 		this.name = name;
-		this.returnValue = returnValue;
 		this.parameters = parameters;
 	}
 
@@ -33,10 +29,6 @@ public class Function implements LanguageElement, FunctionScope {
 	
 	public DStatement getBody() {
 		return body;
-	}
-
-	public NumExpression getReturnValue() {
-		return returnValue;
 	}
 
 	public String[] getParameters() {
@@ -67,7 +59,6 @@ public class Function implements LanguageElement, FunctionScope {
 			Function f = (Function)o;
 			return f.name.equals(name) &&
 					f.body.equals(body) &&
-					f.returnValue.equals(returnValue) &&
 					Arrays.equals(f.parameters, parameters);
 		}
 		return false;
@@ -75,15 +66,14 @@ public class Function implements LanguageElement, FunctionScope {
 	
 	public String toString() {
 		return name + "(" + (Arrays.stream(parameters).collect(Collectors.joining(", "))) + ")" +
-					" {" + body + "; return " + returnValue + ";}";
+					" {" + body + "}";
 	}
 
-	@Override
-	public Function getFunction(String name) {
-		if (name.equals(name)) {
-			return this;
-		} else {
-			throw new RuntimeException("Function " + name + " not defined");
-		}
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+	
+	public int getLineNumber() {
+		return lineNumber;
 	}
 }

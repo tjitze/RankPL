@@ -1,168 +1,169 @@
 package com.tr.rp.statement;
 
+import static com.tr.rp.expressions.Expressions.*;
+
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolLiteral;
-import com.tr.rp.expressions.bool.Equals;
-import com.tr.rp.expressions.bool.Not;
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.Not;
 
 public class ObserveTest extends RPLBaseTest {
 
-	public void testPartiallyTrue() {
-		Observe obs = new Observe(new Equals("a",1)); 
+	public void testPartiallyTrue() throws RPLException {
+		Observe obs = new Observe(eq(var("a"),lit(1))); 
 		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem() == v1);
-		assert(result.getRank() == 0);
-		assert(result.next() == false);
+		assertEquals(true, result.next());
+		assertEquals(v1, result.getItem());
+		assertEquals(0, result.getRank());
+		assertEquals(false, result.next());
 
-		obs = new Observe(new Equals("a",2)); 
+		obs = new Observe(eq(var("a"), lit(2))); 
 		result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem() == v2);
-		assert(result.getRank() == 0);
-		assert(result.next() == false);
+		assertEquals(true, result.next());
+		assertEquals(v2, result.getItem());
+		assertEquals(0, result.getRank());
+		assertEquals(false, result.next());
 
-		obs = new Observe(new Equals("a",3)); 
+		obs = new Observe(eq(var("a"), lit(3))); 
 		result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem() == v3);
-		assert(result.getRank() == 0);
-		assert(result.next() == false);
+		assertEquals(true, result.next());
+		assertEquals(v3, result.getItem());
+		assertEquals(0, result.getRank());
+		assertEquals(false, result.next());
 
-		obs = new Observe(new Not(new Equals("a",1))); 
+		obs = new Observe(new Not(eq(var("a"),lit(1)))); 
 		result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem() == v2);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v2, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v3);
-		assert(result.getRank() == 1);
+		assertEquals(true, result.next());
+		assertEquals(v3, result.getItem());
+		assertEquals(1, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
-		obs = new Observe(new Not(new Equals("a",2))); 
+		obs = new Observe(new Not(eq(var("a"), lit(2)))); 
 		result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem() == v1);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v1, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v3);
-		assert(result.getRank() == 2);
+		assertEquals(true, result.next());
+		assertEquals(v3, result.getItem());
+		assertEquals(2, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
-		obs = new Observe(new Not(new Equals("a",3))); 
+		obs = new Observe(new Not(eq(var("a"), lit(3)))); 
 		result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem() == v1);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v1, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v2);
-		assert(result.getRank() == 1);
+		assertEquals(true, result.next());
+		assertEquals(v2, result.getItem());
+		assertEquals(1, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
 	}
 	
-	public void testTrue() {
-		Observe obs = new Observe(new BoolLiteral(true)); 
+	public void testTrue() throws RPLException {
+		Observe obs = new Observe(lit(true)); 
 		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem() == v1);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v1, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v2);
-		assert(result.getRank() == 1);
+		assertEquals(true, result.next());
+		assertEquals(v2, result.getItem());
+		assertEquals(1, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v3);
-		assert(result.getRank() == 2);
+		assertEquals(true, result.next());
+		assertEquals(v3, result.getItem());
+		assertEquals(2, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 		
-		Observe obs1 = new Observe(new Equals("a",1)); 
-		Observe obs2 = new Observe(new BoolLiteral(true)); 
+		Observe obs1 = new Observe(eq(var("a"),lit(1))); 
+		Observe obs2 = new Observe(lit(true)); 
 		Composition c = new Composition(obs1, obs2);
 		result = c.getIterator(getTestIterator());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v1);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v1, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
-		obs1 = new Observe(new Equals("a",2)); 
-		obs2 = new Observe(new BoolLiteral(true)); 
+		obs1 = new Observe(eq(var("a"), lit(2))); 
+		obs2 = new Observe(lit(true)); 
 		c = new Composition(obs1, obs2);
 		result = c.getIterator(getTestIterator());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v2);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v2, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
-		obs1 = new Observe(new Equals("a",3)); 
-		obs2 = new Observe(new BoolLiteral(true)); 
+		obs1 = new Observe(eq(var("a"), lit(3))); 
+		obs2 = new Observe(lit(true)); 
 		c = new Composition(obs1, obs2);
 		result = c.getIterator(getTestIterator());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v3);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v3, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
-		obs1 = new Observe(new Not(new Equals("a",1))); 
-		obs2 = new Observe(new BoolLiteral(true)); 
+		obs1 = new Observe(new Not(eq(var("a"),lit(1)))); 
+		obs2 = new Observe(lit(true)); 
 		c = new Composition(obs1, obs2);
 		result = c.getIterator(getTestIterator());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v2);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(v2, result.getItem());
+		assertEquals(0, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem() == v3);
-		assert(result.getRank() == 1);
+		assertEquals(true, result.next());
+		assertEquals(v3, result.getItem());
+		assertEquals(1, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
 	}
 	
-	public void testFalse() {
-		Observe obs = new Observe(new BoolLiteral(false)); 
+	public void testFalse() throws RPLException {
+		Observe obs = new Observe(lit(false)); 
 		RankedIterator<VarStore> result = obs.getIterator(getTestIterator());
 		
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
-		Observe obs1 = new Observe(new Equals("a",1)); 
-		Observe obs2 = new Observe(new BoolLiteral(false)); 
+		Observe obs1 = new Observe(eq(var("a"),lit(1))); 
+		Observe obs2 = new Observe(lit(false)); 
 		Composition c = new Composition(obs1, obs2);
 		result = c.getIterator(getTestIterator());
 		
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 
 	}
 	
-	public void testEmptyInput() {
-		Observe obs = new Observe(new BoolLiteral(true)); 
+	public void testEmptyInput() throws RPLException {
+		Observe obs = new Observe(lit(true)); 
 		RankedIterator<VarStore> result = obs.getIterator(new AbsurdIterator<VarStore>());
 		
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 	}	
 
 }

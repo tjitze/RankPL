@@ -4,17 +4,26 @@
 #
 #   java -jar RankPL.jar boolcircuit.rpl 2 fx1 fx2 fa1 fa2 fo1
 
-{ a1 := 0 } << 0 >> { a1 := 1 };
-{ a2 := 0 } << 0 >> { a2 := 1 };
-{ a3 := 0 } << 0 >> { a3 := 1 };
-{ fx1 := 0 } << 1 >> { fx1 := 1 };
-{ fx2 := 0 } << 1 >> { fx2 := 1 };
-{ fa1 := 0 } << 1 >> { fa1 := 1 };
-{ fa2 := 0 } << 1 >> { fa2 := 1 };
-{ fo1 := 0 } << 1 >> { fo1 := 1 };
-IF (fx1 == 0) THEN l1 := (a1 ^ a2) ELSE l1 := 0 << 0 >> 1;
-IF (fa1 == 0) THEN l2 := (a1 & a2) ELSE l2 := 0 << 0 >> 1;
-IF (fa2 == 0) THEN l3 := (l1 & a3) ELSE l3 := 0 << 0 >> 1;
-IF (fx2 == 0) THEN b2 := (l1 ^ a3) ELSE b2 := 0 << 0 >> 1;
-IF (fo2 == 0) THEN b1 := (l3 | l2) ELSE b1 := 0 << 0 >> 1;
-OBSERVE ((a1 == 0) & (a2 == 0) & (a3 == 1) & (b1 == 1) & (b2 == 0));
+# Sate of input variables (true or false, equally likely)
+a1 := FALSE <<0>> TRUE;
+a2 := FALSE <<0>> TRUE;
+a3 := FALSE <<0>> TRUE;
+
+# State of gates (true is functioning, false is faulty)
+fx1 := TRUE <<1>> FALSE;
+fx2 := TRUE <<1>> FALSE;
+fa1 := TRUE <<1>> FALSE;
+fa2 := TRUE <<1>> FALSE;
+fo1 := TRUE <<1>> FALSE;
+
+# circuit logic
+if (fx1) then l1 := (a1 ^ a2) else l1 := FALSE <<0>> TRUE;
+if (fa1) then l2 := (a1 & a2) else l2 := FALSE <<0>> TRUE;
+if (fa2) then l3 := (l1 & a3) else l3 := FALSE <<0>> TRUE;
+if (fx2) then b2 := (l1 ^ a3) else b2 := FALSE <<0>> TRUE;
+if (fo1) then b1 := (l3 | l2) else b1 := FALSE <<0>> TRUE;
+
+# Observed input/output
+observe !a1 & !a2 & a3 & b1 & !b2;
+
+return "fx1: " + fx1 + "\t fx2: " + fx2 + "\t fa1: " + fa1 + "\t fa2: " + fa2 + "\t fo1: " + fo1; 

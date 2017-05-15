@@ -1,11 +1,12 @@
 package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.statement.RPLBaseTest;
 
 public class BufferingIteratorTest extends RPLBaseTest {
 
-	public void testReset() {
+	public void testReset() throws RPLException {
 		BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(getTestIterator());
 
 		// Iterate and reset a couple of times.
@@ -43,7 +44,7 @@ public class BufferingIteratorTest extends RPLBaseTest {
 		}		
 	}
 
-	public void testStopBuffering() {
+	public void testStopBuffering() throws RPLException {
 
 		for (int i = 0; i < 4; i++) {
 			BufferingIterator bi = new BufferingIterator(getTestIterator());
@@ -84,7 +85,7 @@ public class BufferingIteratorTest extends RPLBaseTest {
 		}
 	}
 
-	public void testIfThenElseScenario() {
+	public void testIfThenElseScenario() throws RPLException {
 		BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(getTestIterator());
 		bi.next();
 		VarStore v = bi.getItem();

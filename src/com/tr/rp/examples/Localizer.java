@@ -1,20 +1,21 @@
 package com.tr.rp.examples;
 
+import static com.tr.rp.expressions.Expressions.*;
+
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.And;
-import com.tr.rp.expressions.bool.Equals;
-import com.tr.rp.expressions.bool.LessThan;
-import com.tr.rp.expressions.num.Fun;
-import com.tr.rp.expressions.num.Minus;
-import com.tr.rp.expressions.num.Plus;
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.CustomFunction;
+import com.tr.rp.expressions.Variable;
 import com.tr.rp.statement.Assign;
-import com.tr.rp.statement.Choose;
+import com.tr.rp.statement.RankedChoice;
 import com.tr.rp.statement.IfElse;
+import com.tr.rp.statement.Observe;
 import com.tr.rp.statement.ObserveL;
+import com.tr.rp.statement.RangeChoice;
 import com.tr.rp.statement.While;
 
 /**
@@ -22,9 +23,9 @@ import com.tr.rp.statement.While;
  */
 public class Localizer {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RPLException {
 				
-		int iterations = 4;
+		int iterations = 3;
 		
 		int up = 0, down = 1, left = 2, right = 3;
 
@@ -42,43 +43,42 @@ public class Localizer {
 		int[] sd = new int[]{2,1,2,3};
 		int[] mv = new int[]{right,right,right,right};
 		
-		DStatement cx = new Choose("x", new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 0);
-		DStatement cy = new Choose("y", new int[] {0, 1, 2, 3, 4, 5, 6, 7}, 0);
+		DStatement cx = new RangeChoice("x", 0, 10);
+		DStatement cy = new RangeChoice("y", 0, 7);
 		
 		DStatement inner = new ProgramBuilder()
 				// Move
-				.add(	new IfElse(new And(new LessThan("y", 7), new Equals(new Fun(vs -> mv[vs.getValue("t")]), up)), new Assign("y", new Plus("y", 1)),
-						new IfElse(new And(new LessThan(0, "y"), new Equals(new Fun(vs -> mv[vs.getValue("t")]), down)), new Assign("y", new Minus("y", 1)),
-						new IfElse(new And(new LessThan(0, "x"), new Equals(new Fun(vs -> mv[vs.getValue("t")]), left)), new Assign("x", new Minus("x", 1)),
-						new IfElse(new And(new LessThan("x", 10), new Equals(new Fun(vs -> mv[vs.getValue("t")]), right)), new Assign("x", new Plus("x", 1)))))))
+				.add(	new IfElse(and(lt(new Variable("y"), lit(7)), eq(CustomFunction.create(vs -> mv[(int)vs.getValue("t")]), lit(up))), new Assign("y", plus(var("y"), lit(1))),
+						new IfElse(and(lt(lit(0), new Variable("y")), eq(CustomFunction.create(vs -> mv[(int)vs.getValue("t")]), lit(down))), new Assign("y", minus(var("y"), lit(1))),
+						new IfElse(and(lt(lit(0), new Variable("x")), eq(CustomFunction.create(vs -> mv[(int)vs.getValue("t")]), lit(left))), new Assign("x", minus(var("x"), lit(1))),
+						new IfElse(and(lt(new Variable("x"), lit(10)), eq(CustomFunction.create(vs -> mv[(int)vs.getValue("t")]), lit(right))), new Assign("x", plus(var("x"), lit(1))))))))
 				// North sensor distance 
 				.add(new Assign("n", 0))
-				.add(new While(new And(
-							new Equals(new Fun(vs -> map[vs.getValue("y") + vs.getValue("n")][vs.getValue("x")]), 0),
-							new LessThan(new Plus("y", "n"), 7)),
-						new Assign("n", new Plus("n", 1))))
-				.add(new ObserveL(new Equals("n", new Fun(vs -> nd[vs.getValue("t")] + 1)),1))
+				.add(new While(and(
+						eq(CustomFunction.create(vs -> map[(int)vs.getValue("y") + (int)vs.getValue("n")][(int)vs.getValue("x")]), lit(0)),
+						lt(plus(var("y"), var("n")), lit(7))),
+						new Assign("n", plus(var("n"), lit(1)))))
+				.add(new ObserveL(eq(new Variable("n"), CustomFunction.create(vs -> nd[(int)vs.getValue("t")] + 1)),1))
 				// North sensor distance
 				.add(new Assign("s", 0))
-				.add(new While(new And(
-							new Equals(new Fun(vs -> map[vs.getValue("y") - vs.getValue("s")][vs.getValue("x")]), 0),
-							new LessThan(0, new Minus("y", "n"))),
-						new Assign("s", new Plus("s", 1))))
-				.add(new ObserveL(new Equals("s", new Fun(vs -> sd[vs.getValue("t")] + 1)),1))
-				.add(new Assign("t", new Plus("t", 1)))
+				.add(new While(and(
+						eq(CustomFunction.create(vs -> map[(int)vs.getValue("y") - (int)vs.getValue("s")][(int)vs.getValue("x")]), lit(0)),
+						lt(lit(0), minus(var("y"), var("n")))),
+						new Assign("s", plus(var("s"), lit(1)))))
+				.add(new Observe(eq(var("s"), CustomFunction.create(vs -> sd[(int)vs.getValue("t")] + 1))))//,lit(1)))
+				.add(new Assign("t", plus(var("t"), lit(1))))
 				.build();
 		
 		DStatement prog = new ProgramBuilder()
 				.add(new Assign("t", 0))
 				.add(cx)
 				.add(cy)
-				.add(new While(new And(new LessThan("t", iterations), new LessThan("x", 11)), inner))
+				.add(new While(and(lt(var("t"), lit(iterations)), lt(var("x"), lit(11))), inner))
 				.build();
 
-		VarStore vs = new VarStore();
-		RankedIterator it = prog.getIterator(new InitialVarStoreIterator(vs));
-		while (it.next() && it.getRank() == 0) {
-			System.out.println(it.getItem());
+		RankedIterator<VarStore> it = prog.getIterator(new InitialVarStoreIterator());
+		while (it.next() && it.getRank() < 5) {
+			System.out.println("Rank: " + it.getRank() + " " + it.getItem());
 		}
 
 	}

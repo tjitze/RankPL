@@ -5,19 +5,20 @@ import java.util.Set;
 import java.util.List;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.bool.LessOrEq;
-import com.tr.rp.expressions.num.FunctionCall;
-import com.tr.rp.expressions.num.IntLiteral;
-import com.tr.rp.expressions.num.Minus;
-import com.tr.rp.expressions.num.NumExpression;
-import com.tr.rp.expressions.num.Plus;
-import com.tr.rp.expressions.num.RankExpression;
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.Expressions;
+import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.expressions.Literal;
+import com.tr.rp.expressions.Not;
+import com.tr.rp.expressions.Plus;
+import com.tr.rp.expressions.RankExpr;
+import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.tools.Pair;
 
 /**
@@ -28,45 +29,50 @@ import com.tr.rp.tools.Pair;
  *	else
  *		observe -b [rank(b)-x] observe b
  */
-public class ObserveL implements DStatement {
+public class ObserveL extends DStatement {
 
-	private BoolExpression b;
-	private NumExpression rank;
+	private Expression b;
+	private Expression rank;
 
-	public ObserveL(BoolExpression b, int rank) {
-		this(b, new IntLiteral(rank));
+	public ObserveL(Expression b, int rank) {
+		this(b, new Literal<Integer>(rank));
 	}
 	
-	public ObserveL(BoolExpression b, NumExpression rank) {
+	public ObserveL(Expression b, Expression rank) {
 		this.b = b;
 		this.rank = rank;
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
-		NumExpression rb = new RankExpression(b);
-		NumExpression rnb = new RankExpression(b.negate());
-		// Do rank transformation here
-		NumExpression temp = new Plus(rb, rnb);
-		RankTransformIterator<NumExpression> rt = 
-				new RankTransformIterator<NumExpression>(in, temp);
-		rb = ((Plus)temp).getE1();
-		rnb = ((Plus)temp).getE2();
-		BoolExpression cond = new LessOrEq(rb, rank);
-		NumExpression r1 = new Minus(new Plus(rank, rnb), rb);
-		NumExpression r2 = new Minus(rb, rank);
-		DStatement c1 = new Choose(
-				new Observe(b),
-				new Observe(b.negate()),
-				r1);
-		DStatement c2 = new Choose(
-				new Observe(b.negate()),
-				new Observe(b),
-				r2);
-		DStatement statement = new ProgramBuilder()
-				.add(new IfElse(cond, c1, c2))
-				.build();
-		return statement.getIterator(rt);
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
+		try {
+			Expression rb = new RankExpr(b);
+			Expression rnb = new RankExpr(new Not(b));
+			// Do rank transformation here
+			Expression temp = Expressions.plus(rb, rnb);
+			RankTransformIterator rt = 
+					new RankTransformIterator(in, temp);
+			rb = ((Plus)temp).getE1();
+			rnb = ((Plus)temp).getE2();
+			Expression cond = Expressions.leq(rb, rank);
+			Expression r1 = Expressions.minus(Expressions.plus(rank, rnb), rb);
+			Expression r2 = Expressions.minus(rb, rank);
+			DStatement c1 = new RankedChoice(
+					new Observe(b),
+					new Observe(new Not(b)),
+					r1);
+			DStatement c2 = new RankedChoice(
+					new Observe(new Not(b)),
+					new Observe(b),
+					r2);
+			DStatement statement = new ProgramBuilder()
+					.add(new IfElse(cond, c1, c2))
+					.build();
+			return statement.getIterator(rt);
+		} catch (RPLException e) {
+			e.addStatement(this);
+			throw e;
+		}
 	}
 
 	public String toString() {
@@ -94,7 +100,7 @@ public class ObserveL implements DStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new ObserveL((BoolExpression)this.b.replaceVariable(a, b), (NumExpression)rank.replaceVariable(a, b));
+		return new ObserveL((Expression)this.b.replaceVariable(a, b), (Expression)rank.replaceVariable(a, b));
 	}
 	
 	@Override
@@ -105,17 +111,16 @@ public class ObserveL implements DStatement {
 
 	@Override
 	public DStatement rewriteEmbeddedFunctionCalls() {
-		Pair<List<Pair<String, FunctionCall>>, BoolExpression> rewrittenB
-			= FunctionCallForm.extractFunctionCalls(b);
-		Pair<List<Pair<String, FunctionCall>>, NumExpression> rewrittenRank
-			= FunctionCallForm.extractFunctionCalls(rank);
-		List<Pair<String, FunctionCall>> combined = new ArrayList<Pair<String, FunctionCall>>();
-		combined.addAll(rewrittenB.a);
-		combined.addAll(rewrittenRank.a);
-		if (combined.isEmpty()) {
+		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(b);
+		ExtractedExpression rewrittenRank = FunctionCallForm.extractFunctionCalls(rank);
+		if (rewrittenExp.isRewritten() || rewrittenRank.isRewritten()) {
+			List<Pair<String, FunctionCall>> combined = new ArrayList<Pair<String, FunctionCall>>();
+			combined.addAll(rewrittenExp.getAssignments());
+			combined.addAll(rewrittenRank.getAssignments());
+			return new FunctionCallForm(new ObserveL(rewrittenExp.getExpression(), rewrittenRank.getExpression()), combined);
+		} else {
 			return this;
 		}
-		return new FunctionCallForm(new ObserveL(rewrittenB.b, rewrittenRank.b), combined);
 	}
 
 }

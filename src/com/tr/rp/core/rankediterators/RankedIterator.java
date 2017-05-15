@@ -1,5 +1,7 @@
 package com.tr.rp.core.rankediterators;
 
+import com.tr.rp.exceptions.RPLException;
+
 /**
  * Iterator that returns items associated with ranks in a 
  * low-to-high order. This represents a ranking function 
@@ -29,13 +31,15 @@ public interface RankedIterator<T> {
 	 * Get next item of iterator (accessible via getItem()/getRank()).
 	 *
 	 * @return False if there is no more item.
+	 * @throws RPLException Run time RPL exception
 	 */
-	public boolean next();
+	public boolean next() throws RPLException;
 
 	/**
 	 * @return Current item
+	 * @throws RPLException Run time RPL exception
 	 */
-	public T getItem();
+	public T getItem() throws RPLException;
 
 	/**
 	 * @return Rank of current item

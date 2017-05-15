@@ -1,18 +1,24 @@
 package com.tr.rp.statement;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.List;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.num.FunctionCall;
-import com.tr.rp.expressions.num.IntLiteral;
-import com.tr.rp.expressions.num.NumExpression;
-import com.tr.rp.expressions.num.Var;
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
+import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.expressions.PersistentList;
+import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
+import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.expressions.Variable;
+import com.tr.rp.expressions.Literal;
 import com.tr.rp.tools.Pair;
 
 /**
@@ -25,105 +31,115 @@ import com.tr.rp.tools.Pair;
  * that the array associated with the variable name (indexed by the 
  * array indices) is assigned the value of the given expression.
  */
-public class Assign implements DStatement {
-
-	private final NumExpression exp;
-	private final NumExpression[] index;
-	private final String var;
+public class Assign extends DStatement {
 	
-	public Assign(String var, NumExpression[] index, NumExpression exp) {
-		this.var = var;
-		this.exp = exp;
-		this.index = index;
+	private final Expression value;
+	private final Variable variable;
+	
+	public Assign(Variable var, Expression exp) {
+		this.variable = var;
+		this.value = exp;
 	}
 
-	public Assign(String var, NumExpression[] index, int value) {
-		this(var, index, new IntLiteral(value));
+	public Assign(Variable var, int value) {
+		this(var, new Literal<Integer>(value));
 	}
 
-	public Assign(String var, int value) {
-		this(var, new NumExpression[0], new IntLiteral(value));
+	public Assign(String variableName, int value) {
+		this(new Variable(variableName), new Literal<Integer>(value));
 	}
 
-	public Assign(String var1, String var2) {
-		this(var1, new NumExpression[0], new Var(var2));
+	public Assign(String variableName, Expression value) {
+		this(new Variable(variableName), value);
 	}
 
-	public Assign(String var, NumExpression e) {
-		this(var, new NumExpression[0], e);
+	public Assign(String variableName, String otherVariable) {
+		this(new Variable(variableName), new Variable(otherVariable));
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
-		RankTransformIterator<NumExpression> rt = 
-				new RankTransformIterator<NumExpression>(in, this.exp);
-		NumExpression exp2 = rt.getExpression(0);
-		return new RankedIterator<VarStore>() {
-
-			@Override
-			public boolean next() {
-				return rt.next();
-			}
-
-			@Override
-			public VarStore getItem() {
-				if (rt.getItem() == null) return null;
-				String internalName = Var.getInternalName(var, index, rt.getItem());
-				return rt.getItem().create(internalName, exp2.getVal(rt.getItem()));
-			}
-
-			@Override
-			public int getRank() {
-				return rt.getRank();
-			}
-		};
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) throws RPLException {
+		try {
+			RankTransformIterator rt = 
+				new RankTransformIterator(in, this.value);
+			final Expression exp2 = rt.getExpression(0);
+			return new RankedIterator<VarStore>() {
+	
+				@Override
+				public boolean next() throws RPLException {
+					try {
+						return rt.next();
+					} catch (RPLException e) {
+						e.addStatement(Assign.this);
+						throw e;
+					}
+				}
+	
+				@Override
+				public VarStore getItem() throws RPLException {
+					try {
+						if (rt.getItem() == null) return null;
+						return variable.assign(rt.getItem(), exp2.getValue(rt.getItem()));
+					} catch (RPLException e) {
+						e.addStatement(Assign.this);
+						throw e;
+					}
+				}
+	
+				@Override
+				public int getRank() {
+					return rt.getRank();
+				}
+			};
+		} catch (RPLException e) {
+			e.addStatement(this);
+			throw e;
+		}
 	}
 	
+	
 	public String toString() {
-		String expString = exp.toString();
+		String varString = variable.toString();
+		String expString = value.toString();
 		if (expString.startsWith("(") && expString.endsWith(")")) {
 			expString = expString.substring(1, expString.length()-1);
 		}
-		return var + " := " + expString;
+		return varString + " := " + expString;
 	}
 	
 	public boolean equals(Object o) {
 		return o instanceof Assign &&
-				((Assign)o).var.equals(var) &&
-				((Assign)o).exp.equals(exp);
+				((Assign)o).variable.equals(variable) &&
+				((Assign)o).value.equals(value);
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		for (int i = 0; i < index.length; i++) {
-			if (index[i].containsVariable(var)) return true;
-		}
-		return exp.containsVariable(var) || var.equals(var);
+	public boolean containsVariable(String name) {
+		return variable.containsVariable(name)  || value.containsVariable(name);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		NumExpression[] newIndex = new NumExpression[index.length];
-		for (int i = 0; i < index.length; i++) {
-			newIndex[i] = (NumExpression)index[i].replaceVariable(a, b);
-		}
-		return new Assign(var.equals(a)? b: var, newIndex, (NumExpression)exp.replaceVariable(a, b));
+		return new Assign((Variable)variable.replaceVariable(a, b), (Expression)value.replaceVariable(a, b));
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		list.add(var);
-		Arrays.stream(index).forEach(e -> e.getVariables(list));
-		exp.getVariables(list);
+		variable.getVariables(list);
+		value.getVariables(list);
 	}
 
 	@Override
 	public DStatement rewriteEmbeddedFunctionCalls() {
-		Pair<List<Pair<String, FunctionCall>>, NumExpression> rewrittenExp
-			= FunctionCallForm.extractFunctionCalls(exp);
-		if (rewrittenExp.a.isEmpty()) {
+		ExtractedExpression rewrittenVar = FunctionCallForm.extractFunctionCalls(variable);
+		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
+		if (rewrittenVar.isRewritten() || rewrittenValue.isRewritten()) {
+			List<Pair<String, FunctionCall>> combined = new ArrayList<Pair<String, FunctionCall>>();
+			combined.addAll(rewrittenVar.getAssignments());
+			combined.addAll(rewrittenValue.getAssignments());
+			return new FunctionCallForm(new Assign((Variable)rewrittenVar.getExpression(), rewrittenValue.getExpression()), combined);
+		} else {
 			return this;
 		}
-		return new FunctionCallForm(new Assign(var, rewrittenExp.b), rewrittenExp.a);
 	}	
 }

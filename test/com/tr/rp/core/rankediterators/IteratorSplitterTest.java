@@ -1,16 +1,17 @@
 package com.tr.rp.core.rankediterators;
 
+import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.statement.RPLBaseTest;
 
 public class IteratorSplitterTest extends RPLBaseTest {
 
-	public void testSplitting() {
+	public void testSplitting() throws RPLException {
 		IteratorSplitter s = new IteratorSplitter(getTestIterator());
 		mustEqual(s.getA(), getTestIterator());
 		mustEqual(s.getB(), getTestIterator());
 	}
 	
-	private void mustEqual(RankedIterator a, RankedIterator b) {
+	private void mustEqual(RankedIterator a, RankedIterator b) throws RPLException {
 		boolean done = false;
 		while (!done) {
 			assert(a.getRank() == b.getRank());

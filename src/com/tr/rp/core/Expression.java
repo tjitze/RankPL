@@ -1,12 +1,16 @@
 package com.tr.rp.core;
 
-import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.num.FunctionCall;
+import java.util.List;
+
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.expressions.PersistentList;
+import com.tr.rp.expressions.FunctionCall;
 
 /**
  * Abstract class for expressions.
  */
-public abstract class Expression<T extends Expression<T>> implements LanguageElement {
+public abstract class Expression implements LanguageElement {
 
 	/**
 	 * @return True iff this expression contains a rank expression
@@ -26,8 +30,9 @@ public abstract class Expression<T extends Expression<T>> implements LanguageEle
 	 * @param v Variable store to use for rank expression rewriting.
 	 * @param rank Rank to use for rank expression rewriting.
 	 * @return A new object iff something changed.
+	 * @throws RPLException Run time RPL exception
 	 */
-	public abstract T transformRankExpressions(VarStore v, int rank);
+	public abstract Expression transformRankExpressions(VarStore v, int rank) throws RPLException;
 	
 	/**
 	 * Transform this expression by rewriting all (sub) rank expressions.
@@ -35,8 +40,9 @@ public abstract class Expression<T extends Expression<T>> implements LanguageEle
 	 * 
 	 * @param rank Rank to use for rewriting rank expressions.
 	 * @return New object iff something changed.
+	 * @throws RPLException Run time RPL exception
 	 */
-	public final T transformRankExpressions(int rank) {
+	public final Expression transformRankExpressions(int rank) throws RPLException {
 		return this.transformRankExpressions(null, rank);
 	}
 	
@@ -59,6 +65,85 @@ public abstract class Expression<T extends Expression<T>> implements LanguageEle
 	 * @param var Variable to replace function call with
 	 * @return Result
 	 */
-	public abstract T replaceEmbeddedFunctionCall(FunctionCall fc, String var);
+	public abstract Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var);
+
+	public abstract Object getValue(VarStore e) throws RPLException;
+	
+	public abstract boolean hasDefiniteValue();
+	
+	public abstract Object getDefiniteValue() throws RPLException;
+	
+	public boolean getBoolValue(VarStore e) throws RPLException {
+		Object o = getValue(e);
+		if (o instanceof Boolean) {
+			return ((Boolean)o);
+		} else {
+			throw new RPLTypeError("boolean", o);
+		}
+	}
+	
+	public int getIntValue(VarStore e) throws RPLException {
+		Object o = getValue(e);
+		if (o instanceof Integer) {
+			return ((Integer)o);
+		} else {
+			throw new RPLTypeError("integer", o);
+		}
+	}
+	
+	public String getStringValue(VarStore e) throws RPLException {
+		Object o = getValue(e);
+		if (o instanceof String) {
+			return ((String)o);
+		} else {
+			throw new RPLTypeError("string", o);
+		}
+	}
+
+	public List<?> getListValue(VarStore e) throws RPLException {
+		Object o = getValue(e);
+		if (o instanceof List) {
+			return ((List)o);
+		} else {
+			throw new RPLTypeError("list", o);
+		}
+	}
+
+	public boolean getDefiniteBoolValue() throws RPLException {
+		Object o = getDefiniteValue();
+		if (o instanceof Boolean) {
+			return ((Boolean)o);
+		} else {
+			throw new RPLTypeError("bool", o);
+		}
+	}
+	
+	public int getDefiniteIntValue() throws RPLException {
+		Object o = getDefiniteValue();
+		if (o instanceof Integer) {
+			return ((Integer)o);
+		} else {
+			throw new RPLTypeError("integer", o);
+		}
+	}
+	
+	public String getDefiniteStringValue() throws RPLException {
+		Object o = getDefiniteValue();
+		if (o instanceof String) {
+			return ((String)o);
+		} else {
+			throw new RPLTypeError("string", o);
+		}
+	}
+
+	public PersistentList getDefiniteListValue() throws RPLException {
+		Object o = getDefiniteValue();
+		if (o instanceof PersistentList) {
+			return ((PersistentList)o);
+		} else {
+			throw new RPLTypeError("list", o);
+		}
+	}
+
 
 }

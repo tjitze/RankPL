@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * A ranked iterator that takes another ranked iterator as input,
@@ -19,12 +20,12 @@ public class MarginalizingIterator extends DuplicateRemovingIterator<VarStore> {
 	public MarginalizingIterator(final RankedIterator<VarStore> in, final List<String> vars) {
 		super(new RankedIterator<VarStore>() {
 			@Override
-			public boolean next() {
+			public boolean next() throws RPLException {
 				return in.next();
 			}
 
 			@Override
-			public VarStore getItem() {
+			public VarStore getItem() throws RPLException {
 				if (in == null) return null;
 				VarStore v = in.getItem();
 				if (v == null) return null;

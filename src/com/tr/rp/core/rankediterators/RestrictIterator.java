@@ -1,6 +1,6 @@
 package com.tr.rp.core.rankediterators;
 
-import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * A ranked iterator that reproduces its input but ends once
@@ -17,7 +17,7 @@ public class RestrictIterator<T> implements RankedIterator<T> {
 	}
 	
 	@Override
-	public boolean next() {
+	public boolean next() throws RPLException {
 		boolean next = in.next();
 		if (next && in.getRank() < maxRank) {
 			return true;
@@ -26,7 +26,7 @@ public class RestrictIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public T getItem() {
+	public T getItem() throws RPLException {
 		return in.getItem();
 	}
 

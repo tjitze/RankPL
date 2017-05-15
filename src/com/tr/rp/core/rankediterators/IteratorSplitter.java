@@ -3,6 +3,7 @@ package com.tr.rp.core.rankediterators;
 import java.util.LinkedList;
 
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * An IteratorSplitter takes a ranked iterator as input
@@ -35,7 +36,7 @@ public class IteratorSplitter<T> {
 		return new RankedIterator<T>() {
 
 			@Override
-			public boolean next() {
+			public boolean next() throws RPLException {
 				if (!rsA.isEmpty()) {
 					va = vsA.removeFirst();
 					ra = rsA.removeFirst();
@@ -52,7 +53,7 @@ public class IteratorSplitter<T> {
 			}
 
 			@Override
-			public T getItem() {
+			public T getItem() throws RPLException {
 				return va;
 			}
 
@@ -71,7 +72,7 @@ public class IteratorSplitter<T> {
 		return new RankedIterator<T>() {
 
 			@Override
-			public boolean next() {
+			public boolean next() throws RPLException {
 				if (!rsB.isEmpty()) {
 					vb = vsB.removeFirst();
 					rb = rsB.removeFirst();
@@ -88,7 +89,7 @@ public class IteratorSplitter<T> {
 			}
 
 			@Override
-			public T getItem() {
+			public T getItem() throws RPLException {
 				return vb;
 			}
 

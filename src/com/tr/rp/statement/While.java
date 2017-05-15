@@ -4,129 +4,142 @@ import java.util.Set;
 import java.util.List;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.num.FunctionCall;
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.tools.Pair;
 
-public class While implements DStatement {
+public class While extends DStatement {
 
-	private BoolExpression exp;
-	private DStatement pre;
-	private DStatement s;
-	private int maxIterations = Integer.MAX_VALUE;
+	/** Optional statement to execute before evaluating while condition */
+	private DStatement preStatement;
+
+	/** While condition */
+	private Expression whileCondition;
 	
-	public While(BoolExpression exp, DStatement s) {
-		this.exp = exp;
-		this.s = s;
-		this.pre = null;
+	/** While statement body */
+	private DStatement body;
+
+	private static final int SKIP_COUNT = 5;
+	
+	public While(Expression whileCondition, DStatement body) {
+		this.whileCondition = whileCondition;
+		this.body = body;
+		this.preStatement = null;
 	}
 	
-	private While(BoolExpression exp, DStatement s, DStatement pre) {
-		this.exp = exp;
-		this.s = s;
-		this.pre = pre;
+	private While(Expression whileCondition, DStatement body, DStatement preStatement) {
+		this.whileCondition = whileCondition;
+		this.body = body;
+		this.preStatement = preStatement;
 	}
-		
-	public While setMaxDepth(int maxIterations) {
-		this.maxIterations = maxIterations;
-		return this;
-	}
-
-	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
-		int iterations = 0;
-		
-		while (iterations++ < maxIterations) {
-
-			// Do one iteration
-			in = generateIteration(in);
 			
-			// Check if exp is still satisfied
-			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-			boolean expSatisfied = false;
-			boolean hasNext = bi.next();
-			if (!hasNext) { // Undefined
-				return new AbsurdIterator<VarStore>(); 
-			}
-			while (hasNext) {
-				if (exp.isTrue(bi.getItem())) {
-					expSatisfied = true;
-					break;
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
+		try {
+			while (true) {
+	
+				// Do one iteration
+				in = generateIteration(in);
+				
+				// Check if exp is still satisfied
+				BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
+				boolean expSatisfied = false;
+				boolean hasNext = bi.next();
+				if (!hasNext) { // Undefined
+					return new AbsurdIterator<VarStore>(); 
 				}
-				hasNext = bi.next();
-			}
-			
-			bi.reset();
-			bi.stopBuffering();
-
-			// If exp is not satisfied, we are done
-			if (!expSatisfied) {
-				return bi;
-			}
-			
-			// Try another iteration
-			in = bi;
-		}
-		
-		return null;
-
-	}
+				while (hasNext) {
+					if (whileCondition.getBoolValue(bi.getItem())) {
+						expSatisfied = true;
+						break;
+					}
+					hasNext = bi.next();
+				}
+				
+				bi.reset();
+				bi.stopBuffering();
 	
-	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in) {
-		if (pre == null) {
-			return (new IfElse(exp, s, new Skip())).getIterator(in);
+				// If exp is not satisfied, we are done
+				if (!expSatisfied) {
+					return bi;
+				}
+				
+				// Try another iteration
+				in = bi;
+			}
+			
+		} catch (RPLException e) {
+			e.addStatement(this);
+			throw e;
+		}
+	}
+
+	
+	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in) throws RPLException {
+		if (preStatement == null) {
+			return (new IfElse(whileCondition, body, new Skip())).getIterator(in);
 		} else {
-			return new Composition(pre, (new IfElse(exp, s, new Skip()))).getIterator(in);
+			return new Composition(preStatement, (new IfElse(whileCondition, body, new Skip()))).getIterator(in);
 		}
 	}
 	
 	public boolean equals(Object o) {
 		return o instanceof While &&
-				((While)o).exp.equals(exp) &&
-				((While)o).s.equals(s);
+				((While)o).whileCondition.equals(whileCondition) &&
+				((While)o).body.equals(body);
 	}
 	
 	@Override
 	public boolean containsVariable(String var) {
-		return s.containsVariable(var) || exp.containsVariable(var);
+		return body.containsVariable(var) || whileCondition.containsVariable(var);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new While((BoolExpression)exp.replaceVariable(a, b),
-				(DStatement)this.s.replaceVariable(a, b));
+		return new While((Expression)whileCondition.replaceVariable(a, b),
+				(DStatement)this.body.replaceVariable(a, b));
 	}
 	
 	public String toString() {
-		String expString = exp.toString();
+		String expString = whileCondition.toString();
+		if (preStatement != null && preStatement instanceof FunctionCallForm) {
+			
+		}
 		if (!(expString.startsWith("(") && expString.endsWith(")"))) {
 			expString = "(" + expString + ")";
 		}
-		return "while " + expString + " do " + s;
+		String ss = body.toString();
+		if (preStatement != null && preStatement instanceof FunctionCallForm) {
+			expString = ((FunctionCallForm)preStatement).transformStatement(expString);
+			ss = ((FunctionCallForm)preStatement).transformStatement(ss);
+		}
+		return "while " + expString + " do " + ss;
 	}
 	
 	@Override
 	public void getVariables(Set<String> list) {
-		s.getVariables(list);
-		exp.getVariables(list);
+		body.getVariables(list);
+		whileCondition.getVariables(list);
 	}
 
 	@Override
 	public DStatement rewriteEmbeddedFunctionCalls() {
-		if (pre != null) {
+		if (preStatement != null) {
 			throw new UnsupportedOperationException();
 		}
-		DStatement sr = s.rewriteEmbeddedFunctionCalls();
-		Pair<List<Pair<String, FunctionCall>>, BoolExpression> rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
-		if (rewrittenExp.a.isEmpty()) {
-			return new While(exp, sr);
+		DStatement sr = body.rewriteEmbeddedFunctionCalls();
+		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(whileCondition);
+		if (rewrittenExp.isRewritten()) {
+			return new While(rewrittenExp.getExpression(), sr, new FunctionCallForm(new Skip(), rewrittenExp.getAssignments()));
+		} else {
+			return new While(whileCondition, sr);
 		}
-		return new While(rewrittenExp.b, sr, new FunctionCallForm(new Skip(), rewrittenExp.a));
 	}	
 
 }

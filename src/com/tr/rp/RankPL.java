@@ -17,13 +17,14 @@ import com.tr.rp.core.rankediterators.MarginalizingIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.parser.DefProgLexer;
 import com.tr.rp.parser.DefProgParser;
+import com.tr.rp.statement.Program;
 
 public class RankPL {
 
 	public static void main(String[] args) {
 		
 		// Process options
-		if (args.length < 2) {
+		if (args.length != 2) {
 			printUsage();
 			System.exit(-1);
 		}
@@ -33,19 +34,6 @@ public class RankPL {
 		} catch (Exception e) {
 			printUsage();
 			System.exit(-1);
-		}
-		String[] variables = Arrays.copyOfRange(args, 2, args.length);
-		for (String var: variables) {
-			if (var.length() == 0 || !Character.isAlphabetic(var.charAt(0))) {
-				System.err.println("Invalid variable name: " + var);
-				System.exit(-1);
-			}
-			for (char c: var.toCharArray()) {
-				if (!Character.isAlphabetic(c) && !Character.isDigit(c)) {
-					System.err.println("Invalid variable name: " + var);
-					System.exit(-1);
-				}
-			}
 		}
 
 		// Parse input
@@ -62,27 +50,19 @@ public class RankPL {
         TokenStream tokens = new CommonTokenStream(lexer);
         DefProgParser parser = new DefProgParser(tokens);
         ConcreteParser classVisitor = new ConcreteParser();
-        DStatement program = (DStatement)classVisitor.visit(parser.program());
-		RankedIterator<VarStore> it = program.getIterator(new InitialVarStoreIterator());
-
-		// Apply variable list
-		if (variables.length > 0) {
-			it = new MarginalizingIterator(it, variables);
-		}
-		
-		// Print outcomes
-		boolean emptyResult = false;
-		while (it.next() && it.getRank() <= maxRank) {
-			VarStore v = it.getItem();
-			if (v.toString().equals("[]")) {
-				emptyResult = true;
+        Program program = (Program)classVisitor.visit(parser.program());
+        try {
+	        long time = System.currentTimeMillis();
+	        RankedIterator<String> it = program.run();
+	        // Print outcomes
+			while (it.next() && it.getRank() <= maxRank) {
+				System.out.println("Rank " + it.getRank() + ": " + it.getItem());
 			}
-			int rank = it.getRank();
-			System.out.println("Rank " + rank + ": " + v);
-		}
-		if (emptyResult) {
-			System.out.println("Warning: one or more outcomes did not assign a value to any of the variables " + Arrays.toString(variables) + ".");
-		}
+			System.out.println("Took: " + (System.currentTimeMillis() - time) +" ms");
+        } catch (Exception e) {
+			System.out.println("Exception: " + e);
+			e.printStackTrace();
+        }
 	}
 
 	private static void printUsage() {

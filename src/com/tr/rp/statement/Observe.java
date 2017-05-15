@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.List;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
@@ -11,85 +12,103 @@ import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.num.FunctionCall;
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.tools.Pair;
 
-public class Observe implements DStatement {
+public class Observe extends DStatement {
 
-	private BoolExpression exp;
+	private Expression exp;
 	
-	public Observe(BoolExpression exp) {
+	public Observe(Expression exp) {
 		this.exp = exp;
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
-		
-		// If exp is contradiction/tautology we
-		// can immediately return result.
-		if (exp.isTautology()) {
-			return in;
-		}
-		if (exp.isContradiction()) {
-			return new AbsurdIterator<VarStore>();
-		}
-
-		// Replace rank expressions in exp
-		RankTransformIterator<BoolExpression> rt = 
-				new RankTransformIterator<BoolExpression>(in, this.exp);
-		BoolExpression exp2 = rt.getExpression(0);
-		
-		// Check contradiction/tautology again.
-		if (exp2.isTautology()) {
-			return rt;
-		}
-		if (exp2.isContradiction()) {
-			return new AbsurdIterator<VarStore>();
-		}		
-		// Find first varstore satisfying condition
-		// (if there is no varstore then hasnext will be false)
-		final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(rt);
-		boolean hasNext = bi.next();
-		while (hasNext && !exp2.isTrue(bi.getItem())) { 
-			hasNext = bi.next();
-		}
-		// Remember rank of this varstore
-		final int conditioningOffset = hasNext? bi.getRank(): Integer.MAX_VALUE;
-		// Move back one item so that we can reuse the buffering iterator
-		if (hasNext) bi.reset(bi.getIndex() - 1);
-		return new RankedIterator<VarStore>() {
-			
-			@Override
-			public boolean next() {
-				// Find next varstore satisfying condition
-				boolean hasNext = bi.next();
-				while (hasNext && !exp2.isTrue(bi.getItem())) { 
-					hasNext = bi.next();
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) throws RPLException {
+		try {
+			// If exp is contradiction/tautology we
+			// can immediately return result.
+			if (exp.hasDefiniteValue()) {
+				if (exp.getDefiniteBoolValue()) {
+					return in;
+				} else {
+					return new AbsurdIterator<VarStore>();
 				}
-				return hasNext;
 			}
-
-			@Override
-			public VarStore getItem() {
-				return bi.getItem();
-			}
-
-			@Override
-			public int getRank() {
-				// Subtract offset so that ranks start with zero
-				return Rank.sub(bi.getRank(),  conditioningOffset);
+	
+			// Replace rank expressions in exp
+			RankTransformIterator rt = 
+					new RankTransformIterator(in, this.exp);
+			Expression exp2 = rt.getExpression(0);
+			
+			// Check contradiction/tautology again.
+			if (exp.hasDefiniteValue()) {
+				if (exp.getDefiniteBoolValue()) {
+					return rt;
+				} else {
+					return new AbsurdIterator<VarStore>();
+				}
 			}
 			
-			@Override
-			public int getConditioningOffset() {
-				return conditioningOffset;
+			// Find first varstore satisfying condition
+			// (if there is no varstore then hasnext will be false)
+			final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(rt);
+			boolean hasNext = bi.next();
+			while (hasNext && !exp2.getBoolValue(bi.getItem())) { 
+				hasNext = bi.next();
 			}
-			
-			public String toString() {
-				return "ObserveIterator(exp=" + exp2 + ", buffer=" + bi + ")";
-			}
-		};
+			// Remember rank of this varstore
+			final int conditioningOffset = hasNext? bi.getRank(): Integer.MAX_VALUE;
+			// Move back one item so that we can reuse the buffering iterator
+			if (hasNext) bi.reset(bi.getIndex() - 1);
+			return new RankedIterator<VarStore>() {
+				
+				@Override
+				public boolean next() throws RPLException {
+					try {
+						// Find next varstore satisfying condition
+						boolean hasNext = bi.next();
+						while (hasNext && !exp2.getBoolValue(bi.getItem())) { 
+							hasNext = bi.next();
+						}
+						return hasNext;
+					} catch (RPLException e) {
+						e.addStatement(Observe.this);
+						throw e;
+					}
+				}
+	
+				@Override
+				public VarStore getItem() throws RPLException {
+					try {
+						return bi.getItem();
+					} catch (RPLException e) {
+						e.addStatement(Observe.this);
+						throw e;
+					}
+				}
+	
+				@Override
+				public int getRank() {
+					// Subtract offset so that ranks start with zero
+					return Rank.sub(bi.getRank(),  conditioningOffset);
+				}
+				
+				@Override
+				public int getConditioningOffset() {
+					return conditioningOffset;
+				}
+				
+				public String toString() {
+					return "ObserveIterator(exp=" + exp2 + ", buffer=" + bi + ")";
+				}
+			};
+		} catch (RPLException e) {
+			e.addStatement(this);
+			throw e;
+		}
 	}
 
 	public String toString() {
@@ -111,7 +130,7 @@ public class Observe implements DStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new Observe((BoolExpression)exp.replaceVariable(a, b));
+		return new Observe((Expression)exp.replaceVariable(a, b));
 	}
 	
 	@Override
@@ -121,10 +140,11 @@ public class Observe implements DStatement {
 
 	@Override
 	public DStatement rewriteEmbeddedFunctionCalls() {
-		Pair<List<Pair<String, FunctionCall>>, BoolExpression> rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
-		if (rewrittenExp.a.isEmpty()) {
+		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
+		if (rewrittenExp.isRewritten()) {
+			return new FunctionCallForm(new Observe(rewrittenExp.getExpression()), rewrittenExp.getAssignments());
+		} else {
 			return this;
 		}
-		return new FunctionCallForm(new Observe(rewrittenExp.b), rewrittenExp.a);
 	}	
 }

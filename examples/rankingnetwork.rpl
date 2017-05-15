@@ -31,26 +31,26 @@
 #
 #  java -jar RankPL.jar examples/rankingnetwork.rpl 10 (ENTER)
 #
-#  Rank 0: [r=1, s=0, w=1]
-#  Rank 1: [r=0, s=1, w=1]
-#  Rank 2: [r=0, s=0, w=0]
-#  Rank 2: [r=1, s=0, w=0]
-#  Rank 3: [r=1, s=1, w=1]
-#  Rank 3: [r=0, s=1, w=0]
-#  Rank 8: [r=1, s=1, w=0]
+# Rank 0: rain: true	 sprinkler: false	 wet_grass: true
+# Rank 1: rain: false	 sprinkler: true	 wet_grass: true
+# Rank 2: rain: false	 sprinkler: false	 wet_grass: false
+# Rank 2: rain: true	 sprinkler: false	 wet_grass: false
+# Rank 3: rain: true	 sprinkler: true	 wet_grass: true
+# Rank 3: rain: false	 sprinkler: true	 wet_grass: false
+# Rank 8: rain: true	 sprinkler: true	 wet_grass: false
 #
 # Inference can be modeled simply by adding an observe statement at the end. 
 # Suppose we observe that the sprinkler is on, i.e., we add the statement
 # 
-#    OBSERVE s == 1;
+#    observe sprinkler;
 # 
 # and run it as above. The program then yields the outcome shown below. It tells
 # us that it normally does not rain but that the grass is wet.
 #
-#  Rank 0: [r=0, s=1, w=1]
-#  Rank 2: [r=1, s=1, w=1]
-#  Rank 2: [r=0, s=1, w=0]
-#  Rank 7: [r=1, s=1, w=0]
+# Rank 0: rain: false	 sprinkler: true	 wet_grass: true
+# Rank 2: rain: true	 sprinkler: true	 wet_grass: true
+# Rank 2: rain: false	 sprinkler: true	 wet_grass: false
+# Rank 7: rain: true	 sprinkler: true	 wet_grass: false
 #
 # [1] Spohn, W., The Laws of Belief (Ranking Theory and Its Philosophical Appli-
 #     cations. Oxford University Press (2014).
@@ -64,9 +64,18 @@
 #     programming. Proceedings of FOSE 2014, 2014. pp. 167–181. ACM (2014).
 #
 
-r := 1 << 1 >> 0;
-IF (r == 0) THEN s := 1 << 1 >> 0 ELSE s := 0 << 3 >> 1;
-IF ((r == 0) & (s == 0)) THEN w := 0 
-ELSE IF ((r == 1) & (s == 1)) THEN w := 1 << 5 >> 0
-ELSE w := 1 << 2 >> 0;
-#OBSERVE s == 1;
+rain := true << 1 >> false;
+if (!rain) then {
+	sprinkler := true << 1 >> false;
+} else {
+	sprinkler := false << 3 >> true;
+};
+if (!rain & !sprinkler) then {
+	wet_grass := false; 
+} else if (rain & sprinkler) then {
+	wet_grass := true << 5 >> false;
+} else {
+	wet_grass := true << 2 >> false;
+};
+#observe sprinkler;
+return "rain: " + rain + "\t sprinkler: " + sprinkler + "\t wet_grass: " + wet_grass;

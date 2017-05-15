@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.RankedItem;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * A ranked iterator that takes two other ranked iterators as input and produces
@@ -32,7 +33,7 @@ public class MergingIterator implements RankedIterator<VarStore> {
 	private boolean in1next = false;
 	private boolean in2next = false;
 
-	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, int offset1, int offset2) {
+	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, int offset1, int offset2) throws RPLException {
 		this.in1 = in1;
 		this.in2 = in2;
 		in1next = in1.next();
@@ -53,12 +54,12 @@ public class MergingIterator implements RankedIterator<VarStore> {
 		}
 	}
 	
-	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2) {
+	public MergingIterator(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2) throws RPLException {
 		this(in1, in2, 0, 0);
 	}
 	
 	@Override
-	public boolean next() {
+	public boolean next() throws RPLException {
 		if (!pq.isEmpty()) pq.remove();
 		if (pq.isEmpty()) {
 			if (in1next) {
@@ -85,7 +86,7 @@ public class MergingIterator implements RankedIterator<VarStore> {
 	}
 
 	@Override
-	public VarStore getItem() {
+	public VarStore getItem() throws RPLException {
 		return pq.isEmpty()? null: pq.peek().item;
 	}
 

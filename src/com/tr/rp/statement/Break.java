@@ -6,11 +6,12 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * The break statement terminates execution with a runtime exception.
  */
-public class Break implements DStatement {
+public class Break extends DStatement {
 
 	private String message;
 	
@@ -19,16 +20,16 @@ public class Break implements DStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) throws RPLException {
 		return new RankedIterator<VarStore>() {
 
 			@Override
-			public boolean next() {
+			public boolean next() throws RPLException {
 				throw new RuntimeException(message);
 			}
 
 			@Override
-			public VarStore getItem() {
+			public VarStore getItem() throws RPLException {
 				return null;
 			}
 

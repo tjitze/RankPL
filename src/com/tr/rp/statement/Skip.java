@@ -6,11 +6,12 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.exceptions.RPLException;
 
-public class Skip implements DStatement {
+public class Skip extends DStatement {
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
 		return in;
 	}
 
@@ -33,7 +34,9 @@ public class Skip implements DStatement {
 	}
 
 	@Override
-	public void getVariables(Set<String> list) { }
+	public void getVariables(Set<String> list) { 
+		// nop
+	}
 	
 	@Override
 	public DStatement rewriteEmbeddedFunctionCalls() {

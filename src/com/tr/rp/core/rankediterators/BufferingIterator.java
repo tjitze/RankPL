@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.tr.rp.core.RankedItem;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * A buffering iterator. Yields the same items and ranks as the
@@ -53,7 +54,7 @@ public class BufferingIterator<T> implements RankedIterator<T> {
 	public void reset(int newIndex) {
 		if (stopped) throw new IllegalStateException();
 		if (newIndex < -1 || newIndex > index) {
-			throw new IndexOutOfBoundsException("Illegal index: " + newIndex + " (valid range is -0.." + index + ")");
+			throw new IndexOutOfBoundsException("Illegal index: " + newIndex + " (valid range is 0.." + index + ")");
 		}
 		this.index = newIndex;
 	}
@@ -89,7 +90,7 @@ public class BufferingIterator<T> implements RankedIterator<T> {
 	}
 	
 	@Override
-	public boolean next() {
+	public boolean next() throws RPLException {
 		if (index < queue.size() - 1) {
 			index++;
 			if (stopped) {
@@ -115,7 +116,7 @@ public class BufferingIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public T getItem() {
+	public T getItem() throws RPLException {
 		return index >= 0 && index < queue.size()? queue.get(index).item: null;
 	}
 

@@ -1,68 +1,64 @@
 package com.tr.rp.statement;
 
+import static com.tr.rp.expressions.Expressions.*;
+
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Expression;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
-import com.tr.rp.expressions.bool.BoolExpression;
-import com.tr.rp.expressions.bool.LessThan;
-import com.tr.rp.expressions.num.Plus;
-import com.tr.rp.tools.ResultPrinter;
+import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.Literal;
 
 public class WhileTest extends RPLBaseTest {
 
-	public void testWhile() {
+	public void testWhile() throws RPLException {
 		
-		BoolExpression c = new LessThan("x", 3);
+		Expression c = lt(var("x"), new Literal<Integer>(3));
 		DStatement s = new ProgramBuilder()
-				.add(new Choose("y", new Plus("y", "x"), new Plus("y", 10), 1))
-				.add(new Assign("x", new Plus("x", 1)))
+				.add(new RankedChoice(var("y"), plus(var("y"), var("x")), plus(var("y"), new Literal<Integer>(10)), 1))
+				.add(new Assign("x", plus(var("x"), new Literal<Integer>(1))))
 				.build();
-		While w = new While(c, s);
-		RankedIterator<VarStore> result = w.getIterator(new InitialVarStoreIterator());
-		//	x = 0	x = 1	x = 2	rank
-		//	0		1		3		0
-		//					11		1
-		//			10		12		1
-		//					20		2
-		//	10		11		13		1
-		//					21		2
-		//			20		22		2
-		//					30		3
+		DStatement p = new ProgramBuilder()
+				.add(new Assign("x", 0))
+				.add(new Assign("y", 0))
+				.add(new While(c, s))
+				.build();
+		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator());
 		
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 3);
-		assert(result.getRank() == 0);
+		assertEquals(true, result.next());
+		assertEquals(3, result.getItem().getIntValue("y"));
+		assertEquals(0, result.getRank());
 		
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 11);
-		assert(result.getRank() == 1);
+		assertEquals(true, result.next());
+		assertEquals(11, result.getItem().getIntValue("y"));
+		assertEquals(1, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 12);
-		assert(result.getRank() == 1);
+		assertEquals(true, result.next());
+		assertEquals(12, result.getItem().getIntValue("y"));
+		assertEquals(1, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 13);
-		assert(result.getRank() == 1);
+		assertEquals(true, result.next());
+		assertEquals(13, result.getItem().getIntValue("y"));
+		assertEquals(1, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 21);
-		assert(result.getRank() == 2);
+		assertEquals(true, result.next());
+		assertEquals(21, result.getItem().getIntValue("y"));
+		assertEquals(2, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 20);
-		assert(result.getRank() == 2);
+		assertEquals(true, result.next());
+		assertEquals(20, result.getItem().getIntValue("y"));
+		assertEquals(2, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 22);
-		assert(result.getRank() == 2);
+		assertEquals(true, result.next());
+		assertEquals(22, result.getItem().getIntValue("y"));
+		assertEquals(2, result.getRank());
 
-		assert(result.next() == true);
-		assert(result.getItem().getValue("y") == 30);
-		assert(result.getRank() == 3);
+		assertEquals(true, result.next());
+		assertEquals(30, result.getItem().getIntValue("y"));
+		assertEquals(3, result.getRank());
 
-		assert(result.next() == false);
+		assertEquals(false, result.next());
 	}
 }

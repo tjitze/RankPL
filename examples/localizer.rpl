@@ -5,61 +5,86 @@
 #   java -jar RankPL.jar examples/localizer.rpl 0 x y
 #
 
-# k is the number of time points to simulate. Change it to get 
-# intermediate results. Maximum value for this example is 4.
-k := 4;
+# Main function
+define main() {
+	# k is the number of time points to simulate. Change it to get 
+	# intermediate results. Maximum value for this example is 4.
+	k := 2;
+	
+	# Constants used to refer to different headings
+	north := 0;
+	south := 1;
+	east := 2;
+	west := 3;
+	
+	# Initialize the n*m map in which the robot moves (0 = empty cell, 1 = wall) 
+	n := 11;
+	m := 8;
+	map := array[m];
+	map[7] := [ 1,1,1,1,1,1,1,1,1,1,1 ];
+	map[6] := [ 0,0,0,0,0,1,1,1,1,1,1 ];
+	map[5] := [ 0,0,0,0,0,0,0,0,0,0,0 ];
+	map[4] := [ 0,0,0,0,0,0,0,0,0,0,0 ];
+	map[3] := [ 0,0,0,0,0,0,0,0,0,0,0 ];
+	map[2] := [ 1,1,1,1,0,0,1,1,1,1,1 ];
+	map[1] := [ 1,1,1,1,1,1,1,1,1,1,1 ];
+	map[0] := [ 1,1,1,1,1,1,1,1,1,1,1 ];
+	
+	# A sequence of four distance sensor readings received by the robot (ns = north, ss = south)
+	# Note that this is consistent with movement from (0,5) to (5,5) except that an obstacle is
+	# observed at coordinate (2,3).
+	ns := [ 1,1,1,1 ];
+	ss := [ 2,1,2,3 ];
+	
+	# A sequence of four movements
+	mv := [ east, east, east, east ];
+	
+	# x and y range over all possible coordinates (initially all ranked 0)
+	x := << 0 ... n - 1 >>;
+	y := << 0 ... m - 1 >>;
+	
+	# Initialize time point
+	t := 0;
+	
+	# For each time point ...
+	WHILE (t < k) DO { 
+	
+		# Update x/y according to movement at time point t
+		IF (mv[t] == north) THEN y := y - 1
+		ELSE IF (mv[t] == south) THEN y := y + 1
+		ELSE IF (mv[t] == west) THEN x := x - 1
+		ELSE IF (mv[t] == east) THEN x := x + 1
+		ELSE SKIP;
+		
+		# Make sure we're still inside the map
+		OBSERVE x >= 0 & x < n & y >= 0 & y < m;
+		
+		# Observe north distance to equal ns[t].
+		OBSERVE-L (1) northdistance(x, y, map, m, n) == ns[t];
+	    
+		# Observe south distance to equal ss[t].
+		OBSERVE-L (1) southdistance(x, y, map, m, n) == ss[t];
+	
+		# Update time point
+                t := t + 1;
+	};
+	
+	return "Inferred location (" + x + ", " + y + ")";
+};
 
-# Variables used to refer to different headings
-north := 0;
-south := 1;
-east := 2;
-west := 3;
+# Returns number of empty cells between (x,y) and the nearest wall 
+# on the north side, according to the m*n sized map.
+define northdistance(x, y, map, m, n) {
+    nd := 0;
+    WHILE ((y+nd+1) < m-1 & map[y+nd+1][x] == 0) DO nd := nd + 1; 
+    return nd;
+};
 
-# The map array holds the map (0 = empty cell, 1 = wall)
-map[7] := [ 1,1,1,1,1,1,1,1,1,1,1 ];
-map[6] := [ 0,0,0,0,0,1,1,1,1,1,1 ];
-map[5] := [ 0,0,0,0,0,0,0,0,0,0,0 ];
-map[4] := [ 0,0,0,0,0,0,0,0,0,0,0 ];
-map[3] := [ 0,0,0,0,0,0,0,0,0,0,0 ];
-map[2] := [ 1,1,1,1,0,0,1,1,1,1,1 ];
-map[1] := [ 1,1,1,1,1,1,1,1,1,1,1 ];
-map[0] := [ 1,1,1,1,1,1,1,1,1,1,1 ];
+# Returns number of empty cells between (x,y) and the nearest wall 
+# on the south side, according to the m*n sized map.
+define southdistance(x, y, map, m, n) {
+    sd := 0;
+    WHILE ((y-sd+1) > 0 & map[y-sd+1][x] == 0) DO sd := sd + 1;
+    return sd;
+};
 
-# A sequence of four distance sensor readings (ns = north, ss = south)
-ns := [ 1,1,1,1 ];
-ss := [ 2,1,2,3 ];
-
-# A sequence of four movements
-mv := [ east, east, east, east ];
-
-# x and y range over all possible coordinates (initially all ranked 0)
-{x := 0} <<0>> {{x := 1} <<0>> {{x := 2} <<0>> {{x := 3} <<0>> {{x := 4} <<0>> {{x := 5} <<0>> {{x := 6} <<0>> {{x := 7} <<0>> {{x := 8} <<0>> {{x := 9} <<0>> {x := 10}}}}}}}}}};
-{y := 0} <<0>> {{y := 1} <<0>> {{y := 2} <<0>> {{y := 3} <<0>> {{y := 4} <<0>> {{y := 5} <<0>> {{y := 6} <<0>> {y := 7}}}}}}};
-
-# For each time point ...
-WHILE (t < k) DO { 
-
-	# Update x/y according to movement at time point t (i.e., according to value of mv[t])
-	IF (mv[t] == north) THEN y := y + 1
-	ELSE IF (mv[t] == south) THEN y := y - 1
-	ELSE IF (mv[t] == west) THEN x := x - 1
-	ELSE IF (mv[t] == east) THEN x := x + 1
-	ELSE SKIP;
-
-	# Count number of empty cells between robot and nearest wall on north side. 
-	n := 0;
-    WHILE (map[y + n + 1][x] == 0 & n < 10) DO n := n + 1;
-
-	# Observe this number to equal ns[t]. Use L conditioning to account for the case where ns[t] is incorrect.
-    OBSERVE-L (1) n == ns[t];
-    
-	# Count number of empty cells between robot and nearest wall on south side. 
-    s := 0;
-    WHILE (map[y - s - 1][x] == 0 & s < 10) DO s := s + 1;
-
-	# Observe this number to equal ns[t]. Use L conditioning to account for the case where ss[t] is incorrect.
-    OBSERVE-L (1) s == ss[t];
-
-	# Update time point
-    t := t + 1;
-}		

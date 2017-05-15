@@ -1,6 +1,7 @@
 package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * A ranked iterator that represents the initial state of program 
@@ -22,7 +23,7 @@ public class InitialVarStoreIterator implements RankedIterator<VarStore> {
 	}
 	
 	@Override
-	public boolean next() {
+	public boolean next() throws RPLException {
 		if (!initialized) {
 			initialized = true;
 			return true;
@@ -33,7 +34,7 @@ public class InitialVarStoreIterator implements RankedIterator<VarStore> {
 	}
 
 	@Override
-	public VarStore getItem() {
+	public VarStore getItem() throws RPLException {
 		return vs;
 	}
 

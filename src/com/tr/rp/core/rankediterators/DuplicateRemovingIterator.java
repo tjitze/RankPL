@@ -3,6 +3,7 @@ package com.tr.rp.core.rankediterators;
 import java.util.HashSet;
 
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
 /**
  * Ranked iterator that takes another ranked iterator as input and
@@ -21,7 +22,7 @@ public class DuplicateRemovingIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public boolean next() {
+	public boolean next() throws RPLException {
 		boolean hasNext = in.next();
 		while (hasNext && seen.contains(in.getItem())) {
 			hasNext = in.next();
@@ -36,7 +37,7 @@ public class DuplicateRemovingIterator<T> implements RankedIterator<T> {
 	}
 
 	@Override
-	public T getItem() {
+	public T getItem() throws RPLException {
 		return in.getItem();
 	}
 

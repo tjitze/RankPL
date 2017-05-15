@@ -2,12 +2,13 @@ package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.exceptions.RPLException;
 
-public class RankTransformIterator<T extends Expression<T>> extends BufferingIterator<VarStore> {
+public class RankTransformIterator extends BufferingIterator<VarStore> {
 
-	private final T[] es;
+	private final Expression[] es;
 	
-	public RankTransformIterator(RankedIterator<VarStore> in, T ... expressions) {
+	public RankTransformIterator(RankedIterator<VarStore> in, Expression ... expressions) throws RPLException {
 		super(in);
 		this.es = expressions;
 		transform();
@@ -15,15 +16,15 @@ public class RankTransformIterator<T extends Expression<T>> extends BufferingIte
 		stopBuffering();
 	}
 
-	public T getExpression(int i) {
+	public Expression getExpression(int i) {
 		return es[i];
 	}
 	
-	public T[] getExpressions() {
+	public Expression[] getExpressions() {
 		return es;
 	}
 	
-	private final void transform() {
+	private final void transform() throws RPLException {
 		while (hasRankExpression(es) && next()) {
 			for (int i = 0; i < es.length; i++) {
 				es[i] = es[i].transformRankExpressions(getItem(), getRank());
@@ -34,7 +35,7 @@ public class RankTransformIterator<T extends Expression<T>> extends BufferingIte
 		}
 	}
 	
-	private final boolean hasRankExpression(T[] e) {
+	private final boolean hasRankExpression(Expression[] e) {
 		for (int i = 0; i < es.length; i++) {
 			if (e[i].hasRankExpression()) return true;
 		}

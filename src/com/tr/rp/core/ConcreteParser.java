@@ -18,6 +18,7 @@ import com.tr.rp.expressions.ArrayInitExpression;
 import com.tr.rp.expressions.Conditional;
 import com.tr.rp.expressions.Expressions;
 import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.expressions.InferringFunctionCall;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.expressions.IsSet;
 import com.tr.rp.expressions.Len;
@@ -42,6 +43,7 @@ import com.tr.rp.parser.DefProgParser.Functiondef_or_statementContext;
 import com.tr.rp.parser.DefProgParser.If_statContext;
 import com.tr.rp.parser.DefProgParser.IndexContext;
 import com.tr.rp.parser.DefProgParser.Indifferent_choiceContext;
+import com.tr.rp.parser.DefProgParser.InferringFunctionCallContext;
 import com.tr.rp.parser.DefProgParser.IsSetExprContext;
 import com.tr.rp.parser.DefProgParser.LenExprContext;
 import com.tr.rp.parser.DefProgParser.LiteralBoolExprContext;
@@ -294,6 +296,16 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 			args[i] = (Expression)visit(ctx.expression(i));
 		}
 		return new FunctionCall(functionName, functionScope, args);
+	}
+	
+	@Override
+	public LanguageElement visitInferringFunctionCall(InferringFunctionCallContext ctx) {
+		String functionName = ctx.VAR().toString();
+		Expression[] args = new Expression[ctx.expression().size()];
+		for (int i = 0; i < args.length; i++) {
+			args[i] = (Expression)visit(ctx.expression(i));
+		}
+		return new InferringFunctionCall(functionName, functionScope, args);
 	}
 	
 	@Override

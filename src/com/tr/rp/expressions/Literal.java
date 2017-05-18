@@ -45,12 +45,12 @@ public class Literal<T> extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		return null;
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return this;
 	}
 

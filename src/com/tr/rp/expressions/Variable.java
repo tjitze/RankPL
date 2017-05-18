@@ -62,9 +62,9 @@ public class Variable extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		for (int i = 0; i < indices.length; i++) {
-			FunctionCall fc = indices[i].getEmbeddedFunctionCall();
+			AbstractFunctionCall fc = indices[i].getEmbeddedFunctionCall();
 			if (fc != null) {
 				return fc;
 			}
@@ -73,7 +73,7 @@ public class Variable extends Expression {
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		Expression[] newIndices = new Expression[indices.length];
 		for (int i = 0; i < indices.length; i++) {
 			newIndices[i] = (Expression)indices[i].replaceEmbeddedFunctionCall(fc, var);

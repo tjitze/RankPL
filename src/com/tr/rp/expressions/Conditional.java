@@ -56,8 +56,8 @@ public class Conditional extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
-		FunctionCall fc = condition.getEmbeddedFunctionCall();
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
+		AbstractFunctionCall fc = condition.getEmbeddedFunctionCall();
 		if (fc != null) {
 			return fc;
 		}
@@ -69,7 +69,7 @@ public class Conditional extends Expression {
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return new Conditional(condition.replaceEmbeddedFunctionCall(fc, var),
 				e1.replaceEmbeddedFunctionCall(fc, var),
 				e2.replaceEmbeddedFunctionCall(fc, var));

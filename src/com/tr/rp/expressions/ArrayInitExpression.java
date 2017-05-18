@@ -61,9 +61,9 @@ public class ArrayInitExpression extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		for (int i = 0; i < dimensions.length; i++) {
-			FunctionCall fc = dimensions[i].getEmbeddedFunctionCall();
+			AbstractFunctionCall fc = dimensions[i].getEmbeddedFunctionCall();
 			if (fc != null) {
 				return fc;
 			}
@@ -72,7 +72,7 @@ public class ArrayInitExpression extends Expression {
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		Expression[] newDimensions = new Expression[dimensions.length];
 		for (int i = 0; i < dimensions.length; i++) {
 			newDimensions[i] = (Expression)dimensions[i].replaceEmbeddedFunctionCall(fc, var);

@@ -12,6 +12,7 @@ import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.AbstractFunctionCall;
 import com.tr.rp.expressions.Expressions;
 import com.tr.rp.expressions.FunctionCall;
 import com.tr.rp.expressions.Literal;
@@ -114,7 +115,7 @@ public class ObserveL extends DStatement {
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(b);
 		ExtractedExpression rewrittenRank = FunctionCallForm.extractFunctionCalls(rank);
 		if (rewrittenExp.isRewritten() || rewrittenRank.isRewritten()) {
-			List<Pair<String, FunctionCall>> combined = new ArrayList<Pair<String, FunctionCall>>();
+			List<Pair<String, AbstractFunctionCall>> combined = new ArrayList<Pair<String, AbstractFunctionCall>>();
 			combined.addAll(rewrittenExp.getAssignments());
 			combined.addAll(rewrittenRank.getAssignments());
 			return new FunctionCallForm(new ObserveL(rewrittenExp.getExpression(), rewrittenRank.getExpression()), combined);

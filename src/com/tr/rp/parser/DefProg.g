@@ -69,6 +69,8 @@ expr5
  | ('FALSE' | 'false') 									# LiteralBoolExpr
 
  | variable 											# VariableExpression
+
+ | ('infer'|'INFER') '(' VAR ('()' | '(' expression (',' expression)* ')') ')'	# InferringFunctionCall
  | VAR ('()' | '(' expression (',' expression)* ')') 	# FunctionCall
 
  | '!' expr5 				                 			# NegateExpr

@@ -58,8 +58,8 @@ public class SubString extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
-		FunctionCall fc = input.getEmbeddedFunctionCall();
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
+		AbstractFunctionCall fc = input.getEmbeddedFunctionCall();
 		if (fc != null) {
 			return fc;
 		}
@@ -71,7 +71,7 @@ public class SubString extends Expression {
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return new SubString(
 				(Expression)input.replaceEmbeddedFunctionCall(fc, var),
 				(Expression)begin.replaceEmbeddedFunctionCall(fc, var),

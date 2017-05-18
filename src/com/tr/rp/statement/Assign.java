@@ -16,6 +16,7 @@ import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.expressions.PersistentList;
 import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
+import com.tr.rp.expressions.AbstractFunctionCall;
 import com.tr.rp.expressions.FunctionCall;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.expressions.Literal;
@@ -134,7 +135,7 @@ public class Assign extends DStatement {
 		ExtractedExpression rewrittenVar = FunctionCallForm.extractFunctionCalls(variable);
 		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
 		if (rewrittenVar.isRewritten() || rewrittenValue.isRewritten()) {
-			List<Pair<String, FunctionCall>> combined = new ArrayList<Pair<String, FunctionCall>>();
+			List<Pair<String, AbstractFunctionCall>> combined = new ArrayList<Pair<String, AbstractFunctionCall>>();
 			combined.addAll(rewrittenVar.getAssignments());
 			combined.addAll(rewrittenValue.getAssignments());
 			return new FunctionCallForm(new Assign((Variable)rewrittenVar.getExpression(), rewrittenValue.getExpression()), combined);

@@ -313,6 +313,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitVariableExpression(DefProgParser.VariableExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code InferringFunctionCall}
+	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * @param ctx the parse tree
+	 */
+	void enterInferringFunctionCall(DefProgParser.InferringFunctionCallContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code InferringFunctionCall}
+	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * @param ctx the parse tree
+	 */
+	void exitInferringFunctionCall(DefProgParser.InferringFunctionCallContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code FunctionCall}
 	 * labeled alternative in {@link DefProgParser#expr5}.
 	 * @param ctx the parse tree

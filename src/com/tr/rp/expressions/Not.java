@@ -44,12 +44,12 @@ public class Not extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		return e.getEmbeddedFunctionCall();
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return new Not((Expression)e.replaceEmbeddedFunctionCall(fc, var));
 	}
 

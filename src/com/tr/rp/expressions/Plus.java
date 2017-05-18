@@ -9,6 +9,7 @@ import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.exceptions.RPLUndefinedException;
 
 /**
  * The plus (+) expression. Works on integers as usual, and on
@@ -51,14 +52,14 @@ public class Plus extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
-		FunctionCall fc = e1.getEmbeddedFunctionCall();
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
+		AbstractFunctionCall fc = e1.getEmbeddedFunctionCall();
 		if (fc != null) return fc;
 		return e2.getEmbeddedFunctionCall();
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return new Plus((Expression)e1.replaceEmbeddedFunctionCall(fc, var), (Expression)e2.replaceEmbeddedFunctionCall(fc, var));
 	}
 
@@ -73,6 +74,12 @@ public class Plus extends Expression {
 	}
 
 	private Object get(Object o1, Object o2) throws RPLException {
+		if (o1 == null) {
+			throw new RPLUndefinedException(e1);
+		}
+		if (o2 == null) {
+			throw new RPLUndefinedException(e2);
+		}
 		if (o1 instanceof Integer && o2 instanceof Integer) {
 			return ((int)o1) + ((int)o2);
 		}

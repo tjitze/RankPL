@@ -1,6 +1,8 @@
 package com.tr.rp.expressions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,9 +26,9 @@ import com.tr.rp.tools.Pair;
  * sequence of argument expressions. The arguments must match the function's
  * parameters. Otherwise an exception is thrown at runtime.
  */
-public class FunctionCall extends AbstractFunctionCall {
+public class InferringFunctionCall extends AbstractFunctionCall {
 	
-	public FunctionCall(String functionName, FunctionScope functionScope, Expression ... arguments) {
+	public InferringFunctionCall(String functionName, FunctionScope functionScope, Expression ... arguments) {
 		super(functionName, functionScope, arguments);
 	}
 	
@@ -36,7 +38,7 @@ public class FunctionCall extends AbstractFunctionCall {
 		for (int i = 0; i < newArgs.length; i++) {
 			newArgs[i] = (Expression)getArguments()[i].replaceVariable(a, b);
 		}
-		return new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+		return new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class FunctionCall extends AbstractFunctionCall {
 		for (int i = 0; i < newArgs.length; i++) {
 			newArgs[i] = (Expression)getArguments()[i].transformRankExpressions(v, rank);
 		}
-		return new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+		return new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
 	}
 
 	@Override
@@ -57,19 +59,19 @@ public class FunctionCall extends AbstractFunctionCall {
 			for (int i = 0; i < newArgs.length; i++) {
 				newArgs[i] = (Expression)getArguments()[i].replaceEmbeddedFunctionCall(fc, var);
 			}
-			return new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+			return new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
 		}
 	}
 
 	public String toString() {
-		return getFunctionName() + "(" + 
-				Arrays.stream(getArguments()).map(e -> e.toString()).collect(Collectors.joining(", ")) + ")";
+		return "infer("+getFunctionName() + "(" + 
+				Arrays.stream(getArguments()).map(e -> e.toString()).collect(Collectors.joining(", ")) + "))";
 	}
 	
 	public boolean equals(Object o) {
-		if (o instanceof FunctionCall) {
-			return ((FunctionCall)o).getFunctionName().equals(getFunctionName()) &&
-					Arrays.equals(((FunctionCall)o).getArguments(), getArguments());
+		if (o instanceof InferringFunctionCall) {
+			return ((InferringFunctionCall)o).getFunctionName().equals(getFunctionName()) &&
+					Arrays.equals(((InferringFunctionCall)o).getArguments(), getArguments());
 		}
 		return false;
 	}
@@ -83,31 +85,17 @@ public class FunctionCall extends AbstractFunctionCall {
 				if (parameters.length != arguments.length) {
 					throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, arguments.length);
 				}
-				// execute function
-				in = in.createClosure(getFunction().getParameters(), arguments);
-				RankedIterator<VarStore> i = new InitialVarStoreIterator(in);
-				final RankedIterator<VarStore> pre = getFunction().getBody().getIterator(i);
-				return new RankedIterator<VarStore>() {
-
-					@Override
-					public boolean next() throws RPLException {
-						return pre.next();
+				VarStore closure = in.createClosure(getFunction().getParameters(), arguments);
+				RankedIterator<VarStore> i = new InitialVarStoreIterator(closure);
+				RankedIterator<VarStore> pre = getFunction().getBody().getIterator(i);
+				List<Object> values = new ArrayList<Object>();
+				while (pre.next() && pre.getRank() == 0) {
+					if (!pre.getItem().containsVar("$return")) {
+						throw new RPLMissingReturnValueException(getFunction());
 					}
-
-					@Override
-					public VarStore getItem() throws RPLException {
-						VarStore v = pre.getItem();
-						if (!v.containsVar("$return")) {
-							throw new RPLMissingReturnValueException(getFunction());
-						}
-						return v.getParentOfClosure(assignToVar, new Variable("$return"));
-					}
-
-					@Override
-					public int getRank() {
-						return pre.getRank();
-					}
-				};
+					values.add(pre.getItem().getValue("$return"));
+				}
+				return new InitialVarStoreIterator(in.create(assignToVar, new PersistentList(values)));
 			}
 		};
 	}

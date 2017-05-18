@@ -87,12 +87,12 @@ public class RankExpr extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		return b.getEmbeddedFunctionCall();
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return new RankExpr((Expression)b.replaceEmbeddedFunctionCall(fc, var));
 	}
 

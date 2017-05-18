@@ -191,6 +191,13 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariableExpression(DefProgParser.VariableExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code InferringFunctionCall}
+	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInferringFunctionCall(DefProgParser.InferringFunctionCallContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code FunctionCall}
 	 * labeled alternative in {@link DefProgParser#expr5}.
 	 * @param ctx the parse tree

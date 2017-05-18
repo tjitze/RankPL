@@ -243,10 +243,21 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseStatement("observe-l (fun1()) fun2() == fun3()").toString(), ("observe-l (fun1()) fun2() == fun3()"));
 	}
 	
+	public void testParseInferringFunctionCall() {
+		assertEquals(parseStatement("x := infer(fun())").toString(), ("x := infer(fun())"));
+		assertEquals(parseStatement("x := infer(fun(a, b))").toString(), ("x := infer(fun(a, b))"));
+		assertEquals(parseStatement("x := infer(fun(fun(a, b), c))").toString(), ("x := infer(fun(fun(a, b), c))"));
+		assertEquals(parseStatement("x := fun(infer(fun(a, b)), c)").toString(), ("x := fun(infer(fun(a, b)), c)"));
+	}
+	
 	public void testParseStrings() {
 		assertEquals(parseStatement("x := \"\""), new Assign("x", lit("")));
 		assertEquals(parseStatement("x := \"abc\""), new Assign("x", lit("abc")));
 		assertEquals(parseStatement("x := \"abc\" + \"def\""), new Assign("x", plus(lit("abc"), lit("def"))));
+		// test white spaces in string literals
+		assertEquals(parseStatement("x := \"x \""), new Assign("x", lit("x ")));
+		assertEquals(parseStatement("x := \"x x\""), new Assign("x", lit("x x")));
+		assertEquals(parseStatement("x := \" x\""), new Assign("x", lit(" x")));
 	}
 	
 	private LanguageElement parseStatement(String code) {

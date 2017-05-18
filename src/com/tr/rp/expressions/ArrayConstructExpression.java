@@ -62,9 +62,9 @@ public class ArrayConstructExpression extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		for (int i = 0; i < values.length; i++) {
-			FunctionCall fc = values[i].getEmbeddedFunctionCall();
+			AbstractFunctionCall fc = values[i].getEmbeddedFunctionCall();
 			if (fc != null) {
 				return fc;
 			}
@@ -73,7 +73,7 @@ public class ArrayConstructExpression extends Expression {
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		Expression[] newValues = new Expression[values.length];
 		for (int i = 0; i < values.length; i++) {
 			newValues[i] = (Expression)values[i].replaceEmbeddedFunctionCall(fc, var);

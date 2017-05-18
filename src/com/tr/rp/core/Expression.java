@@ -5,6 +5,7 @@ import java.util.List;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.expressions.PersistentList;
+import com.tr.rp.expressions.AbstractFunctionCall;
 import com.tr.rp.expressions.FunctionCall;
 
 /**
@@ -55,7 +56,7 @@ public abstract class Expression implements LanguageElement {
 	 * 
 	 * @return First embedded function call in this expression.
 	 */
-	public abstract FunctionCall getEmbeddedFunctionCall();
+	public abstract AbstractFunctionCall getEmbeddedFunctionCall();
 	
 	/**
 	 * Replace the given embedded FunctionCall object with the given 
@@ -65,7 +66,7 @@ public abstract class Expression implements LanguageElement {
 	 * @param var Variable to replace function call with
 	 * @return Result
 	 */
-	public abstract Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var);
+	public abstract Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var);
 
 	public abstract Object getValue(VarStore e) throws RPLException;
 	

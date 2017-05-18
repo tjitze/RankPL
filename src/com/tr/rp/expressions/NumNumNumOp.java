@@ -45,14 +45,14 @@ public class NumNumNumOp extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
-		FunctionCall fc = e1.getEmbeddedFunctionCall();
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
+		AbstractFunctionCall fc = e1.getEmbeddedFunctionCall();
 		if (fc != null) return fc;
 		return e2.getEmbeddedFunctionCall();
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return new NumNumNumOp(f, (Expression)e1.replaceEmbeddedFunctionCall(fc, var), (Expression)e2.replaceEmbeddedFunctionCall(fc, var));
 	}
 

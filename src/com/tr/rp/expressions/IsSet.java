@@ -47,12 +47,12 @@ public class IsSet extends Expression {
 	}
 
 	@Override
-	public FunctionCall getEmbeddedFunctionCall() {
+	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		return var.getEmbeddedFunctionCall();
 	}
 
 	@Override
-	public Expression replaceEmbeddedFunctionCall(FunctionCall fc, String var) {
+	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
 		return new IsSet((Variable)this.var.replaceEmbeddedFunctionCall(fc, var));
 	}
 

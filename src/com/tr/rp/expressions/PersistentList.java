@@ -1,6 +1,7 @@
 package com.tr.rp.expressions;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -15,6 +16,13 @@ public class PersistentList {
 	private final Object[][] segments;
 	private final int size;
 	private final int square;
+	
+	public PersistentList(List<Object> values) {
+		this(values.size());
+		for (int i = 0; i < size; i++) {
+			set(i, values.get(i));
+		}
+	}
 	
 	public PersistentList(Object ... values) {
 		this(values.length);

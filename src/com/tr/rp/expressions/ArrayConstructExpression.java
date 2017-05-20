@@ -24,7 +24,7 @@ public class ArrayConstructExpression extends Expression {
 	public ArrayConstructExpression(int ... values) {
 		this.values = new Expression[values.length];
 		for (int i = 0; i < values.length; i++) {
-			this.values[i] = new Literal(values[i]);
+			this.values[i] = new Literal<Integer>(values[i]);
 		}
 	}
 	

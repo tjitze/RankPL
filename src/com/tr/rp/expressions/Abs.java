@@ -68,7 +68,7 @@ public class Abs extends Expression {
 		return Math.abs(this.e.getDefiniteIntValue());
 	}
 
-	public String tostring() {
+	public String toString() {
 		String es = e.toString();
 		if (es.startsWith("(") && es.endsWith(")")) {
 			es = es.substring(1, es.length()-1);

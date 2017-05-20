@@ -119,7 +119,7 @@ public class SubString extends Expression {
 		return s.substring(beginIndex, endIndex);
 	}
 
-	public String tostring() {
+	public String toString() {
 		String es = input.toString();
 		if (es.startsWith("(") && es.endsWith(")")) {
 			es = es.substring(1, es.length()-1);

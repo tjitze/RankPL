@@ -61,6 +61,11 @@ public class Program extends DStatement {
 		return "program";
 	}
 	
+	/**
+	 * Run program. Returns a ranked iterator that produces the values returned
+	 * by this program's return statement. If there is no return statement, no
+	 * values are returned.
+	 */
 	public RankedIterator<String> run() throws RPLException {
 		RankedIterator<VarStore> i = getIterator(new InitialVarStoreIterator());
 		final MarginalizingIterator mi = new MarginalizingIterator(i, "$return");
@@ -68,15 +73,17 @@ public class Program extends DStatement {
 
 			@Override
 			public boolean next() throws RPLException {
-				return mi.next();
+				while (mi.next()) {
+					if (mi.getItem().containsVar("$return")) {
+						return true;
+					}
+				}
+				return false;
 			}
 
 			@Override
 			public String getItem() throws RPLException {
 				VarStore v = mi.getItem();
-				if (!v.containsVar("$return")) {
-					throw new RPLMiscException("Program or main function missing return statement");
-				}
 				return v.getValue("$return").toString();
 			}
 

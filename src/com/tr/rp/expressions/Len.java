@@ -77,7 +77,7 @@ public class Len extends Expression {
 		return this.e.getDefiniteListValue().size();
 	}
 
-	public String tostring() {
+	public String toString() {
 		String es = e.toString();
 		if (es.startsWith("(") && es.endsWith(")")) {
 			es = es.substring(1, es.length()-1);

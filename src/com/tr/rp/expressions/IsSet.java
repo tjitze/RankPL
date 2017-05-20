@@ -71,7 +71,7 @@ public class IsSet extends Expression {
 		return var.getDefiniteValue() != null;
 	}
 
-	public String tostring() {
+	public String toString() {
 		return "isset(" + var + ")";
 	}
 

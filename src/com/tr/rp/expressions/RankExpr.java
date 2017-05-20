@@ -54,7 +54,7 @@ public class RankExpr extends Expression {
 		return true;
 	}
 
-	public String tostring() {
+	public String toString() {
 		String bs = b.toString();
 		if (bs.startsWith("(") && bs.endsWith(")")) {
 			bs = bs.substring(1, bs.length()-1);

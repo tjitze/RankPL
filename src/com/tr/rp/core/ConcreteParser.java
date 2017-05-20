@@ -55,6 +55,7 @@ import com.tr.rp.parser.DefProgParser.ObserveContext;
 import com.tr.rp.parser.DefProgParser.ObserveJContext;
 import com.tr.rp.parser.DefProgParser.ObserveLContext;
 import com.tr.rp.parser.DefProgParser.ParExpressionContext;
+import com.tr.rp.parser.DefProgParser.Print_statementContext;
 import com.tr.rp.parser.DefProgParser.ProgramContext;
 import com.tr.rp.parser.DefProgParser.Range_choiceContext;
 import com.tr.rp.parser.DefProgParser.RankExprContext;
@@ -75,6 +76,7 @@ import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.Observe;
 import com.tr.rp.statement.ObserveJ;
 import com.tr.rp.statement.ObserveL;
+import com.tr.rp.statement.PrintStatement;
 import com.tr.rp.statement.Program;
 import com.tr.rp.statement.RangeChoice;
 import com.tr.rp.statement.Skip;
@@ -95,6 +97,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitReturn_statement(Return_statementContext ctx) {
 		Expression e = (Expression)visit(ctx.expression());
 		return new Return(e);
+	}
+
+	@Override
+	public LanguageElement visitPrint_statement(Print_statementContext ctx) {
+		Expression e = (Expression)visit(ctx.expression());
+		return new PrintStatement(e);
 	}
 
 	@Override

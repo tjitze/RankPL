@@ -40,6 +40,7 @@ statement
  	(('OR'|'or') statement)+													# indifferent_choice
  | '{' statement (';' statement)* ';'? '}'										# statement_sequence
  | ('RETURN'|'return') expression												# return_statement
+ | ('PRINT'|'print') expression												    # print_statement
  ;
  
 expression : expr1;

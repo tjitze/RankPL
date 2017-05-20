@@ -27,6 +27,7 @@ statement
  | variable ':=' '<<' expression '...' expression '>>'							# range_choice
  | ('IF'|'if') expression ('THEN'|'then') statement ('ELSE'|'else') statement	# if_stat
  | ('WHILE'|'while') expression ('DO'|'do') statement							# while_stat
+ | ('FOR'|'for') '(' statement ';' expression ';' statement ')' statement		# for_stat
  | ('OBSERVE'|'observe') expression												# Observe
  | ('OBSERVE-L'|'observe-l') '(' expression ')' expression						# ObserveL
  | ('OBSERVE-J'|'observe-j') '(' expression ')' expression						# ObserveJ

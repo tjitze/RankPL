@@ -37,6 +37,7 @@ import com.tr.rp.parser.DefProgParser.BoolExpressionContext;
 import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.CompareExprContext;
 import com.tr.rp.parser.DefProgParser.ConditionalExpressionContext;
+import com.tr.rp.parser.DefProgParser.For_statContext;
 import com.tr.rp.parser.DefProgParser.FunctionCallContext;
 import com.tr.rp.parser.DefProgParser.FunctiondefContext;
 import com.tr.rp.parser.DefProgParser.Functiondef_or_statementContext;
@@ -72,6 +73,7 @@ import com.tr.rp.statement.Assign;
 import com.tr.rp.statement.RankedChoice;
 import com.tr.rp.statement.Return;
 import com.tr.rp.statement.Composition;
+import com.tr.rp.statement.ForStatement;
 import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.Observe;
 import com.tr.rp.statement.ObserveJ;
@@ -200,6 +202,18 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		DStatement a = (DStatement)visit(ctx.statement());
 		a.setLineNumber(ctx.statement().getStart().getLine());
 		return new While(boolExpr, a);
+	}
+
+	@Override
+	public LanguageElement visitFor_stat(For_statContext ctx) {
+		Expression forCondition = (Expression)visit(ctx.expression());
+		DStatement init = (DStatement)visit(ctx.statement(0));
+		DStatement next = (DStatement)visit(ctx.statement(1));
+		DStatement body = (DStatement)visit(ctx.statement(2));
+		init.setLineNumber(ctx.statement(0).getStart().getLine());
+		next.setLineNumber(ctx.statement(1).getStart().getLine());
+		body.setLineNumber(ctx.statement(2).getStart().getLine());
+		return new ForStatement(init, forCondition, next, body);
 	}
 
 	@Override

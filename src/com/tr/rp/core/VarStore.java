@@ -81,6 +81,17 @@ public class VarStore {
 	}
 	
 	/**
+	 * @return A new variable store where var is set to null (uninitialized).
+	 */
+	public VarStore unset(String var) {
+		if (getValue(var) == null) return this;
+		VarStore v = new VarStore(parent);
+		v.varStore.putAll(varStore);
+		v.varStore.remove(var);
+		return v;
+	}
+	
+	/**
 	 * @return A marginalization of this variable store to a given set of variables.
 	 */
 	public VarStore marginalize(List<String> vars) {

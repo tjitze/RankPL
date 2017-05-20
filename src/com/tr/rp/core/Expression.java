@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.expressions.PersistentList;
 import com.tr.rp.expressions.AbstractFunctionCall;
 import com.tr.rp.expressions.FunctionCall;
@@ -76,7 +77,9 @@ public abstract class Expression implements LanguageElement {
 	
 	public boolean getBoolValue(VarStore e) throws RPLException {
 		Object o = getValue(e);
-		if (o instanceof Boolean) {
+		if (o == null) {
+			throw new RPLUndefinedException(this);
+		} else if (o instanceof Boolean) {
 			return ((Boolean)o);
 		} else {
 			throw new RPLTypeError("boolean", o);
@@ -85,7 +88,9 @@ public abstract class Expression implements LanguageElement {
 	
 	public int getIntValue(VarStore e) throws RPLException {
 		Object o = getValue(e);
-		if (o instanceof Integer) {
+		if (o == null) {
+			throw new RPLUndefinedException(this);
+		} else if (o instanceof Integer) {
 			return ((Integer)o);
 		} else {
 			throw new RPLTypeError("integer", o);
@@ -94,7 +99,9 @@ public abstract class Expression implements LanguageElement {
 	
 	public String getStringValue(VarStore e) throws RPLException {
 		Object o = getValue(e);
-		if (o instanceof String) {
+		if (o == null) {
+			throw new RPLUndefinedException(this);
+		} else if (o instanceof String) {
 			return ((String)o);
 		} else {
 			throw new RPLTypeError("string", o);
@@ -103,7 +110,9 @@ public abstract class Expression implements LanguageElement {
 
 	public List<?> getListValue(VarStore e) throws RPLException {
 		Object o = getValue(e);
-		if (o instanceof List) {
+		if (o == null) {
+			throw new RPLUndefinedException(this);
+		} else if (o instanceof List) {
 			return ((List)o);
 		} else {
 			throw new RPLTypeError("list", o);
@@ -112,7 +121,9 @@ public abstract class Expression implements LanguageElement {
 
 	public boolean getDefiniteBoolValue() throws RPLException {
 		Object o = getDefiniteValue();
-		if (o instanceof Boolean) {
+		if (o == null) {
+			throw new RPLUndefinedException(this);
+		} else if (o instanceof Boolean) {
 			return ((Boolean)o);
 		} else {
 			throw new RPLTypeError("bool", o);
@@ -121,7 +132,9 @@ public abstract class Expression implements LanguageElement {
 	
 	public int getDefiniteIntValue() throws RPLException {
 		Object o = getDefiniteValue();
-		if (o instanceof Integer) {
+		if (o == null) {
+			throw new RPLUndefinedException(this);
+		} else if (o instanceof Integer) {
 			return ((Integer)o);
 		} else {
 			throw new RPLTypeError("integer", o);

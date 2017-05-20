@@ -10,6 +10,7 @@ import com.tr.rp.core.VarStore;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.exceptions.RPLUndefinedException;
 
 /**
  * An indexed variable. Constructed with a variable name and a sequence of 
@@ -84,9 +85,12 @@ public class Variable extends Expression {
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
 		Object o = e.getValue(name);
+		if (o == null) {
+			throw new RPLUndefinedException(this);
+		}
 		for (int i = 0; i < indices.length; i++) {
 			if (o == null) {
-				throw new RPLTypeError("list", o);
+				throw new RPLUndefinedException(this);
 			} else if (o instanceof String) {
 				// Allow strings to be referenced as 1D array
 				String s = (String)o;
@@ -109,6 +113,18 @@ public class Variable extends Expression {
 		return o;
 	}
 
+	/**
+	 * @return True iff value of this variable is defined (not null)
+	 */
+	public boolean isDefined(VarStore e) throws RPLException {
+		try {
+			getValue(e);
+		} catch (RPLUndefinedException ex) {
+			return false;
+		}
+		return true;
+	}
+	
 	@Override
 	public boolean hasDefiniteValue() {
 		return false;

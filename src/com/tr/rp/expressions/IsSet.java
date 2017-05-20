@@ -58,7 +58,7 @@ public class IsSet extends Expression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return var.getValue(e) != null;
+		return var.isDefined(e);
 	}
 
 	@Override

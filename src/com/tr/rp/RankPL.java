@@ -3,18 +3,26 @@ package com.tr.rp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.BitSet;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.DefaultErrorStrategy;
+import org.antlr.v4.runtime.InputMismatchException;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ProxyErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import com.tr.rp.core.ConcreteParser;
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.MarginalizingIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.parser.DefProgLexer;
 import com.tr.rp.parser.DefProgParser;
 import com.tr.rp.statement.Program;
@@ -49,9 +57,11 @@ public class RankPL {
         DefProgLexer lexer = new DefProgLexer(input);
         TokenStream tokens = new CommonTokenStream(lexer);
         DefProgParser parser = new DefProgParser(tokens);
+        parser.setErrorHandler(new BailErrorStrategy());
         ConcreteParser classVisitor = new ConcreteParser();
-        Program program = (Program)classVisitor.visit(parser.program());
+        
         try {
+            Program program = (Program)classVisitor.visit(parser.program());
 	        long time = System.currentTimeMillis();
 	        RankedIterator<String> it = program.run();
 	        // Print outcomes
@@ -59,8 +69,14 @@ public class RankPL {
 				System.out.println("Rank " + it.getRank() + ": " + it.getItem());
 			}
 			System.out.println("Took: " + (System.currentTimeMillis() - time) +" ms");
-        } catch (Exception e) {
+        } catch (RPLException e) {
 			System.out.println("Exception: " + e);
+        } catch (ParseCancellationException e) {
+        	// Ugly hack to get parse exceptions: re-parse but now without the bail error strategy
+			System.out.println("Syntax error");
+            parser = new DefProgParser(tokens);
+            classVisitor.visit(parser.program());
+        } catch (Exception e) {
 			e.printStackTrace();
         }
 	}

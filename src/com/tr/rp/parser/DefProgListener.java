@@ -111,6 +111,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitWhile_stat(DefProgParser.While_statContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code for_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_stat(DefProgParser.For_statContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code for_stat}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_stat(DefProgParser.For_statContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code Observe}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
@@ -206,6 +218,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitReturn_statement(DefProgParser.Return_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code print_statement}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrint_statement(DefProgParser.Print_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code print_statement}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrint_statement(DefProgParser.Print_statementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DefProgParser#expression}.
 	 * @param ctx the parse tree

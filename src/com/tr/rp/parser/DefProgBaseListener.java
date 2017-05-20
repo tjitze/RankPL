@@ -127,6 +127,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFor_stat(DefProgParser.For_statContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFor_stat(DefProgParser.For_statContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterObserve(DefProgParser.ObserveContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -218,6 +230,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitReturn_statement(DefProgParser.Return_statementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPrint_statement(DefProgParser.Print_statementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrint_statement(DefProgParser.Print_statementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

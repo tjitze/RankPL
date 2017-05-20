@@ -126,8 +126,13 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		Expression boolExpr = (Expression)visit(ctx.expression());
 		DStatement a = (DStatement)visit(ctx.statement().get(0));
 		a.setLineNumber(ctx.statement().get(0).getStart().getLine());
-		DStatement b = (DStatement)visit(ctx.statement().get(1));
-		b.setLineNumber(ctx.statement().get(1).getStart().getLine());
+		DStatement b;
+		if (ctx.statement().size() > 1) {
+			b = (DStatement)visit(ctx.statement().get(1));
+			b.setLineNumber(ctx.statement().get(1).getStart().getLine());
+		} else {
+			b = new Skip();
+		}
 		return new IfElse(boolExpr, a, b);
 	}
 

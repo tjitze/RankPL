@@ -1,63 +1,63 @@
-define main() {
-	input := "tweleven";
-	return correctSpelling(getDictionary(), input);
+# This example implements a spelling correction algorithm. The rough idea is 
+# as follows: On line 1 we set input, which is a (possibly) misspelled word. 
+# We then pick a word (potential_match) at random from a dictionary (lines 3-12). 
+# We then compare, one by one, the characters of input and potential_match. For 
+# each character we observe that the characters of input and potential_match are 
+# the same (input[i] == potential_match[k]). This is done using L-conditioning, 
+# which means that the rank of a potential match is increased by one unit, if the
+# characters at i and k don't match. If the characters match, we increase the 
+# pointers i and k and repeat the process. If the characters don't match, we 
+# consider three possibilities and generate the corresponding alternatives using 
+# an either-or statement:
+#
+# 1 There is a misspelling (e.g. when writing cot instead of cat). 
+#   We increase i and k.
+# 2 There is an insertion (e.g. when writing cart instead of cat). 
+#   We increase only i.
+# 3 There is an omission (e.g. when writing ct instead of cat). 
+#   We increase only k.
+#
+# At the end we use a normal observe statement to condition on the fact that 
+# all characters were processed.
+
+input := "foorteen";
+
+dictionary := [
+"one", "two", "three", "four", "five", 
+"six", "seven", "eight", "nine", "ten", "eleven", 
+"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+"seventeen", "eighteen", "nineteen", "twenty"
+];
+
+# Randomly choose word from dictionary
+choice := << 0 ... len(dictionary) >>;
+potential_match := dictionary[choice];
+
+# Initialize counters (i iterates over input, k over match)
+i := 0; k := 0;
+
+# While there are characters left to match ...
+while (i < len(input) & k < len(potential_match)) do {
+	observe-l (1) input[i] == potential_match[k];
+	if (input[i] == potential_match[k]) then {
+		i := i + 1;
+		k := k + 1;
+	} else {
+		either {
+			i := i + 1;
+			k := k + 1;
+		} or {
+			i := i + 1;
+		} or {
+			k := k + 1;
+		}
+	}
 };
+observe i == len(input) & k == len(potential_match);
+return potential_match;
 
-define getDictionary() {
-	dict := array[21];
-	dict[0] := "zero";	dict[1] := "one";	dict[2] := "two";	
-	dict[3] := "three";	dict[4] := "four";	dict[5] := "five";
-	dict[6] := "six";	dict[7] := "seven";	dict[8] := "eight";
-	dict[9] := "nine";	dict[10] := "ten";	dict[11] := "eleven";
-	dict[12] := "twelve";	dict[13] := "thirteen";	dict[14] := "fourteen";
-	dict[15] := "fifteen";	dict[16] := "sixteen";	dict[17] := "seventten";
-	dict[18] := "eighteen";	dict[19] := "nineteen";	dict[20] := "twenty";
-	return dict;
-};
 
-define correctSpelling(dictionary, input) {
-	
-	# Randomly choose word from dictionary
-	choice := << 0 ... len(dictionary) >>;
-	word := dictionary[choice];
 
-	# Initialize counters (ii iterates over input, id over word)
-	ii := 0;
-	id := 0;
 
-	# While there are characters left to match ...
-	while (ii < len(input) | id < len(word)) do {
 
-		normally (1) {
-			# Normally we expect input to match word
-			observe ii < len(input) & id < len(word) & input[ii] == word[id];
-			ii := ii + 1;
-			id := id + 1;
-		} exceptionally {
-			# Exceptional cases
-			normally (1) either {
-				# Two characters swapped
-				observe ii < len(input) - 1 & id < len(word) - 1 
-					& input[ii] == word[id+1]			
-					& input[ii+1] == word[id];
-				ii := ii + 2;
-				id := id + 2;
-			} or {
-				# Extra character in input
-		                observe ii < len(input);
-		                ii := ii + 1;
-		        } or {
-				# Character missing in input
-		                observe id < len(word);
-		                id := id + 1;
-			} exceptionally {
-				# Character mismatch
-		                observe ii < len(input) & id < len(word) & input[ii] != word[id];
-		                ii := ii + 1;
-		                id := id + 1;
-			};
-		};
-	};
-	return word;
-};
 

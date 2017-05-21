@@ -9,7 +9,7 @@
 define main() {
 	# k is the number of time points to simulate. Change it to get 
 	# intermediate results. Maximum value for this example is 4.
-	k := 2;
+	k := 4;
 	
 	# Constants used to refer to different headings
 	north := 0;

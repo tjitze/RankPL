@@ -1,3 +1,5 @@
+# The boolean circuit example using the infer expression
+
 diagnosis := infer(check_circuit(FALSE, FALSE, TRUE, TRUE, FALSE));
 print "Most plausible explanations:";
 for (i := 0; i < len(diagnosis); i := i + 1) {

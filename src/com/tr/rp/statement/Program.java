@@ -58,7 +58,7 @@ public class Program extends DStatement {
 	}
 
 	public String toString() {
-		return "program";
+		return body.toString();
 	}
 	
 	/**

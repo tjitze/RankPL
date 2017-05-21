@@ -12,6 +12,7 @@ import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.AbstractFunctionCall;
 import com.tr.rp.expressions.Expressions;
 import com.tr.rp.expressions.FunctionCall;
 import com.tr.rp.expressions.Variable;
@@ -44,12 +45,12 @@ public class FunctionFormTest extends RPLBaseTest {
 		Expression[] args = new Expression[] { new Variable("a") };
 		DStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
-				.add(new Assign("b", new FunctionCall("test1", scope, false, args)))
+				.add(new Assign("b", new FunctionCall("test1", scope, args)))
 				.build();
 		
 		// Construct expected function call form
-		List<Pair<String, FunctionCall>> assignments = new ArrayList<Pair<String, FunctionCall>>();
-		assignments.add(new Pair<String, FunctionCall>("x", new FunctionCall("test1", scope, false, args)));
+		List<Pair<String, AbstractFunctionCall>> assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
+		assignments.add(new Pair<String, AbstractFunctionCall>("x", new FunctionCall("test1", scope, args)));
 		DStatement rs = new Assign("b", "x");
 		FunctionCallForm fcf = new FunctionCallForm(rs, assignments);
 		
@@ -65,7 +66,7 @@ public class FunctionFormTest extends RPLBaseTest {
 		Expression[] args = new Expression[] { new Variable("a") };
 		DStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
-				.add(new Assign("b", new FunctionCall("test1", scope, false, args)))
+				.add(new Assign("b", new FunctionCall("test1", scope, args)))
 				.build();
 		s = s.rewriteEmbeddedFunctionCalls();
 		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator());
@@ -82,17 +83,17 @@ public class FunctionFormTest extends RPLBaseTest {
 	
 	public void testRewriteNested() {
 		Expression[] args1 = new Expression[] { new Variable("a") };
-		Expression[] args2 = new Expression[] { new FunctionCall("test1", scope, false, args1) };
+		Expression[] args2 = new Expression[] { new FunctionCall("test1", scope, args1) };
 		DStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
-				.add(new Assign("b", new FunctionCall("test1", scope, false, args2)))
+				.add(new Assign("b", new FunctionCall("test1", scope, args2)))
 				.build();
 		
 		// Construct expected function call form
-		List<Pair<String, FunctionCall>> assignments = new ArrayList<Pair<String, FunctionCall>>();
+		List<Pair<String, AbstractFunctionCall>> assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
 		Expression[] args3 = new Expression[] { new Variable("x") };
-		assignments.add(new Pair<String, FunctionCall>("x", new FunctionCall("test1", scope, false, args1)));
-		assignments.add(new Pair<String, FunctionCall>("y", new FunctionCall("test1", scope, false,  args3)));
+		assignments.add(new Pair<String, AbstractFunctionCall>("x", new FunctionCall("test1", scope, args1)));
+		assignments.add(new Pair<String, AbstractFunctionCall>("y", new FunctionCall("test1", scope,  args3)));
 		DStatement rs = new Assign("b", "y");
 		FunctionCallForm fcf = new FunctionCallForm(rs, assignments);
 		
@@ -107,10 +108,10 @@ public class FunctionFormTest extends RPLBaseTest {
 
 	public void testExecuteNested() throws RPLException {
 		Expression[] args1 = new Expression[] { new Variable("a") };
-		Expression[] args2 = new Expression[] { new FunctionCall("test1", scope, false, args1) };
+		Expression[] args2 = new Expression[] { new FunctionCall("test1", scope, args1) };
 		DStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
-				.add(new Assign("b", new FunctionCall("test1", scope, false, args2)))
+				.add(new Assign("b", new FunctionCall("test1", scope, args2)))
 				.build();
 		s = s.rewriteEmbeddedFunctionCalls();
 		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator());
@@ -129,7 +130,7 @@ public class FunctionFormTest extends RPLBaseTest {
 		Expression[] args = new Expression[] { new Variable("a") };
 		DStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
-				.add(new Assign("b", new FunctionCall("test2", scope, false, args)))
+				.add(new Assign("b", new FunctionCall("test2", scope, args)))
 				.build();
 		s = s.rewriteEmbeddedFunctionCalls();
 		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator());

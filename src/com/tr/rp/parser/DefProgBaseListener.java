@@ -247,6 +247,18 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCut_statement(DefProgParser.Cut_statementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCut_statement(DefProgParser.Cut_statementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpression(DefProgParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

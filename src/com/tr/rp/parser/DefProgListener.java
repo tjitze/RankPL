@@ -231,6 +231,18 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitPrint_statement(DefProgParser.Print_statementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code cut_statement}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterCut_statement(DefProgParser.Cut_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code cut_statement}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitCut_statement(DefProgParser.Cut_statementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DefProgParser#expression}.
 	 * @param ctx the parse tree
 	 */

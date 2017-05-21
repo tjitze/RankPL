@@ -143,6 +143,13 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrint_statement(DefProgParser.Print_statementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code cut_statement}
+	 * labeled alternative in {@link DefProgParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCut_statement(DefProgParser.Cut_statementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DefProgParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

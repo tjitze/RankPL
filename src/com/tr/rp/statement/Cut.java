@@ -3,6 +3,7 @@ package com.tr.rp.statement;
 import java.util.Set;
 
 import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -15,12 +16,12 @@ import com.tr.rp.exceptions.RPLException;
  */
 public class Cut extends DStatement {
 	
-	private int rank;
+	private Expression rank;
 	
 	/**
 	 * Construct Cut statement with given rank.
 	 */
-	public Cut(int rank) {
+	public Cut(Expression rank) {
 		this.rank = rank;
 	}
 
@@ -32,7 +33,7 @@ public class Cut extends DStatement {
 			@Override
 			public boolean next() throws RPLException {
 				boolean next = in.next();
-				return next && in.getRank() < rank;
+				return next && in.getRank() < rank.getIntValue(in.getItem());
 			}
 
 			@Override

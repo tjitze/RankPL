@@ -37,6 +37,7 @@ import com.tr.rp.parser.DefProgParser.BoolExpressionContext;
 import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.CompareExprContext;
 import com.tr.rp.parser.DefProgParser.ConditionalExpressionContext;
+import com.tr.rp.parser.DefProgParser.Cut_statementContext;
 import com.tr.rp.parser.DefProgParser.For_statContext;
 import com.tr.rp.parser.DefProgParser.FunctionCallContext;
 import com.tr.rp.parser.DefProgParser.FunctiondefContext;
@@ -73,6 +74,7 @@ import com.tr.rp.statement.Assign;
 import com.tr.rp.statement.RankedChoice;
 import com.tr.rp.statement.Return;
 import com.tr.rp.statement.Composition;
+import com.tr.rp.statement.Cut;
 import com.tr.rp.statement.ForStatement;
 import com.tr.rp.statement.IfElse;
 import com.tr.rp.statement.Observe;
@@ -105,6 +107,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitPrint_statement(Print_statementContext ctx) {
 		Expression e = (Expression)visit(ctx.expression());
 		return new PrintStatement(e);
+	}
+
+	@Override
+	public LanguageElement visitCut_statement(Cut_statementContext ctx) {
+		Expression e = (Expression)visit(ctx.expression());
+		return new Cut(e);
 	}
 
 	@Override

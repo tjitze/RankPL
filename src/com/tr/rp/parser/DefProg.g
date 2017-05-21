@@ -42,6 +42,7 @@ statement
  | '{' statement (';' statement)* ';'? '}'										# statement_sequence
  | ('RETURN'|'return') expression												# return_statement
  | ('PRINT'|'print') expression												    # print_statement
+ | ('CUT'|'cut') expression													    # cut_statement
  ;
  
 expression : expr1;

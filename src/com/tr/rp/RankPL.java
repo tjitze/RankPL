@@ -32,16 +32,14 @@ public class RankPL {
 	public static void main(String[] args) {
 		
 		// Process options
-		if (args.length != 2) {
-			printUsage();
-			System.exit(-1);
-		}
-		int maxRank = 0;
-		try {
+		int maxRank;
+		if (args.length == 1) {
+			maxRank = 0;
+		} else if (args.length == 2) {
 			maxRank = Integer.parseInt(args[1]);
-		} catch (Exception e) {
+		} else {
 			printUsage();
-			System.exit(-1);
+			return;
 		}
 
 		// Parse input
@@ -53,6 +51,7 @@ public class RankPL {
             input = new ANTLRInputStream(fis);
         } catch (IOException e) {
 			System.err.println("I/O Exception while reading file: " + e.getMessage());
+			return;
         }
         DefProgLexer lexer = new DefProgLexer(input);
         TokenStream tokens = new CommonTokenStream(lexer);
@@ -82,11 +81,10 @@ public class RankPL {
 	}
 
 	private static void printUsage() {
-		System.out.println("Usage: java -jar RankPL.jar <source_file> <max_rank> [var1] [var2] ...");
+		System.out.println("Usage: java -jar RankPL.jar <source_file> [max_rank]");
 		System.out.println();
 		System.out.println("  where: <source_file>       is the RankPL source file to execute");
-		System.out.println("         <max_rank>          is the maximum rank to show (i.e. only outcomes ranked at most <max_rank> are shown)");
-		System.out.println("         [var1] [var2] ...   are the variables to show (if none are specified then all variables are shown)");
+		System.out.println("         [max_rank]          is the maximum rank to show (default 0)");
 		System.out.println();
 	}	
 }

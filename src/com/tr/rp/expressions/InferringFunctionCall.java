@@ -3,11 +3,9 @@ package com.tr.rp.expressions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.tr.rp.core.Expression;
-import com.tr.rp.core.Function;
 import com.tr.rp.core.FunctionScope;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
@@ -15,10 +13,8 @@ import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.MultiMergeIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLFunctionUndefinedException;
 import com.tr.rp.exceptions.RPLMissingReturnValueException;
 import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
-import com.tr.rp.tools.Pair;
 
 /**
  * Function call expression. Represents a function call constructed with

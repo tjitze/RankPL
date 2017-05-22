@@ -214,7 +214,7 @@ The \emph{normalization} of $\lambda$ is a ranking function denoted by $|| \lamb
 Conditional ranks are defined as follows.
 
 \begin{definition}\label{def:conditional}
-Given a ranking function $\kappa$, the rank of $A$ conditional on $B$ (denoted $\kappa(A \mid B)$ is defined by
+Given a ranking function $\kappa$, the rank of $A$ conditional on $B$ (denoted $\kappa(A \mid B)$) is defined by
 \[
                 \kappa(A \mid B) = \left\{ \begin{array}{ll}
                  \kappa(A \cap B) - \kappa(B)& \mbox{if $\kappa(B) \not = \infty$,} \\
@@ -554,7 +554,7 @@ Proofs are omitted due to space constraints.
 \begin{theorem}
 Let $b$ be a boolean expression and $\kappa$ a ranking function s.t. $\kappa(b) < \infty$ and $\kappa(\neg b) < \infty$.
 We then have
-$\kappa_{b \rightarrow x} = \dn{\{\emph{\textbf{observe }}b \}\Rank{x} \{\emph{\textbf{observe }}\neg b}(\kappa)\}.$ % removed: inline TODO: why is this cursive?
+$\kappa_{b \rightarrow x} = \dn{\{\emph{\textbf{observe }}b \}\Rank{x} \{\emph{\textbf{observe }}\neg b}(\kappa)\}.$ 
 \end{theorem}
 \emph{L-conditioning}~\cite{goldszmidt1996qualitative} %(also called \emph{evidence-oriented} conditioning~\cite{DBLP:books/daglib/0035277}) 
 is another kind of generalized conditioning.
@@ -565,7 +565,7 @@ Here, the parameter $x$ characterizes the `impact' of the evidence. %, rather th
 %Again, it satisfies the DP postulates for iterated revision.\looseness=-1
 \begin{definition}\label{defn:evidenceoriented}
 Let $A \in \Omega$, $\kappa$ a ranking function over $\Omega$ such that $\kappa(A), \kappa(\overline A) < \infty$, and $x$ a rank.
-The \emph{L-conditioning} of $\kappa$ is denoted by $\kappa_{A \uparrow x}$ and is defined by
+The \emph{L-conditioning} of $\kappa$ by $A$ with strength $x$ is denoted by $\kappa_{A \uparrow x}$ and is defined by
 	$\kappa_{A \uparrow x}(B) = min ( \kappa(A \cap B) - y, \kappa(\neg A \cap B) + x - y ),$ % removed: inline 
 where $y = min(\kappa(A), x).$
 \end{definition}
@@ -584,7 +584,7 @@ Let $b$ be a boolean expression, $\kappa$ a ranking function over $\States$ such
 We then have:
 	$$\kappa_{b \uparrow x} = D
 	\left\llbracket\begin{tabular}{c} 
-	\mbox{$\emph{\textbf{if }}(\emph{\textbf{rank}}(b) \leq x)\emph{\textbf{ then}}$} \\ % TODO: why is this cursive?
+	\mbox{$\emph{\textbf{if }}(\emph{\textbf{rank}}(b) \leq x)\emph{\textbf{ then}}$} \\ 
 	\mbox{$\{\emph{\textbf{observe }}b \} \Rank{x - \emph{\textbf{rank}}(b) + \emph{\textbf{rank}}(\neg b)} \{ \emph{\textbf{observe }}\neg b\}$} \\
 	\mbox{$\emph{\textbf{else}}$} \\
 	\mbox{$\{\emph{\textbf{observe }}\neg b\} \Rank{\emph{\textbf{rank}}(b) - x} \{\emph{\textbf{observe }}b\}$} \\

@@ -29,8 +29,8 @@ statement
  | ('WHILE'|'while') expression ('DO'|'do') statement							# while_stat
  | ('FOR'|'for') '(' statement ';' expression ';' statement ')' statement		# for_stat
  | ('OBSERVE'|'observe') expression												# Observe
- | ('OBSERVE-L'|'observe-l') '(' expression ')' expression						# ObserveL
- | ('OBSERVE-J'|'observe-j') '(' expression ')' expression						# ObserveJ
+ | ('OBSERVE-L'|'observe-l') ('(' expression ')')? expression					# ObserveL
+ | ('OBSERVE-J'|'observe-j') ('(' expression ')')? expression					# ObserveJ
  | ('SKIP'|'skip')																# skip_stat
  | 	('NORMALLY'|'normally'|'NRM'|'nrm') ('(' expression ')')?
  		statement 

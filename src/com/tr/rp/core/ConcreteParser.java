@@ -152,15 +152,29 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitObserveJ(ObserveJContext ctx) {
-		Expression rank = (Expression)visit(ctx.expression(0));
-		Expression boolExpr = (Expression)visit(ctx.expression(1));
+		Expression rank;
+		Expression boolExpr;
+		if (ctx.expression().size() == 1) {
+			rank = new Literal<Integer>(1);
+			boolExpr = (Expression)visit(ctx.expression(0));
+		} else {
+			rank = (Expression)visit(ctx.expression(0));
+			boolExpr = (Expression)visit(ctx.expression(1));
+		}
 		return new ObserveJ(boolExpr, rank);
 	}
 
 	@Override
 	public LanguageElement visitObserveL(ObserveLContext ctx) {
-		Expression rank = (Expression)visit(ctx.expression(0));
-		Expression boolExpr = (Expression)visit(ctx.expression(1));
+		Expression rank;
+		Expression boolExpr;
+		if (ctx.expression().size() == 1) {
+			rank = new Literal<Integer>(1);
+			boolExpr = (Expression)visit(ctx.expression(0));
+		} else {
+			rank = (Expression)visit(ctx.expression(0));
+			boolExpr = (Expression)visit(ctx.expression(1));
+		}
 		return new ObserveL(boolExpr, rank);
 	}
 

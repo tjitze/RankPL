@@ -8,8 +8,7 @@ Semantically, RankPL draws a parallel with probabilistic programming in terms of
 
 # Ranking theory<a name="sec-rankingtheory"></a>
 
-Here we present a brief overview ranking theory. For a more thorough description, the reader is referred to [1](#ref-gp)
-or [2](#ref:survey). In what follows, we denote by *Ω* a set of possibilities. 
+Here we present a brief overview ranking theory. We discuss the basic definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [1](#ref-gp) or [2](#ref:survey). In what follows, we denote by *Ω* a set of possibilities. 
 
 ### Ranking functions
 A *ranking function* *K* assigns to every *w ∈ Ω* a non-negative integer or ∞, such that *K(w) = 0* for at least one *w ∈ Ω*.
@@ -19,7 +18,11 @@ The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the
 
 ### Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)* and defined by *K(A|B) = K(A∩B)-K(B)*. Conditioning on *B* can be understood as a shifting of ranks: the possibilities in *B* are unfiformly shifted downwards so that *K(B|B) = 0*, while the possibilities outside *B* are shifted up to *∞*, so that *K(-B|B) = ∞*.
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)* and defined by *K(A|B) = K(A∩B)-K(B)*. Conditioning on *B* can be understood as a shifting of ranks: the possibilities in *B* are uniformly shifted downwards so that *K(B|B)* becomes *0*, while the possibilities outside *B* are shifted up to *∞*, so that *K(not-B|B)* becomes *∞*.
+
+This definition demonstrates another difference between ranks and probabilities. Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, the division of *P(A∩B)* by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. In the ranking theoretic setting, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. This, too, can be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
+
+Recall that the definition *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*. Analogously, we have *K(A∩B) = K(B) + K(A|B)*. That is, the degree of surprise of *A* *and* *B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
 
 # Ranked programming in RankPL
 

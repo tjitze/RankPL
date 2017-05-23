@@ -426,8 +426,8 @@ This problem is modelled by the following program.
 21  observe b1 & !b2;
 22 
 23  # Return state of gates
-24  return "x1_broken: " + x1_broken + ", x2_broken " + x2_broken + 
-25  	", a1_broken " + a1_broken +  ", a2_broken " + a2_broken +  ", o1_broken " + o1_broken;
+24  return "x1_broken: " + x1_broken + ", x2_broken: " + x2_broken + 
+25  	", a1_broken: " + a1_broken +  ", a2_broken: " + a2_broken +  ", o1_broken: " + o1_broken;
 ```
 
 The program works as follows: on lines 2-4 we set the input (FALSE=0, TRUE=1).
@@ -440,7 +440,7 @@ However, the observe on line 21 states that we see that `b1` is TRUE and `b2` is
 Thus, the circuit is broken.
 The program produces one outcome ranked zero:
 ```
-Rank 0: x1_broken: TRUE, x2_broken FALSE, a1_broken FALSE, a2_broken FALSE, o1_broken FALSE
+Rank 0: x1_broken: TRUE, x2_broken: FALSE, a1_broken: FALSE, a2_broken: FALSE, o1_broken: FALSE
 ```
 This means that the observed behaviour is most plausibly explained by failure of gate `x2`.
 Other outcomes are ranked higher than zero.

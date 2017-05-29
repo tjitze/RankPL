@@ -104,6 +104,7 @@ public class ExpressionTest extends RPLBaseTest {
 		assertEquals(new PersistentList(true, true), evalExp("array[2] (t)"));
 		assertEquals(new PersistentList(true, true), evalExp("array[2] (true)"));
 		assertEquals(new PersistentList(new PersistentList(0, 0)), evalExp("array[1] (array[2])"));
+		// TODO: error testing (negative index, type error) 
 
 		// array literal
 		assertEquals(new PersistentList(0, 1), evalExp("[0, 1]"));

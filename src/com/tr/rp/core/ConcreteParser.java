@@ -34,21 +34,21 @@ import com.tr.rp.parser.DefProgParser.Arithmetic1ExpressionContext;
 import com.tr.rp.parser.DefProgParser.Arithmetic2ExpressionContext;
 import com.tr.rp.parser.DefProgParser.ArrayConstructExprContext;
 import com.tr.rp.parser.DefProgParser.ArrayInitExprContext;
-import com.tr.rp.parser.DefProgParser.Assignment_statContext;
+import com.tr.rp.parser.DefProgParser.AssignmentStatementContext;
 import com.tr.rp.parser.DefProgParser.Assignment_targetContext;
 import com.tr.rp.parser.DefProgParser.BoolExpressionContext;
-import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
+import com.tr.rp.parser.DefProgParser.ChoiceAssignmentStatementContext;
 import com.tr.rp.parser.DefProgParser.CompareExprContext;
 import com.tr.rp.parser.DefProgParser.ConditionalExpressionContext;
-import com.tr.rp.parser.DefProgParser.Cut_statementContext;
-import com.tr.rp.parser.DefProgParser.For_statContext;
+import com.tr.rp.parser.DefProgParser.CutStatementContext;
+import com.tr.rp.parser.DefProgParser.ForStatementContext;
 import com.tr.rp.parser.DefProgParser.FunctionCallContext;
 import com.tr.rp.parser.DefProgParser.FunctiondefContext;
 import com.tr.rp.parser.DefProgParser.Functiondef_or_statementContext;
-import com.tr.rp.parser.DefProgParser.If_statContext;
+import com.tr.rp.parser.DefProgParser.IfStatementContext;
 import com.tr.rp.parser.DefProgParser.IndexContext;
 import com.tr.rp.parser.DefProgParser.IndexedExpressionContext;
-import com.tr.rp.parser.DefProgParser.Indifferent_choiceContext;
+import com.tr.rp.parser.DefProgParser.IndifferentChoiceStatementContext;
 import com.tr.rp.parser.DefProgParser.InferringFunctionCallContext;
 import com.tr.rp.parser.DefProgParser.IsSetExprContext;
 import com.tr.rp.parser.DefProgParser.LenExprContext;
@@ -57,23 +57,23 @@ import com.tr.rp.parser.DefProgParser.LiteralIntExpressionContext;
 import com.tr.rp.parser.DefProgParser.LiteralStringExprContext;
 import com.tr.rp.parser.DefProgParser.MinusExprContext;
 import com.tr.rp.parser.DefProgParser.NegateExprContext;
-import com.tr.rp.parser.DefProgParser.ObserveContext;
-import com.tr.rp.parser.DefProgParser.ObserveJContext;
-import com.tr.rp.parser.DefProgParser.ObserveLContext;
+import com.tr.rp.parser.DefProgParser.ObserveStatementContext;
+import com.tr.rp.parser.DefProgParser.ObserveJStatementContext;
+import com.tr.rp.parser.DefProgParser.ObserveLStatementContext;
 import com.tr.rp.parser.DefProgParser.ParExpressionContext;
-import com.tr.rp.parser.DefProgParser.Print_statementContext;
+import com.tr.rp.parser.DefProgParser.PrintStatementContext;
 import com.tr.rp.parser.DefProgParser.ProgramContext;
-import com.tr.rp.parser.DefProgParser.Range_choiceContext;
+import com.tr.rp.parser.DefProgParser.RangeChoiceStatementContext;
 import com.tr.rp.parser.DefProgParser.RankExprContext;
-import com.tr.rp.parser.DefProgParser.Ranked_choiceContext;
-import com.tr.rp.parser.DefProgParser.Return_statementContext;
-import com.tr.rp.parser.DefProgParser.Skip_statContext;
+import com.tr.rp.parser.DefProgParser.RankedChoiceStatementContext;
+import com.tr.rp.parser.DefProgParser.ReturnStatementContext;
+import com.tr.rp.parser.DefProgParser.SkipStatementContext;
 import com.tr.rp.parser.DefProgParser.StatementContext;
-import com.tr.rp.parser.DefProgParser.Statement_sequenceContext;
+import com.tr.rp.parser.DefProgParser.StatementSequenceContext;
 import com.tr.rp.parser.DefProgParser.SubStringExprContext;
 import com.tr.rp.parser.DefProgParser.VariableContext;
 import com.tr.rp.parser.DefProgParser.VariableExpressionContext;
-import com.tr.rp.parser.DefProgParser.While_statContext;
+import com.tr.rp.parser.DefProgParser.WhileStatementContext;
 import com.tr.rp.statement.Assign;
 import com.tr.rp.statement.RankedChoice;
 import com.tr.rp.statement.Return;
@@ -95,26 +95,26 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	private FunctionScope functionScope = new FunctionScope();
 	
 	@Override
-	public LanguageElement visitAssignment_stat(Assignment_statContext ctx) {
+	public LanguageElement visitAssignmentStatement(AssignmentStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression value = (Expression)visit(ctx.expression());
 		return new Assign(target, value);
 	}
 
 	@Override
-	public LanguageElement visitReturn_statement(Return_statementContext ctx) {
+	public LanguageElement visitReturnStatement(ReturnStatementContext ctx) {
 		Expression e = (Expression)visit(ctx.expression());
 		return new Return(e);
 	}
 
 	@Override
-	public LanguageElement visitPrint_statement(Print_statementContext ctx) {
+	public LanguageElement visitPrintStatement(PrintStatementContext ctx) {
 		Expression e = (Expression)visit(ctx.expression());
 		return new PrintStatement(e);
 	}
 
 	@Override
-	public LanguageElement visitCut_statement(Cut_statementContext ctx) {
+	public LanguageElement visitCutStatement(CutStatementContext ctx) {
 		Expression e = (Expression)visit(ctx.expression());
 		return new Cut(e);
 	}
@@ -136,7 +136,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitChoice_assignment_stat(Choice_assignment_statContext ctx) {
+	public LanguageElement visitChoiceAssignmentStatement(ChoiceAssignmentStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression value1 = (Expression)visit(ctx.expression(0));
 		Expression value2 = (Expression)visit(ctx.expression(2));
@@ -145,7 +145,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitIf_stat(If_statContext ctx) {
+	public LanguageElement visitIfStatement(IfStatementContext ctx) {
 		Expression boolExpr = (Expression)visit(ctx.expression());
 		DStatement a = (DStatement)visit(ctx.statement().get(0));
 		a.setLineNumber(ctx.statement().get(0).getStart().getLine());
@@ -160,13 +160,13 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitObserve(ObserveContext ctx) {
+	public LanguageElement visitObserveStatement(ObserveStatementContext ctx) {
 		Expression boolExpr = (Expression)visit(ctx.expression());
 		return new Observe(boolExpr);
 	}
 
 	@Override
-	public LanguageElement visitObserveJ(ObserveJContext ctx) {
+	public LanguageElement visitObserveJStatement(ObserveJStatementContext ctx) {
 		Expression rank;
 		Expression boolExpr;
 		if (ctx.expression().size() == 1) {
@@ -180,7 +180,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitObserveL(ObserveLContext ctx) {
+	public LanguageElement visitObserveLStatement(ObserveLStatementContext ctx) {
 		Expression rank;
 		Expression boolExpr;
 		if (ctx.expression().size() == 1) {
@@ -194,7 +194,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitRanked_choice(Ranked_choiceContext ctx) {
+	public LanguageElement visitRankedChoiceStatement(RankedChoiceStatementContext ctx) {
 		Expression rank = ctx.expression() == null? lit(1): (Expression)visit(ctx.expression());
 		DStatement a = (DStatement)visit(ctx.statement().get(0));
 		a.setLineNumber(ctx.statement().get(0).getStart().getLine());
@@ -204,7 +204,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitRange_choice(Range_choiceContext ctx) {
+	public LanguageElement visitRangeChoiceStatement(RangeChoiceStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression a = (Expression)visit(ctx.expression().get(0));
 		Expression b = (Expression)visit(ctx.expression().get(1));
@@ -212,7 +212,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitIndifferent_choice(Indifferent_choiceContext ctx) {
+	public LanguageElement visitIndifferentChoiceStatement(IndifferentChoiceStatementContext ctx) {
 		DStatement[] choices = new DStatement[ctx.statement().size()];
 		for (int i = 0; i < choices.length; i++) {
 			choices[i] = (DStatement)visit(ctx.statement().get(i));
@@ -234,12 +234,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 
 	@Override
-	public LanguageElement visitSkip_stat(Skip_statContext ctx) {
+	public LanguageElement visitSkipStatement(SkipStatementContext ctx) {
 		return new Skip();
 	}
 	
 	@Override
-	public LanguageElement visitWhile_stat(While_statContext ctx) {
+	public LanguageElement visitWhileStatement(WhileStatementContext ctx) {
 		Expression boolExpr = (Expression)visit(ctx.expression());
 		DStatement a = (DStatement)visit(ctx.statement());
 		a.setLineNumber(ctx.statement().getStart().getLine());
@@ -247,7 +247,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitFor_stat(For_statContext ctx) {
+	public LanguageElement visitForStatement(ForStatementContext ctx) {
 		Expression forCondition = (Expression)visit(ctx.expression());
 		DStatement init = (DStatement)visit(ctx.statement(0));
 		DStatement next = (DStatement)visit(ctx.statement(1));
@@ -495,7 +495,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		}
 	}
 
-	public LanguageElement visitStatement_sequence(Statement_sequenceContext ctx) {
+	public LanguageElement visitStatementSequence(StatementSequenceContext ctx) {
 		List<DStatement> statements = new ArrayList<DStatement>();
 		for (StatementContext sc: ctx.statement()) {
 			DStatement s = (DStatement)visit(sc);

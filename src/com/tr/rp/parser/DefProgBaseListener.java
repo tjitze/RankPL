@@ -67,193 +67,193 @@ public class DefProgBaseListener implements DefProgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignment_stat(DefProgParser.Assignment_statContext ctx) { }
+	@Override public void enterAssignmentStatement(DefProgParser.AssignmentStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignment_stat(DefProgParser.Assignment_statContext ctx) { }
+	@Override public void exitAssignmentStatement(DefProgParser.AssignmentStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx) { }
+	@Override public void enterChoiceAssignmentStatement(DefProgParser.ChoiceAssignmentStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx) { }
+	@Override public void exitChoiceAssignmentStatement(DefProgParser.ChoiceAssignmentStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRange_choice(DefProgParser.Range_choiceContext ctx) { }
+	@Override public void enterRangeChoiceStatement(DefProgParser.RangeChoiceStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRange_choice(DefProgParser.Range_choiceContext ctx) { }
+	@Override public void exitRangeChoiceStatement(DefProgParser.RangeChoiceStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIf_stat(DefProgParser.If_statContext ctx) { }
+	@Override public void enterIfStatement(DefProgParser.IfStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIf_stat(DefProgParser.If_statContext ctx) { }
+	@Override public void exitIfStatement(DefProgParser.IfStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhile_stat(DefProgParser.While_statContext ctx) { }
+	@Override public void enterWhileStatement(DefProgParser.WhileStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWhile_stat(DefProgParser.While_statContext ctx) { }
+	@Override public void exitWhileStatement(DefProgParser.WhileStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFor_stat(DefProgParser.For_statContext ctx) { }
+	@Override public void enterForStatement(DefProgParser.ForStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFor_stat(DefProgParser.For_statContext ctx) { }
+	@Override public void exitForStatement(DefProgParser.ForStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterObserve(DefProgParser.ObserveContext ctx) { }
+	@Override public void enterObserveStatement(DefProgParser.ObserveStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitObserve(DefProgParser.ObserveContext ctx) { }
+	@Override public void exitObserveStatement(DefProgParser.ObserveStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterObserveL(DefProgParser.ObserveLContext ctx) { }
+	@Override public void enterObserveLStatement(DefProgParser.ObserveLStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitObserveL(DefProgParser.ObserveLContext ctx) { }
+	@Override public void exitObserveLStatement(DefProgParser.ObserveLStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterObserveJ(DefProgParser.ObserveJContext ctx) { }
+	@Override public void enterObserveJStatement(DefProgParser.ObserveJStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitObserveJ(DefProgParser.ObserveJContext ctx) { }
+	@Override public void exitObserveJStatement(DefProgParser.ObserveJStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSkip_stat(DefProgParser.Skip_statContext ctx) { }
+	@Override public void enterSkipStatement(DefProgParser.SkipStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSkip_stat(DefProgParser.Skip_statContext ctx) { }
+	@Override public void exitSkipStatement(DefProgParser.SkipStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRanked_choice(DefProgParser.Ranked_choiceContext ctx) { }
+	@Override public void enterRankedChoiceStatement(DefProgParser.RankedChoiceStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRanked_choice(DefProgParser.Ranked_choiceContext ctx) { }
+	@Override public void exitRankedChoiceStatement(DefProgParser.RankedChoiceStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIndifferent_choice(DefProgParser.Indifferent_choiceContext ctx) { }
+	@Override public void enterIndifferentChoiceStatement(DefProgParser.IndifferentChoiceStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIndifferent_choice(DefProgParser.Indifferent_choiceContext ctx) { }
+	@Override public void exitIndifferentChoiceStatement(DefProgParser.IndifferentChoiceStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatement_sequence(DefProgParser.Statement_sequenceContext ctx) { }
+	@Override public void enterStatementSequence(DefProgParser.StatementSequenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatement_sequence(DefProgParser.Statement_sequenceContext ctx) { }
+	@Override public void exitStatementSequence(DefProgParser.StatementSequenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReturn_statement(DefProgParser.Return_statementContext ctx) { }
+	@Override public void enterReturnStatement(DefProgParser.ReturnStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReturn_statement(DefProgParser.Return_statementContext ctx) { }
+	@Override public void exitReturnStatement(DefProgParser.ReturnStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPrint_statement(DefProgParser.Print_statementContext ctx) { }
+	@Override public void enterPrintStatement(DefProgParser.PrintStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPrint_statement(DefProgParser.Print_statementContext ctx) { }
+	@Override public void exitPrintStatement(DefProgParser.PrintStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCut_statement(DefProgParser.Cut_statementContext ctx) { }
+	@Override public void enterCutStatement(DefProgParser.CutStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCut_statement(DefProgParser.Cut_statementContext ctx) { }
+	@Override public void exitCutStatement(DefProgParser.CutStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

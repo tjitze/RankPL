@@ -38,117 +38,117 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctiondef(DefProgParser.FunctiondefContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code assignment_stat}
+	 * Visit a parse tree produced by the {@code AssignmentStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignment_stat(DefProgParser.Assignment_statContext ctx);
+	T visitAssignmentStatement(DefProgParser.AssignmentStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code choice_assignment_stat}
+	 * Visit a parse tree produced by the {@code ChoiceAssignmentStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx);
+	T visitChoiceAssignmentStatement(DefProgParser.ChoiceAssignmentStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code range_choice}
+	 * Visit a parse tree produced by the {@code RangeChoiceStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRange_choice(DefProgParser.Range_choiceContext ctx);
+	T visitRangeChoiceStatement(DefProgParser.RangeChoiceStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code if_stat}
+	 * Visit a parse tree produced by the {@code IfStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIf_stat(DefProgParser.If_statContext ctx);
+	T visitIfStatement(DefProgParser.IfStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code while_stat}
+	 * Visit a parse tree produced by the {@code WhileStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitWhile_stat(DefProgParser.While_statContext ctx);
+	T visitWhileStatement(DefProgParser.WhileStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code for_stat}
+	 * Visit a parse tree produced by the {@code ForStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFor_stat(DefProgParser.For_statContext ctx);
+	T visitForStatement(DefProgParser.ForStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code Observe}
+	 * Visit a parse tree produced by the {@code ObserveStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitObserve(DefProgParser.ObserveContext ctx);
+	T visitObserveStatement(DefProgParser.ObserveStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ObserveL}
+	 * Visit a parse tree produced by the {@code ObserveLStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitObserveL(DefProgParser.ObserveLContext ctx);
+	T visitObserveLStatement(DefProgParser.ObserveLStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ObserveJ}
+	 * Visit a parse tree produced by the {@code ObserveJStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitObserveJ(DefProgParser.ObserveJContext ctx);
+	T visitObserveJStatement(DefProgParser.ObserveJStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code skip_stat}
+	 * Visit a parse tree produced by the {@code SkipStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSkip_stat(DefProgParser.Skip_statContext ctx);
+	T visitSkipStatement(DefProgParser.SkipStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ranked_choice}
+	 * Visit a parse tree produced by the {@code RankedChoiceStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRanked_choice(DefProgParser.Ranked_choiceContext ctx);
+	T visitRankedChoiceStatement(DefProgParser.RankedChoiceStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code indifferent_choice}
+	 * Visit a parse tree produced by the {@code IndifferentChoiceStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIndifferent_choice(DefProgParser.Indifferent_choiceContext ctx);
+	T visitIndifferentChoiceStatement(DefProgParser.IndifferentChoiceStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code statement_sequence}
+	 * Visit a parse tree produced by the {@code StatementSequence}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatement_sequence(DefProgParser.Statement_sequenceContext ctx);
+	T visitStatementSequence(DefProgParser.StatementSequenceContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code return_statement}
+	 * Visit a parse tree produced by the {@code ReturnStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitReturn_statement(DefProgParser.Return_statementContext ctx);
+	T visitReturnStatement(DefProgParser.ReturnStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code print_statement}
+	 * Visit a parse tree produced by the {@code PrintStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrint_statement(DefProgParser.Print_statementContext ctx);
+	T visitPrintStatement(DefProgParser.PrintStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code cut_statement}
+	 * Visit a parse tree produced by the {@code CutStatement}
 	 * labeled alternative in {@link DefProgParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCut_statement(DefProgParser.Cut_statementContext ctx);
+	T visitCutStatement(DefProgParser.CutStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DefProgParser#expression}.
 	 * @param ctx the parse tree

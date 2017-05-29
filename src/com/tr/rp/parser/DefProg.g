@@ -22,27 +22,27 @@ functiondef
  ;
 
 statement
- : assignment_target ':=' expression											# assignment_stat
- | assignment_target ':=' expression '<<' expression '>>' expression			# choice_assignment_stat
- | assignment_target ':=' '<<' expression '...' expression '>>'					# range_choice
- | ('IF'|'if') expression ('THEN'|'then') statement (('ELSE'|'else') statement)? # if_stat
- | ('WHILE'|'while') expression ('DO'|'do') statement							# while_stat
- | ('FOR'|'for') '(' statement ';' expression ';' statement ')' statement		# for_stat
- | ('OBSERVE'|'observe') expression												# Observe
- | ('OBSERVE-L'|'observe-l') ('(' expression ')')? expression					# ObserveL
- | ('OBSERVE-J'|'observe-j') ('(' expression ')')? expression					# ObserveJ
- | ('SKIP'|'skip')																# skip_stat
+ : assignment_target ':=' expression											# AssignmentStatement
+ | assignment_target ':=' expression '<<' expression '>>' expression			# ChoiceAssignmentStatement
+ | assignment_target ':=' '<<' expression '...' expression '>>'					# RangeChoiceStatement
+ | ('IF'|'if') expression ('THEN'|'then') statement (('ELSE'|'else') statement)? # IfStatement
+ | ('WHILE'|'while') expression ('DO'|'do') statement							# WhileStatement
+ | ('FOR'|'for') '(' statement ';' expression ';' statement ')' statement		# ForStatement
+ | ('OBSERVE'|'observe') expression												# ObserveStatement
+ | ('OBSERVE-L'|'observe-l') ('(' expression ')')? expression					# ObserveLStatement
+ | ('OBSERVE-J'|'observe-j') ('(' expression ')')? expression					# ObserveJStatement
+ | ('SKIP'|'skip')																# SkipStatement
  | 	('NORMALLY'|'normally'|'NRM'|'nrm') ('(' expression ')')?
  		statement 
  	('EXCEPTIONALLY'|'exceptionally'|'EXC'|'exc') 
- 		statement 																# ranked_choice
+ 		statement 																# RankedChoiceStatement
  |	('EITHER'|'either')
  		statement
- 	(('OR'|'or') statement)+													# indifferent_choice
- | '{' statement (';' statement)* ';'? '}'										# statement_sequence
- | ('RETURN'|'return') expression												# return_statement
- | ('PRINT'|'print') expression												    # print_statement
- | ('CUT'|'cut') expression													    # cut_statement
+ 	(('OR'|'or') statement)+													# IndifferentChoiceStatement
+ | '{' statement (';' statement)* ';'? '}'										# StatementSequence
+ | ('RETURN'|'return') expression												# ReturnStatement
+ | ('PRINT'|'print') expression												    # PrintStatement
+ | ('CUT'|'cut') expression													    # CutStatement
  ;
  
 expression : expr1;

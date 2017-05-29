@@ -48,112 +48,112 @@ public class DefProgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implement
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssignment_stat(DefProgParser.Assignment_statContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAssignmentStatement(DefProgParser.AssignmentStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitChoice_assignment_stat(DefProgParser.Choice_assignment_statContext ctx) { return visitChildren(ctx); }
+	@Override public T visitChoiceAssignmentStatement(DefProgParser.ChoiceAssignmentStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitRange_choice(DefProgParser.Range_choiceContext ctx) { return visitChildren(ctx); }
+	@Override public T visitRangeChoiceStatement(DefProgParser.RangeChoiceStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIf_stat(DefProgParser.If_statContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIfStatement(DefProgParser.IfStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitWhile_stat(DefProgParser.While_statContext ctx) { return visitChildren(ctx); }
+	@Override public T visitWhileStatement(DefProgParser.WhileStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFor_stat(DefProgParser.For_statContext ctx) { return visitChildren(ctx); }
+	@Override public T visitForStatement(DefProgParser.ForStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitObserve(DefProgParser.ObserveContext ctx) { return visitChildren(ctx); }
+	@Override public T visitObserveStatement(DefProgParser.ObserveStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitObserveL(DefProgParser.ObserveLContext ctx) { return visitChildren(ctx); }
+	@Override public T visitObserveLStatement(DefProgParser.ObserveLStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitObserveJ(DefProgParser.ObserveJContext ctx) { return visitChildren(ctx); }
+	@Override public T visitObserveJStatement(DefProgParser.ObserveJStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSkip_stat(DefProgParser.Skip_statContext ctx) { return visitChildren(ctx); }
+	@Override public T visitSkipStatement(DefProgParser.SkipStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitRanked_choice(DefProgParser.Ranked_choiceContext ctx) { return visitChildren(ctx); }
+	@Override public T visitRankedChoiceStatement(DefProgParser.RankedChoiceStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIndifferent_choice(DefProgParser.Indifferent_choiceContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIndifferentChoiceStatement(DefProgParser.IndifferentChoiceStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStatement_sequence(DefProgParser.Statement_sequenceContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStatementSequence(DefProgParser.StatementSequenceContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitReturn_statement(DefProgParser.Return_statementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitReturnStatement(DefProgParser.ReturnStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrint_statement(DefProgParser.Print_statementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPrintStatement(DefProgParser.PrintStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCut_statement(DefProgParser.Cut_statementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitCutStatement(DefProgParser.CutStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

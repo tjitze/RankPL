@@ -448,86 +448,23 @@ public class DefProgParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class Statement_sequenceContext extends StatementContext {
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
-		}
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
-		public Statement_sequenceContext(StatementContext ctx) { copyFrom(ctx); }
+	public static class SkipStatementContext extends StatementContext {
+		public SkipStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterStatement_sequence(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterSkipStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitStatement_sequence(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitSkipStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitStatement_sequence(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitSkipStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class Cut_statementContext extends StatementContext {
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public Cut_statementContext(StatementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterCut_statement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitCut_statement(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitCut_statement(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class Indifferent_choiceContext extends StatementContext {
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
-		}
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
-		public Indifferent_choiceContext(StatementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterIndifferent_choice(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitIndifferent_choice(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitIndifferent_choice(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class Skip_statContext extends StatementContext {
-		public Skip_statContext(StatementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterSkip_stat(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitSkip_stat(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitSkip_stat(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class For_statContext extends StatementContext {
+	public static class RankedChoiceStatementContext extends StatementContext {
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
@@ -537,151 +474,107 @@ public class DefProgParser extends Parser {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public For_statContext(StatementContext ctx) { copyFrom(ctx); }
+		public RankedChoiceStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterFor_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterRankedChoiceStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitFor_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitRankedChoiceStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitFor_stat(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitRankedChoiceStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class ObserveJContext extends StatementContext {
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
+	public static class StatementSequenceContext extends StatementContext {
+		public List<StatementContext> statement() {
+			return getRuleContexts(StatementContext.class);
 		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
 		}
-		public ObserveJContext(StatementContext ctx) { copyFrom(ctx); }
+		public StatementSequenceContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterObserveJ(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterStatementSequence(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitObserveJ(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitStatementSequence(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitObserveJ(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitStatementSequence(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class ObserveLContext extends StatementContext {
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public ObserveLContext(StatementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterObserveL(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitObserveL(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitObserveL(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class Print_statementContext extends StatementContext {
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public Print_statementContext(StatementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterPrint_statement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitPrint_statement(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitPrint_statement(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class While_statContext extends StatementContext {
+	public static class WhileStatementContext extends StatementContext {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
 		}
-		public While_statContext(StatementContext ctx) { copyFrom(ctx); }
+		public WhileStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterWhile_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterWhileStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitWhile_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitWhileStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitWhile_stat(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitWhileStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class ObserveContext extends StatementContext {
+	public static class ObserveJStatementContext extends StatementContext {
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public ObserveJStatementContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterObserveJStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitObserveJStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitObserveJStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ObserveStatementContext extends StatementContext {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public ObserveContext(StatementContext ctx) { copyFrom(ctx); }
+		public ObserveStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterObserve(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterObserveStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitObserve(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitObserveStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitObserve(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitObserveStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class Ranked_choiceContext extends StatementContext {
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
-		}
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public Ranked_choiceContext(StatementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterRanked_choice(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitRanked_choice(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitRanked_choice(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class Choice_assignment_statContext extends StatementContext {
+	public static class RangeChoiceStatementContext extends StatementContext {
 		public Assignment_targetContext assignment_target() {
 			return getRuleContext(Assignment_targetContext.class,0);
 		}
@@ -691,22 +584,22 @@ public class DefProgParser extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public Choice_assignment_statContext(StatementContext ctx) { copyFrom(ctx); }
+		public RangeChoiceStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterChoice_assignment_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterRangeChoiceStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitChoice_assignment_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitRangeChoiceStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitChoice_assignment_stat(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitRangeChoiceStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class If_statContext extends StatementContext {
+	public static class IfStatementContext extends StatementContext {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
@@ -716,44 +609,66 @@ public class DefProgParser extends Parser {
 		public StatementContext statement(int i) {
 			return getRuleContext(StatementContext.class,i);
 		}
-		public If_statContext(StatementContext ctx) { copyFrom(ctx); }
+		public IfStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterIf_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterIfStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitIf_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitIfStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitIf_stat(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitIfStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class Assignment_statContext extends StatementContext {
+	public static class AssignmentStatementContext extends StatementContext {
 		public Assignment_targetContext assignment_target() {
 			return getRuleContext(Assignment_targetContext.class,0);
 		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public Assignment_statContext(StatementContext ctx) { copyFrom(ctx); }
+		public AssignmentStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterAssignment_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterAssignmentStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitAssignment_stat(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitAssignmentStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitAssignment_stat(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitAssignmentStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class Range_choiceContext extends StatementContext {
+	public static class IndifferentChoiceStatementContext extends StatementContext {
+		public List<StatementContext> statement() {
+			return getRuleContexts(StatementContext.class);
+		}
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
+		}
+		public IndifferentChoiceStatementContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterIndifferentChoiceStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitIndifferentChoiceStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitIndifferentChoiceStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ChoiceAssignmentStatementContext extends StatementContext {
 		public Assignment_targetContext assignment_target() {
 			return getRuleContext(Assignment_targetContext.class,0);
 		}
@@ -763,37 +678,122 @@ public class DefProgParser extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public Range_choiceContext(StatementContext ctx) { copyFrom(ctx); }
+		public ChoiceAssignmentStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterRange_choice(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterChoiceAssignmentStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitRange_choice(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitChoiceAssignmentStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitRange_choice(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitChoiceAssignmentStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class Return_statementContext extends StatementContext {
+	public static class ReturnStatementContext extends StatementContext {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public Return_statementContext(StatementContext ctx) { copyFrom(ctx); }
+		public ReturnStatementContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterReturn_statement(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterReturnStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitReturn_statement(this);
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitReturnStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitReturn_statement(this);
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitReturnStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class PrintStatementContext extends StatementContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public PrintStatementContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterPrintStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitPrintStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitPrintStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class CutStatementContext extends StatementContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public CutStatementContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterCutStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitCutStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitCutStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ForStatementContext extends StatementContext {
+		public List<StatementContext> statement() {
+			return getRuleContexts(StatementContext.class);
+		}
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
+		}
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ForStatementContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterForStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitForStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitForStatement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ObserveLStatementContext extends StatementContext {
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public ObserveLStatementContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).enterObserveLStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DefProgListener ) ((DefProgListener)listener).exitObserveLStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DefProgVisitor ) return ((DefProgVisitor<? extends T>)visitor).visitObserveLStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -807,7 +807,7 @@ public class DefProgParser extends Parser {
 			setState(175);
 			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 			case 1:
-				_localctx = new Assignment_statContext(_localctx);
+				_localctx = new AssignmentStatementContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(74);
@@ -819,7 +819,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 2:
-				_localctx = new Choice_assignment_statContext(_localctx);
+				_localctx = new ChoiceAssignmentStatementContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(78);
@@ -839,7 +839,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 3:
-				_localctx = new Range_choiceContext(_localctx);
+				_localctx = new RangeChoiceStatementContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(86);
@@ -859,7 +859,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 4:
-				_localctx = new If_statContext(_localctx);
+				_localctx = new IfStatementContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(94);
@@ -899,7 +899,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 5:
-				_localctx = new While_statContext(_localctx);
+				_localctx = new WhileStatementContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(102);
@@ -923,7 +923,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 6:
-				_localctx = new For_statContext(_localctx);
+				_localctx = new ForStatementContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(107);
@@ -952,7 +952,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 7:
-				_localctx = new ObserveContext(_localctx);
+				_localctx = new ObserveStatementContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(117);
@@ -967,7 +967,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 8:
-				_localctx = new ObserveLContext(_localctx);
+				_localctx = new ObserveLStatementContext(_localctx);
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(119);
@@ -995,7 +995,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 9:
-				_localctx = new ObserveJContext(_localctx);
+				_localctx = new ObserveJStatementContext(_localctx);
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(127);
@@ -1023,7 +1023,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 10:
-				_localctx = new Skip_statContext(_localctx);
+				_localctx = new SkipStatementContext(_localctx);
 				enterOuterAlt(_localctx, 10);
 				{
 				setState(135);
@@ -1036,7 +1036,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 11:
-				_localctx = new Ranked_choiceContext(_localctx);
+				_localctx = new RankedChoiceStatementContext(_localctx);
 				enterOuterAlt(_localctx, 11);
 				{
 				setState(136);
@@ -1073,7 +1073,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 12:
-				_localctx = new Indifferent_choiceContext(_localctx);
+				_localctx = new IndifferentChoiceStatementContext(_localctx);
 				enterOuterAlt(_localctx, 12);
 				{
 				setState(147);
@@ -1115,7 +1115,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 13:
-				_localctx = new Statement_sequenceContext(_localctx);
+				_localctx = new StatementSequenceContext(_localctx);
 				enterOuterAlt(_localctx, 13);
 				{
 				setState(155);
@@ -1154,7 +1154,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 14:
-				_localctx = new Return_statementContext(_localctx);
+				_localctx = new ReturnStatementContext(_localctx);
 				enterOuterAlt(_localctx, 14);
 				{
 				setState(169);
@@ -1169,7 +1169,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 15:
-				_localctx = new Print_statementContext(_localctx);
+				_localctx = new PrintStatementContext(_localctx);
 				enterOuterAlt(_localctx, 15);
 				{
 				setState(171);
@@ -1184,7 +1184,7 @@ public class DefProgParser extends Parser {
 				}
 				break;
 			case 16:
-				_localctx = new Cut_statementContext(_localctx);
+				_localctx = new CutStatementContext(_localctx);
 				enterOuterAlt(_localctx, 16);
 				{
 				setState(173);

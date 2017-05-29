@@ -301,206 +301,218 @@ public interface DefProgListener extends ParseTreeListener {
 	 */
 	void exitArithmetic2Expression(DefProgParser.Arithmetic2ExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code LiteralIntExpression}
+	 * Enter a parse tree produced by the {@code IndexedExpression}
 	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * @param ctx the parse tree
+	 */
+	void enterIndexedExpression(DefProgParser.IndexedExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code IndexedExpression}
+	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * @param ctx the parse tree
+	 */
+	void exitIndexedExpression(DefProgParser.IndexedExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code LiteralIntExpression}
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterLiteralIntExpression(DefProgParser.LiteralIntExpressionContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code LiteralIntExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitLiteralIntExpression(DefProgParser.LiteralIntExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code LiteralBoolExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code LiteralBoolExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code LiteralStringExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterLiteralStringExpr(DefProgParser.LiteralStringExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code LiteralStringExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitLiteralStringExpr(DefProgParser.LiteralStringExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code VariableExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterVariableExpression(DefProgParser.VariableExpressionContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code VariableExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitVariableExpression(DefProgParser.VariableExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code InferringFunctionCall}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterInferringFunctionCall(DefProgParser.InferringFunctionCallContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code InferringFunctionCall}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitInferringFunctionCall(DefProgParser.InferringFunctionCallContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code FunctionCall}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterFunctionCall(DefProgParser.FunctionCallContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code FunctionCall}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitFunctionCall(DefProgParser.FunctionCallContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code NegateExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterNegateExpr(DefProgParser.NegateExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code NegateExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitNegateExpr(DefProgParser.NegateExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code MinusExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterMinusExpr(DefProgParser.MinusExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code MinusExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitMinusExpr(DefProgParser.MinusExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code IsSetExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterIsSetExpr(DefProgParser.IsSetExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code IsSetExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitIsSetExpr(DefProgParser.IsSetExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code AbsExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterAbsExpr(DefProgParser.AbsExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code AbsExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitAbsExpr(DefProgParser.AbsExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code LenExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterLenExpr(DefProgParser.LenExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code LenExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitLenExpr(DefProgParser.LenExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code SubStringExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterSubStringExpr(DefProgParser.SubStringExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code SubStringExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitSubStringExpr(DefProgParser.SubStringExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code RankExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterRankExpr(DefProgParser.RankExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code RankExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitRankExpr(DefProgParser.RankExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ArrayInitExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterArrayInitExpr(DefProgParser.ArrayInitExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ArrayInitExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitArrayInitExpr(DefProgParser.ArrayInitExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ArrayConstructExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterArrayConstructExpr(DefProgParser.ArrayConstructExprContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ArrayConstructExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitArrayConstructExpr(DefProgParser.ArrayConstructExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ConditionalExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterConditionalExpression(DefProgParser.ConditionalExpressionContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ConditionalExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitConditionalExpression(DefProgParser.ConditionalExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ParExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void enterParExpression(DefProgParser.ParExpressionContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ParExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 */
 	void exitParExpression(DefProgParser.ParExpressionContext ctx);
@@ -524,4 +536,14 @@ public interface DefProgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIndex(DefProgParser.IndexContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DefProgParser#assignment_target}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignment_target(DefProgParser.Assignment_targetContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DefProgParser#assignment_target}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignment_target(DefProgParser.Assignment_targetContext ctx);
 }

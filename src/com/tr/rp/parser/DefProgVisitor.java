@@ -184,120 +184,127 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArithmetic2Expression(DefProgParser.Arithmetic2ExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code LiteralIntExpression}
+	 * Visit a parse tree produced by the {@code IndexedExpression}
 	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndexedExpression(DefProgParser.IndexedExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LiteralIntExpression}
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitLiteralIntExpression(DefProgParser.LiteralIntExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LiteralBoolExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitLiteralBoolExpr(DefProgParser.LiteralBoolExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LiteralStringExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitLiteralStringExpr(DefProgParser.LiteralStringExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code VariableExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVariableExpression(DefProgParser.VariableExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code InferringFunctionCall}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitInferringFunctionCall(DefProgParser.InferringFunctionCallContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code FunctionCall}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitFunctionCall(DefProgParser.FunctionCallContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code NegateExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitNegateExpr(DefProgParser.NegateExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code MinusExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMinusExpr(DefProgParser.MinusExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code IsSetExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitIsSetExpr(DefProgParser.IsSetExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code AbsExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAbsExpr(DefProgParser.AbsExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LenExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitLenExpr(DefProgParser.LenExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code SubStringExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitSubStringExpr(DefProgParser.SubStringExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code RankExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitRankExpr(DefProgParser.RankExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ArrayInitExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitArrayInitExpr(DefProgParser.ArrayInitExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ArrayConstructExpr}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitArrayConstructExpr(DefProgParser.ArrayConstructExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ConditionalExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitConditionalExpression(DefProgParser.ConditionalExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ParExpression}
-	 * labeled alternative in {@link DefProgParser#expr5}.
+	 * labeled alternative in {@link DefProgParser#expr6}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
@@ -314,4 +321,10 @@ public interface DefProgVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIndex(DefProgParser.IndexContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DefProgParser#assignment_target}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignment_target(DefProgParser.Assignment_targetContext ctx);
 }

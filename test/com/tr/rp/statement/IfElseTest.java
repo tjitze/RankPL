@@ -208,8 +208,8 @@ public class IfElseTest extends RPLBaseTest {
 		// 1   1 5
 		
 		DStatement p = new ProgramBuilder()
-				.add(new RankedChoice(var("fx1"), lit(0), lit(1), lit(5)))
-				.add(new RankedChoice(var("a1"), lit(0), lit(1), lit(0)))
+				.add(new RankedChoice(target("fx1"), lit(0), lit(1), lit(5)))
+				.add(new RankedChoice(target("a1"), lit(0), lit(1), lit(0)))
 				.add(new IfElse(eq(var("fx1"), lit(0)),
 						new Skip(),
 						new Skip()))

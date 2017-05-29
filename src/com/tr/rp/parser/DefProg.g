@@ -22,9 +22,9 @@ functiondef
  ;
 
 statement
- : variable ':=' expression														# assignment_stat
- | variable ':=' expression '<<' expression '>>' expression						# choice_assignment_stat
- | variable ':=' '<<' expression '...' expression '>>'							# range_choice
+ : assignment_target ':=' expression											# assignment_stat
+ | assignment_target ':=' expression '<<' expression '>>' expression			# choice_assignment_stat
+ | assignment_target ':=' '<<' expression '...' expression '>>'					# range_choice
  | ('IF'|'if') expression ('THEN'|'then') statement (('ELSE'|'else') statement)? # if_stat
  | ('WHILE'|'while') expression ('DO'|'do') statement							# while_stat
  | ('FOR'|'for') '(' statement ';' expression ';' statement ')' statement		# for_stat
@@ -64,6 +64,10 @@ expr4
  ;
 
 expr5
+ : expr6 index*											# IndexedExpression
+ ;
+
+expr6
  : INT													# LiteralIntExpression
  | ('TRUE' | 'true') 					 				# LiteralBoolExpr
  | ('FALSE' | 'false') 					 				# LiteralBoolExpr
@@ -79,7 +83,7 @@ expr5
  | '!' expr5 				                 			# NegateExpr
  | '-' expr5 			     	            			# MinusExpr
 
- | ('ISSET'|'isSet'|'isset') '(' variable ')'    		# IsSetExpr
+ | ('ISSET'|'isSet'|'isset') '(' expression ')'    		# IsSetExpr
  | ('ABS'|'abs') '(' expression ')'         			# AbsExpr
  | ('LEN'|'len') '(' expression ')' 		 			# LenExpr
  | ('SUBSTRING'|'substring'|'subString') 
@@ -87,21 +91,25 @@ expr5
  | ('RANK' | 'rank') '(' expression ')' 	 			# RankExpr
 
  | ('ARRAY'|'array') index* (expression)?				# ArrayInitExpr
- | '[' (expression ','?)* ']'							# ArrayConstructExpr
+ | '[' (expression (',' expression)* )?	 ']'			# ArrayConstructExpr
 
  | '@'expression '?' expression ':' expression			# ConditionalExpression
-
+ 
  | '(' expression ')' 									# ParExpression
  ;
 
 variable
- : VAR index*
+ : VAR
  ;
 
 index
  : '[' expression ']'
  ;
-  
+
+assignment_target
+ : VAR index*
+ ;
+   
 VAR
  : ([a-z] | [A-Z]) ( [a-z] | [A-Z] | [0-9] | '_' )*
  ;

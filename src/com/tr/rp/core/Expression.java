@@ -108,12 +108,12 @@ public abstract class Expression implements LanguageElement {
 		}
 	}
 
-	public List<?> getListValue(VarStore e) throws RPLException {
+	public PersistentList getListValue(VarStore e) throws RPLException {
 		Object o = getValue(e);
 		if (o == null) {
 			throw new RPLUndefinedException(this);
-		} else if (o instanceof List) {
-			return ((List)o);
+		} else if (o instanceof PersistentList) {
+			return ((PersistentList)o);
 		} else {
 			throw new RPLTypeError("list", o);
 		}

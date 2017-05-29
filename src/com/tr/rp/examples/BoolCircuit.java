@@ -39,29 +39,29 @@ public class BoolCircuit {
 		 * IF (fo2 == 0) THEN b1 := (l3 | l2) ELSE b1 := 0 << 0 >> 1;
 		 */
 		return new ProgramBuilder()
-				.add(new RankedChoice(var("fx1"), lit(F), lit(T), lit(1)))
-				.add(new RankedChoice(var("fx2"), lit(F), lit(T), lit(1)))
-				.add(new RankedChoice(var("fa1"), lit(F), lit(T), lit(1)))
-				.add(new RankedChoice(var("fa2"), lit(F), lit(T), lit(1)))
-				.add(new RankedChoice(var("fo1"), lit(F), lit(T), lit(1)))
-				.add(new RankedChoice(var("a1"),  lit(F), lit(T), lit(0)))
-				.add(new RankedChoice(var("a2"),  lit(F), lit(T), lit(0)))
-				.add(new RankedChoice(var("a3"),  lit(F), lit(T), lit(0)))
+				.add(new RankedChoice(target("fx1"), lit(F), lit(T), lit(1)))
+				.add(new RankedChoice(target("fx2"), lit(F), lit(T), lit(1)))
+				.add(new RankedChoice(target("fa1"), lit(F), lit(T), lit(1)))
+				.add(new RankedChoice(target("fa2"), lit(F), lit(T), lit(1)))
+				.add(new RankedChoice(target("fo1"), lit(F), lit(T), lit(1)))
+				.add(new RankedChoice(target("a1"),  lit(F), lit(T), lit(0)))
+				.add(new RankedChoice(target("a2"),  lit(F), lit(T), lit(0)))
+				.add(new RankedChoice(target("a3"),  lit(F), lit(T), lit(0)))
 				.add(new IfElse(Expressions.not(new Variable("fx1")),
 						new Assign("l1", Expressions.xor(new Variable("a1"), new Variable("a2"))),
-						new RankedChoice(var("l1"), lit(F), lit(T), lit(0))))
+						new RankedChoice(target("l1"), lit(F), lit(T), lit(0))))
 				.add(new IfElse(Expressions.not(new Variable("fa1")),
 						new Assign("l2", Expressions.and(new Variable("a1"), new Variable("a2"))),
-						new RankedChoice(var("l2"), lit(F), lit(T), lit(0))))
+						new RankedChoice(target("l2"), lit(F), lit(T), lit(0))))
 				.add(new IfElse(Expressions.not(new Variable("fa2")),
 						new Assign("l3", Expressions.and(new Variable("l1"), new Variable("a3"))),
-						new RankedChoice(var("l3"), lit(F), lit(T), lit(0))))
+						new RankedChoice(target("l3"), lit(F), lit(T), lit(0))))
 				.add(new IfElse(Expressions.not(new Variable("fx2")),
 						new Assign("b2", Expressions.xor(new Variable("l1"), new Variable("a3"))),
-						new RankedChoice(var("b2"), lit(F), lit(T), lit(0))))
+						new RankedChoice(target("b2"), lit(F), lit(T), lit(0))))
 				.add(new IfElse(Expressions.not(new Variable("fo1")),
 						new Assign("b1", Expressions.or(new Variable("l3"), new Variable("l2"))),
-						new RankedChoice(var("b1"), lit(F), lit(T), lit(0))))
+						new RankedChoice(target("b1"), lit(F), lit(T), lit(0))))
 				.add(new Observe(getCondition(F,F,T,T,F)))
 				.build();
 	}

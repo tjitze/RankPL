@@ -115,10 +115,10 @@ public class ObserveL extends DStatement {
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(b);
 		ExtractedExpression rewrittenRank = FunctionCallForm.extractFunctionCalls(rank);
 		if (rewrittenExp.isRewritten() || rewrittenRank.isRewritten()) {
-			List<Pair<String, AbstractFunctionCall>> combined = new ArrayList<Pair<String, AbstractFunctionCall>>();
-			combined.addAll(rewrittenExp.getAssignments());
-			combined.addAll(rewrittenRank.getAssignments());
-			return new FunctionCallForm(new ObserveL(rewrittenExp.getExpression(), rewrittenRank.getExpression()), combined);
+			return new FunctionCallForm(
+					new ObserveL(rewrittenExp.getExpression(), rewrittenRank.getExpression()), 
+					rewrittenExp.getAssignments(), 
+					rewrittenRank.getAssignments());
 		} else {
 			return this;
 		}

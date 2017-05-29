@@ -12,20 +12,27 @@ import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.AssignmentTarget;
 import com.tr.rp.expressions.PersistentList;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
 		
 public class Collect extends DStatement {
 	
+	private final AssignmentTarget target;
 	private final Variable variable;
 	
-	public Collect(Variable variable) {
+	public Collect(AssignmentTarget target, Variable variable) {
+		this.target = target;
 		this.variable = variable;
 	}
 
-	public Collect(String variable) {
-		this(new Variable(variable));
+	public Collect(AssignmentTarget target, String variable) {
+		this(target, new Variable(variable));
+	}
+
+	public Collect(String target, String variable) {
+		this(new AssignmentTarget(target), new Variable(variable));
 	}
 
 	@Override
@@ -48,7 +55,7 @@ public class Collect extends DStatement {
 		PersistentList rankZeroValues = new PersistentList(values);
 		// Update rank zero var stores
 		for (int i = 0; i < zeroRankVarStores.size(); i++) {
-			zeroRankVarStores.set(i, variable.assign(zeroRankVarStores.get(i), rankZeroValues));
+			zeroRankVarStores.set(i, target.assign(zeroRankVarStores.get(i), rankZeroValues));
 		}
 		final Iterator<VarStore> zi = zeroRankVarStores.iterator();
 		// First return rank zero var stores, then return rest
@@ -111,7 +118,7 @@ public class Collect extends DStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new Collect((Variable)variable.replaceVariable(a, b));
+		return new Collect((AssignmentTarget)target.replaceVariable(a, b), (Variable)variable.replaceVariable(a, b));
 	}
 
 	@Override
@@ -121,9 +128,10 @@ public class Collect extends DStatement {
 
 	@Override
 	public DStatement rewriteEmbeddedFunctionCalls() {
+		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		ExtractedExpression rewrittenVar = FunctionCallForm.extractFunctionCalls(variable);
-		if (rewrittenVar.isRewritten()) {
-			return new FunctionCallForm(new Collect((Variable)rewrittenVar.getExpression()), rewrittenVar.getAssignments());
+		if (rewrittenVar.isRewritten() || rewrittenTarget.isRewritten()) {
+			return new FunctionCallForm(new Collect((AssignmentTarget)rewrittenTarget.getExpression(), (Variable)rewrittenVar.getExpression()), rewrittenTarget.getAssignments(), rewrittenVar.getAssignments());
 		} else {
 			return this;
 		}

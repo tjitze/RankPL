@@ -90,22 +90,22 @@ public class ArraysTest extends RPLBaseTest {
 						new ArrayInitExpression(null, 
 								new Expression[] { 
 										new Literal<Integer>(3) })))
-				.add(new Assign(var("x", 0), 
+				.add(new Assign(target("x", 0), 
 						new Literal<Integer>(1)))
-				.add(new Assign(var("x", 1), 
+				.add(new Assign(target("x", 1), 
 						new Literal<Integer>(2)))
-				.add(new Assign(var("x", 2), 
+				.add(new Assign(target("x", 2), 
 						new Literal<Integer>(3)))
-				.add(new Assign(var("x", 2), 
+				.add(new Assign(target("x", 2), 
 						new Literal<Integer>(100)));
 		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(1, (new Variable("x", new Literal<Integer>(0))).getIntValue(vs));
-		assertEquals(2, (new Variable("x", new Literal<Integer>(1))).getIntValue(vs));
-		assertEquals(100, (new Variable("x", new Literal<Integer>(2))).getIntValue(vs));
+		assertEquals(1, (indexedExp(var("x"), 0)).getIntValue(vs));
+		assertEquals(2, (indexedExp(var("x"), 1)).getIntValue(vs));
+		assertEquals(100, (indexedExp(var("x"), 2)).getIntValue(vs));
 	}
 	
 	public void test2DArrayAssignment() throws RPLException {
@@ -114,22 +114,22 @@ public class ArraysTest extends RPLBaseTest {
 						new ArrayInitExpression(null, 
 								new Expression[] { 
 										new Literal<Integer>(3), new Literal<Integer>(4) })))
-				.add(new Assign(var("x", 0, 1), 
+				.add(new Assign(target("x", 0, 1), 
 						new Literal<Integer>(1)))
-				.add(new Assign(var("x", 1, 2), 
+				.add(new Assign(target("x", 1, 2), 
 						new Literal<Integer>(2)))
-				.add(new Assign(var("x", 2, 3), 
+				.add(new Assign(target("x", 2, 3), 
 						new Literal<Integer>(3)))
-				.add(new Assign(var("x", 2, 3), 
+				.add(new Assign(target("x", 2, 3), 
 						new Literal<Integer>(100)));
 		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(1, (new Variable("x", new Literal<Integer>(0), new Literal<Integer>(1))).getIntValue(vs));
-		assertEquals(2, (new Variable("x", new Literal<Integer>(1), new Literal<Integer>(2))).getIntValue(vs));
-		assertEquals(100, (new Variable("x", new Literal<Integer>(2), new Literal<Integer>(3))).getIntValue(vs));
+		assertEquals(1, (indexedExp(var("x"), 0, 1)).getIntValue(vs));
+		assertEquals(2, (indexedExp(var("x"), 1, 2)).getIntValue(vs));
+		assertEquals(100, (indexedExp(var("x"), 2, 3)).getIntValue(vs));
 	}
 	
 	public void testIndexed1DExpression() throws RPLException {
@@ -138,16 +138,15 @@ public class ArraysTest extends RPLBaseTest {
 						new ArrayInitExpression(null, 
 								new Expression[] { 
 										new Literal<Integer>(3) })))
-				.add(new Assign(var("x", 2), 
+				.add(new Assign(target("x", 2), 
 						new Literal<Integer>(100)))
-				.add(new Assign("y", new Variable("x", 
-						new Expression[] { new Literal<Integer>(2) })));
+				.add(new Assign("y", indexedExp(var("x"), 2)));
 		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(100, (new Variable("x", new Literal<Integer>(2))).getIntValue(vs));
+		assertEquals(100, (indexedExp(var("x"), 2)).getIntValue(vs));
 		assertEquals(100, vs.getIntValue("y"));
 	}
 	
@@ -158,16 +157,14 @@ public class ArraysTest extends RPLBaseTest {
 								new Expression[] { 
 										new Literal<Integer>(3),
 										new Literal<Integer>(4)})))
-				.add(new Assign(var("x", 2, 3), 
-						new Literal<Integer>(100)))
-				.add(new Assign("y", new Variable("x", 
-						new Expression[] { new Literal<Integer>(2), new Literal<Integer>(3) })));
+				.add(new Assign(target("x", 2, 3), new Literal<Integer>(100)))
+				.add(new Assign("y", indexedExp(var("x"), 2, 3)));
 		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(100, (new Variable("x", new Literal<Integer>(2), new Literal<Integer>(3))).getIntValue(vs));
+		assertEquals(100, indexedExp(var("x"), 2, 3).getIntValue(vs));
 		assertEquals(100, vs.getIntValue("y"));
 	}
 

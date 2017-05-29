@@ -5,10 +5,64 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
+import com.tr.rp.core.ConcreteParser;
+import com.tr.rp.core.DStatement;
+import com.tr.rp.core.Expression;
+import com.tr.rp.core.ProgramBuilder;
+import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
+import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.expressions.Len;
+import com.tr.rp.expressions.Literal;
 import com.tr.rp.expressions.PersistentList;
+import com.tr.rp.expressions.Plus;
+import com.tr.rp.expressions.Variable;
+import com.tr.rp.parser.DefProgLexer;
+import com.tr.rp.parser.DefProgParser;
+import com.tr.rp.parser.DefProgParser.ExpressionContext;
 
 public class ExpressionTest extends RPLBaseTest {
+
+	private Object evalExp(String expression) throws RPLException {
+        CharStream charStream = new ANTLRInputStream(expression);
+        DefProgLexer lexer = new DefProgLexer(charStream);
+        TokenStream tokens = new CommonTokenStream(lexer);
+        DefProgParser parser = new DefProgParser(tokens);
+
+        ConcreteParser classVisitor = new ConcreteParser();
+        ExpressionContext ctx = parser.expression();
+        Expression exp = (Expression)classVisitor.visit(ctx);
+        assertNotNull(exp);
+
+        DStatement st = new Assign("$return", exp);
+        RankedIterator<VarStore> it = st.getIterator(new InitialVarStoreIterator(new TestVarStore()));
+        assert (it.next());
+        VarStore res = it.getItem();
+        assert (res.containsVar("$return"));
+        assert (!it.next());
+        return res.getValue("$return");
+	}
+
+
+	private void expectTypeError(String expression, String expectedType) {
+		expectTypeError(expression, expectedType, null);
+	}
+	
+	private void expectTypeError(String expression, String expectedType, String foundType) {
+		try {
+			evalExp(expression);
+			fail("Expected type error");
+		} catch (RPLTypeError e) {
+			assertEquals(expectedType, e.getExpectedType());
+			if (foundType != null) {
+				assertEquals(foundType, e.getFound());
+			}
+		} catch (RPLException e) {
+			fail("Incorrect exception thrown (expected type error): " + e);
+		}
+	}
 
 	public void testExpressions() throws RPLException {
 		
@@ -267,15 +321,82 @@ public class ExpressionTest extends RPLBaseTest {
 		
 		// substring
 		assertEquals("abcde", evalExp("substring(\"abcde\", 0, 5)"));
+		assertEquals("abcde", evalExp("substring(abcde, 0, 5)"));
 		assertEquals("bcde", evalExp("substring(\"abcde\", 1, 5)"));
+		assertEquals("bcde", evalExp("substring(abcde, 1, 5)"));
 		assertEquals("bcd", evalExp("substring(\"abcde\", 1, 4)"));
+		assertEquals("bcd", evalExp("substring(abcde, 1, 4)"));
 		assertEquals("abcd", evalExp("substring(\"abcde\", 0, 4)"));
+		assertEquals("abcd", evalExp("substring(abcde, 0, 4)"));
 		// TODO: check index out of bounds
 		
 //		rank(b)		Rank of boolean expression b***
 //		functionname(e_1, … e_n)	Function call****
 
 	}
-	
+
+	/**
+	 * Variable store for testing the following variables are set:
+	 * 
+	 * i0 ... in: integer values
+	 * s, ss, sss, ssss : strings "s", "ss", "sss", "ssss"
+	 * u, uu, uuu, uuuu : strings "u", "uu", "uuu", "uuuu"
+	 * abcde : "abcde"
+	 * t : true
+	 * f : false
+	 * ai : array [0, 1, ... 4]
+	 * aii : array [[0], [0, 1], ... [0, ..., 4]]
+	 * as : array ["s", "ss", "sss", "ssss"]
+	 * au : array ["u", "uu", "uuu", "uuuu"]
+	 * ab : array [true, false]
+	 */
+	private static class TestVarStore extends VarStore {
+
+		public TestVarStore() {
+			for (int i = 0; i < 200; i++) {
+				setValue("i"+i, i);
+			}
+			setValue("s", "s");
+			setValue("ss", "ss");
+			setValue("sss", "sss");
+			setValue("ssss", "ssss");
+			setValue("u", "u");
+			setValue("uu", "uu");
+			setValue("uuu", "uuu");
+			setValue("uuuu", "uuuu");
+			setValue("abcde", "abcde");
+			setValue("t", true);
+			setValue("f", false);
+			setValue("f", false);
+			PersistentList ai = new PersistentList(10);
+			for (int i = 0; i < 5; i++) {
+				ai = ai.getMutatedCopy(i, i);
+			}
+			setValue("ai", ai);
+			PersistentList aii = new PersistentList(10);
+			for (int i = 0; i < 5; i++) {
+				ai = new PersistentList(i + 1);
+				for (int j = 0; j < i + 1; j++) {
+					ai = ai.getMutatedCopy(j, j);
+				}
+				aii = aii.getMutatedCopy(i, ai);
+			}
+			setValue("aii", aii);
+			PersistentList as = new PersistentList(4);
+			as = as.getMutatedCopy(0, "s");
+			as = as.getMutatedCopy(0, "ss");
+			as = as.getMutatedCopy(0, "sss");
+			as = as.getMutatedCopy(0, "ssss");
+			setValue("as", as);
+			PersistentList au = new PersistentList(4);
+			au = au.getMutatedCopy(0, "u");
+			au = au.getMutatedCopy(0, "uu");
+			au = au.getMutatedCopy(0, "uuu");
+			au = au.getMutatedCopy(0, "uuuu");
+			setValue("au", au);
+			setValue("t", true);
+			setValue("f", false);
+		}
+	}
 
 }

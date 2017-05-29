@@ -14,6 +14,7 @@ import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.expressions.AssignmentTarget;
 import com.tr.rp.expressions.FunctionCall;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.expressions.Literal;
@@ -38,16 +39,18 @@ public class RankedChoice extends DStatement {
 		this.rank = rank;
 	}
 
-	public RankedChoice(Variable var, Expression v1, Expression v2, Expression rank) {
-		this.s1 = new Assign(var, v1);
-		this.s2 = new Assign(var, v2);
+	public RankedChoice(AssignmentTarget target, Expression v1, Expression v2, int rank) {
+		this(target, v1, v2, new Literal<Integer>(rank));
+	}
+
+	public RankedChoice(AssignmentTarget target, Expression v1, Expression v2, Expression rank) {
+		this.s1 = new Assign(target, v1);
+		this.s2 = new Assign(target, v2);
 		this.rank = rank;
 	}
 
-	public RankedChoice(Variable var, Expression v1, Expression v2, int rank) {
-		this.s1 = new Assign(var, v1);
-		this.s2 = new Assign(var, v2);
-		this.rank = new Literal<Integer>(rank);
+	public RankedChoice(String variable, Expression v1, Expression v2, int rank) {
+		this(new AssignmentTarget(variable), v1, v2, rank);
 	}
 
 	public RankedChoice(DStatement s1, DStatement s2, int rank) {
@@ -62,7 +65,7 @@ public class RankedChoice extends DStatement {
 		this.rank = new Literal<Integer>(0);
 	}
 	
-	public RankedChoice(Variable var, int[] values, int rankIncrement) {
+	public RankedChoice(AssignmentTarget var, int[] values, int rankIncrement) {
 		this.rank = new Literal<Integer>(rankIncrement);
 		if (values.length == 2) {
 			this.s1 = new Assign(var, values[0]);
@@ -73,7 +76,7 @@ public class RankedChoice extends DStatement {
 		}
 	}
 
-	public RankedChoice(Variable var, int[] values, int[] ranks) {
+	public RankedChoice(AssignmentTarget var, int[] values, int[] ranks) {
 		if (ranks.length == 0) throw new IllegalArgumentException();
 		if (values.length != ranks.length + 1) throw new IllegalArgumentException();
 		this.rank = new Literal<Integer>(ranks[0]);

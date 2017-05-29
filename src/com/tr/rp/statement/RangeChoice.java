@@ -12,6 +12,7 @@ import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.expressions.AbstractFunctionCall;
+import com.tr.rp.expressions.AssignmentTarget;
 import com.tr.rp.expressions.FunctionCall;
 import com.tr.rp.expressions.Literal;
 import com.tr.rp.expressions.Variable;
@@ -19,31 +20,32 @@ import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.tools.Pair;
 
 /**
- * The RangeChoice statement takes as input a variable, begin expression and
- * end expression. It represents an indifferent choice (all ranked 0) between
- * all values from begin to end (exclusive). Note that the begin and the end
- * expressions may evaluate to different values in different alternatives. 
+ * The RangeChoice statement takes as input an assignment target, a begin 
+ * expression and end expression. It represents an indifferent choice (all 
+ * ranked 0) between all values from begin to end (exclusive). Note that 
+ * the begin and the end expressions may evaluate to different values in 
+ * different alternatives. 
  */
 public class RangeChoice extends DStatement {
 
-	public final Variable variable;
+	public final AssignmentTarget variable;
 	public final Expression beginExp;
 	public final Expression endExp;
 
-	public RangeChoice(Variable variable, Expression beginExp, Expression endExp) {
+	public RangeChoice(AssignmentTarget variable, Expression beginExp, Expression endExp) {
 		this.variable = variable;
 		this.beginExp = beginExp;
 		this.endExp = endExp;
 	}
 
 	public RangeChoice(String variableName, Expression beginExp, Expression endExp) {
-		this.variable = new Variable(variableName);
+		this.variable = new AssignmentTarget(variableName);
 		this.beginExp = beginExp;
 		this.endExp = endExp;
 	}
 
 	public RangeChoice(String variableName, int begin, int end) {
-		this.variable = new Variable(variableName);
+		this.variable = new AssignmentTarget(variableName);
 		this.beginExp = new Literal<Integer>(begin);
 		this.endExp = new Literal<Integer>(end);
 	}
@@ -145,7 +147,7 @@ public class RangeChoice extends DStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new RangeChoice((Variable)variable.replaceVariable(a, b), 
+		return new RangeChoice((AssignmentTarget)variable.replaceVariable(a, b), 
 				(Expression)beginExp.replaceVariable(a, b),
 				(Expression)endExp.replaceVariable(a, b));
 	}
@@ -163,16 +165,14 @@ public class RangeChoice extends DStatement {
 		ExtractedExpression rewrittenBegin = FunctionCallForm.extractFunctionCalls(beginExp);
 		ExtractedExpression rewrittenEnd = FunctionCallForm.extractFunctionCalls(endExp);
 		if (rewrittenVar.isRewritten() || rewrittenBegin.isRewritten() || rewrittenEnd.isRewritten()) {
-			List<Pair<String, AbstractFunctionCall>> combined = new ArrayList<Pair<String, AbstractFunctionCall>>();
-			combined.addAll(rewrittenVar.getAssignments());
-			combined.addAll(rewrittenBegin.getAssignments());
-			combined.addAll(rewrittenEnd.getAssignments());
 			return new FunctionCallForm(
 					new RangeChoice(
-							(Variable)rewrittenVar.getExpression(), 
+							(AssignmentTarget)rewrittenVar.getExpression(), 
 							rewrittenBegin.getExpression(), 
 							rewrittenEnd.getExpression()), 
-					combined);
+					rewrittenVar.getAssignments(),
+					rewrittenBegin.getAssignments(),
+					rewrittenEnd.getAssignments());
 		} else {
 			return this;
 		}

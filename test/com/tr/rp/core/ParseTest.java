@@ -43,10 +43,10 @@ public class ParseTest extends RPLBaseTest {
 	
 	public void testParseAssign() {
 		assertEquals(parseStatement("x := 20;"), (new Assign("x",20)));
-		assertEquals(parseStatement("x[1] := 20;"), (new Assign(var("x", 1), 20)));
-		assertEquals(parseStatement("x[1][2] := 20;"), (new Assign(var("x", 1, 2), 20)));
-		assertEquals(parseStatement("x[x + y] := 20;"), (new Assign(var("x", plus(var("x"), var("y"))), 20)));
-		assertEquals(parseStatement("x[x + y][p * q] := 20;"), (new Assign(var("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20)));
+		assertEquals(parseStatement("x[1] := 20;"), (new Assign(target("x", 1), 20)));
+		assertEquals(parseStatement("x[1][2] := 20;"), (new Assign(target("x", 1, 2), 20)));
+		assertEquals(parseStatement("x[x + y] := 20;"), (new Assign(target("x", plus(var("x"), var("y"))), 20)));
+		assertEquals(parseStatement("x[x + y][p * q] := 20;"), (new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20)));
 	}
 
 	public void testParseArrayAssign() {
@@ -64,15 +64,15 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseStatement("x := [x + y, p * q];"), (b.build()));
 
 		b = new ProgramBuilder();
-		b.add(new Assign(var("x", 1), new ArrayConstructExpression(10, 11, 12)));
+		b.add(new Assign(target("x", 1), new ArrayConstructExpression(10, 11, 12)));
 		assertEquals(parseStatement("x[1] := [10, 11, 12];"), (b.build()));
 
 		b = new ProgramBuilder();
-		b.add(new Assign(var("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")))));
+		b.add(new Assign(target("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")))));
 		assertEquals(parseStatement("x[10][20] := [x + y];"), (b.build()));
 
 		b = new ProgramBuilder();
-		b.add(new Assign(var("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")), times(var("p"),var("q")))));
+		b.add(new Assign(target("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")), times(var("p"),var("q")))));
 		assertEquals(parseStatement("x[10][20] := [x + y, p * q];"), (b.build()));
 	}
 	
@@ -149,17 +149,17 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseStatement("x := 0 << 5 >> 20;"), (new RankedChoice(
 				new Assign("x",0), new Assign("x",20), 5)));
 		assertEquals(parseStatement("x[0] := 0 << 5 >> 20;"), (new RankedChoice(
-				new Assign(var("x", 0), 0), 
-				new Assign(var("x", 0), 20), 5)));
+				new Assign(target("x", 0), 0), 
+				new Assign(target("x", 0), 20), 5)));
 		assertEquals(parseStatement("x[1][2] := 1 << 5 >> 20;"), (new RankedChoice(
-				new Assign(var("x", 1, 2), 1), 
-				new Assign(var("x", 1, 2), 20), 5)));
+				new Assign(target("x", 1, 2), 1), 
+				new Assign(target("x", 1, 2), 20), 5)));
 		assertEquals(parseStatement("x[x + y] := 2 << 5 >> 20;"), (new RankedChoice(
-				new Assign(var("x", plus(var("x"), var("y"))), 2), 
-				new Assign(var("x", plus(var("x"), var("y"))), 20), 5)));
+				new Assign(target("x", plus(var("x"), var("y"))), 2), 
+				new Assign(target("x", plus(var("x"), var("y"))), 20), 5)));
 		assertEquals(parseStatement("x[x + y][p * q] := 3 << 5 >> 20;"), (new RankedChoice(
-				new Assign(var("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 3), 
-				new Assign(var("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20), 5)));
+				new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 3), 
+				new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20), 5)));
 	}
 
 	public void testParseObserve() {

@@ -8,14 +8,10 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.MultiMergeIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLMissingReturnValueException;
-import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
 import com.tr.rp.expressions.AbstractFunctionCall;
-import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.expressions.AssignmentTarget;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.tools.Pair;
 
@@ -24,31 +20,16 @@ public class FunctionCallForm extends DStatement {
 	private final List<Pair<String, AbstractFunctionCall>> assignments;
 	private final DStatement statement;
 
-	public FunctionCallForm(DStatement statement, List<Pair<String, AbstractFunctionCall>> assignments) {
-		this.assignments = assignments;
-		this.statement = statement;
-	}
-
-	public FunctionCallForm(DStatement statement, String var, AbstractFunctionCall fc) {
-		assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
-		assignments.add(new Pair<String, AbstractFunctionCall>(var, fc));
-		this.statement = statement;
-		checkStatement();
-	}
-
-	public FunctionCallForm(DStatement statement, String var1, AbstractFunctionCall fc1, String var2, AbstractFunctionCall fc2) {
-		assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
-		assignments.add(new Pair<String, AbstractFunctionCall>(var1, fc1));
-		assignments.add(new Pair<String, AbstractFunctionCall>(var2, fc2));
-		this.statement = statement;
-		checkStatement();
-	}
-
-	public FunctionCallForm(DStatement statement, String var1, AbstractFunctionCall fc1, String var2, AbstractFunctionCall fc2, String var3, AbstractFunctionCall fc3) {
-		assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
-		assignments.add(new Pair<String, AbstractFunctionCall>(var1, fc1));
-		assignments.add(new Pair<String, AbstractFunctionCall>(var2, fc2));
-		assignments.add(new Pair<String, AbstractFunctionCall>(var3, fc3));
+	@SafeVarargs
+	public FunctionCallForm(DStatement statement, List<Pair<String, AbstractFunctionCall>> ... assignments) {
+		if (assignments.length == 1) {
+			this.assignments = assignments[0];
+		} else {
+			this.assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
+			for (List<Pair<String, AbstractFunctionCall>> a: assignments) {
+				this.assignments.addAll(a);
+			}
+		}
 		this.statement = statement;
 		checkStatement();
 	}
@@ -146,7 +127,7 @@ public class FunctionCallForm extends DStatement {
 		public boolean isRewritten() {
 			return isRewritten;
 		}
-}
+	}
 	
 	@Override
 	public DStatement rewriteEmbeddedFunctionCalls() {

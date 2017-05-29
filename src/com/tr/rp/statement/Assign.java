@@ -17,6 +17,7 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.expressions.PersistentList;
 import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.expressions.AbstractFunctionCall;
+import com.tr.rp.expressions.AssignmentTarget;
 import com.tr.rp.expressions.FunctionCall;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.expressions.Literal;
@@ -35,27 +36,27 @@ import com.tr.rp.tools.Pair;
 public class Assign extends DStatement {
 	
 	private final Expression value;
-	private final Variable variable;
+	private final AssignmentTarget variable;
 	
-	public Assign(Variable var, Expression exp) {
+	public Assign(AssignmentTarget var, Expression exp) {
 		this.variable = var;
 		this.value = exp;
 	}
 
-	public Assign(Variable var, int value) {
+	public Assign(AssignmentTarget var, int value) {
 		this(var, new Literal<Integer>(value));
 	}
 
 	public Assign(String variableName, int value) {
-		this(new Variable(variableName), new Literal<Integer>(value));
+		this(new AssignmentTarget(variableName), new Literal<Integer>(value));
 	}
 
 	public Assign(String variableName, Expression value) {
-		this(new Variable(variableName), value);
+		this(new AssignmentTarget(variableName), value);
 	}
 
 	public Assign(String variableName, String otherVariable) {
-		this(new Variable(variableName), new Variable(otherVariable));
+		this(new AssignmentTarget(variableName), new Variable(otherVariable));
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class Assign extends DStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new Assign((Variable)variable.replaceVariable(a, b), (Expression)value.replaceVariable(a, b));
+		return new Assign((AssignmentTarget)variable.replaceVariable(a, b), (Expression)value.replaceVariable(a, b));
 	}
 
 	@Override
@@ -135,10 +136,11 @@ public class Assign extends DStatement {
 		ExtractedExpression rewrittenVar = FunctionCallForm.extractFunctionCalls(variable);
 		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
 		if (rewrittenVar.isRewritten() || rewrittenValue.isRewritten()) {
-			List<Pair<String, AbstractFunctionCall>> combined = new ArrayList<Pair<String, AbstractFunctionCall>>();
-			combined.addAll(rewrittenVar.getAssignments());
-			combined.addAll(rewrittenValue.getAssignments());
-			return new FunctionCallForm(new Assign((Variable)rewrittenVar.getExpression(), rewrittenValue.getExpression()), combined);
+			return new FunctionCallForm(
+					new Assign((AssignmentTarget)rewrittenVar.getExpression(), 
+							rewrittenValue.getExpression()), 
+						rewrittenVar.getAssignments(),
+						rewrittenValue.getAssignments());
 		} else {
 			return this;
 		}

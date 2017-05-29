@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.expressions.AssignmentTarget;
 
 /**
  * Represents a variable store: an assignment of values to variables.
@@ -167,11 +168,11 @@ public class VarStore {
 		return v;
 	}
 	
-	public VarStore getParentOfClosure(String functionValueVar, Expression returnValueExp) throws RPLException {
+	public VarStore getParentOfClosure(String target, Expression returnValueExp) throws RPLException {
 		if (parent == null) {
 			throw new InternalError("Missing parent scope");
 		}
 		Object value = returnValueExp.getValue(this);
-		return parent.create(functionValueVar, value);
+		return parent.create(target, value);
 	}
 }

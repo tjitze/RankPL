@@ -83,10 +83,10 @@ public class ObserveJ extends DStatement {
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(b);
 		ExtractedExpression rewrittenRank = FunctionCallForm.extractFunctionCalls(rank);
 		if (rewrittenExp.isRewritten() || rewrittenRank.isRewritten()) {
-			List<Pair<String, AbstractFunctionCall>> combined = new ArrayList<Pair<String, AbstractFunctionCall>>();
-			combined.addAll(rewrittenExp.getAssignments());
-			combined.addAll(rewrittenRank.getAssignments());
-			return new FunctionCallForm(new ObserveJ(rewrittenExp.getExpression(), rewrittenRank.getExpression()), combined);
+			return new FunctionCallForm(
+					new ObserveJ(rewrittenExp.getExpression(), rewrittenRank.getExpression()), 
+					rewrittenExp.getAssignments(), 
+					rewrittenRank.getAssignments());
 		} else {
 			return this;
 		}

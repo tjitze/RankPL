@@ -394,23 +394,68 @@ public class Expressions {
 		return new ArrayInitExpression(initExpr, dimensionExpr);
 	}
 	
-	public static Variable var(String name, Expression ... indices) {
-		if (indices.length == 0) {
-			return new Variable(name);
-		} else {
-			return new Variable(name, indices);
-		}
+	public static Variable var(String name) {
+		return new Variable(name);
 	}
 	
-	public static Variable var(String name, int firstIndex, int ... otherIndices) {
+	public static Expression var(String name, Expression firstIndex, Expression ... otherIndices) {
+		Expression[] indices = new Expression[otherIndices.length+1];
+		indices[0] = firstIndex;
+		for (int i = 0; i < otherIndices.length; i++) {
+			indices[i+1] = otherIndices[i];
+		}
+		return new IndexElementExpression(new Variable(name), indices);
+	}
+	
+	public static IndexElementExpression var(String name, int firstIndex, int ... otherIndices) {
 		Expression[] indices = new Expression[otherIndices.length+1];
 		indices[0] = lit(firstIndex);
 		for (int i = 0; i < otherIndices.length; i++) {
 			indices[i+1] = lit(otherIndices[i]);
 		}
-		return new Variable(name, indices);
+		return new IndexElementExpression(new Variable(name), indices);
+	}
+
+	public static AssignmentTarget target(String name) {
+		return new AssignmentTarget(name);
 	}
 	
+	public static AssignmentTarget target(String name, Expression firstIndex, Expression ... otherIndices) {
+		Expression[] indices = new Expression[otherIndices.length+1];
+		indices[0] = firstIndex;
+		for (int i = 0; i < otherIndices.length; i++) {
+			indices[i+1] = otherIndices[i];
+		}
+		return new AssignmentTarget(name, indices);
+	}
+	
+	public static AssignmentTarget target(String name, int firstIndex, int ... otherIndices) {
+		Expression[] indices = new Expression[otherIndices.length+1];
+		indices[0] = lit(firstIndex);
+		for (int i = 0; i < otherIndices.length; i++) {
+			indices[i+1] = lit(otherIndices[i]);
+		}
+		return new AssignmentTarget(name, indices);
+	}
+
+	public static IndexElementExpression indexedExp(Expression exp, Expression firstIndex, Expression ... otherIndices) {
+		Expression[] indices = new Expression[otherIndices.length+1];
+		indices[0] = firstIndex;
+		for (int i = 0; i < otherIndices.length; i++) {
+			indices[i+1] = otherIndices[i];
+		}
+		return new IndexElementExpression(exp, indices);
+	}
+	
+	public static IndexElementExpression indexedExp(Expression exp, int firstIndex, int ... otherIndices) {
+		Expression[] indices = new Expression[otherIndices.length+1];
+		indices[0] = lit(firstIndex);
+		for (int i = 0; i < otherIndices.length; i++) {
+			indices[i+1] = lit(otherIndices[i]);
+		}
+		return new IndexElementExpression(exp, indices);
+	}
+
 	public static <T> Literal<T> lit(T value) {
 		return new Literal<T>(value);
 	}

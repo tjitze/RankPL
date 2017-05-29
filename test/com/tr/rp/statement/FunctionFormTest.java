@@ -1,5 +1,7 @@
 package com.tr.rp.statement;
 
+import static com.tr.rp.expressions.Expressions.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.expressions.AbstractFunctionCall;
 import com.tr.rp.expressions.Expressions;
 import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.expressions.Literal;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.tools.Pair;
 
@@ -37,7 +40,7 @@ public class FunctionFormTest extends RPLBaseTest {
 	public static Function getTestFunction2() {
 		String[] params = new String[] { "x" };
 		return new Function("test2", new Composition(
-				new RankedChoice(new Variable("y"), Expressions.plus(new Variable("x"), Expressions.lit(100)), Expressions.plus(new Variable("x"), Expressions.lit(1000)), 5),
+				new RankedChoice(target("y"), Expressions.plus(new Variable("x"), Expressions.lit(100)), Expressions.plus(new Variable("x"), Expressions.lit(1000)), 5),
 				new Return("y")), params);
 	}
 	

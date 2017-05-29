@@ -17,7 +17,7 @@ public class WhileTest extends RPLBaseTest {
 		
 		Expression c = lt(var("x"), new Literal<Integer>(3));
 		DStatement s = new ProgramBuilder()
-				.add(new RankedChoice(var("y"), plus(var("y"), var("x")), plus(var("y"), new Literal<Integer>(10)), 1))
+				.add(new RankedChoice(target("y"), plus(var("y"), var("x")), plus(var("y"), new Literal<Integer>(10)), 1))
 				.add(new Assign("x", plus(var("x"), new Literal<Integer>(1))))
 				.build();
 		DStatement p = new ProgramBuilder()

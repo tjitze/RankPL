@@ -15,9 +15,11 @@ import static com.tr.rp.expressions.Expressions.*;
 import com.tr.rp.expressions.Abs;
 import com.tr.rp.expressions.ArrayConstructExpression;
 import com.tr.rp.expressions.ArrayInitExpression;
+import com.tr.rp.expressions.AssignmentTarget;
 import com.tr.rp.expressions.Conditional;
 import com.tr.rp.expressions.Expressions;
 import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.expressions.IndexElementExpression;
 import com.tr.rp.expressions.InferringFunctionCall;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.expressions.IsSet;
@@ -33,6 +35,7 @@ import com.tr.rp.parser.DefProgParser.Arithmetic2ExpressionContext;
 import com.tr.rp.parser.DefProgParser.ArrayConstructExprContext;
 import com.tr.rp.parser.DefProgParser.ArrayInitExprContext;
 import com.tr.rp.parser.DefProgParser.Assignment_statContext;
+import com.tr.rp.parser.DefProgParser.Assignment_targetContext;
 import com.tr.rp.parser.DefProgParser.BoolExpressionContext;
 import com.tr.rp.parser.DefProgParser.Choice_assignment_statContext;
 import com.tr.rp.parser.DefProgParser.CompareExprContext;
@@ -44,6 +47,7 @@ import com.tr.rp.parser.DefProgParser.FunctiondefContext;
 import com.tr.rp.parser.DefProgParser.Functiondef_or_statementContext;
 import com.tr.rp.parser.DefProgParser.If_statContext;
 import com.tr.rp.parser.DefProgParser.IndexContext;
+import com.tr.rp.parser.DefProgParser.IndexedExpressionContext;
 import com.tr.rp.parser.DefProgParser.Indifferent_choiceContext;
 import com.tr.rp.parser.DefProgParser.InferringFunctionCallContext;
 import com.tr.rp.parser.DefProgParser.IsSetExprContext;
@@ -92,9 +96,9 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitAssignment_stat(Assignment_statContext ctx) {
-		Variable var = (Variable)visit(ctx.variable());
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression value = (Expression)visit(ctx.expression());
-		return new Assign(var, value);
+		return new Assign(target, value);
 	}
 
 	@Override
@@ -121,12 +125,23 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
+	public LanguageElement visitAssignment_target(Assignment_targetContext ctx) {
+		TerminalNode tn = ctx.VAR();
+		String varName = tn.toString();
+		Expression[] index = new Expression[ctx.index().size()];
+		for (int i = 0; i < index.length; i++) {
+			index[i] = (Expression)visit(ctx.index(i));
+		}
+		return new AssignmentTarget(varName, index);
+	}
+
+	@Override
 	public LanguageElement visitChoice_assignment_stat(Choice_assignment_statContext ctx) {
-		Variable var = (Variable)visit(ctx.variable());
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression value1 = (Expression)visit(ctx.expression(0));
 		Expression value2 = (Expression)visit(ctx.expression(2));
 		Expression rank = (Expression)visit(ctx.expression(1));
-		return new RankedChoice(var, value1, value2, rank);
+		return new RankedChoice(target, value1, value2, rank);
 	}
 
 	@Override
@@ -190,10 +205,10 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitRange_choice(Range_choiceContext ctx) {
-		Variable var = (Variable)visit(ctx.variable());
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression a = (Expression)visit(ctx.expression().get(0));
 		Expression b = (Expression)visit(ctx.expression().get(1));
-		return new RangeChoice(var.toString(), a, b);
+		return new RangeChoice(target, a, b);
 	}
 
 	@Override
@@ -273,6 +288,20 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	}
 
 	@Override
+	public LanguageElement visitIndexedExpression(IndexedExpressionContext ctx) {
+		Expression a = (Expression)visit(ctx.expr6());
+		if (ctx.index().size() > 0) {
+			Expression[] index = new Expression[ctx.index().size()];
+			for (int i = 0; i < index.length; i++) {
+				index[i] = (Expression)visit(ctx.index(i));
+			}
+			return new IndexElementExpression(a, index);
+		} else {
+			return a;
+		}
+	}
+
+	@Override
 	public LanguageElement visitBoolExpression(BoolExpressionContext ctx) {
 		Expression a = (Expression)visit(ctx.expr2());
 		if (ctx.expr1() == null) {
@@ -297,8 +326,8 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitIsSetExpr(IsSetExprContext ctx) {
-		Variable var = (Variable)visit(ctx.variable());
-		return new IsSet(var);
+		Expression e = (Expression)visit(ctx.expression());
+		return new IsSet(e);
 	}
 
 	@Override
@@ -486,11 +515,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitVariable(VariableContext ctx) {
 		TerminalNode tn = ctx.VAR();
 		String varName = tn.toString();
-		Expression[] index = new Expression[ctx.index().size()];
-		for (int i = 0; i < index.length; i++) {
-			index[i] = (Expression)visit(ctx.index(i));
-		}
-		return new Variable(varName, index);
+		return new Variable(varName);
 	}
 	
 	public LanguageElement visitFunctiondef(FunctiondefContext ctx) {

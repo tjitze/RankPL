@@ -15,68 +15,74 @@ import com.tr.rp.exceptions.RPLTypeError;
  */
 public class IsSet extends Expression {
 
-	private final Variable var;
+	private final Expression exp;
 
-	public IsSet(Variable var) {
-		this.var = var;
+	public IsSet(Expression exp) {
+		this.exp = exp;
 	}
 	
 	@Override
 	public boolean containsVariable(String var) {
-		return this.var.containsVariable(var);
+		return this.exp.containsVariable(var);
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		var.getVariables(list);
+		exp.getVariables(list);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new IsSet((Variable)var.replaceVariable(a, b));
+		return new IsSet((Expression)exp.replaceVariable(a, b));
 	}
 
 	@Override
 	public boolean hasRankExpression() {
-		return var.hasRankExpression();
+		return exp.hasRankExpression();
 	}
 
 	@Override
 	public Expression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new IsSet((Variable)var.transformRankExpressions(v, rank));
+		return new IsSet((Expression)exp.transformRankExpressions(v, rank));
 	}
 
 	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
-		return var.getEmbeddedFunctionCall();
+		return exp.getEmbeddedFunctionCall();
 	}
 
 	@Override
 	public Expression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new IsSet((Variable)this.var.replaceEmbeddedFunctionCall(fc, var));
+		return new IsSet((Expression)exp.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return var.isDefined(e);
+		if (exp instanceof Variable) {
+			return ((Variable)exp).isDefined(e);
+		}
+		if (exp instanceof IndexElementExpression) {
+			return ((IndexElementExpression)exp).isDefined(e);
+		}
+		return true;
 	}
 
 	@Override
 	public boolean hasDefiniteValue() {
-		return var.hasDefiniteValue();
+		return exp.hasDefiniteValue();
 	}
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return var.getDefiniteValue() != null;
+		return exp.getDefiniteValue() != null;
 	}
 
 	public String toString() {
-		return "isset(" + var + ")";
+		return "isset(" + exp + ")";
 	}
 
 	public boolean equals(Object o) {
-		return (o instanceof IsSet) && ((IsSet)o).var.equals(var);
+		return (o instanceof IsSet) && ((IsSet)o).exp.equals(exp);
 	}
 
 }

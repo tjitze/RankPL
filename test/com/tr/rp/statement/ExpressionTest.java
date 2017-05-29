@@ -190,7 +190,22 @@ public class ExpressionTest extends RPLBaseTest {
 		assertEquals(new PersistentList(0,1,2,3), evalExp("aii[3]"));
 		assertEquals(0, evalExp("aii[1][0]"));
 		assertEquals(1, evalExp("aii[1][1]"));
-		// TODO: test index out of bounds
+		// TODO: test index out of bounds, type error
+		
+		// String element
+		assertEquals("a", evalExp("abcde[0]"));
+		assertEquals("b", evalExp("abcde[1]"));
+		assertEquals("c", evalExp("abcde[2]"));
+		assertEquals("d", evalExp("abcde[3]"));
+		assertEquals("e", evalExp("abcde[4]"));
+		// TODO: index out of bounds
+		
+		assertEquals("a", evalExp("\"abcde\"[0]"));
+		assertEquals("b", evalExp("\"abcde\"[1]"));
+		assertEquals("c", evalExp("\"abcde\"[2]"));
+		assertEquals("d", evalExp("\"abcde\"[3]"));
+		assertEquals("e", evalExp("\"abcde\"[4]"));
+		// TODO: index out of bounds
 		
 		// isset
 		assertEquals(true, evalExp("isset(s)"));

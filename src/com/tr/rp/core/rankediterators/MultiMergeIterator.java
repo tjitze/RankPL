@@ -71,7 +71,7 @@ public abstract class MultiMergeIterator<T> implements RankedIterator<T> {
 		while (!inputFinished && (input.getRank() <= currentRank || iq.isEmpty())) {
 			T v = input.getItem();
 			int prior = input.getRank();
-			if (!input.next()) {
+			if (!input.next()) { // update inputFinished flag
 				inputFinished = true;
 			}
 			RankedIterator<T> it = transform(v);
@@ -80,8 +80,10 @@ public abstract class MultiMergeIterator<T> implements RankedIterator<T> {
 				if (it.getRank() + prior < currentRank) {
 					throw new RPLMiscException("Internal error (unexpected rank ordering)");
 				}
-				iq.add(it);
-				rq.add(prior);
+				if (it.next()) { // only remember this iterator if it has a next item
+					iq.add(it);
+					rq.add(prior);
+				}
 				return prior <= currentRank;
 			}
 		}

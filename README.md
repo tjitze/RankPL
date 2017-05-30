@@ -21,7 +21,7 @@ The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the
 
 ### Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* *conditional on* *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*.
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*.
 
 How do conditional ranks compare to conditional probabilities? Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, the division of *P(A∩B)* by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. In the definition of *K(A|B)*, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. This, too, can be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
 
@@ -287,39 +287,39 @@ The RankPL interpreter comes in the form of a self-contained Jar file called `Ra
 ```
 java -jar RankPL.jar <source_file> [max_rank]
 ```
-Where `source_file` is the RankPL source file to execute, and the optional parameter `max_rank` specifies the maximum rank (inclusive) that is generated. The value of the optional `max_rank` argument defaults to zero. The possible outcomes of a program (returned via the `return` statement) are generated in ascending order w.r.t. rank.
+Where `source_file` is the RankPL source file to execute, and the optional parameter `max_rank` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the `max_rank` argument is omitted. The possible outcomes of a program (returned via the `return` statement) are generated in ascending order with respect to their rank.
 
 ### Statements
 
 Statements in RankPL are terminated with a semicolon (;). If a statement contains sub-statements (such as the `if b then s1 else s2` statement) then these substatements may also be *block statements*, which are seqeuences of statements enclosed in curly brackets ({ ... }). 
 
-The table below provides an overview of all available statements in RankPL. We use the following symbols to refer to expressions with specific types:
+The table below provides an overview of all available statements in RankPL. We use the following symbols to refer to specific types of expressions:
 - `var`: 	a variable
-- `e`: 		any expression
-- `n`: 		a numerical (integer) expression
+- `e`: 		an expression (any type)
+- `n`: 		an integer expression
 - `b`: 		a boolean expression
 - `s`: 		a string expression
 
 |Statement      	|Form					|Description	|
 |-----------------------|-----------------------------------------|---------------|
 |Assignment		| `var := e`				| Assign value of `e` to `var`. **(1)** |
-|Cut			| `cut(n)`				| Eliminate all alternatives ranked higher than `n`. |
+|Ranked assignment  	| `var := e_1 << n >> e_2`		| Normally assign to `var` the value of `e_1`, exceptionally (to degree `n`) assign the value of `e2`. **(1)**	|
+|Range choice		| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
 |If-else		| `if b then s_1 else s_2`		| Regular if-else statement. **(2)** |
+|while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
 |observe		| `observe b`				| Observe condition `b` to hold (eliminate alternatives not satisfying `b` and uniformly shift down alternatives that remain`).	|
 |observe-j		| `observe-j (n) b`			| Like `observe b`, but increase rank of alternatives not satisfying `b` by value of `n`. **(3)**		|
 |observe-l		| `observe-l (n) b`			| Improve rank of alternatives satisfying `b` by `n` units w.r.t. alternatives not satisfying `b`. **(3)**		|
-|print			| `print s`				| Print `s` to console.		|
-|range choice		| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
-|ranked choice  	| `normally (n) s_1 exceptionally s_2`	| Normally execute `s_1`, exceptionally (to degree `n`) execute `s_2`. **(3,4)**	|
-|ranked assignment  	| `var := e_1 << n >> e_2`		| Normally assign to `var` the value of `e_1`, exceptionally (to degree `n`) assign the value of `e2`. **(1)**	|
-|indifferent choice  	| `either s_1 or s_2`			| Same as `normally (0) s_1 exceptionally s_2`. 		|
-|return			| `return e`				| Return `e` as value of program or function		|
-|skip			| `skip`				| Does nothing.		|
-|while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
+|Ranked choice  	| `normally (n) s_1 exceptionally s_2`	| Normally execute `s_1`, exceptionally (to degree `n`) execute `s_2`. **(3,4)**	|
+|Indifferent choice  	| `either s_1 or s_2`			| Same as `normally (0) s_1 exceptionally s_2`. 		|
+|Print			| `print s`				| Print `s` to console.		|
+|Cut			| `cut(n)`				| Eliminate all alternatives ranked higher than `n`. |
+|Return			| `return e`				| Return `e` as value of program or function		|
+|Skip			| `skip`				| Does nothing.		|
 
-- **(1)**: Variables in this context may be of the form `var[e_1]...[e_n]`, where `e_1`, ..., `e_n` are indices to a (multi-dimensional) array. Referencing elements that are not defined leads to an *value undefined* error. Referencing indices that are less than zero or larger than the size of the array leads to an *index out of bounds* error. 
+- **(1)**: Variables on the left hand side of an assignment, ranked assignment, or ranged choice statement may include array indices. That is, they may be of the form `var[e_1]...[e_n]`, where `e_1`, ..., `e_n` are indices to the (multi-dimensional) array referenced by `var`. Illegal indices lead to a *value undefined* error.
 - **(2)**: The `else s_2` part may be omitted. If it is, `s_2` is taken to be the `skip` statement.
-- **(3)**: The rank `(n)` part may be omitted. If it is, `n` defaults to 1.
+- **(3)**: The `(n)` part may be omitted. If it is, `n` defaults to 1.
 - **(4)**: The `exceptionally s_2` part may be omitted. If it is, `s_2` is taken to be the `skip` statement.
 
 ### Expressions
@@ -328,8 +328,8 @@ Expressions in RankPL are either integer, boolean, string, or array-valued. All 
 
 In the list below, we use the following symbols to refer to expressions with specific types:
 - `var`: 	a variable
-- `e`: 		any expression
-- `n`: 		a numerical (integer) expression
+- `e`: 		an expression (any type)
+- `n`: 		an integer expression
 - `b`: 		a boolean expression
 - `s`: 		a string expression
 

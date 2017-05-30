@@ -449,12 +449,11 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitArrayInitExpr(ArrayInitExprContext ctx) {
-		Expression[] index = new Expression[ctx.index().size()];
-		for (int i = 0; i < index.length; i++) {
-			index[i] = (Expression)visit(ctx.index(i));
+		if (ctx.expression().size() == 2) {
+			return new ArrayInitExpression((Expression)visit(ctx.expression(0)), (Expression)visit(ctx.expression(1)));
+		} else {
+			return new ArrayInitExpression((Expression)visit(ctx.expression(0)), null);		
 		}
-		Expression initValue = ctx.expression() == null? null: (Expression)visit(ctx.expression());
-		return new ArrayInitExpression(initValue, index);
 	}
 
 	@Override

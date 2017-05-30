@@ -382,16 +382,8 @@ public class Expressions {
 		return new Abs(e);
 	}
 	
-	public static ArrayInitExpression arrayInit(Expression initExpr, Expression ... dimensions) {
-		return new ArrayInitExpression(initExpr, dimensions);
-	}
-
-	public static ArrayInitExpression arrayInit(Expression initExpr, int ... dimensions) {
-		Expression[] dimensionExpr = new Expression[dimensions.length];
-		for (int i = 0; i < dimensions.length; i++) {
-			dimensionExpr[i] = new Literal<Integer>(dimensions[i]);
-		}
-		return new ArrayInitExpression(initExpr, dimensionExpr);
+	public static ArrayInitExpression arrayInitX(Expression dimension, Expression initValue) {
+		return new ArrayInitExpression(dimension, initValue);
 	}
 	
 	public static Variable var(String name) {

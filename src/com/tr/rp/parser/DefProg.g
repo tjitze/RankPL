@@ -90,7 +90,7 @@ expr6
  	'(' expression ',' expression ',' expression ')' 	# SubStringExpr
  | ('RANK' | 'rank') '(' expression ')' 	 			# RankExpr
 
- | ('ARRAY'|'array') index* (expression)?				# ArrayInitExpr
+ | ('ARRAY'|'array') '(' expression (',' expression)? ')' # ArrayInitExpr
  | '[' (expression (',' expression)* )?	 ']'			# ArrayConstructExpr
 
  | '@'expression '?' expression ':' expression			# ConditionalExpression

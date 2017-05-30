@@ -299,6 +299,7 @@ define function_name(var_1, ..., var_n) {
 	...
 };
 ```
+Here, `s_1`, `s_2`, ... are the statements that make up the body of the function.
 A function call is an expression of the form:
 ```
 function_name(arg_1, ..., arg_n)

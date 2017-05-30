@@ -68,7 +68,7 @@ import com.tr.rp.parser.DefProgParser.RankExprContext;
 import com.tr.rp.parser.DefProgParser.RankedChoiceStatementContext;
 import com.tr.rp.parser.DefProgParser.ReturnStatementContext;
 import com.tr.rp.parser.DefProgParser.SkipStatementContext;
-import com.tr.rp.parser.DefProgParser.StatementContext;
+import com.tr.rp.parser.DefProgParser.StatContext;
 import com.tr.rp.parser.DefProgParser.StatementSequenceContext;
 import com.tr.rp.parser.DefProgParser.SubStringExprContext;
 import com.tr.rp.parser.DefProgParser.VariableContext;
@@ -97,31 +97,31 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitAssignmentStatement(AssignmentStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		Expression value = (Expression)visit(ctx.expression());
+		Expression value = (Expression)visit(ctx.exp());
 		return new Assign(target, value);
 	}
 
 	@Override
 	public LanguageElement visitReturnStatement(ReturnStatementContext ctx) {
-		Expression e = (Expression)visit(ctx.expression());
+		Expression e = (Expression)visit(ctx.exp());
 		return new Return(e);
 	}
 
 	@Override
 	public LanguageElement visitPrintStatement(PrintStatementContext ctx) {
-		Expression e = (Expression)visit(ctx.expression());
+		Expression e = (Expression)visit(ctx.exp());
 		return new PrintStatement(e);
 	}
 
 	@Override
 	public LanguageElement visitCutStatement(CutStatementContext ctx) {
-		Expression e = (Expression)visit(ctx.expression());
+		Expression e = (Expression)visit(ctx.exp());
 		return new Cut(e);
 	}
 
 	@Override
 	public LanguageElement visitIndex(IndexContext ctx) {
-		return this.visit(ctx.expression());
+		return this.visit(ctx.exp());
 	}
 
 	@Override
@@ -138,21 +138,21 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitChoiceAssignmentStatement(ChoiceAssignmentStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		Expression value1 = (Expression)visit(ctx.expression(0));
-		Expression value2 = (Expression)visit(ctx.expression(2));
-		Expression rank = (Expression)visit(ctx.expression(1));
+		Expression value1 = (Expression)visit(ctx.exp(0));
+		Expression value2 = (Expression)visit(ctx.exp(2));
+		Expression rank = (Expression)visit(ctx.exp(1));
 		return new RankedChoice(target, value1, value2, rank);
 	}
 
 	@Override
 	public LanguageElement visitIfStatement(IfStatementContext ctx) {
-		Expression boolExpr = (Expression)visit(ctx.expression());
-		DStatement a = (DStatement)visit(ctx.statement().get(0));
-		a.setLineNumber(ctx.statement().get(0).getStart().getLine());
+		Expression boolExpr = (Expression)visit(ctx.exp());
+		DStatement a = (DStatement)visit(ctx.stat().get(0));
+		a.setLineNumber(ctx.stat().get(0).getStart().getLine());
 		DStatement b;
-		if (ctx.statement().size() > 1) {
-			b = (DStatement)visit(ctx.statement().get(1));
-			b.setLineNumber(ctx.statement().get(1).getStart().getLine());
+		if (ctx.stat().size() > 1) {
+			b = (DStatement)visit(ctx.stat().get(1));
+			b.setLineNumber(ctx.stat().get(1).getStart().getLine());
 		} else {
 			b = new Skip();
 		}
@@ -161,7 +161,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitObserveStatement(ObserveStatementContext ctx) {
-		Expression boolExpr = (Expression)visit(ctx.expression());
+		Expression boolExpr = (Expression)visit(ctx.exp());
 		return new Observe(boolExpr);
 	}
 
@@ -169,12 +169,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitObserveJStatement(ObserveJStatementContext ctx) {
 		Expression rank;
 		Expression boolExpr;
-		if (ctx.expression().size() == 1) {
+		if (ctx.exp().size() == 1) {
 			rank = new Literal<Integer>(1);
-			boolExpr = (Expression)visit(ctx.expression(0));
+			boolExpr = (Expression)visit(ctx.exp(0));
 		} else {
-			rank = (Expression)visit(ctx.expression(0));
-			boolExpr = (Expression)visit(ctx.expression(1));
+			rank = (Expression)visit(ctx.exp(0));
+			boolExpr = (Expression)visit(ctx.exp(1));
 		}
 		return new ObserveJ(boolExpr, rank);
 	}
@@ -183,40 +183,40 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitObserveLStatement(ObserveLStatementContext ctx) {
 		Expression rank;
 		Expression boolExpr;
-		if (ctx.expression().size() == 1) {
+		if (ctx.exp().size() == 1) {
 			rank = new Literal<Integer>(1);
-			boolExpr = (Expression)visit(ctx.expression(0));
+			boolExpr = (Expression)visit(ctx.exp(0));
 		} else {
-			rank = (Expression)visit(ctx.expression(0));
-			boolExpr = (Expression)visit(ctx.expression(1));
+			rank = (Expression)visit(ctx.exp(0));
+			boolExpr = (Expression)visit(ctx.exp(1));
 		}
 		return new ObserveL(boolExpr, rank);
 	}
 
 	@Override
 	public LanguageElement visitRankedChoiceStatement(RankedChoiceStatementContext ctx) {
-		Expression rank = ctx.expression() == null? lit(1): (Expression)visit(ctx.expression());
-		DStatement a = (DStatement)visit(ctx.statement().get(0));
-		a.setLineNumber(ctx.statement().get(0).getStart().getLine());
-		DStatement b = (DStatement)visit(ctx.statement().get(1));
-		b.setLineNumber(ctx.statement().get(1).getStart().getLine());
+		Expression rank = ctx.exp() == null? lit(1): (Expression)visit(ctx.exp());
+		DStatement a = (DStatement)visit(ctx.stat().get(0));
+		a.setLineNumber(ctx.stat().get(0).getStart().getLine());
+		DStatement b = (DStatement)visit(ctx.stat().get(1));
+		b.setLineNumber(ctx.stat().get(1).getStart().getLine());
 		return new RankedChoice(a, b, rank);
 	}
 
 	@Override
 	public LanguageElement visitRangeChoiceStatement(RangeChoiceStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		Expression a = (Expression)visit(ctx.expression().get(0));
-		Expression b = (Expression)visit(ctx.expression().get(1));
+		Expression a = (Expression)visit(ctx.exp().get(0));
+		Expression b = (Expression)visit(ctx.exp().get(1));
 		return new RangeChoice(target, a, b);
 	}
 
 	@Override
 	public LanguageElement visitIndifferentChoiceStatement(IndifferentChoiceStatementContext ctx) {
-		DStatement[] choices = new DStatement[ctx.statement().size()];
+		DStatement[] choices = new DStatement[ctx.stat().size()];
 		for (int i = 0; i < choices.length; i++) {
-			choices[i] = (DStatement)visit(ctx.statement().get(i));
-			choices[i].setLineNumber(ctx.statement().get(i).getStart().getLine());
+			choices[i] = (DStatement)visit(ctx.stat().get(i));
+			choices[i].setLineNumber(ctx.stat().get(i).getStart().getLine());
 		}
 		return constructIndifferentChoice(choices, 0);
 	}
@@ -240,21 +240,21 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitWhileStatement(WhileStatementContext ctx) {
-		Expression boolExpr = (Expression)visit(ctx.expression());
-		DStatement a = (DStatement)visit(ctx.statement());
-		a.setLineNumber(ctx.statement().getStart().getLine());
+		Expression boolExpr = (Expression)visit(ctx.exp());
+		DStatement a = (DStatement)visit(ctx.stat());
+		a.setLineNumber(ctx.stat().getStart().getLine());
 		return new While(boolExpr, a);
 	}
 
 	@Override
 	public LanguageElement visitForStatement(ForStatementContext ctx) {
-		Expression forCondition = (Expression)visit(ctx.expression());
-		DStatement init = (DStatement)visit(ctx.statement(0));
-		DStatement next = (DStatement)visit(ctx.statement(1));
-		DStatement body = (DStatement)visit(ctx.statement(2));
-		init.setLineNumber(ctx.statement(0).getStart().getLine());
-		next.setLineNumber(ctx.statement(1).getStart().getLine());
-		body.setLineNumber(ctx.statement(2).getStart().getLine());
+		Expression forCondition = (Expression)visit(ctx.exp());
+		DStatement init = (DStatement)visit(ctx.stat(0));
+		DStatement next = (DStatement)visit(ctx.stat(1));
+		DStatement body = (DStatement)visit(ctx.stat(2));
+		init.setLineNumber(ctx.stat(0).getStart().getLine());
+		next.setLineNumber(ctx.stat(1).getStart().getLine());
+		body.setLineNumber(ctx.stat(2).getStart().getLine());
 		return new ForStatement(init, forCondition, next, body);
 	}
 
@@ -318,35 +318,39 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitConditionalExpression(ConditionalExpressionContext ctx) {
-		Expression condition = (Expression)visit(ctx.expression(0));
-		Expression e1 = (Expression)visit(ctx.expression(1));
-		Expression e2 = (Expression)visit(ctx.expression(2));
-		return new Conditional(condition, e1, e2);
+		Expression e1 = (Expression)visit(ctx.expr1(0));
+		if (ctx.expr1().size() > 1) {
+			Expression e2 = (Expression)visit(ctx.expr1(1));
+			Expression e3 = (Expression)visit(ctx.expr1(2));
+			return new Conditional(e1, e2, e3);
+		} else {
+			return e1;
+		}
 	}
 
 	@Override
 	public LanguageElement visitIsSetExpr(IsSetExprContext ctx) {
-		Expression e = (Expression)visit(ctx.expression());
+		Expression e = (Expression)visit(ctx.exp());
 		return new IsSet(e);
 	}
 
 	@Override
 	public LanguageElement visitAbsExpr(AbsExprContext ctx) {
-		Expression num = (Expression)visit(ctx.expression());
+		Expression num = (Expression)visit(ctx.exp());
 		return new Abs(num);
 	}
 
 	@Override
 	public LanguageElement visitLenExpr(LenExprContext ctx) {
-		Expression e = (Expression)visit(ctx.expression());
+		Expression e = (Expression)visit(ctx.exp());
 		return new Len(e);
 	}
 
 	@Override
 	public LanguageElement visitSubStringExpr(SubStringExprContext ctx) {
-		Expression s = (Expression)visit(ctx.expression(0));
-		Expression begin = (Expression)visit(ctx.expression(1));
-		Expression end = (Expression)visit(ctx.expression(2));
+		Expression s = (Expression)visit(ctx.exp(0));
+		Expression begin = (Expression)visit(ctx.exp(1));
+		Expression end = (Expression)visit(ctx.exp(2));
 		return Expressions.subString(s, begin, end);
 	}
 
@@ -363,15 +367,15 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitRankExpr(RankExprContext ctx) {
-		return new RankExpr((Expression)visit(ctx.expression()));
+		return new RankExpr((Expression)visit(ctx.exp()));
 	}
 	
 	@Override
 	public LanguageElement visitFunctionCall(FunctionCallContext ctx) {
 		String functionName = ctx.VAR().toString();
-		Expression[] args = new Expression[ctx.expression().size()];
+		Expression[] args = new Expression[ctx.exp().size()];
 		for (int i = 0; i < args.length; i++) {
-			args[i] = (Expression)visit(ctx.expression(i));
+			args[i] = (Expression)visit(ctx.exp(i));
 		}
 		return new FunctionCall(functionName, functionScope, args);
 	}
@@ -379,9 +383,9 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitInferringFunctionCall(InferringFunctionCallContext ctx) {
 		String functionName = ctx.VAR().toString();
-		Expression[] args = new Expression[ctx.expression().size()];
+		Expression[] args = new Expression[ctx.exp().size()];
 		for (int i = 0; i < args.length; i++) {
-			args[i] = (Expression)visit(ctx.expression(i));
+			args[i] = (Expression)visit(ctx.exp(i));
 		}
 		return new InferringFunctionCall(functionName, functionScope, args);
 	}
@@ -449,18 +453,18 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitArrayInitExpr(ArrayInitExprContext ctx) {
-		if (ctx.expression().size() == 2) {
-			return new ArrayInitExpression((Expression)visit(ctx.expression(0)), (Expression)visit(ctx.expression(1)));
+		if (ctx.exp().size() == 2) {
+			return new ArrayInitExpression((Expression)visit(ctx.exp(0)), (Expression)visit(ctx.exp(1)));
 		} else {
-			return new ArrayInitExpression((Expression)visit(ctx.expression(0)), null);		
+			return new ArrayInitExpression((Expression)visit(ctx.exp(0)), null);		
 		}
 	}
 
 	@Override
 	public LanguageElement visitArrayConstructExpr(ArrayConstructExprContext ctx) {
-		Expression[] values = new Expression[ctx.expression().size()];
+		Expression[] values = new Expression[ctx.exp().size()];
 		for (int i = 0; i < values.length; i++) {
-			values[i] = (Expression)visit(ctx.expression(i));
+			values[i] = (Expression)visit(ctx.exp(i));
 		}
 		return new ArrayConstructExpression(values);
 	}
@@ -474,10 +478,10 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	public LanguageElement visitProgram(ProgramContext ctx) {
 		List<DStatement> statements = new ArrayList<DStatement>();
 		for (Functiondef_or_statementContext fsc: ctx.functiondef_or_statement()) {
-			if (fsc.statement() != null) {
-				DStatement s = (DStatement)visit(fsc.statement());
+			if (fsc.stat() != null) {
+				DStatement s = (DStatement)visit(fsc.stat());
 				s = s.rewriteEmbeddedFunctionCalls();
-				s.setLineNumber(fsc.statement().getStart().getLine());
+				s.setLineNumber(fsc.stat().getStart().getLine());
 				statements.add(s);
 			}
 			if (fsc.functiondef() != null) {
@@ -496,7 +500,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 
 	public LanguageElement visitStatementSequence(StatementSequenceContext ctx) {
 		List<DStatement> statements = new ArrayList<DStatement>();
-		for (StatementContext sc: ctx.statement()) {
+		for (StatContext sc: ctx.stat()) {
 			DStatement s = (DStatement)visit(sc);
 			s.setLineNumber(sc.getStart().getLine());
 			statements.add(s);
@@ -526,7 +530,7 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 		Function function = new Function(functionName, parameters);
 		function.setLineNumber(ctx.start.getLine());
 		List<DStatement> statements = new ArrayList<DStatement>();
-		for (StatementContext sc: ctx.statement()) {
+		for (StatContext sc: ctx.stat()) {
 			DStatement s = (DStatement)visit(sc);
 			s = s.rewriteEmbeddedFunctionCalls();
 			s.setLineNumber(sc.getStart().getLine());

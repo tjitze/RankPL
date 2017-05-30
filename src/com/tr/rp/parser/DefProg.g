@@ -14,39 +14,39 @@ program
 
 functiondef_or_statement
  : functiondef
- | statement
+ | stat
  ;
 
 functiondef
- : ('DEFINE'|'define') VAR ('()' | '(' VAR (',' VAR)* ')') '{' (statement ';')* '}'
+ : Define VAR ('()' | '(' VAR (',' VAR)* ')') '{' (stat ';')* '}'
  ;
 
-statement
- : assignment_target ':=' expression											# AssignmentStatement
- | assignment_target ':=' expression '<<' expression '>>' expression			# ChoiceAssignmentStatement
- | assignment_target ':=' '<<' expression '...' expression '>>'					# RangeChoiceStatement
- | ('IF'|'if') expression ('THEN'|'then') statement (('ELSE'|'else') statement)? # IfStatement
- | ('WHILE'|'while') expression ('DO'|'do') statement							# WhileStatement
- | ('FOR'|'for') '(' statement ';' expression ';' statement ')' statement		# ForStatement
- | ('OBSERVE'|'observe') expression												# ObserveStatement
- | ('OBSERVE-L'|'observe-l') ('(' expression ')')? expression					# ObserveLStatement
- | ('OBSERVE-J'|'observe-j') ('(' expression ')')? expression					# ObserveJStatement
- | ('SKIP'|'skip')																# SkipStatement
- | 	('NORMALLY'|'normally'|'NRM'|'nrm') ('(' expression ')')?
- 		statement 
- 	('EXCEPTIONALLY'|'exceptionally'|'EXC'|'exc') 
- 		statement 																# RankedChoiceStatement
- |	('EITHER'|'either')
- 		statement
- 	(('OR'|'or') statement)+													# IndifferentChoiceStatement
- | '{' statement (';' statement)* ';'? '}'										# StatementSequence
- | ('RETURN'|'return') expression												# ReturnStatement
- | ('PRINT'|'print') expression												    # PrintStatement
- | ('CUT'|'cut') expression													    # CutStatement
+stat
+ : assignment_target ':=' exp							# AssignmentStatement
+ | assignment_target ':=' exp '<<' exp '>>' exp			# ChoiceAssignmentStatement
+ | assignment_target ':=' '<<' exp '...' exp '>>'		# RangeChoiceStatement
+ | If exp Then stat (Else stat)? 						# IfStatement
+ | While exp Do stat									# WhileStatement
+ | For '(' stat ';' exp ';' stat ')' stat				# ForStatement
+ | Observe exp											# ObserveStatement
+ | ObserveL ('(' exp ')')? exp							# ObserveLStatement
+ | ObserveJ ('(' exp ')')? exp							# ObserveJStatement
+ | Skip													# SkipStatement
+ | Nrm ('(' exp ')')? stat Exc stat 					# RankedChoiceStatement
+ | Either stat (Or stat)+								# IndifferentChoiceStatement
+ | '{' stat (';' stat)* ';'? '}'						# StatementSequence
+ | Return exp											# ReturnStatement
+ | Print exp											# PrintStatement
+ | Cut exp												# CutStatement
+ ;
+
+
+exp : expr0;
+
+expr0
+ : expr1  ('?' expr1 ':' expr1)?						# ConditionalExpression
  ;
  
-expression : expr1;
-
 expr1
  : expr2 (aop=('&'|'|'|'^') expr1)?	 					# BoolExpression
  ;
@@ -69,39 +69,58 @@ expr5
 
 expr6
  : INT													# LiteralIntExpression
- | ('TRUE' | 'true') 					 				# LiteralBoolExpr
- | ('FALSE' | 'false') 					 				# LiteralBoolExpr
+ | True				 					 				# LiteralBoolExpr
+ | False			 					 				# LiteralBoolExpr
  | QUOTED_STRING										# LiteralStringExpr
-
  | variable 											# VariableExpression
-
- | ('infer'|'INFER') '(' VAR ('()' | '(' expression (',' expression)* ')') ')'	# InferringFunctionCall
- | VAR ('()' | '(' expression (',' expression)* ')') 	# FunctionCall
-
- | '!' expr5 				                 			# NegateExpr
- | '-' expr5 			     	            			# MinusExpr
-
- | ('ISSET'|'isSet'|'isset') '(' expression ')'    		# IsSetExpr
- | ('ABS'|'abs') '(' expression ')'         			# AbsExpr
- | ('LEN'|'len') '(' expression ')' 		 			# LenExpr
- | ('SUBSTRING'|'substring'|'subString') 
- 	'(' expression ',' expression ',' expression ')' 	# SubStringExpr
- | ('RANK' | 'rank') '(' expression ')' 	 			# RankExpr
-
- | ('ARRAY'|'array') '(' expression (',' expression)? ')' # ArrayInitExpr
- | '[' (expression (',' expression)* )?	 ']'			# ArrayConstructExpr
-
- | '@'expression '?' expression ':' expression			# ConditionalExpression
- 
- | '(' expression ')' 									# ParExpression
+ | Infer '(' VAR ('()' | ('(' (exp (',' exp)*) ')')) ')'# InferringFunctionCall
+ | VAR ('()' | ('(' (exp (',' exp)*) ')'))				# FunctionCall
+ | '!' expr6 				                 			# NegateExpr
+ | '-' expr6 			     	            			# MinusExpr
+ | Isset '(' exp ')'    								# IsSetExpr
+ | Abs '(' exp ')'      				   				# AbsExpr
+ | Len '(' exp ')' 		 								# LenExpr
+ | Substring '(' exp ',' exp ',' exp ')' 				# SubStringExpr
+ | Rank '(' exp ')' 	 								# RankExpr
+ | Array '(' exp (',' exp)? ')' 						# ArrayInitExpr
+ | '[' (exp (',' exp)* )? ']'							# ArrayConstructExpr
+ | '(' exp ')' 											# ParExpression
  ;
+
+Define:			'define' | 'DEFINE';
+If: 			'if' | 'IF';
+Then: 			'then' | 'THEN';
+Else: 			'else' | 'ELSE';
+While: 			'while' | 'WHILE';
+Do: 			'do' | 'DO';
+For: 			'for' | 'FOR';
+Observe: 		'observe' | 'OBSERVE' | 'obs' | 'OBS';
+ObserveL: 		'observe-l' | 'observe-L' | 'OBSERVE-L' | 'obs-l' | 'obs-L' | 'OBS-L';
+ObserveJ: 		'observe-j' | 'observe-J' | 'OBSERVE-J' | 'obs-j' | 'obs-J' | 'OBS-J';
+Skip: 			'skip' | 'SKIP';
+Nrm: 			'normally' | 'NORMALLY' | 'nrm' | 'NRM';
+Exc: 			'exceptionally' | 'EXCEPTIONALLY' | 'exc' | 'EXC';
+Either: 		'either' | 'EITHER';
+Or: 			'or' | 'OR';
+Return: 		'return' | 'RETURN';
+Print: 			'print' | 'PRINT';
+Cut: 			'cut' | 'CUT';
+True: 			'true' | 'TRUE';
+False: 			'false' | 'FALSE';
+Infer: 			'infer' | 'INFER';
+Isset: 			'isset' | 'ISSET';
+Abs: 			'abs' | 'ABS';
+Len: 			'len' | 'LEN';
+Substring: 		'substring' | 'SUBSTRING';
+Rank: 			'rank' | 'RANK';
+Array: 			'array' | 'ARRAY';
 
 variable
  : VAR
  ;
 
 index
- : '[' expression ']'
+ : '[' exp ']'
  ;
 
 assignment_target
@@ -133,3 +152,4 @@ SPACE
 OTHER
  : . 
  ;
+ 

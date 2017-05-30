@@ -74,9 +74,9 @@ normally (1) {
 }
 ```
 This statement states that, normally, `A` executed. 
-If not (which is surprising to degree 1) then, normally, `B` is executed. 
-Finally, if neither `A` nor `B` is executed (surprising to degree 2) then `C` is executed. 
-Note that, like in the previous example, the ranks of subsequent events sum up. Here, this means that the ranks of the choices `B` and `C` are, respectively, 1 and 2, since these choices are nested inside the exceptional block of the outer ranked choice statement.
+If `A` is not executed (which is surprising to degree 1) then, normally, `B` is executed. 
+Finally, if neither `A` nor `B` are executed (which is surprising to degree 2) then `C` is executed. 
+Note that, like in the previous example, the ranks of subsequent events sum up. Here, this means that the ranks of the choices `B` and `C` are, respectively, 1 and 2. This is because they are nested inside the exceptional block of the outer ranked choice statement.
 
 To express commonly occurring patterns, three “syntactic sugar” forms are supported. The first is the *either-or* construct, which represents regular non-deterministic choice, where each possibility is equally likely. 
 
@@ -95,7 +95,7 @@ var := e_1 <<rank>> e_2       is equivalent to            } exceptionally {
                                                               var := e_2;
                                                           }
 ```
-The third is the *range expression*. It represents the random choice, all equally likely, among the integer values between 
+The third is the *range assignment*. It represents the random choice, all equally likely, among the integer values between 
 `i_1` (inclusive) and `i_2` (exclusive). 
 ```
                                                           either {
@@ -322,7 +322,7 @@ The table below provides an overview of all available statements in RankPL. We u
 |-----------------------|-----------------------------------------|---------------|
 |Assignment		| `var := e`				| Assign value of `e` to `var`. **(1)** |
 |Ranked assignment  	| `var := e_1 << n >> e_2`		| Normally assign to `var` the value of `e_1`, exceptionally (to degree `n`) assign the value of `e2`. **(1)**	|
-|Range choice		| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
+|Range assignment	| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
 |If-else		| `if b then s_1 else s_2`		| Regular if-else statement. **(2)** |
 |while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
 |observe		| `observe b`				| Observe condition `b` to hold (eliminate alternatives not satisfying `b` and uniformly shift down alternatives that remain`).	|

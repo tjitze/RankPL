@@ -52,206 +52,218 @@ public interface DefProgListener extends ParseTreeListener {
 	void exitFunctiondef(DefProgParser.FunctiondefContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code AssignmentStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterAssignmentStatement(DefProgParser.AssignmentStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code AssignmentStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitAssignmentStatement(DefProgParser.AssignmentStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ChoiceAssignmentStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterChoiceAssignmentStatement(DefProgParser.ChoiceAssignmentStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ChoiceAssignmentStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitChoiceAssignmentStatement(DefProgParser.ChoiceAssignmentStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code RangeChoiceStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterRangeChoiceStatement(DefProgParser.RangeChoiceStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code RangeChoiceStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitRangeChoiceStatement(DefProgParser.RangeChoiceStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code IfStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterIfStatement(DefProgParser.IfStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code IfStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitIfStatement(DefProgParser.IfStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code WhileStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterWhileStatement(DefProgParser.WhileStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code WhileStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitWhileStatement(DefProgParser.WhileStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ForStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterForStatement(DefProgParser.ForStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ForStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitForStatement(DefProgParser.ForStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ObserveStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterObserveStatement(DefProgParser.ObserveStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ObserveStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitObserveStatement(DefProgParser.ObserveStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ObserveLStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterObserveLStatement(DefProgParser.ObserveLStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ObserveLStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitObserveLStatement(DefProgParser.ObserveLStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ObserveJStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterObserveJStatement(DefProgParser.ObserveJStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ObserveJStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitObserveJStatement(DefProgParser.ObserveJStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code SkipStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterSkipStatement(DefProgParser.SkipStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code SkipStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitSkipStatement(DefProgParser.SkipStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code RankedChoiceStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterRankedChoiceStatement(DefProgParser.RankedChoiceStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code RankedChoiceStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitRankedChoiceStatement(DefProgParser.RankedChoiceStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code IndifferentChoiceStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterIndifferentChoiceStatement(DefProgParser.IndifferentChoiceStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code IndifferentChoiceStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitIndifferentChoiceStatement(DefProgParser.IndifferentChoiceStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code StatementSequence}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterStatementSequence(DefProgParser.StatementSequenceContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code StatementSequence}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitStatementSequence(DefProgParser.StatementSequenceContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ReturnStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterReturnStatement(DefProgParser.ReturnStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code ReturnStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitReturnStatement(DefProgParser.ReturnStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code PrintStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterPrintStatement(DefProgParser.PrintStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code PrintStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitPrintStatement(DefProgParser.PrintStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code CutStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void enterCutStatement(DefProgParser.CutStatementContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code CutStatement}
-	 * labeled alternative in {@link DefProgParser#statement}.
+	 * labeled alternative in {@link DefProgParser#stat}.
 	 * @param ctx the parse tree
 	 */
 	void exitCutStatement(DefProgParser.CutStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DefProgParser#expression}.
+	 * Enter a parse tree produced by {@link DefProgParser#exp}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(DefProgParser.ExpressionContext ctx);
+	void enterExp(DefProgParser.ExpContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DefProgParser#expression}.
+	 * Exit a parse tree produced by {@link DefProgParser#exp}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(DefProgParser.ExpressionContext ctx);
+	void exitExp(DefProgParser.ExpContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ConditionalExpression}
+	 * labeled alternative in {@link DefProgParser#expr0}.
+	 * @param ctx the parse tree
+	 */
+	void enterConditionalExpression(DefProgParser.ConditionalExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ConditionalExpression}
+	 * labeled alternative in {@link DefProgParser#expr0}.
+	 * @param ctx the parse tree
+	 */
+	void exitConditionalExpression(DefProgParser.ConditionalExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code BoolExpression}
 	 * labeled alternative in {@link DefProgParser#expr1}.
@@ -492,18 +504,6 @@ public interface DefProgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitArrayConstructExpr(DefProgParser.ArrayConstructExprContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ConditionalExpression}
-	 * labeled alternative in {@link DefProgParser#expr6}.
-	 * @param ctx the parse tree
-	 */
-	void enterConditionalExpression(DefProgParser.ConditionalExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ConditionalExpression}
-	 * labeled alternative in {@link DefProgParser#expr6}.
-	 * @param ctx the parse tree
-	 */
-	void exitConditionalExpression(DefProgParser.ConditionalExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ParExpression}
 	 * labeled alternative in {@link DefProgParser#expr6}.

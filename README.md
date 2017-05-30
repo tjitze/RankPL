@@ -21,11 +21,11 @@ The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the
 
 ### Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)* and defined by *K(A|B) = K(A∩B)-K(B)* if *K(B) < ∞*, *K(A|B)* is undefined, otherwise.
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* *conditional on* *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*.
 
 How do conditional ranks compare to conditional probabilities? Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, the division of *P(A∩B)* by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. In the definition of *K(A|B)*, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. This, too, can be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
 
-Recall that the definition *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*. Analogously, we have *K(A∩B) = K(B) + K(A|B)*. That is, the degree of surprise of *A* *and* *B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
+Just like *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*, we can rewrite *K(A|B) = K(A∩B)-K(B)* as *K(A∩B) = K(B) + K(A|B)*. In this form, the definition says that the degree of surprise of *A and B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
 
 # Ranked programming in RankPL
 

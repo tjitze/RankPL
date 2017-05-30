@@ -252,6 +252,7 @@ public class ParseTest extends RPLBaseTest {
 	
 	public void testParseStrings() {
 		assertEquals(parseStatement("x := \"\""), new Assign("x", lit("")));
+		assertEquals(parseStatement("x := \"\\\"\""), new Assign("x", lit("\"")));
 		assertEquals(parseStatement("x := \"abc\""), new Assign("x", lit("abc")));
 		assertEquals(parseStatement("x := \"abc\" + \"def\""), new Assign("x", plus(lit("abc"), lit("def"))));
 		// test white spaces in string literals

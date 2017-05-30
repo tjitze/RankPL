@@ -436,10 +436,12 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 	
 	@Override
 	public LanguageElement visitLiteralStringExpr(LiteralStringExprContext ctx) {
-		String s = ctx.getText().toLowerCase();
+		String s = ctx.getText();
 		// remove quotes
 		s = s.substring(1, s.length()-1);
-		// a hack to process escape characters
+		// a hack to process escape characters. This removes trailing spaces so we have to remember them
+		int wsCount = 0;
+		while (wsCount < s.length() && s.charAt(wsCount) == ' ') wsCount++;
 	    Properties prop = new Properties();     
 	    try {
 			prop.load(new StringReader("x=" + s + "\n"));
@@ -447,7 +449,8 @@ public class ConcreteParser extends DefProgBaseVisitor<LanguageElement> {
 			throw new RuntimeException("Internal parser error: " + e);
 		}
 	    s = prop.getProperty("x");
-
+	    // put back leading spaces
+	    for (int i = 0; i < wsCount; i++) s = " " + s;
 		return new Literal<String>(s);
 	}
 	

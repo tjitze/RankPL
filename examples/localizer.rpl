@@ -9,7 +9,7 @@
 define main() {
 	# k is the number of time points to simulate. Change it to get 
 	# intermediate results. Maximum value for this example is 4.
-	k := 4;
+	k := 1;
 	
 	# Constants used to refer to different headings
 	north := 0;
@@ -20,7 +20,7 @@ define main() {
 	# Initialize the n*m map in which the robot moves (0 = empty cell, 1 = wall) 
 	n := 11;
 	m := 8;
-	map := array[m];
+	map := array(m);
 	map[7] := [ 1,1,1,1,1,1,1,1,1,1,1 ];
 	map[6] := [ 0,0,0,0,0,1,1,1,1,1,1 ];
 	map[5] := [ 0,0,0,0,0,0,0,0,0,0,0 ];

@@ -95,15 +95,15 @@ public class ExpressionTest extends RPLBaseTest {
 		expectTypeError("abs(ai)", "integer");
 		
 		// array constructor
-		assertEquals(new PersistentList(0, 0), evalExp("array[2]"));
-		assertEquals(new PersistentList(0, 0), evalExp("array[i2]"));
-		assertEquals(new PersistentList(new PersistentList(0, 0), new PersistentList(0, 0)), evalExp("array[2][2]"));
-		assertEquals(new PersistentList(new PersistentList(0, 0), new PersistentList(0, 0)), evalExp("array[i2][i2]"));
-		assertEquals(new PersistentList("s", "s"), evalExp("array[2] (s)"));
-		assertEquals(new PersistentList("s", "s"), evalExp("array[2] (\"s\")"));
-		assertEquals(new PersistentList(true, true), evalExp("array[2] (t)"));
-		assertEquals(new PersistentList(true, true), evalExp("array[2] (true)"));
-		assertEquals(new PersistentList(new PersistentList(0, 0)), evalExp("array[1] (array[2])"));
+		assertEquals(new PersistentList(null, null), evalExp("array(2)"));
+		assertEquals(new PersistentList(0, 0), evalExp("array(2, 0)"));
+		assertEquals(new PersistentList(new PersistentList(null, null), new PersistentList(null, null)), evalExp("array(2, array(2))"));
+		assertEquals(new PersistentList(new PersistentList(0, 0), new PersistentList(0, 0)), evalExp("array(2, array(2, 0))"));
+		assertEquals(new PersistentList("s", "s"), evalExp("array(2, s)"));
+		assertEquals(new PersistentList("s", "s"), evalExp("array(2, \"s\")"));
+		assertEquals(new PersistentList(true, true), evalExp("array(2, t)"));
+		assertEquals(new PersistentList(true, true), evalExp("array(2, true)"));
+		assertEquals(new PersistentList(new PersistentList(0, 0)), evalExp("array(1, array(2, 0))"));
 		// TODO: error testing (negative index, type error) 
 
 		// array literal
@@ -274,8 +274,8 @@ public class ExpressionTest extends RPLBaseTest {
 		assertEquals(0, evalExp("len(\"\")"));
 		assertEquals(1, evalExp("len(s)"));
 		assertEquals(2, evalExp("len(ss)"));
-		assertEquals(0, evalExp("len(array[0])"));
-		assertEquals(10, evalExp("len(array[10])"));
+		assertEquals(0, evalExp("len(array(0))"));
+		assertEquals(10, evalExp("len(array(10))"));
 		assertEquals(2, evalExp("len(aii[1])"));
 		assertEquals(3, evalExp("len(aii[2])"));
 		

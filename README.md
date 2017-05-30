@@ -289,9 +289,27 @@ java -jar RankPL.jar <source_file> [max_rank]
 ```
 Where `source_file` is the RankPL source file to execute, and the optional parameter `max_rank` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the `max_rank` argument is omitted. The possible outcomes of a program (returned via the `return` statement) are generated in ascending order with respect to their rank.
 
+### Programs and functions
+
+A program is a sequence of function definitions. A function definition has the form
+```
+define function_name(var_1, ..., var_n) {
+	s_1;
+	s_2;
+	...
+};
+```
+A function call is an expression of the form:
+```
+function_name(arg_1, ..., arg_n)
+```
+The arguments supplied with a function call must match the parameters of the function. Violation leads to an error. Every function must terminate with a `return` statement. A missing return statement will lead to an error.
+
+The main entry point of a program is the `main()` function. The values returned by the `main()` function are the values returned by the program. If the `main()` function is omitted, the body of the program (i.e., all statements not nested inside a function definition) is taken to be the body of the `main()` function.
+
 ### Statements
 
-Statements in RankPL are terminated with a semicolon (;). If a statement contains sub-statements (such as the `if b then s1 else s2` statement) then these substatements may also be *block statements*, which are seqeuences of statements enclosed in curly brackets ({ ... }). 
+Statements in RankPL are separated by semicolons. If a statement contains sub-statements (such as the `if b then s1 else s2` statement) then these sub-statements may be *block statements*, which are sequeences of statements enclosed in curly brackets ({ ... }). 
 
 The table below provides an overview of all available statements in RankPL. We use the following symbols to refer to specific types of expressions:
 - `var`: 	a variable
@@ -370,28 +388,6 @@ Remarks:
 - **(1)**: Equality is always based on value, never on reference. This includes arrays.
 - **(2)**: Applying `+` to one string and one non-string expression results in a string where the value of the non-string expression is converted to a string.
 - **(3)**: Use with caution: can be computationally expensive.
-
-### Function definitions and function calls
-
-A function definition has the form
-```
-define function_name(var_1, ..., var_n) {
-	s_1;
-	s_2;
-	...
-};
-```
-A function call is an expression of the form:
-```
-function_name(arg_1, ..., arg_n)
-```
-As usual, the number of arguments supplied with a function call must match the number of parameters of the function. Violation leads to an error. Parameters of functions are untyped. Thus, mistakes due to incorrectly typed arguments may lead to type errors when the function body is executed. Return values are also untyped. Return values are, as usual, specified by a return statement `return e`. A missing return statement will lead to an error. Function definitions may occur anywhere within a RankPL source file. They do not need to be defined prior to use. 
-
-### The main() function
-
-The main entry point of a program (i.e., the code that is executed when a source file is run) is the `main()` function. This is is a function with no parameters, whose return value is the return value of the program. 
-
-If the `main()` function is not explicitly defined then the main function is taken to consist of all unnested statements (i.e., all statements occurring outside of a function definition) in the program. In the latter case, a `return` statement is not obligatory.
 
 # Practical Examples
 

@@ -72,8 +72,6 @@ expr6
  | ('TRUE' | 'true') 					 				# LiteralBoolExpr
  | ('FALSE' | 'false') 					 				# LiteralBoolExpr
  | QUOTED_STRING										# LiteralStringExpr
- | ('TRUE' | 'true') 									# LiteralBoolExpr
- | ('FALSE' | 'false') 									# LiteralBoolExpr
 
  | variable 											# VariableExpression
 

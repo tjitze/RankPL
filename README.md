@@ -314,10 +314,10 @@ The table below provides an overview of all available statements in RankPL. We u
 |Indifferent choice  	| `either s_1 or s_2`			| Same as `normally (0) s_1 exceptionally s_2`. 		|
 |Print			| `print s`				| Print `s` to console.		|
 |Cut			| `cut(n)`				| Eliminate all alternatives ranked higher than `n`. |
-|Return			| `return e`				| Return `e` as value of program or function		|
+|Return			| `return e`				| Return `e` as value of program or function.		|
 |Skip			| `skip`				| Does nothing.		|
 
-- **(1)**: Variables on the left hand side of an assignment, ranked assignment, or ranged choice statement may include array indices. That is, they may be of the form `var[e_1]...[e_n]`, where `e_1`, ..., `e_n` are indices to the (multi-dimensional) array referenced by `var`. Illegal indices lead to a *value undefined* error.
+- **(1)**: Variables on the left hand side of an assignment, ranked assignment, or ranged choice statement may include array indices. That is, they may be of the form `var[e_1]...[e_n]`, where `e_1`, ..., `e_n` are indices to the (multi-dimensional) array stored in `var`. Illegal indices lead to a *value undefined* or *index out of bounds* error.
 - **(2)**: The `else s_2` part may be omitted. If it is, `s_2` is taken to be the `skip` statement.
 - **(3)**: The `(n)` part may be omitted. If it is, `n` defaults to 1.
 - **(4)**: The `exceptionally s_2` part may be omitted. If it is, `s_2` is taken to be the `skip` statement.
@@ -338,10 +338,12 @@ Expressions
 |Expression			|Evaluates to	|Description						|
 |-------------------------------|---------------|-------------------------------------------------------|
 |`abs(n)`			|int		|Absolute value of `i`					|
-|`array(i)`			|array		|Array of length `i` (elements not initialised)		|
-|`[e_1, …, e_n]`			|array		|Array of length `n` initialised with values `e_1`,...,`e_n`|
+|`array(i)`			|array		|Array of length `i`. Elements not initialised.		|
+|`array(i,e)`			|array		|Array of length `i`. Elements initialised to `e`.	|
+|`[e_1, …, e_n]`		|array		|Array of length `n` initialised with values `e_1`,...,`e_n`|
+|`b? e_1: e_2`			|any		|Evaluates to `e_1` iF `B` is TRUE. Evaluates to `e_2` otherwise. |
 |`b_1 & b_2`			|boolean	|Boolean AND						|
-|`b_1 | b_2`			|boolean	|Boolean OR						|
+|`b_1 \| b_2`			|boolean	|Boolean OR						|
 |`b_1 ^ b_2`			|boolean	|Boolean XOR						|
 |`!b`				|boolean	|Boolean NOT						|
 |`e_1 == e_2`			|boolean	|Equality of e1 and e2 **(1)**				|
@@ -357,17 +359,17 @@ Expressions
 |`i_1 * i_2`			|int		|Multiplication						|
 |`i_1 / i_2`			|int		|Division (integer, rounding down)			|
 |`i_1 % i_2`			|int		|Remainder						|
+|`-i`				|int		|Negative `i`						|
 |`rank(b)`			|int		|Rank of boolean expression b **(3)**			|
-|`substring(s, i_1, i_2)`		|string		|Substring of s between index `i_1` (inclusive) and `i_2` (exclusive)|
-|`var`				|any		|Value of variable `var` **(4)**			|
-|`var[e_1]...[e_n]`		|any		|Indexed value of (multi-dimensional) arrya stored in `var`|
+|`substring(s, i_1, i_2)`	|string		|Substring of s between index `i_1` (inclusive) and `i_2` (exclusive)|
+|`var`				|any		|Value of variable `var` 				|
+|`var[e_1]...[e_n]`		|any		|Indexed value of (multi-dimensional) arryay stored in `var`|
 |`functionname(e_1, … e_n)`	|any		|Function call with arguments `e_1`,...,`e_n`		|
 
 Remarks:
 - **(1)**: Equality is always based on value, never on reference. This includes arrays.
 - **(2)**: Applying `+` to one string and one non-string expression results in a string where the value of the non-string expression is converted to a string.
 - **(3)**: Use with caution: can be computationally expensive.
-- **(4)**: A variable is a string starting with a character and otherwise consisting of characters, numbers and underscores. A
 
 ### Function definitions and function calls
 

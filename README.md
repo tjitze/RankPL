@@ -8,19 +8,22 @@ Semantically, RankPL draws a parallel with probabilistic programming in terms of
 
 # Ranking theory<a name="sec-rankingtheory"></a>
 
-Here we present a brief overview ranking theory. We discuss the basic definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [1](#ref-gp) or [2](#ref:survey). In what follows, we denote by *Ω* a set of possibilities. 
+Here we present a brief overview ranking theory. We discuss the basic definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [1](#ref-gp) or [2](#ref-survey). 
 
 ### Ranking functions
-A *ranking function* *K* assigns to every *w ∈ Ω* a non-negative integer or ∞, such that *K(w) = 0* for at least one *w ∈ Ω*.
+
+The definition of a *ranking function* presupposes a set *Ω* of elements called *possibilities*. 
+A ranking function *K* assigns to every *w ∈ Ω* a non-negative integer or ∞, such that *K(w) = 0* for at least one *w ∈ Ω*.
 Intuitively, these numbers (called ranks) represent relative degrees of surprise: if *K(w) = 0* then *w* is not surprising, if *K(w) = 1* then *w* is surprising, if *K(w) = 2* then *w* is very suprising, and so on, until *K(w) = ∞*, which means that *w* is impossible.
 
-The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the elements of *E*. In other words, an event *A* is as surprising as the least surprising possibility *w ∈ A* that gives rise to it. In this respect, ranks behave different from probabilities, because the probability of an event is defined to be the *sum* of its elements.
+Non-empty subsets of *Ω* are called *events*.
+The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the elements of *A*. In other words, an event *A* is as surprising as the least surprising possibility *w ∈ A* that gives rise to it. In this respect, ranks behave different from probabilities, because the probability of an event is defined to be the *sum* of its elements.
 
 ### Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)* and defined by *K(A|B) = K(A∩B)-K(B)*. Conditioning on *B* can be understood as a shifting of ranks: the possibilities in *B* are uniformly shifted downwards so that *K(B|B)* becomes *0*, while the possibilities outside *B* are shifted up to *∞*, so that *K(not-B|B)* becomes *∞*.
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)* and defined by *K(A|B) = K(A∩B)-K(B)* if *K(B) < ∞*, *K(A|B)* is undefined, otherwise.
 
-This definition demonstrates another difference between ranks and probabilities. Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, the division of *P(A∩B)* by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. In the ranking theoretic setting, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. This, too, can be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
+How do conditional ranks compare to conditional probabilities? Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, the division of *P(A∩B)* by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. In the definition of *K(A|B)*, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. This, too, can be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
 
 Recall that the definition *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*. Analogously, we have *K(A∩B) = K(B) + K(A|B)*. That is, the degree of surprise of *A* *and* *B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
 
@@ -521,4 +524,4 @@ Rank 2: fifteen
 <a name="ref-gp"></a>["Qualitative probabilities for default reasoning, belief revision, and causal modeling"](http://www.sciencedirect.com/science/article/pii/0004370295000909) (Goldszmidt, Pearl. Artificial Intelligence
 Volume 84, Issues 1–2, July 1996, Pages 57-112).
 
-<a name="ref:survey"></a>["A Survery of Ranking Theory"](https://www.researchgate.net/profile/Wolfgang_Spohn/publication/30013588_A_Survey_of_Ranking_Theory/links/0c9605231bd9314802000000.pdf) (Spohn. Degrees of belief. Springer Netherlands, 2009. 185-228.).
+<a name="ref-survey"></a>["A Survery of Ranking Theory"](https://www.researchgate.net/profile/Wolfgang_Spohn/publication/30013588_A_Survey_of_Ranking_Theory/links/0c9605231bd9314802000000.pdf) (Spohn. Degrees of belief. Springer Netherlands, 2009. 185-228).

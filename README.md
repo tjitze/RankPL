@@ -73,10 +73,10 @@ normally (1) {
     }
 }
 ```
-This statement states that, normally, A executed. 
-If not (which is surprising to degree 1) then, normally, B is executed. 
-Finally, if neither A nor B is executed (surprising to degree 2) then C is executed. 
-Note that, like in the previous example, the ranks of subsequent events sum up. Here, it means that the rank of the alternatives B and C are, respectively, 1 and 2, since these choices are nested inside the exceptional block of the outer ranked choice statement.
+This statement states that, normally, `A` executed. 
+If not (which is surprising to degree 1) then, normally, `B` is executed. 
+Finally, if neither `A` nor `B` is executed (surprising to degree 2) then `C` is executed. 
+Note that, like in the previous example, the ranks of subsequent events sum up. Here, this means that the ranks of the choices `B` and `C` are, respectively, 1 and 2, since these choices are nested inside the exceptional block of the outer ranked choice statement.
 
 To express commonly occurring patterns, three “syntactic sugar” forms are supported. The first is the *either-or* construct, which represents regular non-deterministic choice, where each possibility is equally likely. 
 

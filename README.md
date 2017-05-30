@@ -21,7 +21,7 @@ The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the
 
 ### Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* *conditional on* *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*.
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*.
 
 How do conditional ranks compare to conditional probabilities? Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, the division of *P(A∩B)* by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. In the definition of *K(A|B)*, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. This, too, can be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
 
@@ -74,9 +74,9 @@ normally (1) {
 }
 ```
 This statement states that, normally, `A` executed. 
-If not (which is surprising to degree 1) then, normally, `B` is executed. 
-Finally, if neither `A` nor `B` is executed (surprising to degree 2) then `C` is executed. 
-Note that, like in the previous example, the ranks of subsequent events sum up. Here, this means that the ranks of the choices `B` and `C` are, respectively, 1 and 2, since these choices are nested inside the exceptional block of the outer ranked choice statement.
+If `A` is not executed (which is surprising to degree 1) then, normally, `B` is executed. 
+Finally, if neither `A` nor `B` are executed (which is surprising to degree 2) then `C` is executed. 
+Note that, like in the previous example, the ranks of subsequent events sum up. Here, this means that the ranks of the choices `B` and `C` are, respectively, 1 and 2. This is because they are nested inside the exceptional block of the outer ranked choice statement.
 
 To express commonly occurring patterns, three “syntactic sugar” forms are supported. The first is the *either-or* construct, which represents regular non-deterministic choice, where each possibility is equally likely. 
 
@@ -95,7 +95,7 @@ var := e_1 <<rank>> e_2       is equivalent to            } exceptionally {
                                                               var := e_2;
                                                           }
 ```
-The third is the *range expression*. It represents the random choice, all equally likely, among the integer values between 
+The third is the *range assignment*. It represents the random choice, all equally likely, among the integer values between 
 `i_1` (inclusive) and `i_2` (exclusive). 
 ```
                                                           either {
@@ -287,39 +287,58 @@ The RankPL interpreter comes in the form of a self-contained Jar file called `Ra
 ```
 java -jar RankPL.jar <source_file> [max_rank]
 ```
-Where `source_file` is the RankPL source file to execute, and the optional parameter `max_rank` specifies the maximum rank (inclusive) that is generated. The value of the optional `max_rank` argument defaults to zero. The possible outcomes of a program (returned via the `return` statement) are generated in ascending order w.r.t. rank.
+Where `source_file` is the RankPL source file to execute, and the optional parameter `max_rank` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the `max_rank` argument is omitted. The possible outcomes of a program (returned via the `return` statement) are generated in ascending order with respect to their rank.
+
+### Programs and functions
+
+A program is a sequence of function definitions. A function definition has the form
+```
+define function_name(var_1, ..., var_n) {
+	s_1;
+	s_2;
+	...
+};
+```
+Here, `s_1`, `s_2`, ... are the statements that make up the body of the function.
+A function call is an expression of the form:
+```
+function_name(arg_1, ..., arg_n)
+```
+The arguments supplied with a function call must match the parameters of the function. Violation leads to an error. Every function must terminate with a `return` statement. A missing return statement will lead to an error.
+
+The main entry point of a program is the `main()` function. The values returned by the `main()` function are the values returned by the program. If the `main()` function is omitted, the body of the program (i.e., all statements not nested inside a function definition) is taken to be the body of the `main()` function.
 
 ### Statements
 
-Statements in RankPL are terminated with a semicolon (;). If a statement contains sub-statements (such as the `if b then s1 else s2` statement) then these substatements may also be *block statements*, which are seqeuences of statements enclosed in curly brackets ({ ... }). 
+Statements in RankPL are separated by semicolons. If a statement contains sub-statements (such as the `if b then s1 else s2` statement) then these sub-statements may be *block statements*, which are sequeences of statements enclosed in curly brackets ({ ... }). 
 
-The table below provides an overview of all available statements in RankPL. We use the following symbols to refer to expressions with specific types:
+The table below provides an overview of all available statements in RankPL. We use the following symbols to refer to specific types of expressions:
 - `var`: 	a variable
-- `e`: 		any expression
-- `n`: 		a numerical (integer) expression
+- `e`: 		an expression (any type)
+- `n`: 		an integer expression
 - `b`: 		a boolean expression
 - `s`: 		a string expression
 
 |Statement      	|Form					|Description	|
 |-----------------------|-----------------------------------------|---------------|
 |Assignment		| `var := e`				| Assign value of `e` to `var`. **(1)** |
-|Cut			| `cut(n)`				| Eliminate all alternatives ranked higher than `n`. |
+|Ranked assignment  	| `var := e_1 << n >> e_2`		| Normally assign to `var` the value of `e_1`, exceptionally (to degree `n`) assign the value of `e2`. **(1)**	|
+|Range assignment	| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
 |If-else		| `if b then s_1 else s_2`		| Regular if-else statement. **(2)** |
+|while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
 |observe		| `observe b`				| Observe condition `b` to hold (eliminate alternatives not satisfying `b` and uniformly shift down alternatives that remain`).	|
 |observe-j		| `observe-j (n) b`			| Like `observe b`, but increase rank of alternatives not satisfying `b` by value of `n`. **(3)**		|
 |observe-l		| `observe-l (n) b`			| Improve rank of alternatives satisfying `b` by `n` units w.r.t. alternatives not satisfying `b`. **(3)**		|
-|print			| `print s`				| Print `s` to console.		|
-|range choice		| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
-|ranked choice  	| `normally (n) s_1 exceptionally s_2`	| Normally execute `s_1`, exceptionally (to degree `n`) execute `s_2`. **(3,4)**	|
-|ranked assignment  	| `var := e_1 << n >> e_2`		| Normally assign to `var` the value of `e_1`, exceptionally (to degree `n`) assign the value of `e2`. **(1)**	|
-|indifferent choice  	| `either s_1 or s_2`			| Same as `normally (0) s_1 exceptionally s_2`. 		|
-|return			| `return e`				| Return `e` as value of program or function		|
-|skip			| `skip`				| Does nothing.		|
-|while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
+|Ranked choice  	| `normally (n) s_1 exceptionally s_2`	| Normally execute `s_1`, exceptionally (to degree `n`) execute `s_2`. **(3,4)**	|
+|Indifferent choice  	| `either s_1 or s_2`			| Same as `normally (0) s_1 exceptionally s_2`. 		|
+|Print			| `print s`				| Print `s` to console.		|
+|Cut			| `cut(n)`				| Eliminate all alternatives ranked higher than `n`. |
+|Return			| `return e`				| Return `e` as value of program or function.		|
+|Skip			| `skip`				| Does nothing.		|
 
-- **(1)**: Variables in this context may be of the form `var[e_1]...[e_n]`, where `e_1`, ..., `e_n` are indices to a (multi-dimensional) array. Referencing elements that are not defined leads to an *value undefined* error. Referencing indices that are less than zero or larger than the size of the array leads to an *index out of bounds* error. 
+- **(1)**: Variables on the left hand side of an assignment, ranked assignment, or ranged choice statement may include array indices. That is, they may be of the form `var[e_1]...[e_n]`, where `e_1`, ..., `e_n` are indices to the (multi-dimensional) array stored in `var`. Illegal indices lead to a *value undefined* or *index out of bounds* error.
 - **(2)**: The `else s_2` part may be omitted. If it is, `s_2` is taken to be the `skip` statement.
-- **(3)**: The rank `(n)` part may be omitted. If it is, `n` defaults to 1.
+- **(3)**: The `(n)` part may be omitted. If it is, `n` defaults to 1.
 - **(4)**: The `exceptionally s_2` part may be omitted. If it is, `s_2` is taken to be the `skip` statement.
 
 ### Expressions
@@ -328,8 +347,8 @@ Expressions in RankPL are either integer, boolean, string, or array-valued. All 
 
 In the list below, we use the following symbols to refer to expressions with specific types:
 - `var`: 	a variable
-- `e`: 		any expression
-- `n`: 		a numerical (integer) expression
+- `e`: 		an expression (any type)
+- `n`: 		an integer expression
 - `b`: 		a boolean expression
 - `s`: 		a string expression
 
@@ -338,10 +357,12 @@ Expressions
 |Expression			|Evaluates to	|Description						|
 |-------------------------------|---------------|-------------------------------------------------------|
 |`abs(n)`			|int		|Absolute value of `i`					|
-|`array(i)`			|array		|Array of length `i` (elements not initialised)		|
-|`[e_1, …, e_n]`			|array		|Array of length `n` initialised with values `e_1`,...,`e_n`|
+|`array(i)`			|array		|Array of length `i`. Elements not initialised.		|
+|`array(i,e)`			|array		|Array of length `i`. Elements initialised to `e`.	|
+|`[e_1, …, e_n]`		|array		|Array of length `n` initialised with values `e_1`,...,`e_n`|
+|`b? e_1: e_2`			|any		|Evaluates to `e_1` iF `B` is TRUE. Evaluates to `e_2` otherwise. |
 |`b_1 & b_2`			|boolean	|Boolean AND						|
-|`b_1 | b_2`			|boolean	|Boolean OR						|
+|`b_1 \| b_2`			|boolean	|Boolean OR						|
 |`b_1 ^ b_2`			|boolean	|Boolean XOR						|
 |`!b`				|boolean	|Boolean NOT						|
 |`e_1 == e_2`			|boolean	|Equality of e1 and e2 **(1)**				|
@@ -357,39 +378,17 @@ Expressions
 |`i_1 * i_2`			|int		|Multiplication						|
 |`i_1 / i_2`			|int		|Division (integer, rounding down)			|
 |`i_1 % i_2`			|int		|Remainder						|
+|`-i`				|int		|Negative `i`						|
 |`rank(b)`			|int		|Rank of boolean expression b **(3)**			|
-|`substring(s, i_1, i_2)`		|string		|Substring of s between index `i_1` (inclusive) and `i_2` (exclusive)|
-|`var`				|any		|Value of variable `var` **(4)**			|
-|`var[e_1]...[e_n]`		|any		|Indexed value of (multi-dimensional) arrya stored in `var`|
+|`substring(s, i_1, i_2)`	|string		|Substring of s between index `i_1` (inclusive) and `i_2` (exclusive)|
+|`var`				|any		|Value of variable `var` 				|
+|`var[e_1]...[e_n]`		|any		|Indexed value of (multi-dimensional) arryay stored in `var`|
 |`functionname(e_1, … e_n)`	|any		|Function call with arguments `e_1`,...,`e_n`		|
 
 Remarks:
 - **(1)**: Equality is always based on value, never on reference. This includes arrays.
 - **(2)**: Applying `+` to one string and one non-string expression results in a string where the value of the non-string expression is converted to a string.
 - **(3)**: Use with caution: can be computationally expensive.
-- **(4)**: A variable is a string starting with a character and otherwise consisting of characters, numbers and underscores. A
-
-### Function definitions and function calls
-
-A function definition has the form
-```
-define function_name(var_1, ..., var_n) {
-	s_1;
-	s_2;
-	...
-};
-```
-A function call is an expression of the form:
-```
-function_name(arg_1, ..., arg_n)
-```
-As usual, the number of arguments supplied with a function call must match the number of parameters of the function. Violation leads to an error. Parameters of functions are untyped. Thus, mistakes due to incorrectly typed arguments may lead to type errors when the function body is executed. Return values are also untyped. Return values are, as usual, specified by a return statement `return e`. A missing return statement will lead to an error. Function definitions may occur anywhere within a RankPL source file. They do not need to be defined prior to use. 
-
-### The main() function
-
-The main entry point of a program (i.e., the code that is executed when a source file is run) is the `main()` function. This is is a function with no parameters, whose return value is the return value of the program. 
-
-If the `main()` function is not explicitly defined then the main function is taken to consist of all unnested statements (i.e., all statements occurring outside of a function definition) in the program. In the latter case, a `return` statement is not obligatory.
 
 # Practical Examples
 

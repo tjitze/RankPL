@@ -31,7 +31,9 @@ Just like *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*
 
 RankPL is a simple imperative programming language extended with statements to draw choices at random from a ranking function and to perform ranking-theoretic conditioning. This makes it possible to model uncertainty expressible by distinguishing normal (rank 0) from surprising (rank > 0) events. 
 
-Drawing choices at random from a ranking function is done through the *ranked choice* construct. Ranking-theoretic conditioning is done using the *observe* statement. Other language features that support ranked programming are the *infer* statement and the special observe statements *observe-j* and *observe-l*. These features are discussed in this section. Because the rest of the language is fairly standard, the examples should be easy to understand. A more complete specification of the language (but less in-depth) is provided in the next section.
+Drawing choices at random from a ranking function is done through the *ranked choice* statement. Ranking-theoretic conditioning is done using the *observe* statement. Other special statements are the *infer* statement and the special observe statements *observe-j* and *observe-l*. 
+
+We discuss these statements in this section. Because the rest of the language is fairly standard, the examples provided here should be easy to understand. A complete specification of the language is provided in the next section.
 
 ### The ranked choice construct
 

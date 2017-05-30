@@ -35,22 +35,22 @@ Drawing choices at random from a ranking function is done through the *ranked ch
 
 We discuss these statements in this section. Because the rest of the language is fairly standard, the examples provided here should be easy to understand. A complete specification of the language is provided in the next section.
 
-### The ranked choice construct
+### The ranked choice statement
 
-The *ranked choice* construct makes it possible to introduce alternative program flows, each associated with a rank. The basic form is as follows.
+The *ranked choice* statement makes it possible to introduce alternative program flows, each associated with a rank. The basic form is as follows.
 ```
 normally (rank) A exceptionally B;
 ```
-where rank is an integer expression and A and B are (block) statements. This statement states that, normally, A 
-is executed, and that B is executed in the exceptional event (surprising to degree `rank`) that it is not. 
-In ranking-theoretic terms, this can be understood as a draw at random from a ranking function over the statements A and B, 
-where the alternative A is ranked 0 and the alternative B is ranked `rank`.
+where `rank` is an integer expression and `A` and `B` are (block) statements. This statement states that, normally, `A` 
+is executed, and that `B` is executed in the exceptional event (surprising to degree `rank`) that it is not. 
+In ranking-theoretic terms, this can be understood as a draw at random from a ranking function over the statements `A` and `B`, 
+where the alternative `A` is ranked 0 and the alternative `B` is ranked `rank`.
 The rank expression may be omitted. If it is, the rank defaults to 1. 
-If the exceptional event B is a no-op (does nothing) then the `exceptionally B` part can be omitted. Thus, the statement
+If the exceptional event `B` is a no-op (does nothing) then the `exceptionally B` part can be omitted. Thus, the statement
 ```
 normally A;
 ```
-simply states that, normally, A executed, and that the event that A is not executed is surprising to degree 1.
+simply states that, normally, `A` executed, and that the event that `A` is not executed is surprising to degree 1.
 
 If we combine ranked choice constructs we obtain larger sets of alternatives. Consider, for example, the program
 ```

@@ -135,11 +135,22 @@ INT
  : [0-9]+
  ;
 
-fragment ESCAPED_QUOTE : '\\"';
-
 QUOTED_STRING 
- : '"' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '"'
+ : '"' SCHAR* '"'
  ;
+
+fragment
+SCHAR
+    :   ~["\\\r\n]
+    |   ESCAPE_SEQUENCE
+    |   '\\\n'   // Added line
+    |   '\\\r\n' // Added line
+    ;
+
+fragment
+ESCAPE_SEQUENCE
+    :   '\\' ['"?abfnrtv\\]
+    ;
 
 COMMENT
  : '#' ~[\r\n]* -> skip

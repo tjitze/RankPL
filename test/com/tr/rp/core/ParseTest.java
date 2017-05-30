@@ -17,7 +17,7 @@ import com.tr.rp.expressions.Not;
 import com.tr.rp.expressions.RankExpr;
 import com.tr.rp.parser.DefProgLexer;
 import com.tr.rp.parser.DefProgParser;
-import com.tr.rp.parser.DefProgParser.ExpressionContext;
+import com.tr.rp.parser.DefProgParser.ExpContext;
 import com.tr.rp.parser.DefProgParser.FunctiondefContext;
 import com.tr.rp.statement.Assign;
 import com.tr.rp.statement.RankedChoice;
@@ -280,7 +280,7 @@ public class ParseTest extends RPLBaseTest {
         DefProgParser parser = new DefProgParser(tokens);
 
         ConcreteParser classVisitor = new ConcreteParser();
-        ExpressionContext ctx = parser.expression();
+        ExpContext ctx = parser.exp();
         Expression res = (Expression)classVisitor.visit(ctx);
         return res;
 	}

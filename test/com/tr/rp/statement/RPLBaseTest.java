@@ -18,7 +18,7 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.expressions.PersistentList;
 import com.tr.rp.parser.DefProgLexer;
 import com.tr.rp.parser.DefProgParser;
-import com.tr.rp.parser.DefProgParser.ExpressionContext;
+import com.tr.rp.parser.DefProgParser.ExpContext;
 
 import junit.framework.TestCase;
 
@@ -96,7 +96,7 @@ public abstract class RPLBaseTest extends TestCase {
         DefProgParser parser = new DefProgParser(tokens);
 
         ConcreteParser classVisitor = new ConcreteParser();
-        ExpressionContext ctx = parser.expression();
+        ExpContext ctx = parser.exp();
         Expression res = (Expression)classVisitor.visit(ctx);
         
         

@@ -24,20 +24,20 @@ import junit.framework.TestCase;
 
 public abstract class RPLBaseTest extends TestCase {
 
-	protected static final VarStore v1 = new VarStore();
-	protected static final VarStore v2 = new VarStore();
-	protected static final VarStore v3 = new VarStore();
+	protected static VarStore v1 = new VarStore();
+	protected static VarStore v2 = new VarStore();
+	protected static VarStore v3 = new VarStore();
 
 	static {
-		v1.setValue("a", 1);
-		v2.setValue("a", 2);
-		v3.setValue("a", 3);
-		v1.setValue("b", 5);
-		v2.setValue("b", 5);
-		v3.setValue("b", 5);
-		v1.setValue("c", 0);
-		v2.setValue("c", 5);
-		v3.setValue("c", 10);
+		v1 = v1.create("a", 1);
+		v2 = v2.create("a", 2);
+		v3 = v3.create("a", 3);
+		v1 = v1.create("b", 5);
+		v2 = v2.create("b", 5);
+		v3 = v3.create("b", 5);
+		v1 = v1.create("c", 0);
+		v2 = v2.create("c", 5);
+		v3 = v3.create("c", 10);
 	}
 
 	protected RankedIterator<VarStore> getTestIterator() {

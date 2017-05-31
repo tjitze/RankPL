@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.organicdesign.fp.collections.PersistentTreeMap;
+
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.expressions.AssignmentTarget;
 
 /**
@@ -17,18 +21,29 @@ import com.tr.rp.expressions.AssignmentTarget;
  */
 public class VarStore {
 
-	private final LinkedHashMap<String, Object> varStore = new LinkedHashMap<String, Object>();
+	private PersistentTreeMap<String, Object> varStore;
 	private volatile static long rwCounter = 0;
 	private final VarStore parent;
 	
 	public VarStore() {
+		varStore = PersistentTreeMap.empty();
 		parent = null;
 	}
 	
 	public VarStore(VarStore parent) {
+		varStore  = PersistentTreeMap.empty();
 		this.parent = parent;
 	}
 	
+	private VarStore(VarStore previous, String var, Object value) {
+		if (value != null) {
+			this.varStore = previous.varStore.assoc(var, value);
+		} else {
+			this.varStore = previous.varStore.without(var);
+		}
+		this.parent = previous.parent;
+	}
+
 	/**
 	 * @return Value of given variable (0 if not initialized).
 	 */
@@ -36,49 +51,86 @@ public class VarStore {
 		return varStore.get(var);
 	}
 	
+	/**
+	 * Get integer value of variable
+	 * 
+	 * @param var Name of variable to get
+	 * @return Integer value of variable
+	 * @throws RPLException If variable is undefined or not an integer
+	 */
 	public int getIntValue(String var) throws RPLException {
 		Object o = getValue(var);
 		if (o != null && o instanceof Integer) {
 			return (Integer)o;
+		} else if (o == null) {
+			throw new RPLUndefinedException(var);
 		} else {
 			throw new RPLTypeError("integer", o);
 		}
 	}
 
+	/**
+	 * Get boolean value of variable
+	 * 
+	 * @param var Name of variable to get
+	 * @return Boolean value of variable
+	 * @throws RPLException If variable is undefined or not boolean
+	 */
 	public boolean getBoolValue(String var) throws RPLException {
 		Object o = getValue(var);
 		if (o != null && o instanceof Boolean) {
 			return (Boolean)o;
+		} else if (o == null) {
+			throw new RPLUndefinedException(var);
 		} else {
 			throw new RPLTypeError("boolean", o);
 		}
 	}
 	
+	/**
+	 * Get String value of variable
+	 * 
+	 * @param var Name of variable to get
+	 * @return String value of variable
+	 * @throws RPLException If variable is undefined or not String
+	 */
 	public String getStringValue(String var) throws RPLException {
 		Object o = getValue(var);
 		if (o != null && o instanceof String) {
 			return (String)o;
+		} else if (o == null) {
+			throw new RPLUndefinedException(var);
 		} else {
 			throw new RPLTypeError("string", o);
 		}
 	}
 	
 	/**
-	 * Set value of given variable.
-	 */
-	public void setValue(String var, Object value) {
-		varStore.put(var, value);
-	}
-
-	/**
+	 * Mutates this variable store. Returns a new variable store where the
+	 * given variable is set to the given value, without changing the
+	 * original variable store. Using a null value will un-set the variable.
+	 * 
 	 * @return A new variable store where var is set to value.
 	 */
 	public VarStore create(String var, Object value) {
-		if (getValue(var) != null && value.equals(getValue(var))) return this;
-		VarStore v = new VarStore(parent);
-		v.varStore.putAll(varStore);
-		v.setValue(var, value);
-		return v;
+		if (Objects.equals(varStore.get(var), value)) {
+			return this;
+		}
+		return new VarStore(this, var, value);
+	}
+	
+	/**
+	 * Internal method to set value of variable.
+     *
+	 * @param var name of variable to set
+	 * @param value the value
+	 */
+	protected void setValue(String var, Object value) {
+		if (value == null) {
+			varStore = varStore.without(var);
+		} else {
+			varStore = varStore.assoc(var, value);
+		}
 	}
 	
 	/**
@@ -86,10 +138,7 @@ public class VarStore {
 	 */
 	public VarStore unset(String var) {
 		if (getValue(var) == null) return this;
-		VarStore v = new VarStore(parent);
-		v.varStore.putAll(varStore);
-		v.varStore.remove(var);
-		return v;
+		return new VarStore(this, var, null);
 	}
 	
 	/**
@@ -97,9 +146,12 @@ public class VarStore {
 	 */
 	public VarStore marginalize(List<String> vars) {
 		VarStore v = new VarStore(parent);
-		varStore.keySet().stream()
-			.filter(var -> vars.contains(var))
-			.forEach(var -> v.varStore.put(var, varStore.get(var)));
+		for (String var: vars) {
+			Object value = varStore.get(var);
+			if (value != null) {
+				v = v.create(var, value);
+			}
+		}
 		return v;
 	}
 
@@ -159,11 +211,12 @@ public class VarStore {
 		if (parameters.length != arguments.length) {
 			throw new InternalError("Wrong number of arguments");
 		}
+		// Create new var store with parameters
 		VarStore v = new VarStore(this);
 		for (int i = 0; i < parameters.length; i++) {
 			String var = parameters[i];
 			Expression expr = arguments[i];
-			v.setValue(var, expr.getValue(this));
+			v = new VarStore(v, var, expr.getValue(this));
 		}
 		return v;
 	}

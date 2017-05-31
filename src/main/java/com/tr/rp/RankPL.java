@@ -23,8 +23,8 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import com.tr.rp.core.ConcreteParser;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.parser.DefProgLexer;
-import com.tr.rp.parser.DefProgParser;
+import com.tr.rp.parser.RankPLLexer;
+import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.statement.Program;
 
 public class RankPL {
@@ -53,9 +53,9 @@ public class RankPL {
 			System.err.println("I/O Exception while reading file: " + e.getMessage());
 			return;
         }
-        DefProgLexer lexer = new DefProgLexer(input);
+        RankPLLexer lexer = new RankPLLexer(input);
         TokenStream tokens = new CommonTokenStream(lexer);
-        DefProgParser parser = new DefProgParser(tokens);
+        RankPLParser parser = new RankPLParser(tokens);
         parser.setErrorHandler(new BailErrorStrategy());
         ConcreteParser classVisitor = new ConcreteParser();
         
@@ -73,7 +73,7 @@ public class RankPL {
         } catch (ParseCancellationException e) {
         	// Ugly hack to get parse exceptions: re-parse but now without the bail error strategy
 			System.out.println("Syntax error");
-            parser = new DefProgParser(tokens);
+            parser = new RankPLParser(tokens);
             classVisitor.visit(parser.program());
         } catch (Exception e) {
 			e.printStackTrace();

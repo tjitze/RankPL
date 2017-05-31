@@ -1,4 +1,4 @@
-grammar DefProg;
+grammar RankPL;
 
 parse
  : program

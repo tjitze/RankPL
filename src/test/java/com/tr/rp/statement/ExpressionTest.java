@@ -19,17 +19,17 @@ import com.tr.rp.expressions.Literal;
 import com.tr.rp.expressions.PersistentList;
 import com.tr.rp.expressions.Plus;
 import com.tr.rp.expressions.Variable;
-import com.tr.rp.parser.DefProgLexer;
-import com.tr.rp.parser.DefProgParser;
-import com.tr.rp.parser.DefProgParser.ExpContext;
+import com.tr.rp.parser.RankPLLexer;
+import com.tr.rp.parser.RankPLParser;
+import com.tr.rp.parser.RankPLParser.ExpContext;
 
 public class ExpressionTest extends RPLBaseTest {
 
 	private Object evalExp(String expression) throws RPLException {
         CharStream charStream = new ANTLRInputStream(expression);
-        DefProgLexer lexer = new DefProgLexer(charStream);
+        RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
-        DefProgParser parser = new DefProgParser(tokens);
+        RankPLParser parser = new RankPLParser(tokens);
 
         ConcreteParser classVisitor = new ConcreteParser();
         ExpContext ctx = parser.exp();

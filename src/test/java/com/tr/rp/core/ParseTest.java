@@ -12,10 +12,10 @@ import org.antlr.v4.runtime.TokenStream;
 import com.tr.rp.expressions.ArrayConstructExpression;
 import com.tr.rp.expressions.Expressions;
 import com.tr.rp.expressions.Variable;
-import com.tr.rp.parser.DefProgLexer;
-import com.tr.rp.parser.DefProgParser;
-import com.tr.rp.parser.DefProgParser.ExpContext;
-import com.tr.rp.parser.DefProgParser.FunctiondefContext;
+import com.tr.rp.parser.RankPLLexer;
+import com.tr.rp.parser.RankPLParser;
+import com.tr.rp.parser.RankPLParser.ExpContext;
+import com.tr.rp.parser.RankPLParser.FunctiondefContext;
 import com.tr.rp.expressions.Literal;
 import com.tr.rp.expressions.Not;
 import com.tr.rp.expressions.RankExpr;
@@ -266,9 +266,9 @@ public class ParseTest extends RPLBaseTest {
 			code += ";";
 		}
         CharStream charStream = new ANTLRInputStream(code);
-        DefProgLexer lexer = new DefProgLexer(charStream);
+        RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
-        DefProgParser parser = new DefProgParser(tokens);
+        RankPLParser parser = new RankPLParser(tokens);
 
         ConcreteParser classVisitor = new ConcreteParser();
         return ((Program)classVisitor.visit(parser.program())).getBody();
@@ -276,9 +276,9 @@ public class ParseTest extends RPLBaseTest {
 	
 	private Expression parseExpr(String code) {
         CharStream charStream = new ANTLRInputStream(code);
-        DefProgLexer lexer = new DefProgLexer(charStream);
+        RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
-        DefProgParser parser = new DefProgParser(tokens);
+        RankPLParser parser = new RankPLParser(tokens);
 
         ConcreteParser classVisitor = new ConcreteParser();
         ExpContext ctx = parser.exp();
@@ -288,9 +288,9 @@ public class ParseTest extends RPLBaseTest {
 
 	private Function parseFunctionDef(String code) {
         CharStream charStream = new ANTLRInputStream(code);
-        DefProgLexer lexer = new DefProgLexer(charStream);
+        RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
-        DefProgParser parser = new DefProgParser(tokens);
+        RankPLParser parser = new RankPLParser(tokens);
 
         ConcreteParser classVisitor = new ConcreteParser();
         FunctiondefContext ctx = parser.functiondef();

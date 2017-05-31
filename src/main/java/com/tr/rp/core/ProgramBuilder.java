@@ -5,8 +5,8 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
-import com.tr.rp.parser.DefProgLexer;
-import com.tr.rp.parser.DefProgParser;
+import com.tr.rp.parser.RankPLLexer;
+import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.statement.Composition;
 
 /**
@@ -32,9 +32,9 @@ public class ProgramBuilder {
 	
 	public ProgramBuilder add(String statement) {
         CharStream charStream = new ANTLRInputStream(statement);
-        DefProgLexer lexer = new DefProgLexer(charStream);
+        RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
-        DefProgParser parser = new DefProgParser(tokens);
+        RankPLParser parser = new RankPLParser(tokens);
         ConcreteParser classVisitor = new ConcreteParser();
         return add((DStatement)classVisitor.visit(parser.program()));
 	}

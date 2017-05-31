@@ -1,9 +1,5 @@
 grammar DefProg;
 
-@header {
-package com.tr.rp.parser;
-}
-
 parse
  : program
  ;

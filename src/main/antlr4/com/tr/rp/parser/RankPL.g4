@@ -21,6 +21,7 @@ stat
  : assignment_target ':=' exp							# AssignmentStatement
  | assignment_target ':=' exp '<<' exp '>>' exp			# ChoiceAssignmentStatement
  | assignment_target ':=' '<<' exp '...' exp '>>'		# RangeChoiceStatement
+ | assignment_target ':=' ReadFile '(' exp ')'			# ReadFileStatement
  | If exp Then stat (Else stat)? 						# IfStatement
  | While exp Do stat									# WhileStatement
  | For '(' stat ';' exp ';' stat ')' stat				# ForStatement
@@ -84,6 +85,7 @@ expr6
  ;
 
 Define:			'define' | 'DEFINE';
+ReadFile:		'readfile' | 'READFILE';
 If: 			'if' | 'IF';
 Then: 			'then' | 'THEN';
 Else: 			'else' | 'ELSE';

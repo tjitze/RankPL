@@ -66,6 +66,7 @@ import com.tr.rp.parser.RankPLParser.ProgramContext;
 import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.RankExprContext;
 import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
+import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
 import com.tr.rp.parser.RankPLParser.SkipStatementContext;
 import com.tr.rp.parser.RankPLParser.StatContext;
@@ -76,6 +77,7 @@ import com.tr.rp.parser.RankPLParser.VariableExpressionContext;
 import com.tr.rp.parser.RankPLParser.WhileStatementContext;
 import com.tr.rp.statement.Assign;
 import com.tr.rp.statement.RankedChoice;
+import com.tr.rp.statement.ReadFile;
 import com.tr.rp.statement.Return;
 import com.tr.rp.statement.Composition;
 import com.tr.rp.statement.Cut;
@@ -209,6 +211,13 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		Expression a = (Expression)visit(ctx.exp().get(0));
 		Expression b = (Expression)visit(ctx.exp().get(1));
 		return new RangeChoice(target, a, b);
+	}
+
+	@Override
+	public LanguageElement visitReadFileStatement(ReadFileStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		Expression fileName = (Expression)visit(ctx.exp());
+		return new ReadFile(target, fileName, ReadFile.InputMethod.OnePerLine);
 	}
 
 	@Override

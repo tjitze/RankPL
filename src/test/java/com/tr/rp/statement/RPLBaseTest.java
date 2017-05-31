@@ -16,9 +16,9 @@ import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.expressions.PersistentList;
-import com.tr.rp.parser.DefProgLexer;
-import com.tr.rp.parser.DefProgParser;
-import com.tr.rp.parser.DefProgParser.ExpContext;
+import com.tr.rp.parser.RankPLLexer;
+import com.tr.rp.parser.RankPLParser;
+import com.tr.rp.parser.RankPLParser.ExpContext;
 
 import junit.framework.TestCase;
 
@@ -91,9 +91,9 @@ public abstract class RPLBaseTest extends TestCase {
 	
 	protected static Object evalProgram(String program) {
         CharStream charStream = new ANTLRInputStream(program);
-        DefProgLexer lexer = new DefProgLexer(charStream);
+        RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
-        DefProgParser parser = new DefProgParser(tokens);
+        RankPLParser parser = new RankPLParser(tokens);
 
         ConcreteParser classVisitor = new ConcreteParser();
         ExpContext ctx = parser.exp();

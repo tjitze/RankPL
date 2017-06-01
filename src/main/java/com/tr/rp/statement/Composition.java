@@ -85,11 +85,6 @@ public class Composition extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return first.containsVariable(var) || second.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Composition((DStatement)this.first.replaceVariable(a, b),
 				(DStatement)this.second.replaceVariable(a, b));

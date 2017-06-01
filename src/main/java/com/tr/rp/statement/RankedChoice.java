@@ -123,13 +123,6 @@ public class RankedChoice extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return s1.containsVariable(var) ||
-			s2.containsVariable(var) ||
-			rank.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new RankedChoice((DStatement)s1.replaceVariable(a, b),
 				(DStatement)s2.replaceVariable(a, b),

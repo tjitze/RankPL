@@ -24,11 +24,6 @@ public class Skip extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return false;
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return this;
 	}

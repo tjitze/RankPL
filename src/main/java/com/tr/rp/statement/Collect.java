@@ -112,11 +112,6 @@ public class Collect extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String name) {
-		return variable.containsVariable(name);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Collect((AssignmentTarget)target.replaceVariable(a, b), (Variable)variable.replaceVariable(a, b));
 	}

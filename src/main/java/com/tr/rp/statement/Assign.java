@@ -116,11 +116,6 @@ public class Assign extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String name) {
-		return variable.containsVariable(name)  || value.containsVariable(name);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Assign((AssignmentTarget)variable.replaceVariable(a, b), (Expression)value.replaceVariable(a, b));
 	}

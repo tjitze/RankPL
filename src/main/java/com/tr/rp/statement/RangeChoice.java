@@ -139,13 +139,6 @@ public class RangeChoice extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return variable.equals(var) ||
-				beginExp.containsVariable(var) ||
-				endExp.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new RangeChoice((AssignmentTarget)variable.replaceVariable(a, b), 
 				(Expression)beginExp.replaceVariable(a, b),

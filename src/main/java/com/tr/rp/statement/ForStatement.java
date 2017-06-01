@@ -101,14 +101,6 @@ public class ForStatement extends DStatement {
 				((ForStatement)o).body.equals(body) &&
 				((ForStatement)o).next.equals(next);
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return init.containsVariable(var) || 
-				body.containsVariable(var) || 
-				next.containsVariable(var) || 
-				forCondition.containsVariable(var);
-	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

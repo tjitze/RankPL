@@ -17,11 +17,6 @@ public class Abs extends Expression {
 	public Abs(Expression e) {
 		this.e = e;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return e.containsVariable(var);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

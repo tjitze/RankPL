@@ -22,11 +22,6 @@ public class Variable extends Expression {
 	public Variable(String name) {
 		this.name = name;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return var.equals(name);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

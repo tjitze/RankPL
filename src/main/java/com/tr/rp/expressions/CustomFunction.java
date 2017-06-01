@@ -26,11 +26,6 @@ public class CustomFunction<T> extends Expression {
 	private CustomFunction(Function<VarStore, T> fn) {
 		this.fn = fn;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return false;
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

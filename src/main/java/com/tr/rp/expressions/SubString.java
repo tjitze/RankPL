@@ -20,12 +20,6 @@ public class SubString extends Expression {
 		this.begin = start;
 		this.end = end;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return input.containsVariable(var) || begin.containsVariable(var)
-				|| end.containsVariable(var);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

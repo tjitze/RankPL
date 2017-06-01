@@ -27,11 +27,6 @@ public class ArrayConstructExpression extends Expression {
 			this.values[i] = new Literal<Integer>(values[i]);
 		}
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return Arrays.stream(values).anyMatch(e -> e.containsVariable(var));
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

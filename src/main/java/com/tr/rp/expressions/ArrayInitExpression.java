@@ -28,11 +28,6 @@ public class ArrayInitExpression extends Expression {
 		this.dimension = dimension;
 		this.initValue = initValue;
 	}
-		
-	@Override
-	public boolean containsVariable(String var) {
-		return dimension.containsVariable(var) || (initValue != null && initValue.containsVariable(var));
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

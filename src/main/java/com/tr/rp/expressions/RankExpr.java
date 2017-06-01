@@ -77,11 +77,6 @@ public class RankExpr extends Expression {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return b.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new RankExpr((Expression)this.b.replaceVariable(a, b));
 	}

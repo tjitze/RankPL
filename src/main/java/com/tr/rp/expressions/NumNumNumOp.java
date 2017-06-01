@@ -18,10 +18,6 @@ public class NumNumNumOp extends Expression {
 		this.e2 = e2;
 		this.f = f;
 	}
-	@Override
-	public boolean containsVariable(String var) {
-		return e1.containsVariable(var) || e2.containsVariable(var);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

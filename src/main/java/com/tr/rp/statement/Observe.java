@@ -124,11 +124,6 @@ public class Observe extends DStatement {
 	}
 	
 	@Override
-	public boolean containsVariable(String var) {
-		return exp.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Observe((Expression)exp.replaceVariable(a, b));
 	}

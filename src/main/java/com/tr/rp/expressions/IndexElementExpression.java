@@ -27,12 +27,6 @@ public class IndexElementExpression extends Expression {
 		this.exp = exp;
 		this.indices = indices;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return exp.containsVariable(var) ||
-				Arrays.stream(indices).anyMatch(e -> e.containsVariable(var));
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

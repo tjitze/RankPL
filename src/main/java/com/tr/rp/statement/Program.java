@@ -38,11 +38,6 @@ public class Program extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return false;
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		// nop
 	}

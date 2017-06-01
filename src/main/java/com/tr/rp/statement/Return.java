@@ -50,11 +50,6 @@ public class Return extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return exp.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Return((Expression)exp.replaceVariable(a, b));
 	}

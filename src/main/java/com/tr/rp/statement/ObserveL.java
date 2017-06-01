@@ -95,11 +95,6 @@ public class ObserveL extends DStatement {
 	}	
 
 	@Override
-	public boolean containsVariable(String var) {
-		return b.containsVariable(var) || rank.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new ObserveL((Expression)this.b.replaceVariable(a, b), (Expression)rank.replaceVariable(a, b));
 	}

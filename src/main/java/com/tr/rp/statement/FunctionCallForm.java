@@ -52,17 +52,6 @@ public class FunctionCallForm extends DStatement {
 		return chainedIterator;
 	}
 
-
-	@Override
-	public boolean containsVariable(String var) {
-		for (Pair<String, AbstractFunctionCall> assignment: assignments) {
-			if (assignment.b.containsVariable(var)) {
-				return true;
-			}
-		}
-		return statement.containsVariable(var);
-	}
-
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		List<Pair<String, AbstractFunctionCall>> rewrittenAssingments = new ArrayList<Pair<String, AbstractFunctionCall>>();

@@ -105,13 +105,6 @@ public class IfElse extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return a.containsVariable(var) ||
-			b.containsVariable(var) ||
-			exp.containsVariable(var);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new IfElse((Expression)exp.replaceVariable(a, b),
 				(DStatement)this.a.replaceVariable(a, b),

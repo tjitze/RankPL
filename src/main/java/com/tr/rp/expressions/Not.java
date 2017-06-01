@@ -17,11 +17,6 @@ public class Not extends Expression {
 	public Not(Expression e) {
 		this.e = e;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return e.containsVariable(var);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

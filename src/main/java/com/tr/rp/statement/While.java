@@ -94,11 +94,6 @@ public class While extends DStatement {
 				((While)o).whileCondition.equals(whileCondition) &&
 				((While)o).body.equals(body);
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return body.containsVariable(var) || whileCondition.containsVariable(var);
-	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

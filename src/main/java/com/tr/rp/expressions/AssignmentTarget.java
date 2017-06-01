@@ -26,11 +26,6 @@ public class AssignmentTarget extends Expression {
 		this.name = name;
 		this.indices = indices;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return Arrays.stream(indices).anyMatch(e -> e.containsVariable(var)) || var.equals(name);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

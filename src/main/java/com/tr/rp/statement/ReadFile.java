@@ -74,11 +74,6 @@ public class ReadFile extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		return target.containsVariable(var) || path.containsVariable(var);
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		target.getVariables(list);
 		path.getVariables(list);

@@ -25,11 +25,6 @@ public class Equals extends Expression {
 		this.e1 = e1;
 		this.e2 = e2;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return e1.containsVariable(var) || e2.containsVariable(var);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

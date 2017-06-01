@@ -20,11 +20,6 @@ public class IsSet extends Expression {
 	public IsSet(Expression exp) {
 		this.exp = exp;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return this.exp.containsVariable(var);
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

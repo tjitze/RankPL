@@ -5,16 +5,18 @@ import java.util.Set;
 public interface LanguageElement {
 
 	/**
-	 * Return true if this element contains (possibly as a sub expression)
-	 * a variable with given name.
+	 * Return list of variables occurring in this language element.
+     *
+	 * @param list Variables occurring in this language element
 	 */
-	public boolean containsVariable(String var);
-	
 	public void getVariables(Set<String> list);
-	
+
 	/**
-	 * Return a copy of this element where all occurrences of the variable
-	 * called 'a' are replaced with variables called 'b'.
+	 * Replace occurrences of variable a with b.
+	 * 
+	 * @param a Variable to replace
+	 * @param b Variable to replace with
+	 * @return Transformed language element.
 	 */
 	public LanguageElement replaceVariable(String a, String b);
 	

@@ -18,11 +18,6 @@ public class Literal<T> extends Expression {
 	public Literal(T value) {
 		this.value = value;
 	}
-	
-	@Override
-	public boolean containsVariable(String var) {
-		return false;
-	}
 
 	@Override
 	public void getVariables(Set<String> list) {

@@ -56,11 +56,6 @@ public class PrintStatement extends DStatement {
 	}
 
 	@Override
-	public boolean containsVariable(String name) {
-		return exp.containsVariable(name);
-	}
-
-	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new PrintStatement((Expression)exp.replaceVariable(a, b));
 	}

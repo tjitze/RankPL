@@ -35,16 +35,6 @@ public abstract class AbstractFunctionCall extends Expression {
 		this.functionScope = functionScope;
 		this.arguments = arguments;
 	}
-	
-	@Override
-	public final boolean containsVariable(String var) {
-		for (Expression arg: arguments) {
-			if (arg.containsVariable(var)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public final String getFunctionName() {
 		return functionName;

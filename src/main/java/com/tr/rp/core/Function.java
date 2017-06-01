@@ -40,11 +40,6 @@ public class Function implements LanguageElement {
 	}
 
 	@Override
-	public boolean containsVariable(String var) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		throw new UnsupportedOperationException();
 	}

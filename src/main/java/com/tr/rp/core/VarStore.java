@@ -1,12 +1,7 @@
 package com.tr.rp.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.organicdesign.fp.collections.PersistentTreeMap;
@@ -14,7 +9,6 @@ import org.organicdesign.fp.collections.PersistentTreeMap;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
-import com.tr.rp.expressions.AssignmentTarget;
 
 /**
  * Represents a variable store: an assignment of values to variables.

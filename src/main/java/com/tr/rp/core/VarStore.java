@@ -16,8 +16,14 @@ import com.tr.rp.exceptions.RPLUndefinedException;
 public class VarStore {
 
 	private PersistentTreeMap<String, Object> varStore;
-	private volatile static long rwCounter = 0;
 	private final VarStore parent;
+
+	// Global counter to generate unique variable names
+	private volatile static long rwCounter = 0;
+
+	// Hash code caching
+	private int hashCode = 0;
+	private boolean hashCodeComputed = false;
 	
 	public VarStore() {
 		varStore = PersistentTreeMap.empty();
@@ -151,13 +157,20 @@ public class VarStore {
 
 	public boolean equals(Object o) {
 		if (o instanceof VarStore) {
+			if (parent != null && !parent.equals(((VarStore)o).parent)) {
+				return false;
+			}
 			return ((VarStore)o).varStore.equals(varStore);
 		}
 		return false;
 	}
 	
 	public int hashCode() {
-		return varStore.hashCode();
+		if (!hashCodeComputed) {
+			hashCode = varStore.hashCode() + (parent != null? parent.hashCode: 0);
+			hashCodeComputed = true;
+		}
+		return hashCode;
 	}
 	
 	public String toString() {

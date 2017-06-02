@@ -13,6 +13,11 @@ import com.tr.rp.exceptions.RPLException;
  */
 public class Literal<T> extends Expression {
 
+	public static final Literal<Integer> ZERO = new Literal<Integer>(0);
+	public static final Literal<Integer> MAX = new Literal<Integer>(Integer.MAX_VALUE);
+	public static final Literal<Boolean> TRUE = new Literal<Boolean>(true);
+	public static final Literal<Boolean> FALSE = new Literal<Boolean>(false);
+	
 	private final T value;
 	
 	public Literal(T value) {

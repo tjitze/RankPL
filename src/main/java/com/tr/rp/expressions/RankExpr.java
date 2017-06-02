@@ -36,9 +36,9 @@ public class RankExpr extends Expression {
 		// If so, we can rewrite it immediately
 		if (b.hasDefiniteValue()) {
 			if (b.getDefiniteBoolValue()) {
-				return new Literal<Integer>(0);
+				return Literal.ZERO;
 			} else {
-				return new Literal<Integer>(Integer.MAX_VALUE);
+				return Literal.MAX;
 			}
 		}
 		// Otherwise, rewrite to rank if expression is true

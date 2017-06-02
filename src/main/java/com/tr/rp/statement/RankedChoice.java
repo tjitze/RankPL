@@ -62,7 +62,7 @@ public class RankedChoice extends DStatement {
 	public RankedChoice(DStatement s1, DStatement s2) {
 		this.s1 = s1;
 		this.s2 = s2;
-		this.rank = new Literal<Integer>(0);
+		this.rank = Literal.ZERO;
 	}
 	
 	public RankedChoice(AssignmentTarget var, int[] values, int rankIncrement) {

@@ -9,6 +9,7 @@ import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -50,11 +51,10 @@ public class ObserveL extends DStatement {
 			Expression rb = new RankExpr(b);
 			Expression rnb = new RankExpr(new Not(b));
 			// Do rank transformation here
-			Expression temp = Expressions.plus(rb, rnb);
 			RankTransformIterator rt = 
-					new RankTransformIterator(in, temp);
-			rb = ((Plus)temp).getE1();
-			rnb = ((Plus)temp).getE2();
+					new RankTransformIterator(in, rb, rnb);
+			rb = rt.getExpression(0);
+			rnb = rt.getExpression(1);
 			Expression cond = Expressions.leq(rb, rank);
 			Expression r1 = Expressions.minus(Expressions.plus(rank, rnb), rb);
 			Expression r2 = Expressions.minus(rb, rank);

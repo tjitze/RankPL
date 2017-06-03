@@ -8,6 +8,7 @@ import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.MergingIterator;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
@@ -34,15 +35,15 @@ public class IfElse extends DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
 		try {
 			// If exp is contradiction/tautology we
 			// can immediately pass the a/b iterator.
 			if (exp.hasDefiniteValue()) {
 				if (exp.getDefiniteBoolValue()) {
-					return a.getIterator(parent);
+					return a.getIterator(parent, c);
 				} else {
-					return b.getIterator(parent);
+					return b.getIterator(parent, c);
 				}
 			}
 			
@@ -54,9 +55,9 @@ public class IfElse extends DStatement {
 			// Check contradiction/tautology again.
 			if (exp.hasDefiniteValue()) {
 				if (exp.getDefiniteBoolValue()) {
-					return a.getIterator(parent);
+					return a.getIterator(parent, c);
 				} else {
-					return b.getIterator(parent);
+					return b.getIterator(parent, c);
 				}
 			}
 			
@@ -64,8 +65,8 @@ public class IfElse extends DStatement {
 			IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
 	
 			// Apply condition 
-			RankedIterator<VarStore> ia1 = new Observe(exp2).getIterator(split.getA());
-			RankedIterator<VarStore> ia2 = new Observe(new Not(exp2)).getIterator(split.getB());
+			RankedIterator<VarStore> ia1 = new Observe(exp2).getIterator(split.getA(), c);
+			RankedIterator<VarStore> ia2 = new Observe(new Not(exp2)).getIterator(split.getB(), c);
 			
 			// Remember offsets (prior ranks of the conditions)
 			int offset1 = ia1.getConditioningOffset();
@@ -77,8 +78,8 @@ public class IfElse extends DStatement {
 			}
 			
 			// Execute statements
-			RankedIterator<VarStore> ib1 = a.getIterator(ia1);
-			RankedIterator<VarStore> ib2 = b.getIterator(ia2);
+			RankedIterator<VarStore> ib1 = a.getIterator(ia1, c);
+			RankedIterator<VarStore> ib2 = b.getIterator(ia2, c);
 	
 			// Merge result
 			RankedIterator<VarStore> rc = new MergingIterator(ib1, ib2, offset1, offset2);

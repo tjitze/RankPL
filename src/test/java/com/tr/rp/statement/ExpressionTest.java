@@ -10,6 +10,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -37,7 +38,7 @@ public class ExpressionTest extends RPLBaseTest {
         assertNotNull(exp);
 
         DStatement st = new Assign("$return", exp);
-        RankedIterator<VarStore> it = st.getIterator(new InitialVarStoreIterator(new TestVarStore()));
+        RankedIterator<VarStore> it = st.getIterator(new InitialVarStoreIterator(new TestVarStore()), ExecutionContext.createDefault());
         assert (it.next());
         VarStore res = it.getItem();
         assert (res.containsVar("$return"));

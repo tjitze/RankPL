@@ -9,6 +9,7 @@ import com.tr.rp.core.Expression;
 import com.tr.rp.core.FunctionScope;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.MultiMergeIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -72,7 +73,7 @@ public class InferringFunctionCall extends AbstractFunctionCall {
 		return false;
 	}
 
-	public RankedIterator<VarStore> getIterator(Expression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
+	public RankedIterator<VarStore> getIterator(ExecutionContext c, Expression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
 		return new MultiMergeIterator<VarStore>(parent) {
 
 			@Override
@@ -83,7 +84,7 @@ public class InferringFunctionCall extends AbstractFunctionCall {
 				}
 				VarStore closure = in.createClosure(getFunction().getParameters(), arguments);
 				RankedIterator<VarStore> i = new InitialVarStoreIterator(closure);
-				RankedIterator<VarStore> pre = getFunction().getBody().getIterator(i);
+				RankedIterator<VarStore> pre = getFunction().getBody().getIterator(i, c);
 				List<Object> values = new ArrayList<Object>();
 				while (pre.next() && pre.getRank() == 0) {
 					if (!pre.getItem().containsVar("$return")) {

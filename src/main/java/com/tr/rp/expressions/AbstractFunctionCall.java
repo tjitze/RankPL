@@ -9,6 +9,7 @@ import com.tr.rp.core.Function;
 import com.tr.rp.core.FunctionScope;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.MultiMergeIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -101,6 +102,6 @@ public abstract class AbstractFunctionCall extends Expression {
 		return functionScope;
 	}
 	
-	public abstract RankedIterator<VarStore> getIterator(Expression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException;
+	public abstract RankedIterator<VarStore> getIterator(ExecutionContext c, Expression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException;
 
 }

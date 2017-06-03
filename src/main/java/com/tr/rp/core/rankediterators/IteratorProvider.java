@@ -7,6 +7,6 @@ import com.tr.rp.exceptions.RPLException;
  */
 public interface IteratorProvider<T> {
 
-	public RankedIterator<T> getIterator(RankedIterator<T> parent) throws RPLException;
+	public RankedIterator<T> getIterator(RankedIterator<T> parent, ExecutionContext c) throws RPLException;
 	
 }

@@ -4,6 +4,7 @@ import static com.tr.rp.expressions.Expressions.*;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.expressions.Variable;
@@ -17,7 +18,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		
 		// s1 [0] s2
 		RankedChoice c = new RankedChoice(s1, s2, 0);
-		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		assertEquals(11, result.getItem().getIntValue("b"));
@@ -47,7 +48,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		
 		// s1 [1] s2
 		c = new RankedChoice(s1, s2, 1);
-		result = c.getIterator(getTestIterator());
+		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		assertEquals(11, result.getItem().getIntValue("b"));
@@ -77,7 +78,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 
 		// s1 [2] s2
 		c = new RankedChoice(s1, s2, 2);
-		result = c.getIterator(getTestIterator());
+		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(11, result.getItem().getIntValue("b"));
@@ -107,7 +108,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 
 		// s1 [3] s2
 		c = new RankedChoice(s1, s2, 3);
-		result = c.getIterator(getTestIterator());
+		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(11, result.getItem().getIntValue("b"));
@@ -137,7 +138,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 
 		// skip left
 		c = new RankedChoice(new Skip(), s1, 3);
-		result = c.getIterator(getTestIterator());
+		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		assertEquals(5, result.getItem().getIntValue("b"));
@@ -167,7 +168,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		
 		// skip right
 		c = new RankedChoice(s1, new Skip(), 3);
-		result = c.getIterator(getTestIterator());
+		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		assertEquals(11, result.getItem().getIntValue("b"));
@@ -202,7 +203,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		
 		// {observe false [3] b = a + 10}
 		RankedChoice c = new RankedChoice(new Observe(new Literal<Boolean>(false)), s1, 3);
-		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		// Note: shifted down to 0
 		assertEquals(true, result.next());
@@ -226,7 +227,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		
 		// {observe b = a + 10 [3] false}
 		RankedChoice c = new RankedChoice(s1, new Observe(new Literal<Boolean>(false)), 3);
-		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		assertEquals(11, result.getItem().getIntValue("b"));
@@ -249,7 +250,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 				new Observe(new Literal<Boolean>(false)), 
 				new Observe(new Literal<Boolean>(true)), 
 				new Variable("c"));
-		RankedIterator<VarStore> result = c.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		int value = result.getItem().getIntValue("c");
@@ -275,7 +276,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 				new Observe(new Literal<Boolean>(false)), 
 				new Observe(new Literal<Boolean>(true)), 
 				new Variable("b"));
-		result = c.getIterator(getTestIterator());
+		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		assertEquals(5, result.getItem().getIntValue("b"));

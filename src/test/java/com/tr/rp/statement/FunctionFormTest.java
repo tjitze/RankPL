@@ -11,6 +11,7 @@ import com.tr.rp.core.Function;
 import com.tr.rp.core.FunctionScope;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -72,7 +73,7 @@ public class FunctionFormTest extends RPLBaseTest {
 				.add(new Assign("b", new FunctionCall("test1", scope, args)))
 				.build();
 		s = s.rewriteEmbeddedFunctionCalls();
-		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, it.next());
 		VarStore v = it.getItem();
@@ -117,7 +118,7 @@ public class FunctionFormTest extends RPLBaseTest {
 				.add(new Assign("b", new FunctionCall("test1", scope, args2)))
 				.build();
 		s = s.rewriteEmbeddedFunctionCalls();
-		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, it.next());
 		VarStore v = it.getItem();
@@ -136,7 +137,7 @@ public class FunctionFormTest extends RPLBaseTest {
 				.add(new Assign("b", new FunctionCall("test2", scope, args)))
 				.build();
 		s = s.rewriteEmbeddedFunctionCalls();
-		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> it = s.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, it.next());
 		assertEquals(0, it.getRank());

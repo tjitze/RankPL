@@ -6,6 +6,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -25,7 +26,7 @@ public class WhileTest extends RPLBaseTest {
 				.add(new Assign("y", 0))
 				.add(new While(c, s))
 				.build();
-		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
 		assertEquals(3, result.getItem().getIntValue("y"));

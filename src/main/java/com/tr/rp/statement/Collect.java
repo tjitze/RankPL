@@ -10,6 +10,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.expressions.AssignmentTarget;
@@ -36,7 +37,7 @@ public class Collect extends DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		// Get all zero ranked variable stores
 		List<VarStore> zeroRankVarStores = new ArrayList<VarStore>();
 		boolean hasNext = in.next();

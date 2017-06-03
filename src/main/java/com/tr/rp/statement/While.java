@@ -9,6 +9,7 @@ import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.expressions.FunctionCall;
@@ -40,12 +41,12 @@ public class While extends DStatement {
 		this.preStatement = preStatement;
 	}
 			
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
 			while (true) {
 	
 				// Do one iteration
-				in = generateIteration(in);
+				in = generateIteration(in, c);
 				
 				// Check if exp is still satisfied
 				BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
@@ -81,11 +82,11 @@ public class While extends DStatement {
 	}
 
 	
-	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in) throws RPLException {
+	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		if (preStatement == null) {
-			return (new IfElse(whileCondition, body, new Skip())).getIterator(in);
+			return (new IfElse(whileCondition, body, new Skip())).getIterator(in, c);
 		} else {
-			return new Composition(preStatement, (new IfElse(whileCondition, body, new Skip()))).getIterator(in);
+			return new Composition(preStatement, (new IfElse(whileCondition, body, new Skip()))).getIterator(in, c);
 		}
 	}
 	

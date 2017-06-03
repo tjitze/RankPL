@@ -9,6 +9,7 @@ import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.expressions.FunctionCall;
@@ -43,15 +44,15 @@ public class ForStatement extends DStatement {
 		this.preConditionStatement = null;
 	}
 				
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
 			// Init
-			in = init.getIterator(in);
+			in = init.getIterator(in, c);
 
 			while (true) {
 				
 				// Do one iteration
-				in = generateIteration(in);
+				in = generateIteration(in, c);
 				
 				// Check if condition is still satisfied
 				BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
@@ -86,11 +87,11 @@ public class ForStatement extends DStatement {
 		}
 	}
 
-	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in) throws RPLException {
+	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		if (preConditionStatement == null) {
-			return (new IfElse(forCondition, new Composition(body, next), new Skip())).getIterator(in);
+			return (new IfElse(forCondition, new Composition(body, next), new Skip())).getIterator(in, c);
 		} else {
-			return new Composition(preConditionStatement, (new IfElse(forCondition, new Composition(body, next), new Skip()))).getIterator(in);
+			return new Composition(preConditionStatement, (new IfElse(forCondition, new Composition(body, next), new Skip()))).getIterator(in, c);
 		}
 	}
 	

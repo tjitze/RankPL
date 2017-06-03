@@ -3,10 +3,12 @@ package com.tr.rp.statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import com.tr.rp.core.DStatement;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.core.rankediterators.RestrictIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -17,6 +19,9 @@ import com.tr.rp.expressions.IsSet;
  * The Composition statement represents the composition of two other 
  * statements. The second statement is skipped if the first statement
  * sets the $return value (see Return statement class).
+ * 
+ * The composition statement also handles the rank cut-off which is set
+ * in the execution context.
  */
 public class Composition extends DStatement {
 
@@ -53,17 +58,48 @@ public class Composition extends DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
-			in = first.getIterator(in);
-			// TODO: optimize: we can omit the following if a contains no return statement
-			IfElse ifElse = new IfElse(new IsSet(new Variable("$return")), new Skip(), second);
-			in = ifElse.getIterator(in);
+			// Execute first
+			in = first.getIterator(in, c);
+			
+			// Apply rank cut-off if applicable
+			if (c.getRankCutOff() < Integer.MAX_VALUE) {
+				in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
+					@Override
+					public void accept(Integer t) {
+						c.registerCutOffEvent(t);
+					}
+				});
+			}
+
+			// Execute second (but skip if return value is set)
+			if (containsReturnStatement(first)) {
+				IfElse ifElse = new IfElse(new IsSet(new Variable("$return")), new Skip(), second);
+				in = ifElse.getIterator(in, c);
+			} else {
+				in = second.getIterator(in, c);
+			}
+
+			// Apply rank cut-off if applicable
+			if (c.getRankCutOff() < Integer.MAX_VALUE) {
+				in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
+					@Override
+					public void accept(Integer t) {
+						c.registerCutOffEvent(t);
+					}
+				});
+			}
 			return in;
 		} catch (RPLException e) {
 			e.addStatement(this);
 			throw e;
 		}
+	}
+
+	private boolean containsReturnStatement(DStatement first2) {
+		// TODO: implement this
+		return true;
 	}
 
 	public String toString() {

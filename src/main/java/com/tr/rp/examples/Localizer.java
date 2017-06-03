@@ -76,7 +76,7 @@ public class Localizer {
 				.add(new While(and(lt(var("t"), lit(iterations)), lt(var("x"), lit(11))), inner))
 				.build();
 
-		RankedIterator<VarStore> it = prog.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> it = prog.getIterator(new InitialVarStoreIterator(), null);
 		while (it.next() && it.getRank() < 5) {
 			System.out.println("Rank: " + it.getRank() + " " + it.getItem());
 		}

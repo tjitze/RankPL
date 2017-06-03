@@ -6,6 +6,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -17,7 +18,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(eq(var("a"), lit(1)), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Assign("b", plus(var("a"), lit(20))));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(1, result.getItem().getIntValue("a"));
@@ -40,7 +41,7 @@ public class IfElseTest extends RPLBaseTest {
 		ie = new IfElse(not(eq(var("a"), lit(1))), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Assign("b", plus(var("a"), lit(20))));
-		result = ie.getIterator(getTestIterator());
+		result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(1, result.getItem().getIntValue("a"));
@@ -66,7 +67,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(lit(true), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Assign("b", plus(var("a"), lit(20))));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(1, result.getItem().getIntValue("a"));
@@ -91,7 +92,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(lit(false), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Assign("b", plus(var("a"), lit(20))));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(1, result.getItem().getIntValue("a"));
@@ -116,13 +117,13 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(lit(false), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Assign("b", plus(var("a"), lit(20))));
-		RankedIterator<VarStore> result = ie.getIterator(new AbsurdIterator<VarStore>());
+		RankedIterator<VarStore> result = ie.getIterator(new AbsurdIterator<VarStore>(), ExecutionContext.createDefault());
 		assertEquals(false, result.next());
 
 		ie = new IfElse(lit(true), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Assign("b", plus(var("a"), lit(20))));
-		result = ie.getIterator(new AbsurdIterator<VarStore>());
+		result = ie.getIterator(new AbsurdIterator<VarStore>(), ExecutionContext.createDefault());
 		assertEquals(false, result.next());
 }
 	
@@ -131,7 +132,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(eq(var("a"),lit(1)), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Observe(lit(false)));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(1, result.getItem().getIntValue("a"));
@@ -144,7 +145,7 @@ public class IfElseTest extends RPLBaseTest {
 		ie = new IfElse(not(eq(var("a"),lit(1))), 
 				new Assign("b", plus(var("a"), lit(10))),
 				new Observe(lit(false)));
-		result = ie.getIterator(getTestIterator());
+		result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		// Note: ranks shifted down by 1
 		assertEquals(true, result.next());
@@ -166,7 +167,7 @@ public class IfElseTest extends RPLBaseTest {
 		IfElse ie = new IfElse(eq(var("a"), lit(1)), 
 				new Observe(lit(false)),
 				new Assign("b", plus(var("a"), lit(20))));
-		RankedIterator<VarStore> result = ie.getIterator(getTestIterator());
+		RankedIterator<VarStore> result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		// Note: ranks shifted down by 1
 		assertEquals(true, result.next());
@@ -185,7 +186,7 @@ public class IfElseTest extends RPLBaseTest {
 		ie = new IfElse(not(eq(var("a"),lit(1))), 
 				new Observe(lit(false)),
 				new Assign("b", plus(var("a"), lit(20))));
-		result = ie.getIterator(getTestIterator());
+		result = ie.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(1, result.getItem().getIntValue("a"));
@@ -214,7 +215,7 @@ public class IfElseTest extends RPLBaseTest {
 						new Skip(),
 						new Skip()))
 				.build();
-		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(0, result.getItem().getIntValue("fx1"));

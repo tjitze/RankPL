@@ -8,6 +8,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.expressions.AbstractFunctionCall;
@@ -41,14 +42,14 @@ public class FunctionCallForm extends DStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
 		RankedIterator<VarStore> chainedIterator = parent;
 		// For each function assignment ...
 		for (Pair<String, AbstractFunctionCall> assignment: assignments) {
-			chainedIterator = assignment.b.getIterator(assignment.b.getArguments(), assignment.a, chainedIterator);
+			chainedIterator = assignment.b.getIterator(c, assignment.b.getArguments(), assignment.a, chainedIterator);
 		}
 		// Execute statement
-		chainedIterator = statement.getIterator(chainedIterator);
+		chainedIterator = statement.getIterator(chainedIterator, c);
 		return chainedIterator;
 	}
 

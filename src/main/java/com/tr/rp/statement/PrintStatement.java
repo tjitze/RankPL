@@ -7,6 +7,7 @@ import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
@@ -19,7 +20,7 @@ public class PrintStatement extends DStatement {
 		this.exp = exp;
 	}
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		final RankedIterator<VarStore> in2 = new DuplicateRemovingIterator<VarStore>(in);
 		return new RankedIterator<VarStore>() {
 

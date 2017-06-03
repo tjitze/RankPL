@@ -10,6 +10,7 @@ import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -46,7 +47,7 @@ public class ObserveL extends DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
 			Expression rb = new RankExpr(b);
 			Expression rnb = new RankExpr(new Not(b));
@@ -55,6 +56,11 @@ public class ObserveL extends DStatement {
 					new RankTransformIterator(in, rb, rnb);
 			rb = rt.getExpression(0);
 			rnb = rt.getExpression(1);
+			// Handle destruction
+//			if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
+//				return new AbsurdIterator<VarStore>();
+//			}
+			// Construct observe-L statement
 			Expression cond = Expressions.leq(rb, rank);
 			Expression r1 = Expressions.minus(Expressions.plus(rank, rnb), rb);
 			Expression r2 = Expressions.minus(rb, rank);
@@ -69,7 +75,8 @@ public class ObserveL extends DStatement {
 			DStatement statement = new ProgramBuilder()
 					.add(new IfElse(cond, c1, c2))
 					.build();
-			return statement.getIterator(rt);
+			// Execute
+			return statement.getIterator(rt, c);
 		} catch (RPLException e) {
 			e.addStatement(this);
 			throw e;

@@ -12,6 +12,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
@@ -36,7 +37,7 @@ public class ReadFile extends DStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
 		return new RankedIterator<VarStore>() {
 
 			private String lastPath;

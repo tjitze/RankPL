@@ -3,6 +3,7 @@ package com.tr.rp.statement;
 import static com.tr.rp.expressions.Expressions.*;
 
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
 
@@ -11,7 +12,7 @@ public class ObserveJTest extends RPLBaseTest {
 	public void testObserveJ() throws RPLException {
 		
 		ObserveJ o = new ObserveJ(eq(var("a"), lit(3)), 0);
-		RankedIterator<VarStore> result = o.getIterator(this.getTestIterator());
+		RankedIterator<VarStore> result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(3, result.getItem().getIntValue("a"));
@@ -25,7 +26,7 @@ public class ObserveJTest extends RPLBaseTest {
 		assertEquals(false, result.next());
 
 		o = new ObserveJ(eq(var("a"), lit(3)), 1);
-		result = o.getIterator(this.getTestIterator());
+		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(3, result.getItem().getIntValue("a"));
@@ -39,7 +40,7 @@ public class ObserveJTest extends RPLBaseTest {
 		assertEquals(false, result.next());
 
 		o = new ObserveJ(eq(var("a"), lit(3)), 2);
-		result = o.getIterator(this.getTestIterator());
+		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
 		assertEquals(3, result.getItem().getIntValue("a"));

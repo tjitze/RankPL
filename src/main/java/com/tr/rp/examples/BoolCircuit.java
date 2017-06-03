@@ -79,7 +79,7 @@ public class BoolCircuit {
 
 		DStatement circuit = getProgram();
 		
-		RankedIterator<VarStore> it = circuit.getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> it = circuit.getIterator(new InitialVarStoreIterator(), null);
 		List<String> vars = new ArrayList<String>();
 		vars.add("fx1"); vars.add("fx2"); vars.add("fa1"); vars.add("fa2"); vars.add("fo1");
 //		RankedIterator<VarStore> m = new MarginalizingIterator(it, vars);

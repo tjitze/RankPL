@@ -8,6 +8,7 @@ import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -51,7 +52,7 @@ public class RangeChoice extends DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
 			RankTransformIterator rt = new RankTransformIterator(in, beginExp, endExp);
 			final Expression begin = rt.getExpression(0);

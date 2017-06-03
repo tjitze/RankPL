@@ -10,6 +10,7 @@ import com.tr.rp.core.Rank;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.AbsurdIterator;
 import com.tr.rp.core.rankediterators.BufferingIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -26,7 +27,7 @@ public class Observe extends DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
 			// If exp is contradiction/tautology we
 			// can immediately return result.

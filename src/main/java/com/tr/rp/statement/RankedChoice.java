@@ -10,6 +10,7 @@ import com.tr.rp.core.LanguageElement;
 import com.tr.rp.core.VarStore;
 import com.tr.rp.core.rankediterators.ChooseMergingIterator;
 import com.tr.rp.core.rankediterators.DuplicateRemovingIterator;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.IteratorSplitter;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
@@ -90,15 +91,14 @@ public class RankedChoice extends DStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
-			RankTransformIterator rt = 
-					new RankTransformIterator(in, rank);
+			RankTransformIterator rt = new RankTransformIterator(in, rank);
 			Expression rank2 = rt.getExpression(0);
 			IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(rt);
 			RankedIterator<VarStore> merge = new ChooseMergingIterator(
-					s1.getIterator(split.getA()), 
-					s2.getIterator(split.getB()), 
+					s1.getIterator(split.getA(), c), 
+					s2.getIterator(split.getB(), c), 
 					rank2);
 			return new DuplicateRemovingIterator<VarStore>(merge);
 		} catch (RPLException e) {

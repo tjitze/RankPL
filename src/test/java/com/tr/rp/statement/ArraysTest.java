@@ -5,6 +5,7 @@ import static com.tr.rp.expressions.Expressions.*;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.ProgramBuilder;
 import com.tr.rp.core.VarStore;
+import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
@@ -24,7 +25,7 @@ public class ArraysTest extends RPLBaseTest {
 		// 1D array of null
 		RankedIterator<VarStore> result = new Assign("x", 
 				new ArrayInitExpression(lit(d1), null))
-				.getIterator(new InitialVarStoreIterator());
+				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
 		PersistentList list = (PersistentList)result.getItem().getValue("x");
 		assertEquals(d1, list.size());
@@ -35,7 +36,7 @@ public class ArraysTest extends RPLBaseTest {
 		// 1D array of int
 		result = new Assign("x", 
 				new ArrayInitExpression(lit(d1), lit(0)))
-				.getIterator(new InitialVarStoreIterator());
+				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
 		list = (PersistentList)result.getItem().getValue("x");
 		assertEquals(d1, list.size());
@@ -46,7 +47,7 @@ public class ArraysTest extends RPLBaseTest {
 		// 1D array of strings
 		result = new Assign("x", 
 				new ArrayInitExpression(lit(d1), new Literal<String>("")))
-				.getIterator(new InitialVarStoreIterator());
+				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
 		assert(result.getItem().getValue("x") instanceof PersistentList);
 		list = (PersistentList)result.getItem().getValue("x");
@@ -58,7 +59,7 @@ public class ArraysTest extends RPLBaseTest {
 		// 2D array of null
 		result = new Assign("x", 
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), null)))
-				.getIterator(new InitialVarStoreIterator());
+				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
 		assert(result.getItem().getValue("x") instanceof PersistentList);
 		list = (PersistentList)result.getItem().getValue("x");
@@ -75,7 +76,7 @@ public class ArraysTest extends RPLBaseTest {
 		// 2D array of ints
 		result = new Assign("x", 
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), lit(0))))
-				.getIterator(new InitialVarStoreIterator());
+				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
 		assert(result.getItem().getValue("x") instanceof PersistentList);
 		list = (PersistentList)result.getItem().getValue("x");
@@ -92,7 +93,7 @@ public class ArraysTest extends RPLBaseTest {
 		// 3D array of null
 		result = new Assign("x", 
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), new ArrayInitExpression(lit(d3), null))))
-				.getIterator(new InitialVarStoreIterator());
+				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
 		assert(result.getItem().getValue("x") instanceof PersistentList);
 		list = (PersistentList)result.getItem().getValue("x");
@@ -114,7 +115,7 @@ public class ArraysTest extends RPLBaseTest {
 		// 3D array of int
 		result = new Assign("x", 
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), new ArrayInitExpression(lit(d3), lit(0)))))
-				.getIterator(new InitialVarStoreIterator());
+				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
 		assert(result.getItem().getValue("x") instanceof PersistentList);
 		list = (PersistentList)result.getItem().getValue("x");
@@ -146,7 +147,7 @@ public class ArraysTest extends RPLBaseTest {
 						new Literal<Integer>(3)))
 				.add(new Assign(target("x", 2), 
 						new Literal<Integer>(100)));
-		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();
@@ -168,7 +169,7 @@ public class ArraysTest extends RPLBaseTest {
 						new Literal<Integer>(3)))
 				.add(new Assign(target("x", 2, 3), 
 						new Literal<Integer>(100)));
-		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();
@@ -185,7 +186,7 @@ public class ArraysTest extends RPLBaseTest {
 				.add(new Assign(target("x", 2), 
 						new Literal<Integer>(100)))
 				.add(new Assign("y", indexedExp(var("x"), 2)));
-		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();
@@ -200,7 +201,7 @@ public class ArraysTest extends RPLBaseTest {
 						new ArrayInitExpression(lit(3), new ArrayInitExpression(lit(4), null))))
 				.add(new Assign(target("x", 2, 3), new Literal<Integer>(100)))
 				.add(new Assign("y", indexedExp(var("x"), 2, 3)));
-		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator());
+		RankedIterator<VarStore> result = p.build().getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		
 		assert(result.next());
 		VarStore vs = result.getItem();

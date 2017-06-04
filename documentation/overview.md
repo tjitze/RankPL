@@ -326,8 +326,7 @@ The table below provides an overview of all available statements in RankPL. We u
 |Range assignment	| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
 |If-else		| `if b then s_1 else s_2`		| Regular if-else statement. **(2)** |
 |while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
-|for loop		| `for (s_1; b; s_2) s_3`		| Java-style for loop. `s_1` is the init 
-		statement, `b` the termination condition, `s_2` the increment statement. |
+|for loop		| `for (s_1; b; s_2) s_3`		| Java-style for loop. `s_1` is the init statement, `b` the termination condition and `s_2` the increment statement. |
 |observe		| `observe b`				| Observe condition `b` to hold (eliminate alternatives not satisfying `b` and uniformly shift down alternatives that remain`).	|
 |observe-j		| `observe-j (n) b`			| Like `observe b`, but increase rank of alternatives not satisfying `b` by value of `n`. **(3)**		|
 |observe-l		| `observe-l (n) b`			| Improve rank of alternatives satisfying `b` by `n` units w.r.t. alternatives not satisfying `b`. **(3)**		|

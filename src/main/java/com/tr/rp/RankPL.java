@@ -12,6 +12,12 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
@@ -47,10 +53,12 @@ import com.tr.rp.statement.Program;
 public class RankPL {
 
 	private static int maxRank = 0;
+	private static int rankCutOff = Integer.MAX_VALUE;
 	private static boolean iterativeDeepening = false;
 	private static int timeOut = Integer.MAX_VALUE;
 	private static boolean noExecStats = false;
 	private static boolean noRanks = false;
+	private static boolean terminateAfterFirst = false;
 	private static String fileName;
 
 	public static void main(String[] args) {
@@ -72,7 +80,7 @@ public class RankPL {
 			System.err.println("I/O Exception while reading source file: " + e.getMessage());
 			return;
 		}
-		
+
 		RankPLLexer lexer = new RankPLLexer(new ANTLRInputStream(source));
 		TokenStream tokens = new CommonTokenStream(lexer);
 		RankPLParser parser = new RankPLParser(tokens);
@@ -125,28 +133,64 @@ public class RankPL {
 	}
 
 	private static void execute(Program program) throws RPLException {
+		
 		// Build execution context
 		ExecutionContext c = new ExecutionContext();
 
-		// Start time
 		long startTime = System.currentTimeMillis();
+		
+		final Runnable executeTask = new Thread() {
+			@Override
+			public void run() {
+				try {
+					// Run
+					RankedIterator<String> it;
+					if (iterativeDeepening) {
+						it = program.runWithIterativeDeepening(c, rankCutOff);
+					} else {
+						c.setRankCutOff(rankCutOff);
+						;
+						it = program.run(c);
+					}
 
-		// Run
-		RankedIterator<String> it = iterativeDeepening ? program.runWithIterativeDeepening(c, Integer.MAX_VALUE)
-				: program.run(c);
+					// Print outcomes
+					while (it.next() && it.getRank() <= maxRank) {
+						if (noRanks) {
+							System.out.println(it.getItem());
+						} else {
+							System.out.println("Rank " + it.getRank() + ": " + it.getItem());
+						}
+						if (terminateAfterFirst) {
+							return;
+						}
+					}
+				} catch (RPLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
+		final ExecutorService executor = Executors.newSingleThreadExecutor();
+		final Future<?> future = executor.submit(executeTask);
+		executor.shutdown(); // This does not cancel the already-scheduled task.
 
-		// Print outcomes
-		while (it.next() && it.getRank() <= maxRank) {
-			if (noRanks) {
-				System.out.println(it.getItem());
-			} else {
-				System.out.println("Rank " + it.getRank() + ": " + it.getItem());
+		try { 
+		  future.get(timeOut, TimeUnit.MILLISECONDS); 
+		} catch (InterruptedException ie) { 
+			System.out.println("Interrupted ex " + ie);
+			System.out.println("Interrupted ex cause " + ie.getCause());
+		} catch (ExecutionException ee) { 
+			// Re-throw the RPL exception thrown inside the thread
+			c.setInterruptRequested();
+			if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLException) {
+				throw (RPLException)ee.getCause().getCause();
 			}
-			if (System.currentTimeMillis() - startTime >= timeOut) {
-				break;
-			}
+		} catch (TimeoutException te) { 
+			c.setInterruptRequested();
+			System.out.println("Remaining results omitted due to timeout.");
 		}
-
+		if (!executor.isTerminated()) {
+		    executor.shutdownNow();
+		}
 		// Print exec stats
 		if (!noExecStats) {
 			System.out.println("Took: " + (System.currentTimeMillis() - startTime) + " ms");
@@ -158,14 +202,18 @@ public class RankPL {
 		Options options = new Options();
 		options.addOption(Option.builder("source").hasArg().required().argName("source_file")
 				.desc("source file to execute").build());
-		options.addOption(Option.builder("r").hasArg().type(Number.class).argName("max_rank")
-				.desc("maximum rank to generate (default 0)").build());
-		options.addOption(Option.builder("d").argName("max_rank")
-				.desc("apply iterative deepening (faster but experimental)").build());
+		options.addOption(Option.builder("r").hasArg().type(Number.class).argName("max_output_rank")
+				.desc("maximum rank of results to generate (default 0)").build());
+		options.addOption(Option.builder("c").hasArg().type(Number.class).argName("rank_cutoff")
+				.desc("discard computations above this rank (default ∞)").build());
+		options.addOption(Option.builder("d")
+				.desc("enable iterative deepening (run repeatedly with increasing rank_cutoff values)").build());
+		options.addOption(Option.builder("f")
+				.desc("terminate after first answer").build());
 		options.addOption(Option.builder("t").hasArg().type(Number.class).argName("timeout")
 				.desc("execution time-out (in milliseconds)").build());
-		options.addOption(Option.builder("ns").argName("max_rank").desc("don't print execution stats").build());
-		options.addOption(Option.builder("nr").argName("max_rank").desc("don't print ranks").build());
+		options.addOption(Option.builder("ns").desc("don't print execution stats").build());
+		options.addOption(Option.builder("nr").desc("don't print ranks").build());
 		return options;
 	}
 
@@ -176,10 +224,25 @@ public class RankPL {
 			fileName = cmd.getOptionValue("source");
 		}
 		if (cmd.hasOption("r")) {
-			maxRank = ((Number) cmd.getParsedOptionValue("r")).intValue();
+			try {
+				maxRank = ((Number) cmd.getParsedOptionValue("r")).intValue();
+			} catch (Exception e) {
+				System.err.println("Illegal value provided for -r option.");
+			}
 		}
 		if (cmd.hasOption("t")) {
-			timeOut = ((Number) cmd.getParsedOptionValue("timeOut")).intValue();
+			try {
+				timeOut = ((Number) cmd.getParsedOptionValue("t")).intValue();
+			} catch (Exception e) {
+				System.err.println("Illegal value provided for -t option.");
+			}
+		}
+		if (cmd.hasOption("c")) {
+			try {
+				rankCutOff = ((Number) cmd.getParsedOptionValue("c")).intValue();
+			} catch (Exception e) {
+				System.err.println("Illegal value provided for -c option.");
+			}
 		}
 		if (cmd.hasOption("d")) {
 			iterativeDeepening = true;
@@ -188,6 +251,9 @@ public class RankPL {
 						.println("Warning: ignoring max_rank setting (must be 0 when iterative deepening is enabled).");
 				maxRank = 0;
 			}
+		}
+		if (cmd.hasOption("f")) {
+			terminateAfterFirst = true;
 		}
 		if (cmd.hasOption("ns")) {
 			noExecStats = true;
@@ -200,7 +266,7 @@ public class RankPL {
 	private static void printUsage() {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.setWidth(160);
-		List<String> order = Arrays.asList("source", "r", "t", "d", "ns", "nr");
+		List<String> order = Arrays.asList("source", "r", "t", "c", "d", "f", "ns", "nr");
 		formatter.setOptionComparator(new Comparator<Option>() {
 			@Override
 			public int compare(Option o1, Option o2) {
@@ -219,7 +285,7 @@ public class RankPL {
 		Reader r = new InputStreamReader(fis, "UTF-8"); // or whatever encoding
 		int ch = r.read();
 		while (ch >= 0) {
-			sb.append((char)ch);
+			sb.append((char) ch);
 			ch = r.read();
 		}
 		r.close();

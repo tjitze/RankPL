@@ -76,6 +76,9 @@ expr6
  | '-' expr6 			     	            			# MinusExpr
  | Isset '(' exp ')'    								# IsSetExpr
  | Abs '(' exp ')'      				   				# AbsExpr
+ | Min '(' (exp (',' exp)*) ')'      				   	# MinExpr
+ | Max '(' (exp (',' exp)*) ')'      				   	# MaxExpr
+ | ParseInt '(' exp ')'       				   			# ParseIntExpr
  | Len '(' exp ')' 		 								# LenExpr
  | Substring '(' exp ',' exp ',' exp ')' 				# SubStringExpr
  | Rank '(' exp ')' 	 								# RankExpr
@@ -108,6 +111,9 @@ False: 			'false' | 'FALSE';
 Infer: 			'infer' | 'INFER';
 Isset: 			'isset' | 'ISSET';
 Abs: 			'abs' | 'ABS';
+ParseInt:		'parseint' | 'parseInt' | 'PARSEINT';
+Min: 			'min' | 'MIN';
+Max: 			'max' | 'MAX';
 Len: 			'len' | 'LEN';
 Substring: 		'substring' | 'SUBSTRING';
 Rank: 			'rank' | 'RANK';

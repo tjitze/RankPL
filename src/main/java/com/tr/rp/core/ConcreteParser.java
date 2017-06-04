@@ -25,8 +25,11 @@ import com.tr.rp.expressions.Variable;
 import com.tr.rp.expressions.IsSet;
 import com.tr.rp.expressions.Len;
 import com.tr.rp.expressions.Literal;
+import com.tr.rp.expressions.Max;
+import com.tr.rp.expressions.Min;
 import com.tr.rp.expressions.Negative;
 import com.tr.rp.expressions.Not;
+import com.tr.rp.expressions.ParseInt;
 import com.tr.rp.expressions.RankExpr;
 import com.tr.rp.parser.RankPLBaseVisitor;
 import com.tr.rp.parser.RankPLParser.AbsExprContext;
@@ -55,12 +58,15 @@ import com.tr.rp.parser.RankPLParser.LenExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralBoolExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralIntExpressionContext;
 import com.tr.rp.parser.RankPLParser.LiteralStringExprContext;
+import com.tr.rp.parser.RankPLParser.MaxExprContext;
+import com.tr.rp.parser.RankPLParser.MinExprContext;
 import com.tr.rp.parser.RankPLParser.MinusExprContext;
 import com.tr.rp.parser.RankPLParser.NegateExprContext;
 import com.tr.rp.parser.RankPLParser.ObserveStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveJStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveLStatementContext;
 import com.tr.rp.parser.RankPLParser.ParExpressionContext;
+import com.tr.rp.parser.RankPLParser.ParseIntExprContext;
 import com.tr.rp.parser.RankPLParser.PrintStatementContext;
 import com.tr.rp.parser.RankPLParser.ProgramContext;
 import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
@@ -375,6 +381,30 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitAbsExpr(AbsExprContext ctx) {
 		Expression num = (Expression)visit(ctx.exp());
 		return new Abs(num);
+	}
+
+	@Override
+	public LanguageElement visitParseIntExpr(ParseIntExprContext ctx) {
+		Expression str = (Expression)visit(ctx.exp());
+		return new ParseInt(str);
+	}
+
+	@Override
+	public LanguageElement visitMinExpr(MinExprContext ctx) {
+		Expression[] args = new Expression[ctx.exp().size()];
+		for (int i = 0; i < args.length; i++) {
+			args[i] = (Expression)visit(ctx.exp(i));
+		}
+		return new Min(args);
+	}
+
+	@Override
+	public LanguageElement visitMaxExpr(MaxExprContext ctx) {
+		Expression[] args = new Expression[ctx.exp().size()];
+		for (int i = 0; i < args.length; i++) {
+			args[i] = (Expression)visit(ctx.exp(i));
+		}
+		return new Max(args);
 	}
 
 	@Override

@@ -463,4 +463,17 @@ public class Expressions {
 	public static SubString subString(Expression s, Expression begin, Expression end) {
 		return new SubString(s, begin, end);
 	}
+	
+	public static Min min(Expression ... es) {
+		return new Min(es);
+	}
+
+	public static Max max(Expression ... es) {
+		return new Max(es);
+	}
+
+	public static ParseInt parseInt(Expression e) {
+		return new ParseInt(e);
+	}
+
 }

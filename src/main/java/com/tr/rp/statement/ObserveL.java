@@ -56,10 +56,11 @@ public class ObserveL extends DStatement {
 					new RankTransformIterator(in, this, rb, rnb);
 			rb = rt.getExpression(0);
 			rnb = rt.getExpression(1);
-			// Handle destruction
-//			if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
-//				return new AbsurdIterator<VarStore>();
-//			}
+			// Normal behavior if rank(b) is infinity, is to leave the prior ranking
+			// unchanged. If iterative deepening is enabled we need to block execution.
+			if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
+				return new AbsurdIterator<VarStore>();
+			}
 			// Construct observe-L statement
 			Expression cond = Expressions.leq(rb, rank);
 			Expression r1 = Expressions.minus(Expressions.plus(rank, rnb), rb);

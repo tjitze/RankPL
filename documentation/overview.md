@@ -10,7 +10,7 @@ Semantically, RankPL draws a parallel with probabilistic programming in terms of
 
 Here we present a brief overview ranking theory. We discuss the basic definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [1](#ref-gp) or [2](#ref-survey). 
 
-### Ranking functions
+## Ranking functions
 
 The definition of a *ranking function* presupposes a set *Ω* of elements called *possibilities*. 
 A ranking function *K* assigns to every *w ∈ Ω* a non-negative integer or ∞, such that *K(w) = 0* for at least one *w ∈ Ω*.
@@ -19,23 +19,23 @@ Intuitively, these numbers (called ranks) represent relative degrees of surprise
 Non-empty subsets of *Ω* are called *events*.
 The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the elements of *A*. In other words, an event *A* is as surprising as the least surprising possibility *w ∈ A* that gives rise to it. In this respect, ranks behave different from probabilities, because the probability of an event is defined to be the *sum* of its elements.
 
-### Conditional ranks
+## Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*.
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*. 
 
-How do conditional ranks compare to conditional probabilities? Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, the division of *P(A∩B)* by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. In the definition of *K(A|B)*, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. This, too, can be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
+How do conditional ranks compare to conditional probabilities? Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, taking the intersection *A∩B* ensures that *P(not-B|B) = 0*, while division by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. 
+
+In the definition of *K(A|B)*, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. Here, taking the intersection *A∩B* ensures that *K(not-B|B) = ∞* (i.e., *not-B* is impossible given *B*). Subtracting *K(B)* can, like division by *P(B)*, be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
 
 Just like *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*, we can rewrite *K(A|B) = K(A∩B)-K(B)* as *K(A∩B) = K(B) + K(A|B)*. In this form, the definition says that the degree of surprise of *A and B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
 
 # Ranked programming in RankPL
 
-RankPL is a simple imperative programming language extended with statements to draw choices at random from a ranking function and to perform ranking-theoretic conditioning. This makes it possible to model uncertainty expressible by distinguishing normal (rank 0) from surprising (rank > 0) events. 
-
-Drawing choices at random from a ranking function is done through the *ranked choice* statement. Ranking-theoretic conditioning is done using the *observe* statement. Other special statements are the *infer* statement and the special observe statements *observe-j* and *observe-l*. 
+RankPL is a simple imperative programming language extended with statements to draw choices at random from a ranking function and to perform ranking-theoretic conditioning. Drawing choices at random from a ranking function is done through the *ranked choice* statement. Ranking-theoretic conditioning is done using the *observe* statement. Other special statements are the *infer* statement and the special observe statements *observe-j* and *observe-l*. 
 
 We discuss these statements in this section. Because the rest of the language is fairly standard, the examples provided here should be easy to understand. A complete specification of the language is provided in the next section.
 
-### The ranked choice statement
+## The ranked choice statement
 
 The *ranked choice* statement makes it possible to introduce alternative program flows, each associated with a rank. The basic form is as follows.
 ```
@@ -128,7 +128,7 @@ This means that we can stop generating outcomes once we have generated all the r
 For this reason, the interpreter always generates results in ascending order with respect to rank.
 For complex programs, this can result in significant savings in terms of computation.
 
-### The *observe* statement
+## The *observe* statement
 
 The *observe* statement revises the ranking of alternatives due to a given condition that we observe or learn to hold. How does this work? Intuitively, if we would halt the execution of a RankPL program at a given point, we end up with a ranking function over alternative program states. The observe statement does two things: 
 
@@ -164,16 +164,16 @@ Instead of returning `c`, we return the values of `a` and `b`.
 ```
 The result is:
 ```
-Rank 0: result: "a = 20, b = 10"
-Rank 0: result: "a = 10, b = 20"
-Rank 1: result: "a = 20, b = 20"
+Rank 0: result: a = 20, b = 10
+Rank 0: result: a = 10, b = 20
+Rank 1: result: a = 20, b = 20
 ```
 This tells us that the most plausible cause for `c > 150` is that either `a` or `b` is 20, but not both. 
 While `a` and `b` both being 20 does explain the observation, 
 	it is more surprising and therefore less plauisible than just `a` or just `b` being 20.
 A practical application of this principle to the problem of circuit diagnosis is included in the examples section ([link](#circuit-diagnosis)).
 
-### The *infer* expression
+## The *infer* expression
 
 In the example above, the program generates a ranking over possible outcomes,
 	where the rank zero outcomes represent the normal or most plauisble behaviour of the program.
@@ -181,32 +181,29 @@ The *infer* expression can be used to collect these outcomes,
 	so that they can be used in the remainder of the program.
 This is useful if we want to use the `print` statement to report back to the user,
 	or handle the result of an inference in another deterministic way.
-	
 The infer expression takes as input a function call and returns an array containing all the return values 
 	of this function call that are ranked zero.
-We demonstrate it by adapting the circuit diagnosis program as follows.
-The program does the same as before, but instead of returning a ranking over return values,
-	the program prints the rank zero explanations on the console.
+We demonstrate it by adapting the prevous example as follows.
 ```
- 1  result := infer(getValue());
- 2  print "Most plausible outcomes:" + result;
- 3
- 4  define getValue() { 
- 5 	a := 10 << 1 >> 20;
- 6 	b := 10 << 1 >> 20;
- 7 	c := a * b;
- 8 	observe c > 1;
- 9  	return "a = " + a + ", b = " + b;
-10  };
+ 1  define program() { 
+ 2 	a := 10 << 1 >> 20;
+ 3 	b := 10 << 1 >> 20;
+ 4 	c := a * b;
+ 5 	observe c > 150;
+ 6  	return "(a = " + a + ", b = " + b + ")";
+ 7 };
+ 8
+ 9 result := infer(program());
+10 print "Most plausible outcomes:" + result;
 ```
 This program prints the output:
 ```
-Most plausible values: [ "a = 20, b = 10", "a = 10, b = 20"]
+Most plausible outcomes:[(a = 10, b = 20), (a = 20, b = 10)]
 ```
 
 # Special observe statements
 
-### J-observation
+## J-observation
 
 Instead of learning that a condition `b` holds with absolute certainty, we may also learn that b *normally* holds. In other words, instead of completely ruling out alternatives not satisfying `b`, which is what the observe statement does, we merely increase their rank. We penalise them, so to say, because they do not satisfy what we expect to normally hold. This is what J-observation does. It implements a special form of conditioning called J-conditioning [1](#ref-gp). The statement has the form:
 ```
@@ -226,7 +223,7 @@ Rank 2: a = 2
 Rank 2: a = 3
 ```
 
-### L-observation
+## L-observation
 
 The second generalised kind of observation is *L-observation*. It implements a special form of conditioning called L-conditioning [1](#ref-gp). L-conditioning is especially useful when we have to deal with multiple sequential observations. The statement has the form:
 ```
@@ -277,19 +274,35 @@ Rank 0: a = 3
 Note that the normal `observe` statement is less suitable to deal with multple observations, because alteranatives not satisfying the observation are completely ruled out and their ranks cannot (as in the example above) be shifted down afterwards due to subsequent observations. While J-observation does allow this, it often produces undersirable results. The main problem is that a statement `observe-J (n) b` does not take the prior ranks of `b` and `!b` into account. L-conditioning does take these prior ranks into account. For more information about J-conditioning and L-conditioning we refer the reader to [1](#ref-gp).
 A practical example using L observation is included in the examples section ([link](#spelling-corrector)).
 
+# Building and running RankPL
+
+## Build instructions
+
+The project comes with a Maven build script. To build the project, simply run the following command from the root directory of the project. 
+```
+mvn package
+```
+This compiles the grammar and java sources, runs tests, and produces a self-contained executable .jar file
+```
+RankPL-{version}-jar-with-dependencies.jar
+```
+in the `target` directory. Rename this file to `RankPL.jar` and copy it to your working directory.
+
+The self-contained executable jar file can also be downloaded TODO.
+
+## Running RankPL
+
+Basic usage of the executable jar file is: 
+```
+java -jar RankPL.jar -source <source_file> [-r <max_output_rank>]
+```
+where `source_file` is the RankPL source file to execute, and the optional argument `-r <max_output_rank>` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the argument is omitted. The possible outcomes of the program (returned via the `return` statement) are generated in ascending order with respect to their rank and printed on the console.
+
 # Language reference
 
 Apart from the special statements described above, RankPL is a simple imperative programming language. It supports integers, booleans, string, and array expressions, and is dynamically typed. Function calls in RankPL are always call-by-value. In this section we explain how to use RankPL and provide a reference of the supported statements and expressions.
 
-### Running RankPL
-
-The RankPL interpreter comes in the form of a self-contained Jar file called `RankPL.jar`. The usage is:
-```
-java -jar RankPL.jar <source_file> [max_rank]
-```
-Where `source_file` is the RankPL source file to execute, and the optional parameter `max_rank` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the `max_rank` argument is omitted. The possible outcomes of a program (returned via the `return` statement) are generated in ascending order with respect to their rank.
-
-### Programs and functions
+## Programs and functions
 
 A program is a sequence of function definitions. A function definition has the form
 ```
@@ -308,7 +321,7 @@ The arguments supplied with a function call must match the parameters of the fun
 
 The main entry point of a program is the `main()` function. The values returned by the `main()` function are the values returned by the program. If the `main()` function is omitted, the body of the program (i.e., all statements not nested inside a function definition) is taken to be the body of the `main()` function.
 
-### Statements
+## Statements
 
 Statements in RankPL are separated by semicolons. If a statement contains sub-statements (such as the `if b then s1 else s2` statement) then these sub-statements may be *block statements*, which are sequeences of statements enclosed in curly brackets ({ ... }). 
 
@@ -342,7 +355,7 @@ The table below provides an overview of all available statements in RankPL. We u
 - **(3)**: The `(n)` part may be omitted. If it is, `n` defaults to 1.
 - **(4)**: The `exceptionally s_2` part may be omitted. If it is, `s_2` is taken to be the `skip` statement.
 
-### Expressions
+## Expressions
 
 Expressions in RankPL are either integer, boolean, string, or array-valued. All expressions are dynamically typed. This means, for example, that an expression like `"ab"” <= "def"` is syntactically correct but will lead to a type error during execution. In this section we provide an overview of all expressions in RankPL.
 

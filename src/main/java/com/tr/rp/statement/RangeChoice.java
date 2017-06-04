@@ -171,4 +171,10 @@ public class RangeChoice extends DStatement {
 			return this;
 		}
 	}	
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		variables.add(variable.getAssignedVariable());
+	}	
+
 }

@@ -87,4 +87,10 @@ public class ObserveJ extends DStatement {
 			return this;
 		}
 	}
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		// nop
+	}	
+
 }

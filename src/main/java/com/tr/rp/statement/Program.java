@@ -202,5 +202,11 @@ public class Program extends DStatement {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		getAssignedVariables(variables);
+	}	
+
 
 }

@@ -13,16 +13,10 @@ import com.tr.rp.core.rankediterators.ExecutionContext;
 import com.tr.rp.core.rankediterators.RankTransformIterator;
 import com.tr.rp.core.rankediterators.RankedIterator;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
-import com.tr.rp.exceptions.RPLTypeError;
-import com.tr.rp.expressions.PersistentList;
 import com.tr.rp.statement.FunctionCallForm.ExtractedExpression;
-import com.tr.rp.expressions.AbstractFunctionCall;
 import com.tr.rp.expressions.AssignmentTarget;
-import com.tr.rp.expressions.FunctionCall;
 import com.tr.rp.expressions.Variable;
 import com.tr.rp.expressions.Literal;
-import com.tr.rp.tools.Pair;
 
 /**
  * The assign statement takes as input a variable, an (optional) list
@@ -136,5 +130,10 @@ public class Assign extends DStatement {
 		} else {
 			return this;
 		}
+	}
+
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		variables.add(variable.getAssignedVariable());
 	}	
 }

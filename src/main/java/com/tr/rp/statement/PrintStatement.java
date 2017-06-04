@@ -29,7 +29,7 @@ public class PrintStatement extends DStatement {
 				boolean next = in2.next();
 				// Print here so that it's only done once, and in the right order
 				if (next) {
-					System.out.println(exp.getStringValue(in2.getItem()));
+					System.out.println(exp.getValue(in2.getItem()));
 				}
 				return next;
 			}
@@ -75,4 +75,10 @@ public class PrintStatement extends DStatement {
 			return this;
 		}
 	}	
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		// nop
+	}	
+
 }

@@ -28,6 +28,14 @@ public class AssignmentTarget extends Expression {
 		this.indices = indices;
 	}
 
+	public String getAssignedVariable() {
+		return name;
+	}
+	
+	public Expression[] getIndices() {
+		return indices;
+	}
+	
 	@Override
 	public void getVariables(Set<String> list) {
 		Arrays.stream(indices).forEach(e -> e.getVariables(list));

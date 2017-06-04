@@ -3,6 +3,7 @@ package com.tr.rp.statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 import com.tr.rp.core.DStatement;
@@ -27,6 +28,7 @@ import com.tr.rp.expressions.IsSet;
 public class Composition extends DStatement {
 
 	private final DStatement first, second;
+	private final boolean firstContainsReturn;
 	
 	/**
 	 * Construct composition of two or more statements. If more than
@@ -45,6 +47,7 @@ public class Composition extends DStatement {
 		} else {
 			this.second = s[1];
 		}
+		firstContainsReturn = containsReturnStatement(first);
 	}
 	
 	/**
@@ -77,7 +80,7 @@ public class Composition extends DStatement {
 		}
 
 		// Execute second (but skip if return value is set)
-		if (containsReturnStatement(first)) {
+		if (firstContainsReturn) {
 			IfElse ifElse = new IfElse(new IsSet(new Variable("$return")), new Skip(), second);
 			in = ifElse.getIterator(in, c);
 		} else {
@@ -100,9 +103,10 @@ public class Composition extends DStatement {
 		return in;
 	}
 
-	private boolean containsReturnStatement(DStatement first2) {
-		// TODO: implement this
-		return true;
+	private boolean containsReturnStatement(DStatement s) {
+		Set<String> assignedVariables = new TreeSet<String>();
+		s.getAssignedVariables(assignedVariables);
+		return assignedVariables.contains("$return");
 	}
 
 	public String toString() {
@@ -147,4 +151,11 @@ public class Composition extends DStatement {
 	public DStatement getSecond() {
 		return second;
 	}
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		first.getAssignedVariables(variables);
+		second.getAssignedVariables(variables);
+	}	
+
 }

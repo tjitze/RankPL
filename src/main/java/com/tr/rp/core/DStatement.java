@@ -1,5 +1,8 @@
 package com.tr.rp.core;
 
+import java.util.List;
+import java.util.Set;
+
 import com.tr.rp.core.rankediterators.IteratorProvider;
 import com.tr.rp.statement.FunctionCallForm;
 
@@ -37,4 +40,9 @@ public abstract class DStatement implements IteratorProvider<VarStore>, Language
 		this.lineNumber = lineNumber;
 	}
 	
+	/**
+	 * Collect variables that are assigned by this statement
+	 */
+	public abstract void getAssignedVariables(Set<String> variables);
+
 }

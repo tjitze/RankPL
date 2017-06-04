@@ -142,5 +142,12 @@ public class RankedChoice extends DStatement {
 		} else {
 			return new RankedChoice(s1r, s2r, rank);
 		}
+	}
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		s1.getAssignedVariables(variables);
+		s2.getAssignedVariables(variables);
 	}	
+
 }

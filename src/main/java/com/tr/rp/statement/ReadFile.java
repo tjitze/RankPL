@@ -112,5 +112,10 @@ public class ReadFile extends DStatement {
 		}
 		return lines;
 	}
-	
+
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		variables.add(target.getAssignedVariable());
+	}	
+
 }

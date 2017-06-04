@@ -163,5 +163,11 @@ public class FunctionCallForm extends DStatement {
 		}
 		return statement.equals(s);
 	}
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		statement.getAssignedVariables(variables);
+	}	
+
 
 }

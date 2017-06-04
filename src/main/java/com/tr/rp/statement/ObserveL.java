@@ -127,4 +127,9 @@ public class ObserveL extends DStatement {
 		}
 	}
 
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		// nop
+	}	
+
 }

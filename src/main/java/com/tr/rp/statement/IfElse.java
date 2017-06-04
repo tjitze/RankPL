@@ -149,4 +149,11 @@ public class IfElse extends DStatement {
 			return new IfElse(exp, ar, br);
 		}
 	}	
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		a.getAssignedVariables(variables);
+		b.getAssignedVariables(variables);
+	}	
+
 }

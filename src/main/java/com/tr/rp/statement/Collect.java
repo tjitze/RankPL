@@ -131,5 +131,10 @@ public class Collect extends DStatement {
 		} else {
 			return this;
 		}
+	}
+
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		variables.add(target.getAssignedVariable());
 	}	
 }

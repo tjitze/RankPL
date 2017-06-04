@@ -140,4 +140,9 @@ public class While extends DStatement {
 		}
 	}	
 
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		body.getAssignedVariables(variables);
+	}	
+
 }

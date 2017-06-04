@@ -101,4 +101,10 @@ public class Return extends DStatement {
 			return this;
 		}
 	}	
+	
+	@Override
+	public void getAssignedVariables(Set<String> variables) {
+		variables.add("$return");
+	}	
+
 }

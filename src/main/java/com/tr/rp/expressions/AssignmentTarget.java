@@ -10,6 +10,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.exceptions.RPLUndefinedException;
 
 /**
  * An assignment target. This expression cannot be evaluated 
@@ -119,26 +120,27 @@ public class AssignmentTarget extends Expression {
 		if (indices.length == 0) {
 			return vs.create(name, value);
 		} else {
-			return vs.create(name, mutateList(0, vs.getValue(name), value, vs));
+			return vs.create(name, mutateList(0, vs.getListValue(name), value, vs));
 		}
 	}
 	
-	private PersistentList mutateList(int i, Object in, Object value, VarStore vs) throws RPLException {
-		if (in == null) {
-			throw new RPLTypeError("list", in);
-		} else if (in instanceof PersistentList) {
-			PersistentList list = (PersistentList)in;
-			int position = indices[i].getIntValue(vs);
-			if (position < 0 || position >= list.size()) {
-				throw new RPLIndexOutOfBoundsException(position, list.size());
-			}
-			if (i == indices.length - 1) {
-				return list.getMutatedCopy(position, value);
-			} else {
-				return list.getMutatedCopy(position, mutateList(i + 1, list.get(position), value, vs));
-			}
+	private PersistentList mutateList(int i, PersistentList in, Object value, VarStore vs) throws RPLException {
+		PersistentList list = (PersistentList)in;
+		int position = indices[i].getIntValue(vs);
+		if (position < 0 || position >= list.size()) {
+			throw new RPLIndexOutOfBoundsException(position, list.size(), this);
+		}
+		if (i == indices.length - 1) {
+			return list.getMutatedCopy(position, value);
 		} else {
-			throw new RPLTypeError("list", in);
+			Object o = list.get(position);
+			if (o != null && o instanceof PersistentList) {
+				return list.getMutatedCopy(position, mutateList(i + 1, (PersistentList)o, value, vs));
+			} else if (o == null) {
+				throw new RPLUndefinedException(this);
+			} else {
+				throw new RPLTypeError("list", o, this);
+			}
 		}
 	}
 

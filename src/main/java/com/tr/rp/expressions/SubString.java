@@ -77,14 +77,14 @@ public class SubString extends Expression {
 		String s = input.getStringValue(vs);
 		int beginIndex = begin.getIntValue(vs);
 		if (beginIndex < 0 || beginIndex >= s.length()) {
-			throw new RPLIndexOutOfBoundsException(beginIndex, s.length());
+			throw new RPLIndexOutOfBoundsException(beginIndex, s.length(), this);
 		}
 		int endIndex = end.getIntValue(vs);
 		if (endIndex < beginIndex) {
 			throw new RPLMiscException("Illegal substring range (" + beginIndex + ", " + endIndex + ")");
 		}
 		if (endIndex > s.length()) {
-			throw new RPLIndexOutOfBoundsException(endIndex, s.length());
+			throw new RPLIndexOutOfBoundsException(endIndex, s.length(), this);
 		}
 		return s.substring(beginIndex, endIndex);
 	}
@@ -101,14 +101,14 @@ public class SubString extends Expression {
 		String s = input.getDefiniteStringValue();
 		int beginIndex = begin.getDefiniteIntValue();
 		if (beginIndex < 0 || beginIndex >= s.length()) {
-			throw new RPLIndexOutOfBoundsException(beginIndex, s.length());
+			throw new RPLIndexOutOfBoundsException(beginIndex, s.length(), this);
 		}
 		int endIndex = end.getDefiniteIntValue();
 		if (endIndex < beginIndex) {
 			throw new RPLMiscException("Illegal substring range (" + beginIndex + ", " + endIndex + ")");
 		}
 		if (endIndex > s.length()) {
-			throw new RPLIndexOutOfBoundsException(endIndex, s.length());
+			throw new RPLIndexOutOfBoundsException(endIndex, s.length(), this);
 		}
 		return s.substring(beginIndex, endIndex);
 	}

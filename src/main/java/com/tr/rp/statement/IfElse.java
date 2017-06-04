@@ -23,11 +23,20 @@ public class IfElse extends DStatement {
 
 	private Expression exp;
 	private DStatement a, b;
+	private DStatement exceptionSource;
 	
 	public IfElse(Expression exp, DStatement a, DStatement b) {
 		this.exp = exp;
 		this.a = a;
 		this.b = b;
+		this.exceptionSource = this;
+	}
+
+	public IfElse(Expression exp, DStatement a, DStatement b, DStatement exceptionSource) {
+		this.exp = exp;
+		this.a = a;
+		this.b = b;
+		this.exceptionSource = exceptionSource;
 	}
 
 	public IfElse(Expression exp, DStatement a) {
@@ -36,58 +45,68 @@ public class IfElse extends DStatement {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
+		Observe obs1;
+		Observe obs2;
+
+		// If exp is contradiction/tautology we
+		// can immediately pass the a/b iterator.
+		if (exp.hasDefiniteValue()) {
+			if (exp.getDefiniteBoolValue()) {
+				return a.getIterator(parent, c);
+			} else {
+				return b.getIterator(parent, c);
+			}
+		}
+		
+		// Replace rank expressions in exp
+		RankTransformIterator i = 
+				new RankTransformIterator(parent, this, this.exp);
+		Expression exp2 = i.getExpression(0);
+		
+		// Check contradiction/tautology again.
+		if (exp.hasDefiniteValue()) {
+			if (exp.getDefiniteBoolValue()) {
+				return a.getIterator(parent, c);
+			} else {
+				return b.getIterator(parent, c);
+			}
+		}
+		
+		// Split input
+		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
+
+		// Apply condition 
+		obs1 = new Observe(exp2);
+		obs2 = new Observe(new Not(exp2));
+		RankedIterator<VarStore> ia1;
+		RankedIterator<VarStore> ia2;
 		try {
-			// If exp is contradiction/tautology we
-			// can immediately pass the a/b iterator.
-			if (exp.hasDefiniteValue()) {
-				if (exp.getDefiniteBoolValue()) {
-					return a.getIterator(parent, c);
-				} else {
-					return b.getIterator(parent, c);
-				}
-			}
-			
-			// Replace rank expressions in exp
-			RankTransformIterator i = 
-					new RankTransformIterator(parent, this.exp);
-			Expression exp2 = i.getExpression(0);
-			
-			// Check contradiction/tautology again.
-			if (exp.hasDefiniteValue()) {
-				if (exp.getDefiniteBoolValue()) {
-					return a.getIterator(parent, c);
-				} else {
-					return b.getIterator(parent, c);
-				}
-			}
-			
-			// Split input
-			IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
-	
-			// Apply condition 
-			RankedIterator<VarStore> ia1 = new Observe(exp2).getIterator(split.getA(), c);
-			RankedIterator<VarStore> ia2 = new Observe(new Not(exp2)).getIterator(split.getB(), c);
-			
-			// Remember offsets (prior ranks of the conditions)
-			int offset1 = ia1.getConditioningOffset();
-			int offset2 = ia2.getConditioningOffset();
-	
-			// Following happens if input iterator is empty
-			if (offset1 == Integer.MAX_VALUE && offset2 == Integer.MAX_VALUE) {
-				return new AbsurdIterator<VarStore>();
-			}
-			
-			// Execute statements
-			RankedIterator<VarStore> ib1 = a.getIterator(ia1, c);
-			RankedIterator<VarStore> ib2 = b.getIterator(ia2, c);
-	
-			// Merge result
-			RankedIterator<VarStore> rc = new MergingIterator(ib1, ib2, offset1, offset2);
-			return rc;
+			ia1 = obs1.getIterator(split.getA(), c);
+			ia2 = obs2.getIterator(split.getB(), c);
 		} catch (RPLException e) {
-			e.addStatement(this);
+			if (e.getStatement() == obs1 || e.getStatement() == obs2) {
+				e.setStatement(exceptionSource);
+			}
 			throw e;
 		}
+		
+		// Remember offsets (prior ranks of the conditions)
+		int offset1 = ia1.getConditioningOffset();
+		int offset2 = ia2.getConditioningOffset();
+		
+		// Following happens if input iterator is empty
+		if (offset1 == Integer.MAX_VALUE && offset2 == Integer.MAX_VALUE) {
+			return new AbsurdIterator<VarStore>();
+		}
+		
+		// Execute statements
+		RankedIterator<VarStore> ib1 = a.getIterator(ia1, c);
+		RankedIterator<VarStore> ib2 = b.getIterator(ia2, c);
+
+		// Merge result
+		RankedIterator<VarStore> rc = new MergingIterator(ib1, ib2, offset1, offset2);
+		return rc;
+
 	}
 
 	public String toString() {

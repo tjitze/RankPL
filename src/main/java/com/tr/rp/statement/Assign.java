@@ -64,27 +64,22 @@ public class Assign extends DStatement {
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
 			RankTransformIterator rt = 
-				new RankTransformIterator(in, this.value);
+				new RankTransformIterator(in, this, this.value);
 			final Expression exp2 = rt.getExpression(0);
-			return new RankedIterator<VarStore>() {
+			RankedIterator<VarStore> ai = new RankedIterator<VarStore>() {
 	
 				@Override
 				public boolean next() throws RPLException {
-					try {
-						return rt.next();
-					} catch (RPLException e) {
-						e.addStatement(Assign.this);
-						throw e;
-					}
+					return rt.next();
 				}
 	
 				@Override
 				public VarStore getItem() throws RPLException {
+					if (rt.getItem() == null) return null;
 					try {
-						if (rt.getItem() == null) return null;
 						return variable.assign(rt.getItem(), exp2.getValue(rt.getItem()));
 					} catch (RPLException e) {
-						e.addStatement(Assign.this);
+						e.setStatement(Assign.this);
 						throw e;
 					}
 				}
@@ -94,8 +89,9 @@ public class Assign extends DStatement {
 					return rt.getRank();
 				}
 			};
+			return ai;
 		} catch (RPLException e) {
-			e.addStatement(this);
+			e.setStatement(this);
 			throw e;
 		}
 	}

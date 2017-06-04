@@ -59,42 +59,37 @@ public class Composition extends DStatement {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			// Execute first
-			in = first.getIterator(in, c);
-			
-			// Apply rank cut-off if applicable
-			if (c.getRankCutOff() < Integer.MAX_VALUE) {
-				in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
-					@Override
-					public void accept(Integer t) {
-						c.registerCutOffEvent(t);
-					}
-				});
-			}
-
-			// Execute second (but skip if return value is set)
-			if (containsReturnStatement(first)) {
-				IfElse ifElse = new IfElse(new IsSet(new Variable("$return")), new Skip(), second);
-				in = ifElse.getIterator(in, c);
-			} else {
-				in = second.getIterator(in, c);
-			}
-
-			// Apply rank cut-off if applicable
-			if (c.getRankCutOff() < Integer.MAX_VALUE) {
-				in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
-					@Override
-					public void accept(Integer t) {
-						c.registerCutOffEvent(t);
-					}
-				});
-			}
-			return in;
-		} catch (RPLException e) {
-			e.addStatement(this);
-			throw e;
+		// Execute first
+		in = first.getIterator(in, c);
+		
+		// Apply rank cut-off if applicable
+		if (c.getRankCutOff() < Integer.MAX_VALUE) {
+			in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
+				@Override
+				public void accept(Integer t) {
+					c.registerCutOffEvent(t);
+				}
+			});
 		}
+
+		// Execute second (but skip if return value is set)
+		if (containsReturnStatement(first)) {
+			IfElse ifElse = new IfElse(new IsSet(new Variable("$return")), new Skip(), second);
+			in = ifElse.getIterator(in, c);
+		} else {
+			in = second.getIterator(in, c);
+		}
+
+		// Apply rank cut-off if applicable
+		if (c.getRankCutOff() < Integer.MAX_VALUE) {
+			in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
+				@Override
+				public void accept(Integer t) {
+					c.registerCutOffEvent(t);
+				}
+			});
+		}
+		return in;
 	}
 
 	private boolean containsReturnStatement(DStatement first2) {

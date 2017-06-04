@@ -1,8 +1,13 @@
 package com.tr.rp;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Comparator;
@@ -47,9 +52,9 @@ public class RankPL {
 	private static boolean noExecStats = false;
 	private static boolean noRanks = false;
 	private static String fileName;
-	
+
 	public static void main(String[] args) {
-		
+
 		// Handle options
 		try {
 			parseOptions(args);
@@ -58,51 +63,79 @@ public class RankPL {
 			printUsage();
 			return;
 		}
-		
+
 		// Parse input
-        File file = new File(fileName);
-        FileInputStream fis = null;
-        ANTLRInputStream input = null;
-        try {
-            fis = new FileInputStream(file);
-            input = new ANTLRInputStream(fis);
-        } catch (IOException e) {
+		String source = "";
+		try {
+			source = getFileContent(fileName);
+		} catch (IOException e) {
 			System.err.println("I/O Exception while reading source file: " + e.getMessage());
 			return;
-        }
-        RankPLLexer lexer = new RankPLLexer(input);
-        TokenStream tokens = new CommonTokenStream(lexer);
-        RankPLParser parser = new RankPLParser(tokens);
-        parser.setErrorHandler(new BailErrorStrategy());
-        ConcreteParser classVisitor = new ConcreteParser();
-        
-        // Execute
-        Program program = (Program)classVisitor.visit(parser.program());
-        try {
-	        execute(program);
-        } catch (RPLException e) {
-			System.out.println("Exception: " + e);
-        } catch (ParseCancellationException e) {
-        	// Ugly hack to get parse exceptions: re-parse but now without the bail error strategy
+		}
+		
+		RankPLLexer lexer = new RankPLLexer(new ANTLRInputStream(source));
+		TokenStream tokens = new CommonTokenStream(lexer);
+		RankPLParser parser = new RankPLParser(tokens);
+		parser.setErrorHandler(new BailErrorStrategy());
+		ConcreteParser classVisitor = new ConcreteParser();
+
+		// Parse
+		Program program = null;
+		try {
+			program = (Program) classVisitor.visit(parser.program());
+		} catch (ParseCancellationException e) {
+			// Ugly hack to get parse exceptions: re-parse but now without the
+			// bail error strategy
 			System.out.println("Syntax error");
-            parser = new RankPLParser(tokens);
-            classVisitor.visit(parser.program());
-        } catch (Exception e) {
+			try {
+				lexer = new RankPLLexer(new ANTLRInputStream(source));
+				tokens = new CommonTokenStream(lexer);
+				parser = new RankPLParser(tokens);
+				classVisitor = new ConcreteParser();
+				classVisitor.visit(parser.program());
+			} catch (Exception ex) {
+				// Nothing
+			}
+			return;
+		} catch (Exception e) {
 			e.printStackTrace();
-        }
+			return;
+		}
+
+		// Execute
+		try {
+			execute(program);
+		} catch (RPLException e) {
+			System.out.println("Exception: " + e.getDescription());
+			String info = "";
+			if (e.getExpression() != null) {
+				info += "In expression " + e.getExpression();
+			}
+			if (e.getStatement() != null) {
+				info += (info.equals("") ? "In" : ", in") + " statement " + e.getStatement();
+				if (e.getStatement().getLineNumber() != -1) {
+					info += ", on line " + e.getStatement().getLineNumber();
+				}
+			}
+			info += ".";
+			System.out.println(info);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void execute(Program program) throws RPLException {
-        // Build execution context
-        ExecutionContext c = new ExecutionContext();
+		// Build execution context
+		ExecutionContext c = new ExecutionContext();
 
-        // Start time
-        long startTime = System.currentTimeMillis();
+		// Start time
+		long startTime = System.currentTimeMillis();
 
-        // Run
-        RankedIterator<String> it = iterativeDeepening? program.runWithIterativeDeepening(c, Integer.MAX_VALUE): program.run(c);
+		// Run
+		RankedIterator<String> it = iterativeDeepening ? program.runWithIterativeDeepening(c, Integer.MAX_VALUE)
+				: program.run(c);
 
-        // Print outcomes
+		// Print outcomes
 		while (it.next() && it.getRank() <= maxRank) {
 			if (noRanks) {
 				System.out.println(it.getItem());
@@ -116,46 +149,26 @@ public class RankPL {
 
 		// Print exec stats
 		if (!noExecStats) {
-			System.out.println("Took: " + (System.currentTimeMillis() - startTime) +" ms");
+			System.out.println("Took: " + (System.currentTimeMillis() - startTime) + " ms");
 		}
 
 	}
-	
+
 	private static Options createOptions() {
 		Options options = new Options();
-		options.addOption(Option.builder("source")
-				.hasArg()
-				.required()
-				.argName("source_file")
-				.desc("source file to execute")
-				.build());
-		options.addOption(Option.builder("r")
-				.hasArg()
-				.type(Number.class)
-				.argName("max_rank")
-				.desc("maximum rank to generate (default 0)")
-				.build());
-		options.addOption(Option.builder("d")
-				.argName("max_rank")
-				.desc("apply iterative deepening (faster but experimental)")
-				.build());
-		options.addOption(Option.builder("t")
-				.hasArg()
-				.type(Number.class)
-				.argName("timeout")
-				.desc("execution time-out (in milliseconds)")
-				.build());
-		options.addOption(Option.builder("ns")
-				.argName("max_rank")
-				.desc("don't print execution stats")
-				.build());
-		options.addOption(Option.builder("nr")
-				.argName("max_rank")
-				.desc("don't print ranks")
-				.build());
+		options.addOption(Option.builder("source").hasArg().required().argName("source_file")
+				.desc("source file to execute").build());
+		options.addOption(Option.builder("r").hasArg().type(Number.class).argName("max_rank")
+				.desc("maximum rank to generate (default 0)").build());
+		options.addOption(Option.builder("d").argName("max_rank")
+				.desc("apply iterative deepening (faster but experimental)").build());
+		options.addOption(Option.builder("t").hasArg().type(Number.class).argName("timeout")
+				.desc("execution time-out (in milliseconds)").build());
+		options.addOption(Option.builder("ns").argName("max_rank").desc("don't print execution stats").build());
+		options.addOption(Option.builder("nr").argName("max_rank").desc("don't print ranks").build());
 		return options;
 	}
-	
+
 	private static void parseOptions(String[] args) throws ParseException {
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(createOptions(), args);
@@ -163,15 +176,16 @@ public class RankPL {
 			fileName = cmd.getOptionValue("source");
 		}
 		if (cmd.hasOption("r")) {
-			maxRank = ((Number)cmd.getParsedOptionValue("r")).intValue();
+			maxRank = ((Number) cmd.getParsedOptionValue("r")).intValue();
 		}
 		if (cmd.hasOption("t")) {
-			timeOut = ((Number)cmd.getParsedOptionValue("timeOut")).intValue();
+			timeOut = ((Number) cmd.getParsedOptionValue("timeOut")).intValue();
 		}
 		if (cmd.hasOption("d")) {
 			iterativeDeepening = true;
 			if (maxRank > 0) {
-				System.out.println("Warning: ignoring max_rank setting (must be 0 when iterative deepening is enabled).");
+				System.out
+						.println("Warning: ignoring max_rank setting (must be 0 when iterative deepening is enabled).");
 				maxRank = 0;
 			}
 		}
@@ -182,7 +196,7 @@ public class RankPL {
 			noRanks = true;
 		}
 	}
-	
+
 	private static void printUsage() {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.setWidth(160);
@@ -190,12 +204,26 @@ public class RankPL {
 		formatter.setOptionComparator(new Comparator<Option>() {
 			@Override
 			public int compare(Option o1, Option o2) {
-				String s1 = ((Option)o1).getOpt();
-				String s2 = ((Option)o2).getOpt();
+				String s1 = ((Option) o1).getOpt();
+				String s2 = ((Option) o2).getOpt();
 				return order.indexOf(s1) - order.indexOf(s2);
 			}
 		});
 		formatter.printHelp("java -jar RankPL.jar", createOptions(), true);
-
 	}
+
+	private static String getFileContent(String sourceFile) throws IOException {
+		File file = new File(sourceFile);
+		FileInputStream fis = new FileInputStream(file);
+		StringBuilder sb = new StringBuilder();
+		Reader r = new InputStreamReader(fis, "UTF-8"); // or whatever encoding
+		int ch = r.read();
+		while (ch >= 0) {
+			sb.append((char)ch);
+			ch = r.read();
+		}
+		r.close();
+		return sb.toString();
+	}
+
 }

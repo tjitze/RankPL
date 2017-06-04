@@ -234,7 +234,8 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseStatement("x := fun(fun(a, b), c)").toString(), ("x := fun(fun(a, b), c)"));
 		assertEquals(parseStatement("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)").toString(), ("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)"));
 		assertEquals(parseStatement("while (x == fun1(y)) do y := fun2(z)").toString(), ("while (x == fun1(y)) do y := fun2(z)"));
-		assertEquals(parseStatement("x := fun1() <<fun2()>> fun3()").toString(), ("{x := fun1()} <<fun2()>> {x := fun3()}"));
+		assertEquals(parseStatement("x := fun1() <<fun2()>> fun3()").toString(), ("normally (fun2()) x := fun1() exceptionally x := fun3()"));
+		assertEquals(parseStatement("normally (fun2()) x := fun1() exceptionally x := fun3()").toString(), ("normally (fun2()) x := fun1() exceptionally x := fun3()"));
 		assertEquals(parseStatement("observe fun()").toString(), ("observe fun()"));
 		assertEquals(parseStatement("observe fun1() == fun2()").toString(), ("observe fun1() == fun2()"));
 		assertEquals(parseStatement("observe-j (fun1()) fun2()").toString(), ("observe-j (fun1()) fun2()"));

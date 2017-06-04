@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
+import com.tr.rp.core.DStatement;
 import com.tr.rp.core.Expression;
 import com.tr.rp.core.Rank;
 import com.tr.rp.core.RankedItem;
@@ -29,9 +30,22 @@ public class ChooseMergingIterator implements RankedIterator<VarStore> {
 	private Expression rankIncrease;
 	
 	private int normalizationOffset = -1;
-		
+	
+	private DStatement exceptionSource = null;
+	
+	/**
+	 * Construct a choose merging iterator 
+	 * 
+	 * @param in1 First iterator
+	 * @param in2 Second iterator
+	 * @param rankIncrease Expression indicating rank increase for second iterator
+	 * @param exceptionSource Statement to use as exception source for exceptions coning from rank increase expression
+	 * @throws RPLException
+	 */
 	public ChooseMergingIterator(RankedIterator<VarStore> in1, 
-			RankedIterator<VarStore> in2, Expression rankIncrease) throws RPLException {
+			RankedIterator<VarStore> in2, Expression rankIncrease,
+			DStatement exceptionSource) throws RPLException {
+		this.exceptionSource = exceptionSource;
 		this.in1 = in1;
 		this.in2 = in2;
 		in1next = in1.next();
@@ -43,7 +57,12 @@ public class ChooseMergingIterator implements RankedIterator<VarStore> {
 			throw new IllegalArgumentException("Expression contains rank expressions");
 		}
 	}
-	
+
+	public ChooseMergingIterator(RankedIterator<VarStore> in1, 
+			RankedIterator<VarStore> in2, Expression rankIncrease) throws RPLException {
+		this(in1, in2, rankIncrease, null);
+	}
+
 	@Override
 	public boolean next() throws RPLException {
 		if (!pq.isEmpty()) pq.remove();
@@ -53,7 +72,15 @@ public class ChooseMergingIterator implements RankedIterator<VarStore> {
 				in1next = in1.next();
 			}
 			if (in2next) {
-				pq.add(new RankedItem<VarStore>(in2.getItem(), Rank.add(in2.getRank(), rankIncrease.getIntValue(in2.getItem()))));
+				int ri;
+				VarStore vs = in2.getItem();
+				try {
+					ri = rankIncrease.getIntValue(vs);
+				} catch (RPLException e) {
+					e.setStatement(exceptionSource);
+					throw e;
+				}
+				pq.add(new RankedItem<VarStore>(in2.getItem(), Rank.add(in2.getRank(), ri)));
 				in2next = in2.next();
 			}
 		} else {
@@ -67,7 +94,15 @@ public class ChooseMergingIterator implements RankedIterator<VarStore> {
 			// but that's OK. We just need to ensure that all items that are
 			// possibly ranked as low as the current rank are in pq.
 			while (in2next && in2.getRank() < currentRank) {
-				pq.add(new RankedItem<VarStore>(in2.getItem(),Rank.add(in2.getRank(), rankIncrease.getIntValue(in2.getItem()))));
+				int ri;
+				VarStore vs = in2.getItem();
+				try {
+					ri = rankIncrease.getIntValue(vs);
+				} catch (RPLException e) {
+					e.setStatement(exceptionSource);
+					throw e;
+				}
+				pq.add(new RankedItem<VarStore>(in2.getItem(),Rank.add(in2.getRank(), ri)));
 				in2next = in2.next();
 			}
 		}

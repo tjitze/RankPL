@@ -99,18 +99,18 @@ public class IndexElementExpression extends Expression {
 				String s = (String)o;
 				int index = indices[i].getIntValue(e);
 				if (index < 0 || index >= s.length()) {
-					throw new RPLIndexOutOfBoundsException(index, s.length());
+					throw new RPLIndexOutOfBoundsException(index, s.length(), this);
 				}
 				o = s.substring(index, index + 1);
 			} else if (o instanceof PersistentList) {
 				PersistentList list = (PersistentList)o;
 				int index = indices[i].getIntValue(e);
 				if (index < 0 || index >= list.size()) {
-					throw new RPLIndexOutOfBoundsException(index, list.size());
+					throw new RPLIndexOutOfBoundsException(index, list.size(), this);
 				}
 				o = list.get(index);
 			} else {
-				throw new RPLTypeError("list", o);
+				throw new RPLTypeError("list", o, this);
 			}
 		}
 		return o;

@@ -38,7 +38,39 @@ public class Return extends DStatement {
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		Assign assign = new Assign("$return", exp);
-		return assign.getIterator(in, c);
+		try {
+			RankedIterator<VarStore> it = assign.getIterator(in, c);
+			return new RankedIterator<VarStore>() {
+				@Override
+				public boolean next() throws RPLException {
+					try {
+						return it.next();
+					} catch (RPLException e) {
+						e.setStatement(Return.this);
+						throw e;
+					}
+				}
+
+				@Override
+				public VarStore getItem() throws RPLException {
+					try {
+						return it.getItem();
+					} catch (RPLException e) {
+						e.setStatement(Return.this);
+						throw e;
+					}
+				}
+
+				@Override
+				public int getRank() {
+					return it.getRank();
+				}
+				
+			};
+		} catch (RPLException e) {
+			e.setStatement(this);
+			throw e;
+		}
 	}
 		
 	public String toString() {

@@ -100,25 +100,33 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitAssignmentStatement(AssignmentStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression value = (Expression)visit(ctx.exp());
-		return new Assign(target, value);
+		DStatement s = new Assign(target, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
 	public LanguageElement visitReturnStatement(ReturnStatementContext ctx) {
 		Expression e = (Expression)visit(ctx.exp());
-		return new Return(e);
+		DStatement s = new Return(e);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
 	public LanguageElement visitPrintStatement(PrintStatementContext ctx) {
 		Expression e = (Expression)visit(ctx.exp());
-		return new PrintStatement(e);
+		PrintStatement s = new PrintStatement(e);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
 	public LanguageElement visitCutStatement(CutStatementContext ctx) {
 		Expression e = (Expression)visit(ctx.exp());
-		return new Cut(e);
+		DStatement s = new Cut(e);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
@@ -143,28 +151,37 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		Expression value1 = (Expression)visit(ctx.exp(0));
 		Expression value2 = (Expression)visit(ctx.exp(2));
 		Expression rank = (Expression)visit(ctx.exp(1));
-		return new RankedChoice(target, value1, value2, rank);
+		DStatement s1 = new Assign(target, value1);
+		s1.setLineNumber(ctx.exp(0).start.getLine());
+		DStatement s2 = new Assign(target, value2);
+		s2.setLineNumber(ctx.exp(1).start.getLine());
+		DStatement s = new RankedChoice(s1, s2, rank);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
 	public LanguageElement visitIfStatement(IfStatementContext ctx) {
 		Expression boolExpr = (Expression)visit(ctx.exp());
 		DStatement a = (DStatement)visit(ctx.stat().get(0));
-		a.setLineNumber(ctx.stat().get(0).getStart().getLine());
 		DStatement b;
 		if (ctx.stat().size() > 1) {
 			b = (DStatement)visit(ctx.stat().get(1));
-			b.setLineNumber(ctx.stat().get(1).getStart().getLine());
 		} else {
 			b = new Skip();
 		}
-		return new IfElse(boolExpr, a, b);
+		DStatement s = new IfElse(boolExpr, a, b);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+
 	}
 
 	@Override
 	public LanguageElement visitObserveStatement(ObserveStatementContext ctx) {
 		Expression boolExpr = (Expression)visit(ctx.exp());
-		return new Observe(boolExpr);
+		DStatement s = new Observe(boolExpr);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
@@ -178,7 +195,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			rank = (Expression)visit(ctx.exp(0));
 			boolExpr = (Expression)visit(ctx.exp(1));
 		}
-		return new ObserveJ(boolExpr, rank);
+		DStatement s = new ObserveJ(boolExpr, rank);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
@@ -192,17 +211,19 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			rank = (Expression)visit(ctx.exp(0));
 			boolExpr = (Expression)visit(ctx.exp(1));
 		}
-		return new ObserveL(boolExpr, rank);
+		DStatement s = new ObserveL(boolExpr, rank);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
 	public LanguageElement visitRankedChoiceStatement(RankedChoiceStatementContext ctx) {
 		Expression rank = ctx.exp() == null? lit(1): (Expression)visit(ctx.exp());
 		DStatement a = (DStatement)visit(ctx.stat().get(0));
-		a.setLineNumber(ctx.stat().get(0).getStart().getLine());
 		DStatement b = (DStatement)visit(ctx.stat().get(1));
-		b.setLineNumber(ctx.stat().get(1).getStart().getLine());
-		return new RankedChoice(a, b, rank);
+		DStatement s = new RankedChoice(a, b, rank);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
@@ -210,14 +231,18 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression a = (Expression)visit(ctx.exp().get(0));
 		Expression b = (Expression)visit(ctx.exp().get(1));
-		return new RangeChoice(target, a, b);
+		DStatement s = new RangeChoice(target, a, b);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
 	public LanguageElement visitReadFileStatement(ReadFileStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		Expression fileName = (Expression)visit(ctx.exp());
-		return new ReadFile(target, fileName, ReadFile.InputMethod.OnePerLine);
+		DStatement s = new ReadFile(target, fileName, ReadFile.InputMethod.OnePerLine);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
@@ -225,9 +250,10 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		DStatement[] choices = new DStatement[ctx.stat().size()];
 		for (int i = 0; i < choices.length; i++) {
 			choices[i] = (DStatement)visit(ctx.stat().get(i));
-			choices[i].setLineNumber(ctx.stat().get(i).getStart().getLine());
 		}
-		return constructIndifferentChoice(choices, 0);
+		DStatement s = constructIndifferentChoice(choices, 0);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 	
 	public DStatement constructIndifferentChoice(DStatement[] choices, int idx) {
@@ -244,15 +270,18 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitSkipStatement(SkipStatementContext ctx) {
-		return new Skip();
+		DStatement s = new Skip();
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 	
 	@Override
 	public LanguageElement visitWhileStatement(WhileStatementContext ctx) {
 		Expression boolExpr = (Expression)visit(ctx.exp());
-		DStatement a = (DStatement)visit(ctx.stat());
-		a.setLineNumber(ctx.stat().getStart().getLine());
-		return new While(boolExpr, a);
+		DStatement body = (DStatement)visit(ctx.stat());
+		DStatement s = new While(boolExpr, body);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
@@ -261,10 +290,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		DStatement init = (DStatement)visit(ctx.stat(0));
 		DStatement next = (DStatement)visit(ctx.stat(1));
 		DStatement body = (DStatement)visit(ctx.stat(2));
-		init.setLineNumber(ctx.stat(0).getStart().getLine());
-		next.setLineNumber(ctx.stat(1).getStart().getLine());
-		body.setLineNumber(ctx.stat(2).getStart().getLine());
-		return new ForStatement(init, forCondition, next, body);
+		DStatement s = new ForStatement(init, forCondition, next, body);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
 	}
 
 	@Override
@@ -514,7 +542,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		List<DStatement> statements = new ArrayList<DStatement>();
 		for (StatContext sc: ctx.stat()) {
 			DStatement s = (DStatement)visit(sc);
-			s.setLineNumber(sc.getStart().getLine());
 			statements.add(s);
 		}
 		if (statements.isEmpty()) {

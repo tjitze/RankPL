@@ -42,51 +42,53 @@ public class While extends DStatement {
 	}
 			
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			while (true) {
-	
-				// Do one iteration
-				in = generateIteration(in, c);
-				
-				// Check if exp is still satisfied
-				BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-				boolean expSatisfied = false;
-				boolean hasNext = bi.next();
-				if (!hasNext) { // Undefined
-					return new AbsurdIterator<VarStore>(); 
+		while (true) {
+
+			// Do one iteration
+			in = generateIteration(in, c);
+			
+			// Check if exp is still satisfied
+			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
+			boolean expSatisfied = false;
+			boolean hasNext = bi.next();
+			if (!hasNext) { // Undefined
+				return new AbsurdIterator<VarStore>(); 
+			}
+			while (hasNext) {
+				if (whileCondition.getBoolValue(bi.getItem())) {
+					expSatisfied = true;
+					break;
 				}
-				while (hasNext) {
-					if (whileCondition.getBoolValue(bi.getItem())) {
-						expSatisfied = true;
-						break;
-					}
-					hasNext = bi.next();
-				}
-				
-				bi.reset();
-				bi.stopBuffering();
-	
-				// If exp is not satisfied, we are done
-				if (!expSatisfied) {
-					return bi;
-				}
-				
-				// Try another iteration
-				in = bi;
+				hasNext = bi.next();
 			}
 			
-		} catch (RPLException e) {
-			e.addStatement(this);
-			throw e;
-		}
-	}
+			bi.reset();
+			bi.stopBuffering();
 
+			// If exp is not satisfied, we are done
+			if (!expSatisfied) {
+				return bi;
+			}
+			
+			// Try another iteration
+			in = bi;
+		}
+		
+	}
 	
 	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		if (preStatement == null) {
-			return (new IfElse(whileCondition, body, new Skip())).getIterator(in, c);
-		} else {
-			return new Composition(preStatement, (new IfElse(whileCondition, body, new Skip()))).getIterator(in, c);
+		IfElse ifElse = new IfElse(whileCondition, body, new Skip(), this);
+		try {
+			if (preStatement == null) {
+				return ifElse.getIterator(in, c);
+			} else {
+				return new Composition(preStatement, ifElse).getIterator(in, c);
+			}
+		} catch (RPLException e) {
+			if (e.getStatement() == ifElse || e.getStatement() == preStatement) {
+				e.setStatement(this);
+			}
+			throw e;
 		}
 	}
 	

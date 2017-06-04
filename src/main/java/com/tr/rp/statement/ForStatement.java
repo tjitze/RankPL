@@ -82,7 +82,7 @@ public class ForStatement extends DStatement {
 			}
 			
 		} catch (RPLException e) {
-			e.addStatement(this);
+			e.setStatement(this);
 			throw e;
 		}
 	}

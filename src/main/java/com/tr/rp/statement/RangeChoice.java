@@ -54,7 +54,7 @@ public class RangeChoice extends DStatement {
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
-			RankTransformIterator rt = new RankTransformIterator(in, beginExp, endExp);
+			RankTransformIterator rt = new RankTransformIterator(in, this, beginExp, endExp);
 			final Expression begin = rt.getExpression(0);
 			final Expression end = rt.getExpression(1);
 			return new RankedIterator<VarStore>() {
@@ -97,7 +97,7 @@ public class RangeChoice extends DStatement {
 							return true;
 						}
 					} catch (RPLException e) {
-						e.addStatement(RangeChoice.this);
+						e.setStatement(RangeChoice.this);
 						throw e;
 					}
 				}
@@ -112,7 +112,7 @@ public class RangeChoice extends DStatement {
 							return variable.assign(vs, i);
 						}
 					} catch (RPLException e) {
-						e.addStatement(RangeChoice.this);
+						e.setStatement(RangeChoice.this);
 						throw e;
 					}
 				}
@@ -123,7 +123,7 @@ public class RangeChoice extends DStatement {
 				}
 			};
 		} catch (RPLException e) {
-			e.addStatement(this);
+			e.setStatement(this);
 			throw e;
 		}
 	}

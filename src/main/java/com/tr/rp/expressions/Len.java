@@ -59,7 +59,7 @@ public class Len extends Expression {
 				return ((PersistentList)o).size();
 			}
 		}
-		throw new RPLTypeError("list or string", o);
+		throw new RPLTypeError("list or string", o, e);
 	}
 
 	@Override

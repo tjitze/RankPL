@@ -21,13 +21,21 @@ import com.tr.rp.tools.Pair;
 public class Observe extends DStatement {
 
 	private Expression exp;
+	private DStatement exceptionSource;
 	
 	public Observe(Expression exp) {
 		this.exp = exp;
+		this.exceptionSource = this;
+	}
+
+	public Observe(Expression exp, DStatement exceptionSource) {
+		this.exp = exp;
+		this.exceptionSource = exceptionSource;
 	}
 
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+		Expression exp2 = null;
 		try {
 			// If exp is contradiction/tautology we
 			// can immediately return result.
@@ -41,8 +49,8 @@ public class Observe extends DStatement {
 	
 			// Replace rank expressions in exp
 			RankTransformIterator rt = 
-					new RankTransformIterator(in, this.exp);
-			Expression exp2 = rt.getExpression(0);
+					new RankTransformIterator(in, this, this.exp);
+			exp2 = rt.getExpression(0);
 			
 			// Check contradiction/tautology again.
 			if (exp.hasDefiniteValue()) {
@@ -64,6 +72,8 @@ public class Observe extends DStatement {
 			final int conditioningOffset = hasNext? bi.getRank(): Integer.MAX_VALUE;
 			// Move back one item so that we can reuse the buffering iterator
 			if (hasNext) bi.reset(bi.getIndex() - 1);
+			
+			final Expression exp2f = exp2;
 			return new RankedIterator<VarStore>() {
 				
 				@Override
@@ -71,12 +81,14 @@ public class Observe extends DStatement {
 					try {
 						// Find next varstore satisfying condition
 						boolean hasNext = bi.next();
-						while (hasNext && !exp2.getBoolValue(bi.getItem())) { 
+						while (hasNext && !exp2f.getBoolValue(bi.getItem())) { 
 							hasNext = bi.next();
 						}
 						return hasNext;
 					} catch (RPLException e) {
-						e.addStatement(Observe.this);
+						if (e.getExpression() == exp2f) {
+							e.setStatement(exceptionSource);
+						}
 						throw e;
 					}
 				}
@@ -86,7 +98,7 @@ public class Observe extends DStatement {
 					try {
 						return bi.getItem();
 					} catch (RPLException e) {
-						e.addStatement(Observe.this);
+						e.setStatement(Observe.this);
 						throw e;
 					}
 				}
@@ -103,11 +115,13 @@ public class Observe extends DStatement {
 				}
 				
 				public String toString() {
-					return "ObserveIterator(exp=" + exp2 + ", buffer=" + bi + ")";
+					return "ObserveIterator(exp=" + exp2f + ", buffer=" + bi + ")";
 				}
 			};
 		} catch (RPLException e) {
-			e.addStatement(this);
+			if (e.getExpression() == exp2) {
+				e.setStatement(exceptionSource);
+			}
 			throw e;
 		}
 	}

@@ -53,7 +53,7 @@ public class ObserveL extends DStatement {
 			Expression rnb = new RankExpr(new Not(b));
 			// Do rank transformation here
 			RankTransformIterator rt = 
-					new RankTransformIterator(in, rb, rnb);
+					new RankTransformIterator(in, this, rb, rnb);
 			rb = rt.getExpression(0);
 			rnb = rt.getExpression(1);
 			// Handle destruction
@@ -78,7 +78,7 @@ public class ObserveL extends DStatement {
 			// Execute
 			return statement.getIterator(rt, c);
 		} catch (RPLException e) {
-			e.addStatement(this);
+			e.setStatement(this);
 			throw e;
 		}
 	}

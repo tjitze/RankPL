@@ -92,19 +92,15 @@ public class RankedChoice extends DStatement {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			RankTransformIterator rt = new RankTransformIterator(in, rank);
-			Expression rank2 = rt.getExpression(0);
-			IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(rt);
-			RankedIterator<VarStore> merge = new ChooseMergingIterator(
-					s1.getIterator(split.getA(), c), 
-					s2.getIterator(split.getB(), c), 
-					rank2);
-			return new DuplicateRemovingIterator<VarStore>(merge);
-		} catch (RPLException e) {
-			e.addStatement(this);
-			throw e;
-		}
+		RankTransformIterator rt = new RankTransformIterator(in, this, rank);
+		Expression rank2 = rt.getExpression(0);
+		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(rt);
+		RankedIterator<VarStore> merge = new ChooseMergingIterator(
+				s1.getIterator(split.getA(), c), 
+				s2.getIterator(split.getB(), c), 
+				rank2,
+				this);
+		return new DuplicateRemovingIterator<VarStore>(merge);
 	}
 	
 	public String toString() {
@@ -112,7 +108,7 @@ public class RankedChoice extends DStatement {
 		if (rankString.startsWith("(") && rankString.endsWith(")")) {
 			rankString = rankString.substring(1, rankString.length()-1);
 		}
-		return "{" + s1 + "} <<" + rankString + ">> {" + s2 + "}";
+		return "normally ("+rankString+") " + s1 + " exceptionally " + s2;
 	}
 	
 	public boolean equals(Object o) {

@@ -82,7 +82,7 @@ public abstract class Expression implements LanguageElement {
 		} else if (o instanceof Boolean) {
 			return ((Boolean)o);
 		} else {
-			throw new RPLTypeError("boolean", o);
+			throw new RPLTypeError("boolean", o, this);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public abstract class Expression implements LanguageElement {
 		} else if (o instanceof Integer) {
 			return ((Integer)o);
 		} else {
-			throw new RPLTypeError("integer", o);
+			throw new RPLTypeError("integer", o, this);
 		}
 	}
 	
@@ -104,7 +104,7 @@ public abstract class Expression implements LanguageElement {
 		} else if (o instanceof String) {
 			return ((String)o);
 		} else {
-			throw new RPLTypeError("string", o);
+			throw new RPLTypeError("string", o, this);
 		}
 	}
 
@@ -115,7 +115,7 @@ public abstract class Expression implements LanguageElement {
 		} else if (o instanceof PersistentList) {
 			return ((PersistentList)o);
 		} else {
-			throw new RPLTypeError("list", o);
+			throw new RPLTypeError("list", o, this);
 		}
 	}
 
@@ -126,7 +126,7 @@ public abstract class Expression implements LanguageElement {
 		} else if (o instanceof Boolean) {
 			return ((Boolean)o);
 		} else {
-			throw new RPLTypeError("bool", o);
+			throw new RPLTypeError("bool", o, this);
 		}
 	}
 	
@@ -137,7 +137,7 @@ public abstract class Expression implements LanguageElement {
 		} else if (o instanceof Integer) {
 			return ((Integer)o);
 		} else {
-			throw new RPLTypeError("integer", o);
+			throw new RPLTypeError("integer", o, this);
 		}
 	}
 	
@@ -146,7 +146,7 @@ public abstract class Expression implements LanguageElement {
 		if (o instanceof String) {
 			return ((String)o);
 		} else {
-			throw new RPLTypeError("string", o);
+			throw new RPLTypeError("string", o, this);
 		}
 	}
 
@@ -155,7 +155,7 @@ public abstract class Expression implements LanguageElement {
 		if (o instanceof PersistentList) {
 			return ((PersistentList)o);
 		} else {
-			throw new RPLTypeError("list", o);
+			throw new RPLTypeError("list", o, this);
 		}
 	}
 

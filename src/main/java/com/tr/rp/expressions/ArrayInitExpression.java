@@ -94,7 +94,7 @@ public class ArrayInitExpression extends Expression {
 				list = new PersistentList((Integer)dimensionValue);
 			}
 		} else {
-			throw new RPLTypeError("Integer", dimensionValue);
+			throw new RPLTypeError("Integer", dimensionValue, dimension);
 		}
 		return list;
 	}
@@ -116,7 +116,7 @@ public class ArrayInitExpression extends Expression {
 				list = new PersistentList((Integer)dimensionValue);
 			}
 		} else {
-			throw new RPLTypeError("Integer", dimensionValue);
+			throw new RPLTypeError("Integer", dimensionValue, dimension);
 		}
 		return list;
 	}

@@ -9,6 +9,8 @@ import org.organicdesign.fp.collections.PersistentTreeMap;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
+import com.tr.rp.expressions.PersistentList;
+import com.tr.rp.expressions.Variable;
 
 /**
  * Represents a variable store: an assignment of values to variables.
@@ -65,7 +67,7 @@ public class VarStore {
 		} else if (o == null) {
 			throw new RPLUndefinedException(var);
 		} else {
-			throw new RPLTypeError("integer", o);
+			throw new RPLTypeError("integer", o, new Variable(var));
 		}
 	}
 
@@ -83,7 +85,7 @@ public class VarStore {
 		} else if (o == null) {
 			throw new RPLUndefinedException(var);
 		} else {
-			throw new RPLTypeError("boolean", o);
+			throw new RPLTypeError("boolean", o, new Variable(var));
 		}
 	}
 	
@@ -101,7 +103,25 @@ public class VarStore {
 		} else if (o == null) {
 			throw new RPLUndefinedException(var);
 		} else {
-			throw new RPLTypeError("string", o);
+			throw new RPLTypeError("string", o, new Variable(var));
+		}
+	}
+	
+	/**
+	 * Get List value of variable
+	 * 
+	 * @param var Name of variable to get
+	 * @return String value of variable
+	 * @throws RPLException If variable is undefined or not String
+	 */
+	public PersistentList getListValue(String var) throws RPLException {
+		Object o = getValue(var);
+		if (o != null && o instanceof PersistentList) {
+			return (PersistentList)o;
+		} else if (o == null) {
+			throw new RPLUndefinedException(var);
+		} else {
+			throw new RPLTypeError("list", o, new Variable(var));
 		}
 	}
 	

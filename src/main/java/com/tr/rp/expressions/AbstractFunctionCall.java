@@ -70,10 +70,12 @@ public abstract class AbstractFunctionCall extends Expression {
 	}
 	
 	public final Function getFunction() throws RPLException {
-		if (functionScope.getFunction(functionName) == null) {
-			throw new RPLFunctionUndefinedException(functionName);
+		try {
+			return functionScope.getFunction(functionName);
+		} catch (RPLException e) {
+			e.setExpression(this);
+			throw e;
 		}
-		return functionScope.getFunction(functionName);
 	}
 
 	public final Expression[] getArguments() {

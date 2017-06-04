@@ -41,7 +41,7 @@ public class ObserveJ extends DStatement {
 		try {
 			return new RankedChoice(new Observe(b), new Observe(new Not(b)), rank).getIterator(in, c);
 		} catch (RPLException e) {
-			e.addStatement(this);
+			e.setStatement(this);
 			throw e;
 		}
 	}

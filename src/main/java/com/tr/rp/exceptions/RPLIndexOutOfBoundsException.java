@@ -1,15 +1,18 @@
 package com.tr.rp.exceptions;
 
+import com.tr.rp.core.Expression;
+
 public class RPLIndexOutOfBoundsException extends RPLException {
 
 	private final int index;
 	private final int size;
 	private boolean hasIndexAndSize;
 	
-	public RPLIndexOutOfBoundsException(int index, int size) {
+	public RPLIndexOutOfBoundsException(int index, int size, Expression e) {
 		this.index = index;
 		this.size = size;
 		this.hasIndexAndSize = true;
+		setExpression(e);
 	}
 	
 	public RPLIndexOutOfBoundsException() {
@@ -20,6 +23,6 @@ public class RPLIndexOutOfBoundsException extends RPLException {
 	
 	public String getDescription() {
 		return "Array or string index out of bounds" +
-				(hasIndexAndSize? (" (referencing index " + index + " of array or string of length " + size + ")"): "");
+				(hasIndexAndSize? (" (referencing index " + index + " of array or string of length " + size + ")"): "") + ".";
 	}
 }

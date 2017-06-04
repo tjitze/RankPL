@@ -81,7 +81,7 @@ public class Plus extends Expression {
 		if (o1 instanceof String || o2 instanceof String) {
 			return o1.toString() + o2.toString();
 		}
-		throw new RPLTypeError("int or string", o1);
+		throw new RPLTypeError("int or string", o1, e1);
 	}
 	
 	@Override

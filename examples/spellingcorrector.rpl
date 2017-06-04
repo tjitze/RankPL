@@ -1,32 +1,14 @@
-# This example implements a spelling correction algorithm. The rough idea is 
-# as follows: On line 1 we set input, which is a (possibly) misspelled word. 
-# We then pick a word (potential_match) at random from a dictionary (lines 3-12). 
-# We then compare, one by one, the characters of input and potential_match. For 
-# each character we observe that the characters of input and potential_match are 
-# the same (input[i] == potential_match[k]). This is done using L-conditioning, 
-# which means that the rank of a potential match is increased by one unit, if the
-# characters at i and k don't match. If the characters match, we increase the 
-# pointers i and k and repeat the process. If the characters don't match, we 
-# consider three possibilities and generate the corresponding alternatives using 
-# an either-or statement:
-#
-# 1 There is a misspelling (e.g. when writing cot instead of cat). 
-#   We increase i and k.
-# 2 There is an insertion (e.g. when writing cart instead of cat). 
-#   We increase only i.
-# 3 There is an omission (e.g. when writing ct instead of cat). 
-#   We increase only k.
-#
-# At the end we use a normal observe statement to condition on the fact that 
-# all characters were processed.
+# A spelling correction algorithm.
 
-input := "foorteen";
+# Input (possibly misspelled)
+input := "cemistryy";
 
+# Read dictionary of possible words
 dictionary := [
-"one", "two", "three", "four", "five", 
-"six", "seven", "eight", "nine", "ten", "eleven", 
-"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
-"seventeen", "eighteen", "nineteen", "twenty"
+	"one", "two", "three", "four", "five",
+	"six", "seven", "eight", "nine", "ten", "eleven",
+	"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+	"seventeen", "eighteen", "nineteen", "twenty"
 ];
 
 # Randomly choose word from dictionary
@@ -36,28 +18,41 @@ potential_match := dictionary[choice];
 # Initialize counters (i iterates over input, k over match)
 i := 0; k := 0;
 
+# Append * to end of input and potential_match, to match end-of-word
+input := input + "*";
+potential_match := potential_match + "*";
+
 # While there are characters left to match ...
 while (i < len(input) & k < len(potential_match)) do {
-	observe-l (1) input[i] == potential_match[k];
+	# Improve rank of match with 1 unit of rank w.r.t. rank of a mis-match.
+	observe-l (1) (input[i] == potential_match[k]);
+
+	# If match, increase pointers
 	if (input[i] == potential_match[k]) then {
 		i := i + 1;
 		k := k + 1;
-	} else {
-		either {
-			i := i + 1;
-			k := k + 1;
-		} or {
-			i := i + 1;
-		} or {
-			k := k + 1;
-		}
 	}
+
+	# If mis-match, consider three possibilities:
+	else {
+		either {
+			# misspelling (as in cot instead of cat)
+			i := i + 1; 
+			k := k + 1;
+		} or {
+			# misplaced char in input (as in cart instead of cat)
+			i := i + 1; 
+		} or {
+			# missing char in input (as in ct instead of cat)
+			k := k + 1;
+		};
+	};
 };
+
+# Filter on event that all characters were matched
 observe i == len(input) & k == len(potential_match);
+
 return potential_match;
-
-
-
 
 
 

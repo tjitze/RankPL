@@ -45,7 +45,7 @@ expr0
  ;
  
 expr1
- : expr2 (aop=('&'|'|'|'^') expr1)?	 					# BoolExpression
+ : expr2 (aop=('&'|'&&'|'|'|'||'|'^') expr1)?	 		# BoolExpression
  ;
 
 expr2

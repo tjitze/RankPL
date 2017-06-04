@@ -1,18 +1,19 @@
 package com.tr.rp.statement;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
-import com.tr.rp.core.Expression;
-import com.tr.rp.core.ProgramBuilder;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.ProgramBuilder;
+import com.tr.rp.ast.expressions.ArrayInitExpression;
+import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.expressions.Variable;
+import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.expressions.ArrayInitExpression;
-import com.tr.rp.expressions.PersistentList;
-import com.tr.rp.expressions.Variable;
-import com.tr.rp.expressions.Literal;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.PersistentList;
+import com.tr.rp.varstore.VarStore;
 
 public class ArraysTest extends RPLBaseTest {
 

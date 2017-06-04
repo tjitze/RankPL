@@ -1,20 +1,21 @@
 package com.tr.rp.statement;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.expressions.Not;
+import com.tr.rp.ast.expressions.RankExpr;
+import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.expressions.Not;
-import com.tr.rp.expressions.RankExpr;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.VarStore;
 
 public class RankExpressionTest extends RPLBaseTest {
 
 	public void testSimpleRankExpressions() throws RPLException {
 
-		DStatement s = new Assign("c", new RankExpr(eq(var("a"), lit(1))));
+		AbstractStatement s = new Assign("c", new RankExpr(eq(var("a"), lit(1))));
 		RankedIterator<VarStore> result = s.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());

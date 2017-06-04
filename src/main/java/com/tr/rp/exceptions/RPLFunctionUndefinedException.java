@@ -1,6 +1,6 @@
 package com.tr.rp.exceptions;
 
-import com.tr.rp.expressions.FunctionCall;
+import com.tr.rp.ast.expressions.FunctionCall;
 
 public class RPLFunctionUndefinedException extends RPLException {
 

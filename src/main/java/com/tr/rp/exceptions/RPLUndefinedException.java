@@ -1,11 +1,11 @@
 package com.tr.rp.exceptions;
 
-import com.tr.rp.core.Expression;
-import com.tr.rp.expressions.Variable;
+import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.expressions.Variable;
 
 public class RPLUndefinedException extends RPLException {
 
-	public RPLUndefinedException(Expression e) {
+	public RPLUndefinedException(AbstractExpression e) {
 		setExpression(e);
 	}
 	

@@ -1,19 +1,19 @@
 package com.tr.rp.exceptions;
 
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.Expression;
-import com.tr.rp.statement.Composition;
+import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.statements.Composition;
 
 public abstract class RPLException extends Exception {
 
-	private Expression expression;
+	private AbstractExpression expression;
 
-	private DStatement statement;
+	private AbstractStatement statement;
 
 	/**
 	 * Set statement from which this exception originates.
 	 */
-	public void setStatement(DStatement statement) {
+	public void setStatement(AbstractStatement statement) {
 		if (statement.toString().equals("if (isset($return)) then skip else return a")) {
 			throw new RuntimeException();
 		}
@@ -23,21 +23,21 @@ public abstract class RPLException extends Exception {
 	/**
 	 * Set expression from which this exception originates.
 	 */
-	public void setExpression(Expression expression) {
+	public void setExpression(AbstractExpression expression) {
 		this.expression = expression;
 	}
 	
 	/**
 	 * @return Statement from which this exception originates.
 	 */
-	public DStatement getStatement() {
+	public AbstractStatement getStatement() {
 		return statement;
 	}
 
 	/**
 	 * @return Expression from which this exception originates;
 	 */
-	public Expression getExpression() {
+	public AbstractExpression getExpression() {
 		return expression;
 	}
 

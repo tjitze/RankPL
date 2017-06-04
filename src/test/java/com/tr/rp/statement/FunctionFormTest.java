@@ -1,26 +1,31 @@
 package com.tr.rp.statement;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.Expression;
-import com.tr.rp.core.Function;
-import com.tr.rp.core.FunctionScope;
-import com.tr.rp.core.ProgramBuilder;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.Function;
+import com.tr.rp.ast.ProgramBuilder;
+import com.tr.rp.ast.expressions.AbstractFunctionCall;
+import com.tr.rp.ast.expressions.Expressions;
+import com.tr.rp.ast.expressions.FunctionCall;
+import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.expressions.Variable;
+import com.tr.rp.ast.statements.Assign;
+import com.tr.rp.ast.statements.Composition;
+import com.tr.rp.ast.statements.FunctionCallForm;
+import com.tr.rp.ast.statements.RankedChoice;
+import com.tr.rp.ast.statements.Return;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.expressions.AbstractFunctionCall;
-import com.tr.rp.expressions.Expressions;
-import com.tr.rp.expressions.FunctionCall;
-import com.tr.rp.expressions.Literal;
-import com.tr.rp.expressions.Variable;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.tools.Pair;
+import com.tr.rp.varstore.VarStore;
 
 public class FunctionFormTest extends RPLBaseTest {
 
@@ -46,8 +51,8 @@ public class FunctionFormTest extends RPLBaseTest {
 	}
 	
 	public void testRewrite() {
-		Expression[] args = new Expression[] { new Variable("a") };
-		DStatement s = new ProgramBuilder()
+		AbstractExpression[] args = new AbstractExpression[] { new Variable("a") };
+		AbstractStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
 				.add(new Assign("b", new FunctionCall("test1", scope, args)))
 				.build();
@@ -55,11 +60,11 @@ public class FunctionFormTest extends RPLBaseTest {
 		// Construct expected function call form
 		List<Pair<String, AbstractFunctionCall>> assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
 		assignments.add(new Pair<String, AbstractFunctionCall>("x", new FunctionCall("test1", scope, args)));
-		DStatement rs = new Assign("b", "x");
+		AbstractStatement rs = new Assign("b", "x");
 		FunctionCallForm fcf = new FunctionCallForm(rs, assignments);
 		
 		// Test
-		DStatement rw = s.rewriteEmbeddedFunctionCalls();
+		AbstractStatement rw = s.rewriteEmbeddedFunctionCalls();
 		assertEquals(rw.getClass(), Composition.class);
 		assertEquals(((Composition)rw).getFirst(), new Assign("a", 20));
 		assertEquals(((Composition)rw).getSecond().getClass(), FunctionCallForm.class);
@@ -67,8 +72,8 @@ public class FunctionFormTest extends RPLBaseTest {
 	}		
 		
 	public void testExecuteSingle() throws RPLException {
-		Expression[] args = new Expression[] { new Variable("a") };
-		DStatement s = new ProgramBuilder()
+		AbstractExpression[] args = new AbstractExpression[] { new Variable("a") };
+		AbstractStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
 				.add(new Assign("b", new FunctionCall("test1", scope, args)))
 				.build();
@@ -86,23 +91,23 @@ public class FunctionFormTest extends RPLBaseTest {
 	}
 	
 	public void testRewriteNested() {
-		Expression[] args1 = new Expression[] { new Variable("a") };
-		Expression[] args2 = new Expression[] { new FunctionCall("test1", scope, args1) };
-		DStatement s = new ProgramBuilder()
+		AbstractExpression[] args1 = new AbstractExpression[] { new Variable("a") };
+		AbstractExpression[] args2 = new AbstractExpression[] { new FunctionCall("test1", scope, args1) };
+		AbstractStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
 				.add(new Assign("b", new FunctionCall("test1", scope, args2)))
 				.build();
 		
 		// Construct expected function call form
 		List<Pair<String, AbstractFunctionCall>> assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
-		Expression[] args3 = new Expression[] { new Variable("x") };
+		AbstractExpression[] args3 = new AbstractExpression[] { new Variable("x") };
 		assignments.add(new Pair<String, AbstractFunctionCall>("x", new FunctionCall("test1", scope, args1)));
 		assignments.add(new Pair<String, AbstractFunctionCall>("y", new FunctionCall("test1", scope,  args3)));
-		DStatement rs = new Assign("b", "y");
+		AbstractStatement rs = new Assign("b", "y");
 		FunctionCallForm fcf = new FunctionCallForm(rs, assignments);
 		
 		// Test
-		DStatement rw = s.rewriteEmbeddedFunctionCalls();
+		AbstractStatement rw = s.rewriteEmbeddedFunctionCalls();
 		assertEquals(rw.getClass(), Composition.class);
 		assertEquals(((Composition)rw).getFirst(), new Assign("a", 20));
 		assertEquals(((Composition)rw).getSecond().getClass(), FunctionCallForm.class);
@@ -111,9 +116,9 @@ public class FunctionFormTest extends RPLBaseTest {
 	}
 
 	public void testExecuteNested() throws RPLException {
-		Expression[] args1 = new Expression[] { new Variable("a") };
-		Expression[] args2 = new Expression[] { new FunctionCall("test1", scope, args1) };
-		DStatement s = new ProgramBuilder()
+		AbstractExpression[] args1 = new AbstractExpression[] { new Variable("a") };
+		AbstractExpression[] args2 = new AbstractExpression[] { new FunctionCall("test1", scope, args1) };
+		AbstractStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
 				.add(new Assign("b", new FunctionCall("test1", scope, args2)))
 				.build();
@@ -131,8 +136,8 @@ public class FunctionFormTest extends RPLBaseTest {
 	}
 	
 	public void testExecuteRanked() throws RPLException {
-		Expression[] args = new Expression[] { new Variable("a") };
-		DStatement s = new ProgramBuilder()
+		AbstractExpression[] args = new AbstractExpression[] { new Variable("a") };
+		AbstractStatement s = new ProgramBuilder()
 				.add(new Assign("a", 20))
 				.add(new Assign("b", new FunctionCall("test2", scope, args)))
 				.build();

@@ -1,15 +1,20 @@
 package com.tr.rp.statement;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.ProgramBuilder;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.AbsurdIterator;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.ProgramBuilder;
+import com.tr.rp.ast.statements.Assign;
+import com.tr.rp.ast.statements.IfElse;
+import com.tr.rp.ast.statements.Observe;
+import com.tr.rp.ast.statements.RankedChoice;
+import com.tr.rp.ast.statements.Skip;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.iterators.ranked.AbsurdIterator;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.VarStore;
 
 public class IfElseTest extends RPLBaseTest {
 	
@@ -208,7 +213,7 @@ public class IfElseTest extends RPLBaseTest {
 		// 1   0 5
 		// 1   1 5
 		
-		DStatement p = new ProgramBuilder()
+		AbstractStatement p = new ProgramBuilder()
 				.add(new RankedChoice(target("fx1"), lit(0), lit(1), lit(5)))
 				.add(new RankedChoice(target("a1"), lit(0), lit(1), lit(0)))
 				.add(new IfElse(eq(var("fx1"), lit(0)),

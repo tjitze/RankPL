@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.tr.rp.core.Expression;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.VarStore;
 
 public class ResultPrinter {
 
@@ -34,7 +34,7 @@ public class ResultPrinter {
 		}
 	}
 	
-	public static void printRanks(RankedIterator<VarStore> it, Expression...bs) throws RPLException {
+	public static void printRanks(RankedIterator<VarStore> it, AbstractExpression...bs) throws RPLException {
 		Set<Integer> found = new HashSet<Integer>();
 		while (it.next() && found.size() < bs.length) {
 			for (int i = 0; i< bs.length; i++) {

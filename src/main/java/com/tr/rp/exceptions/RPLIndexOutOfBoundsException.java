@@ -1,6 +1,6 @@
 package com.tr.rp.exceptions;
 
-import com.tr.rp.core.Expression;
+import com.tr.rp.ast.AbstractExpression;
 
 public class RPLIndexOutOfBoundsException extends RPLException {
 
@@ -8,7 +8,7 @@ public class RPLIndexOutOfBoundsException extends RPLException {
 	private final int size;
 	private boolean hasIndexAndSize;
 	
-	public RPLIndexOutOfBoundsException(int index, int size, Expression e) {
+	public RPLIndexOutOfBoundsException(int index, int size, AbstractExpression e) {
 		this.index = index;
 		this.size = size;
 		this.hasIndexAndSize = true;

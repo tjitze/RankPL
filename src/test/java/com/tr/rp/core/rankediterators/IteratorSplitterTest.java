@@ -1,6 +1,8 @@
 package com.tr.rp.core.rankediterators;
 
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.iterators.ranked.IteratorSplitter;
+import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.statement.RPLBaseTest;
 
 public class IteratorSplitterTest extends RPLBaseTest {

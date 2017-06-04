@@ -1,9 +1,13 @@
 package com.tr.rp.core.rankediterators;
 
-import com.tr.rp.core.VarStore;
+import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.expressions.Literal;
+import com.tr.rp.iterators.ranked.AbsurdIterator;
+import com.tr.rp.iterators.ranked.ChooseMergingIterator;
+import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.statement.RPLBaseTest;
+import com.tr.rp.varstore.VarStore;
 
 public class MergingIteratorTest extends RPLBaseTest {
 

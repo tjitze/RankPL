@@ -1,27 +1,30 @@
 package com.tr.rp.statement;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.Expression;
-import com.tr.rp.core.ProgramBuilder;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.ProgramBuilder;
+import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.statements.Assign;
+import com.tr.rp.ast.statements.RankedChoice;
+import com.tr.rp.ast.statements.While;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.expressions.Literal;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.VarStore;
 
 public class WhileTest extends RPLBaseTest {
 
 	public void testWhile() throws RPLException {
 		
-		Expression c = lt(var("x"), new Literal<Integer>(3));
-		DStatement s = new ProgramBuilder()
+		AbstractExpression c = lt(var("x"), new Literal<Integer>(3));
+		AbstractStatement s = new ProgramBuilder()
 				.add(new RankedChoice(target("y"), plus(var("y"), var("x")), plus(var("y"), new Literal<Integer>(10)), 1))
 				.add(new Assign("x", plus(var("x"), new Literal<Integer>(1))))
 				.build();
-		DStatement p = new ProgramBuilder()
+		AbstractStatement p = new ProgramBuilder()
 				.add(new Assign("x", 0))
 				.add(new Assign("y", 0))
 				.add(new While(c, s))

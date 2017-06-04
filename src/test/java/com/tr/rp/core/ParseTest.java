@@ -1,6 +1,6 @@
 package com.tr.rp.core;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
 import java.util.ArrayList;
 
@@ -9,27 +9,33 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
-import com.tr.rp.expressions.ArrayConstructExpression;
-import com.tr.rp.expressions.Expressions;
-import com.tr.rp.expressions.Variable;
+import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.Function;
+import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.ProgramBuilder;
+import com.tr.rp.ast.expressions.ArrayConstructExpression;
+import com.tr.rp.ast.expressions.Expressions;
+import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.expressions.Not;
+import com.tr.rp.ast.expressions.RankExpr;
+import com.tr.rp.ast.expressions.Variable;
+import com.tr.rp.ast.statements.Assign;
+import com.tr.rp.ast.statements.Composition;
+import com.tr.rp.ast.statements.FunctionCallForm;
+import com.tr.rp.ast.statements.IfElse;
+import com.tr.rp.ast.statements.Observe;
+import com.tr.rp.ast.statements.Program;
+import com.tr.rp.ast.statements.RankedChoice;
+import com.tr.rp.ast.statements.Return;
+import com.tr.rp.ast.statements.Skip;
+import com.tr.rp.ast.statements.While;
+import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.parser.RankPLParser.ExpContext;
 import com.tr.rp.parser.RankPLParser.FunctiondefContext;
-import com.tr.rp.expressions.Literal;
-import com.tr.rp.expressions.Not;
-import com.tr.rp.expressions.RankExpr;
-import com.tr.rp.statement.Assign;
-import com.tr.rp.statement.RankedChoice;
-import com.tr.rp.statement.Return;
-import com.tr.rp.statement.Composition;
-import com.tr.rp.statement.FunctionCallForm;
-import com.tr.rp.statement.IfElse;
-import com.tr.rp.statement.Observe;
-import com.tr.rp.statement.Program;
 import com.tr.rp.statement.RPLBaseTest;
-import com.tr.rp.statement.Skip;
-import com.tr.rp.statement.While;
 
 public class ParseTest extends RPLBaseTest {
 
@@ -37,7 +43,7 @@ public class ParseTest extends RPLBaseTest {
 		String program = "x := 0;";
 		assertEquals(parseStatement(program), (new Assign("x",0)));
 		program = "x1 := 0;";
-		DStatement s = (DStatement) parseStatement(program);
+		AbstractStatement s = (AbstractStatement) parseStatement(program);
 		assertEquals(s, (new Assign("x1",0)));
 	}
 	
@@ -275,7 +281,7 @@ public class ParseTest extends RPLBaseTest {
         return ((Program)classVisitor.visit(parser.program())).getBody();
 	}
 	
-	private Expression parseExpr(String code) {
+	private AbstractExpression parseExpr(String code) {
         CharStream charStream = new ANTLRInputStream(code);
         RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
@@ -283,7 +289,7 @@ public class ParseTest extends RPLBaseTest {
 
         ConcreteParser classVisitor = new ConcreteParser();
         ExpContext ctx = parser.exp();
-        Expression res = (Expression)classVisitor.visit(ctx);
+        AbstractExpression res = (AbstractExpression)classVisitor.visit(ctx);
         return res;
 	}
 

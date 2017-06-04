@@ -1,6 +1,6 @@
 package com.tr.rp.exceptions;
 
-import com.tr.rp.core.Function;
+import com.tr.rp.ast.Function;
 
 public class RPLMissingReturnValueException extends RPLException {
 

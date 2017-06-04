@@ -5,24 +5,25 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
-import com.tr.rp.core.ConcreteParser;
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.Expression;
-import com.tr.rp.core.ProgramBuilder;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.ProgramBuilder;
+import com.tr.rp.ast.expressions.Len;
+import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.expressions.Plus;
+import com.tr.rp.ast.expressions.Variable;
+import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
-import com.tr.rp.expressions.Len;
-import com.tr.rp.expressions.Literal;
-import com.tr.rp.expressions.PersistentList;
-import com.tr.rp.expressions.Plus;
-import com.tr.rp.expressions.Variable;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.parser.RankPLParser.ExpContext;
+import com.tr.rp.varstore.PersistentList;
+import com.tr.rp.varstore.VarStore;
 
 public class ExpressionTest extends RPLBaseTest {
 
@@ -34,10 +35,10 @@ public class ExpressionTest extends RPLBaseTest {
 
         ConcreteParser classVisitor = new ConcreteParser();
         ExpContext ctx = parser.exp();
-        Expression exp = (Expression)classVisitor.visit(ctx);
+        AbstractExpression exp = (AbstractExpression)classVisitor.visit(ctx);
         assertNotNull(exp);
 
-        DStatement st = new Assign("$return", exp);
+        AbstractStatement st = new Assign("$return", exp);
         RankedIterator<VarStore> it = st.getIterator(new InitialVarStoreIterator(new TestVarStore()), ExecutionContext.createDefault());
         assert (it.next());
         VarStore res = it.getItem();

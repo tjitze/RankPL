@@ -1,13 +1,13 @@
 package com.tr.rp.exceptions;
 
-import com.tr.rp.core.Expression;
+import com.tr.rp.ast.AbstractExpression;
 
 public class RPLTypeError extends RPLException {
 
 	private final String expectedType;
 	private final Object found;
 	
-	public RPLTypeError(String expectedType, Object found, Expression expression) {
+	public RPLTypeError(String expectedType, Object found, AbstractExpression expression) {
 		this.expectedType = expectedType;
 		this.found = found;
 		this.setExpression(expression);

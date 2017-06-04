@@ -7,18 +7,17 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
-import com.tr.rp.core.ConcreteParser;
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.Expression;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
-import com.tr.rp.expressions.PersistentList;
+import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.parser.RankPLParser.ExpContext;
+import com.tr.rp.varstore.PersistentList;
+import com.tr.rp.varstore.VarStore;
 
 import junit.framework.TestCase;
 
@@ -97,7 +96,7 @@ public abstract class RPLBaseTest extends TestCase {
 
         ConcreteParser classVisitor = new ConcreteParser();
         ExpContext ctx = parser.exp();
-        Expression res = (Expression)classVisitor.visit(ctx);
+        AbstractExpression res = (AbstractExpression)classVisitor.visit(ctx);
         
         
         return res;

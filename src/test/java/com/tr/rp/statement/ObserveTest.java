@@ -1,13 +1,15 @@
 package com.tr.rp.statement;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.AbsurdIterator;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.expressions.Not;
+import com.tr.rp.ast.statements.Composition;
+import com.tr.rp.ast.statements.Observe;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.expressions.Not;
+import com.tr.rp.iterators.ranked.AbsurdIterator;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.VarStore;
 
 public class ObserveTest extends RPLBaseTest {
 

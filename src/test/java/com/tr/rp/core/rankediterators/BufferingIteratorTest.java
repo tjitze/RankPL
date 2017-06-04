@@ -1,8 +1,10 @@
 package com.tr.rp.core.rankediterators;
 
-import com.tr.rp.core.VarStore;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.iterators.ranked.BufferingIterator;
+import com.tr.rp.ranks.Rank;
 import com.tr.rp.statement.RPLBaseTest;
+import com.tr.rp.varstore.VarStore;
 
 public class BufferingIteratorTest extends RPLBaseTest {
 
@@ -13,7 +15,7 @@ public class BufferingIteratorTest extends RPLBaseTest {
 		// Perform reset at different states (before init, middle, after end)
 		for (int i = 0; i < 5; i++) {
 			assert(bi.getItem() == null);
-			assert(bi.getRank() == Integer.MAX_VALUE);
+			assert(bi.getRank() == Rank.MAX);
 			if (i == 0) {
 				bi.reset();
 				continue;
@@ -50,7 +52,7 @@ public class BufferingIteratorTest extends RPLBaseTest {
 			BufferingIterator bi = new BufferingIterator(getTestIterator());
 	
 			assert(bi.getItem() == null);
-			assert(bi.getRank() == Integer.MAX_VALUE);
+			assert(bi.getRank() == Rank.MAX);
 			if (i == 0) {
 				bi.stopBuffering();
 			}

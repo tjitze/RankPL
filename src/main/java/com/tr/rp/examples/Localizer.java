@@ -1,22 +1,22 @@
 package com.tr.rp.examples;
 
-import static com.tr.rp.expressions.Expressions.*;
+import static com.tr.rp.ast.expressions.Expressions.*;
 
-import com.tr.rp.core.DStatement;
-import com.tr.rp.core.ProgramBuilder;
-import com.tr.rp.core.VarStore;
-import com.tr.rp.core.rankediterators.InitialVarStoreIterator;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.ProgramBuilder;
+import com.tr.rp.ast.expressions.CustomFunction;
+import com.tr.rp.ast.expressions.Variable;
+import com.tr.rp.ast.statements.Assign;
+import com.tr.rp.ast.statements.IfElse;
+import com.tr.rp.ast.statements.Observe;
+import com.tr.rp.ast.statements.ObserveL;
+import com.tr.rp.ast.statements.RangeChoice;
+import com.tr.rp.ast.statements.RankedChoice;
+import com.tr.rp.ast.statements.While;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.expressions.CustomFunction;
-import com.tr.rp.expressions.Variable;
-import com.tr.rp.statement.Assign;
-import com.tr.rp.statement.RankedChoice;
-import com.tr.rp.statement.IfElse;
-import com.tr.rp.statement.Observe;
-import com.tr.rp.statement.ObserveL;
-import com.tr.rp.statement.RangeChoice;
-import com.tr.rp.statement.While;
+import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.VarStore;
 
 /**
  * The robot localization example from the paper.
@@ -43,10 +43,10 @@ public class Localizer {
 		int[] sd = new int[]{2,1,2,3};
 		int[] mv = new int[]{right,right,right,right};
 		
-		DStatement cx = new RangeChoice("x", 0, 10);
-		DStatement cy = new RangeChoice("y", 0, 7);
+		AbstractStatement cx = new RangeChoice("x", 0, 10);
+		AbstractStatement cy = new RangeChoice("y", 0, 7);
 		
-		DStatement inner = new ProgramBuilder()
+		AbstractStatement inner = new ProgramBuilder()
 				// Move
 				.add(	new IfElse(and(lt(new Variable("y"), lit(7)), eq(CustomFunction.create(vs -> mv[(int)vs.getValue("t")]), lit(up))), new Assign("y", plus(var("y"), lit(1))),
 						new IfElse(and(lt(lit(0), new Variable("y")), eq(CustomFunction.create(vs -> mv[(int)vs.getValue("t")]), lit(down))), new Assign("y", minus(var("y"), lit(1))),
@@ -69,7 +69,7 @@ public class Localizer {
 				.add(new Assign("t", plus(var("t"), lit(1))))
 				.build();
 		
-		DStatement prog = new ProgramBuilder()
+		AbstractStatement prog = new ProgramBuilder()
 				.add(new Assign("t", 0))
 				.add(cx)
 				.add(cy)

@@ -1,15 +1,11 @@
 package com.tr.rp;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -21,39 +17,30 @@ import java.util.concurrent.TimeoutException;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
-import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.DefaultErrorStrategy;
-import org.antlr.v4.runtime.InputMismatchException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ProxyErrorListener;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.tr.rp.core.ConcreteParser;
-import com.tr.rp.core.rankediterators.ExecutionContext;
-import com.tr.rp.core.rankediterators.RankedIterator;
+import com.tr.rp.ast.statements.Program;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
-import com.tr.rp.statement.Program;
+import com.tr.rp.ranks.Rank;
 
 public class RankPL {
 
 	private static int maxRank = 0;
-	private static int rankCutOff = Integer.MAX_VALUE;
+	private static int rankCutOff = Rank.MAX;
 	private static boolean iterativeDeepening = false;
 	private static int timeOut = Integer.MAX_VALUE;
 	private static boolean noExecStats = false;
@@ -64,10 +51,7 @@ public class RankPL {
 	public static void main(String[] args) {
 
 		// Handle options
-		try {
-			parseOptions(args);
-		} catch (ParseException e1) {
-			System.out.println(e1.getMessage());
+		if (!parseOptions(args)) {
 			printUsage();
 			return;
 		}
@@ -92,8 +76,8 @@ public class RankPL {
 		try {
 			program = (Program) classVisitor.visit(parser.program());
 		} catch (ParseCancellationException e) {
-			// Ugly hack to get parse exceptions: re-parse but now without the
-			// bail error strategy
+			// Ugly hack to get handle exceptions: re-parse but now without the
+			// bail error strategy, so that errors are printed to console
 			System.out.println("Syntax error");
 			try {
 				lexer = new RankPLLexer(new ANTLRInputStream(source));
@@ -102,12 +86,12 @@ public class RankPL {
 				classVisitor = new ConcreteParser();
 				classVisitor.visit(parser.program());
 			} catch (Exception ex) {
-				// Nothing
+				// Ignore
 			}
-			return;
+			System.exit(-1);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
+			System.exit(-1);
 		}
 
 		// Execute
@@ -127,14 +111,21 @@ public class RankPL {
 			}
 			info += ".";
 			System.out.println(info);
+			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
 	}
 
+	/**
+	 * Execute program, keeping track of timeout, and print results to console.
+	 * 
+	 * @param program Program to execute
+	 * @throws RPLException Exception occurring during execution of program
+	 */
 	private static void execute(Program program) throws RPLException {
 		
-		// Build execution context
 		ExecutionContext c = new ExecutionContext();
 
 		long startTime = System.currentTimeMillis();
@@ -176,8 +167,7 @@ public class RankPL {
 		try { 
 		  future.get(timeOut, TimeUnit.MILLISECONDS); 
 		} catch (InterruptedException ie) { 
-			System.out.println("Interrupted ex " + ie);
-			System.out.println("Interrupted ex cause " + ie.getCause());
+			// Ignore
 		} catch (ExecutionException ee) { 
 			// Re-throw the RPL exception thrown inside the thread
 			c.setInterruptRequested();
@@ -198,6 +188,9 @@ public class RankPL {
 
 	}
 
+	/**
+	 * @return Options object
+	 */
 	private static Options createOptions() {
 		Options options = new Options();
 		options.addOption(Option.builder("source").hasArg().required().argName("source_file")
@@ -214,59 +207,76 @@ public class RankPL {
 				.desc("execution time-out (in milliseconds)").build());
 		options.addOption(Option.builder("ns").desc("don't print execution stats").build());
 		options.addOption(Option.builder("nr").desc("don't print ranks").build());
+		options.addOption(Option.builder("help").desc("show help message").build());
 		return options;
 	}
 
-	private static void parseOptions(String[] args) throws ParseException {
-		CommandLineParser parser = new DefaultParser();
-		CommandLine cmd = parser.parse(createOptions(), args);
-		if (cmd.hasOption("source")) {
-			fileName = cmd.getOptionValue("source");
-		}
-		if (cmd.hasOption("r")) {
-			try {
-				maxRank = ((Number) cmd.getParsedOptionValue("r")).intValue();
-			} catch (Exception e) {
-				System.err.println("Illegal value provided for -r option.");
+	/**
+	 * Parse options and set static fields. Returns true if successful.
+     *
+	 * @param args Options to parse
+	 * @return True if successful
+	 */
+	private static boolean parseOptions(String[] args) {
+		try {
+			CommandLineParser parser = new DefaultParser();
+			CommandLine cmd = parser.parse(createOptions(), args);
+			if (cmd.hasOption("source")) {
+				fileName = cmd.getOptionValue("source");
 			}
-		}
-		if (cmd.hasOption("t")) {
-			try {
-				timeOut = ((Number) cmd.getParsedOptionValue("t")).intValue();
-			} catch (Exception e) {
-				System.err.println("Illegal value provided for -t option.");
+			if (cmd.hasOption("r")) {
+				try {
+					maxRank = ((Number) cmd.getParsedOptionValue("r")).intValue();
+				} catch (Exception e) {
+					System.err.println("Illegal value provided for -r option.");
+				}
 			}
-		}
-		if (cmd.hasOption("c")) {
-			try {
-				rankCutOff = ((Number) cmd.getParsedOptionValue("c")).intValue();
-			} catch (Exception e) {
-				System.err.println("Illegal value provided for -c option.");
+			if (cmd.hasOption("t")) {
+				try {
+					timeOut = ((Number) cmd.getParsedOptionValue("t")).intValue();
+				} catch (Exception e) {
+					System.err.println("Illegal value provided for -t option.");
+				}
 			}
-		}
-		if (cmd.hasOption("d")) {
-			iterativeDeepening = true;
-			if (maxRank > 0) {
-				System.out
-						.println("Warning: ignoring max_rank setting (must be 0 when iterative deepening is enabled).");
-				maxRank = 0;
+			if (cmd.hasOption("c")) {
+				try {
+					rankCutOff = ((Number) cmd.getParsedOptionValue("c")).intValue();
+				} catch (Exception e) {
+					System.err.println("Illegal value provided for -c option.");
+				}
 			}
+			if (cmd.hasOption("d")) {
+				iterativeDeepening = true;
+				if (maxRank > 0) {
+					System.out
+							.println("Warning: ignoring max_rank setting (must be 0 when iterative deepening is enabled).");
+					maxRank = 0;
+				}
+			}
+			if (cmd.hasOption("f")) {
+				terminateAfterFirst = true;
+			}
+			if (cmd.hasOption("ns")) {
+				noExecStats = true;
+			}
+			if (cmd.hasOption("nr")) {
+				noRanks = true;
+			}
+			if (cmd.hasOption("help")) {
+				printUsage();
+				return false;
+			}
+		} catch (ParseException pe) {
+			System.out.println(pe.getMessage());
+			return false;
 		}
-		if (cmd.hasOption("f")) {
-			terminateAfterFirst = true;
-		}
-		if (cmd.hasOption("ns")) {
-			noExecStats = true;
-		}
-		if (cmd.hasOption("nr")) {
-			noRanks = true;
-		}
+		return true;
 	}
 
 	private static void printUsage() {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.setWidth(160);
-		List<String> order = Arrays.asList("source", "r", "t", "c", "d", "f", "ns", "nr");
+		List<String> order = Arrays.asList("source", "r", "t", "c", "d", "f", "ns", "nr", "help");
 		formatter.setOptionComparator(new Comparator<Option>() {
 			@Override
 			public int compare(Option o1, Option o2) {

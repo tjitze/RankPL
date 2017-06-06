@@ -1,13 +1,10 @@
 package com.tr.rp.ast.expressions;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
-import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
 
 /**

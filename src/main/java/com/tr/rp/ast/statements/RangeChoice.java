@@ -29,24 +29,30 @@ import com.tr.rp.varstore.VarStore;
  */
 public class RangeChoice extends AbstractStatement {
 
-	public final AssignmentTarget variable;
+	public final AssignmentTarget target;
 	public final AbstractExpression beginExp;
 	public final AbstractExpression endExp;
 
-	public RangeChoice(AssignmentTarget variable, AbstractExpression beginExp, AbstractExpression endExp) {
-		this.variable = variable;
+	public RangeChoice(AssignmentTarget target, AbstractExpression beginExp, AbstractExpression endExp) {
+		this.target = target;
 		this.beginExp = beginExp;
 		this.endExp = endExp;
 	}
 
-	public RangeChoice(String variableName, AbstractExpression beginExp, AbstractExpression endExp) {
-		this.variable = new AssignmentTarget(variableName);
+	public RangeChoice(AssignmentTarget target, int begin, int end) {
+		this.target = target;
+		this.beginExp = new Literal<Integer>(begin);
+		this.endExp = new Literal<Integer>(end);
+	}
+
+	public RangeChoice(String targetVariable, AbstractExpression beginExp, AbstractExpression endExp) {
+		this.target = new AssignmentTarget(targetVariable);
 		this.beginExp = beginExp;
 		this.endExp = endExp;
 	}
 
-	public RangeChoice(String variableName, int begin, int end) {
-		this.variable = new AssignmentTarget(variableName);
+	public RangeChoice(String targetVariable, int begin, int end) {
+		this.target = new AssignmentTarget(targetVariable);
 		this.beginExp = new Literal<Integer>(begin);
 		this.endExp = new Literal<Integer>(end);
 	}
@@ -54,9 +60,10 @@ public class RangeChoice extends AbstractStatement {
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
-			RankTransformIterator rt = new RankTransformIterator(in, this, beginExp, endExp);
-			final AbstractExpression begin = rt.getExpression(0);
-			final AbstractExpression end = rt.getExpression(1);
+			RankTransformIterator rt = new RankTransformIterator(in, this, target, beginExp, endExp);
+			final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
+			final AbstractExpression begin = rt.getExpression(1);
+			final AbstractExpression end = rt.getExpression(2);
 			return new RankedIterator<VarStore>() {
 				private boolean initialized = false;
 				private boolean finalized = false;
@@ -109,7 +116,7 @@ public class RangeChoice extends AbstractStatement {
 						if (vs == null) {
 							return null;
 						} else {
-							return variable.assign(vs, i);
+							return target.assign(vs, i);
 						}
 					} catch (RPLException e) {
 						e.setStatement(RangeChoice.this);
@@ -129,42 +136,42 @@ public class RangeChoice extends AbstractStatement {
 	}
 	
 	public String toString() {
-		return variable + " := <" + beginExp + " ... " + endExp + ">";
+		return target + " := <" + beginExp + " ... " + endExp + ">";
 	}
 	
 	public boolean equals(Object o) {
 		return o instanceof RangeChoice &&
 				((RangeChoice)o).beginExp.equals(beginExp) &&
 				((RangeChoice)o).endExp.equals(endExp) &&
-				((RangeChoice)o).variable.equals(variable);
+				((RangeChoice)o).target.equals(target);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new RangeChoice((AssignmentTarget)variable.replaceVariable(a, b), 
+		return new RangeChoice((AssignmentTarget)target.replaceVariable(a, b), 
 				(AbstractExpression)beginExp.replaceVariable(a, b),
 				(AbstractExpression)endExp.replaceVariable(a, b));
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		variable.getVariables(list);
+		target.getVariables(list);
 		beginExp.getVariables(list);
 		endExp.getVariables(list);
 	}
 
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
-		ExtractedExpression rewrittenVar = FunctionCallForm.extractFunctionCalls(variable);
+		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		ExtractedExpression rewrittenBegin = FunctionCallForm.extractFunctionCalls(beginExp);
 		ExtractedExpression rewrittenEnd = FunctionCallForm.extractFunctionCalls(endExp);
-		if (rewrittenVar.isRewritten() || rewrittenBegin.isRewritten() || rewrittenEnd.isRewritten()) {
+		if (rewrittenTarget.isRewritten() || rewrittenBegin.isRewritten() || rewrittenEnd.isRewritten()) {
 			return new FunctionCallForm(
 					new RangeChoice(
-							(AssignmentTarget)rewrittenVar.getExpression(), 
+							(AssignmentTarget)rewrittenTarget.getExpression(), 
 							rewrittenBegin.getExpression(), 
 							rewrittenEnd.getExpression()), 
-					rewrittenVar.getAssignments(),
+					rewrittenTarget.getAssignments(),
 					rewrittenBegin.getAssignments(),
 					rewrittenEnd.getAssignments());
 		} else {
@@ -174,7 +181,7 @@ public class RangeChoice extends AbstractStatement {
 	
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
-		variables.add(variable.getAssignedVariable());
+		variables.add(target.getAssignedVariable());
 	}	
 
 }

@@ -30,36 +30,36 @@ import com.tr.rp.varstore.VarStore;
  */
 public class Assign extends AbstractStatement {
 	
+	private final AssignmentTarget target;
 	private final AbstractExpression value;
-	private final AssignmentTarget variable;
 	
-	public Assign(AssignmentTarget var, AbstractExpression exp) {
-		this.variable = var;
+	public Assign(AssignmentTarget target, AbstractExpression exp) {
+		this.target = target;
 		this.value = exp;
 	}
 
-	public Assign(AssignmentTarget var, int value) {
-		this(var, new Literal<Integer>(value));
+	public Assign(AssignmentTarget target, int value) {
+		this(target, new Literal<Integer>(value));
 	}
 
-	public Assign(String variableName, int value) {
-		this(new AssignmentTarget(variableName), new Literal<Integer>(value));
+	public Assign(String targetVariable, int value) {
+		this(new AssignmentTarget(targetVariable), new Literal<Integer>(value));
 	}
 
-	public Assign(String variableName, AbstractExpression value) {
-		this(new AssignmentTarget(variableName), value);
+	public Assign(String targetVariable, AbstractExpression value) {
+		this(new AssignmentTarget(targetVariable), value);
 	}
 
-	public Assign(String variableName, String otherVariable) {
-		this(new AssignmentTarget(variableName), new Variable(otherVariable));
+	public Assign(String targetVariable, String otherVariable) {
+		this(new AssignmentTarget(targetVariable), new Variable(otherVariable));
 	}
 
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {
-			RankTransformIterator rt = 
-				new RankTransformIterator(in, this, this.value);
-			final AbstractExpression exp2 = rt.getExpression(0);
+			RankTransformIterator rt = new RankTransformIterator(in, this, target, value);
+			final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
+			final AbstractExpression exp = rt.getExpression(1);
 			RankedIterator<VarStore> ai = new RankedIterator<VarStore>() {
 	
 				@Override
@@ -71,7 +71,7 @@ public class Assign extends AbstractStatement {
 				public VarStore getItem() throws RPLException {
 					if (rt.getItem() == null) return null;
 					try {
-						return variable.assign(rt.getItem(), exp2.getValue(rt.getItem()));
+						return target.assign(rt.getItem(), exp.getValue(rt.getItem()));
 					} catch (RPLException e) {
 						e.setStatement(Assign.this);
 						throw e;
@@ -92,7 +92,7 @@ public class Assign extends AbstractStatement {
 	
 	
 	public String toString() {
-		String varString = variable.toString();
+		String varString = target.toString();
 		String expString = value.toString();
 		if (expString.startsWith("(") && expString.endsWith(")")) {
 			expString = expString.substring(1, expString.length()-1);
@@ -102,30 +102,30 @@ public class Assign extends AbstractStatement {
 	
 	public boolean equals(Object o) {
 		return o instanceof Assign &&
-				((Assign)o).variable.equals(variable) &&
+				((Assign)o).target.equals(target) &&
 				((Assign)o).value.equals(value);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new Assign((AssignmentTarget)variable.replaceVariable(a, b), (AbstractExpression)value.replaceVariable(a, b));
+		return new Assign((AssignmentTarget)target.replaceVariable(a, b), (AbstractExpression)value.replaceVariable(a, b));
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		variable.getVariables(list);
+		target.getVariables(list);
 		value.getVariables(list);
 	}
 
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
-		ExtractedExpression rewrittenVar = FunctionCallForm.extractFunctionCalls(variable);
+		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
-		if (rewrittenVar.isRewritten() || rewrittenValue.isRewritten()) {
+		if (rewrittenTarget.isRewritten() || rewrittenValue.isRewritten()) {
 			return new FunctionCallForm(
-					new Assign((AssignmentTarget)rewrittenVar.getExpression(), 
+					new Assign((AssignmentTarget)rewrittenTarget.getExpression(), 
 							rewrittenValue.getExpression()), 
-						rewrittenVar.getAssignments(),
+						rewrittenTarget.getAssignments(),
 						rewrittenValue.getAssignments());
 		} else {
 			return this;
@@ -134,6 +134,6 @@ public class Assign extends AbstractStatement {
 
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
-		variables.add(variable.getAssignedVariable());
+		variables.add(target.getAssignedVariable());
 	}	
 }

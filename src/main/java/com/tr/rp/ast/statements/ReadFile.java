@@ -16,6 +16,7 @@ import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
@@ -39,7 +40,10 @@ public class ReadFile extends AbstractStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
+	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+		RankTransformIterator rt = new RankTransformIterator(in, this, target, path);
+		final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
+		final AssignmentTarget path = (AssignmentTarget)rt.getExpression(1);
 		return new RankedIterator<VarStore>() {
 
 			private String lastPath;
@@ -47,30 +51,30 @@ public class ReadFile extends AbstractStatement {
 			
 			@Override
 			public boolean next() throws RPLException {
-				return parent.next();
+				return in.next();
 			}
 
 			@Override
 			public VarStore getItem() throws RPLException {
-				VarStore v = parent.getItem();
+				VarStore v = in.getItem();
 				if (v == null) {
 					return null;
 				}
-				String currentPath = path.getStringValue(parent.getItem());
+				String currentPath = path.getStringValue(in.getItem());
 				if (lines == null || !lastPath.equals(currentPath)) {
 					try {
 						lastPath = currentPath;
-						lines = new PersistentList(readFile(path.getStringValue(parent.getItem())).toArray());
+						lines = new PersistentList(readFile(path.getStringValue(in.getItem())).toArray());
 					} catch (IOException e) {
 						throw new RPLMiscException(e.toString());
 					}
 				}
-				return target.assign(parent.getItem(), lines);
+				return target.assign(in.getItem(), lines);
 			}
 
 			@Override
 			public int getRank() {
-				return parent.getRank();
+				return in.getRank();
 			}
 			
 		};

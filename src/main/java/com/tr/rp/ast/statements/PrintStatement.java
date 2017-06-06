@@ -5,10 +5,12 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
 
@@ -21,6 +23,8 @@ public class PrintStatement extends AbstractStatement {
 	}
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+		RankTransformIterator rt = new RankTransformIterator(in, this, exp);
+		final AbstractExpression exp = rt.getExpression(0);
 		final RankedIterator<VarStore> in2 = new DuplicateRemovingIterator<VarStore>(in);
 		return new RankedIterator<VarStore>() {
 

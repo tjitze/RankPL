@@ -22,6 +22,7 @@ stat
  | assignment_target ':=' exp '<<' exp '>>' exp			# ChoiceAssignmentStatement
  | assignment_target ':=' '<<' exp '...' exp '>>'		# RangeChoiceStatement
  | assignment_target ':=' ReadFile '(' exp ')'			# ReadFileStatement
+ | assignment_target (op=('++'|'--'))					# IncDecStatement
  | If exp Then stat (Else stat)? 						# IfStatement
  | While exp Do stat									# WhileStatement
  | For '(' stat ';' exp ';' stat ')' stat				# ForStatement

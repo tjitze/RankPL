@@ -22,8 +22,10 @@ import com.tr.rp.ast.expressions.RankExpr;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.ast.statements.Composition;
+import com.tr.rp.ast.statements.Dec;
 import com.tr.rp.ast.statements.FunctionCallForm;
 import com.tr.rp.ast.statements.IfElse;
+import com.tr.rp.ast.statements.Inc;
 import com.tr.rp.ast.statements.Observe;
 import com.tr.rp.ast.statements.Program;
 import com.tr.rp.ast.statements.RankedChoice;
@@ -214,7 +216,8 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseExpr("10 - 4 - 2"), minus(lit(10), minus(lit(4), lit(2))));
 		assertEquals(parseExpr("10 - 4 + 2"), minus(lit(10), plus(lit(4), lit(2))));
 		assertEquals(parseExpr("10 + 4 - 2"), plus(lit(10), minus(lit(4), lit(2))));
-		assertEquals(parseExpr("10 + 4 + 2"), plus(lit(10), plus(lit(4), lit(2))));
+		assertEquals(parseStatement("i++"), new Inc("i"));
+		assertEquals(parseStatement("i--"), new Dec("i"));
 	}
 
 	public void testParseArrayExpr() {

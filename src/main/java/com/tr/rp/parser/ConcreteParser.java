@@ -38,8 +38,10 @@ import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.ast.statements.Composition;
 import com.tr.rp.ast.statements.Cut;
+import com.tr.rp.ast.statements.Dec;
 import com.tr.rp.ast.statements.ForStatement;
 import com.tr.rp.ast.statements.IfElse;
+import com.tr.rp.ast.statements.Inc;
 import com.tr.rp.ast.statements.Observe;
 import com.tr.rp.ast.statements.ObserveJ;
 import com.tr.rp.ast.statements.ObserveL;
@@ -69,6 +71,7 @@ import com.tr.rp.parser.RankPLParser.FunctionCallContext;
 import com.tr.rp.parser.RankPLParser.FunctiondefContext;
 import com.tr.rp.parser.RankPLParser.Functiondef_or_statementContext;
 import com.tr.rp.parser.RankPLParser.IfStatementContext;
+import com.tr.rp.parser.RankPLParser.IncDecStatementContext;
 import com.tr.rp.parser.RankPLParser.IndexContext;
 import com.tr.rp.parser.RankPLParser.IndexedExpressionContext;
 import com.tr.rp.parser.RankPLParser.IndifferentChoiceStatementContext;
@@ -112,6 +115,17 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
 		AbstractStatement s = new Assign(target, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitIncDecStatement(IncDecStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		String aop = ctx.op.getText();
+		AbstractStatement s = null;
+		if (aop.equals("++")) s = new Inc(target);
+		if (aop.equals("--")) s = new Dec(target);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

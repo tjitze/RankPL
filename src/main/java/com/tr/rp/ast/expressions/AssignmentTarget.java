@@ -152,5 +152,17 @@ public class AssignmentTarget extends AbstractExpression {
 			}
 		}
 	}
+	
+	/**
+	 * @return Right-hand side version of this expression
+	 */
+	public AbstractExpression convertToRHSExpression() {
+		Variable v = new Variable(name);
+		if (indices.length > 0) {
+			return new IndexElementExpression(v, indices);
+		} else {
+			return v;
+		}
+	}
 
 }

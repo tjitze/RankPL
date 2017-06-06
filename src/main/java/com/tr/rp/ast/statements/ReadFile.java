@@ -22,8 +22,10 @@ import com.tr.rp.varstore.VarStore;
 
 public class ReadFile extends AbstractStatement {
 
+	// TODO: add CSV mode
+	
 	public enum InputMethod {
-		OnePerLine
+		NEWLINE_SEPARATED
 	}
 	
 	private final AssignmentTarget target;

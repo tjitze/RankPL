@@ -265,7 +265,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitReadFileStatement(ReadFileStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		AbstractExpression fileName = (AbstractExpression)visit(ctx.exp());
-		AbstractStatement s = new ReadFile(target, fileName, ReadFile.InputMethod.OnePerLine);
+		AbstractStatement s = new ReadFile(target, fileName, ReadFile.InputMethod.NEWLINE_SEPARATED);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

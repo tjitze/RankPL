@@ -11,6 +11,8 @@ import java.util.function.Supplier;
  * which creates a new PersistentList object and does not change the original 
  * list. The implementation is efficient (sqrt(n) time and space complexity
  * for mutation operations). 
+ * 
+ * TODO: consider replacing with PersistentVector
  */
 public class PersistentList {
 

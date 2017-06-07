@@ -63,7 +63,7 @@ public class AssignmentTarget extends AbstractExpression {
 		for (int i = 0; i < indices.length; i++) {
 			newIndices[i] = (AbstractExpression)indices[i].transformRankExpressions(v, rank);
 		}
-		return new AssignmentTarget(name);
+		return new AssignmentTarget(name, newIndices);
 	}
 
 	@Override

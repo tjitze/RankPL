@@ -136,4 +136,12 @@ public class PersistentList {
 		}
 		return false;
 	}
+	
+	public int hashCode() {
+		int hash = 0;
+		for (int i = 0; i < size; i++) {
+			hash += i * get(i).hashCode();
+		}
+		return hash;
+	}
 }

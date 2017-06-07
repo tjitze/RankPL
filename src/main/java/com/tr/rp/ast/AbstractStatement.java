@@ -45,4 +45,7 @@ public abstract class AbstractStatement implements IteratorProvider<VarStore>, L
 	 */
 	public abstract void getAssignedVariables(Set<String> variables);
 
+	public abstract boolean equals(Object o);
+	
+	public abstract int hashCode();
 }

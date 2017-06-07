@@ -2,6 +2,7 @@ package com.tr.rp.ast.statements;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
@@ -127,6 +128,11 @@ public class Composition extends AbstractStatement {
 				((Composition)o).first.equals(first) &&
 				((Composition)o).second.equals(second);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(first, second);
+	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

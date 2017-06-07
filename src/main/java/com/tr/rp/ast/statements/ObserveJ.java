@@ -3,6 +3,7 @@ package com.tr.rp.ast.statements;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -62,7 +63,12 @@ public class ObserveJ extends AbstractStatement {
 		return o instanceof ObserveJ &&
 				((ObserveJ)o).b.equals(b);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(b, rank);
+	}	
+
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new ObserveJ((AbstractExpression)this.b.replaceVariable(a, b), (AbstractExpression)rank.replaceVariable(a, b));

@@ -136,4 +136,9 @@ public class ArrayInitExpression extends AbstractExpression {
 				Objects.equals(((ArrayInitExpression)o).initValue, initValue);
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(dimension, initValue);
+	}
+
 }

@@ -1,5 +1,6 @@
 package com.tr.rp.ast.statements;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -59,6 +60,11 @@ public class PrintStatement extends AbstractStatement {
 	public boolean equals(Object o) {
 		return o instanceof PrintStatement && ((PrintStatement)o).exp.equals(exp);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(exp);
+	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

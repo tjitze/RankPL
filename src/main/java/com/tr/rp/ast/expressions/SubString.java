@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -134,6 +135,11 @@ public class SubString extends AbstractExpression {
 				((SubString)o).input.equals(input) &&
 				((SubString)o).begin.equals(begin) &&
 				((SubString)o).end.equals(end);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(input, begin, end);
 	}
 
 }

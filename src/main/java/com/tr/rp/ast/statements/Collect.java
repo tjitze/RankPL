@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractStatement;
@@ -109,8 +110,14 @@ public class Collect extends AbstractStatement {
 	
 	public boolean equals(Object o) {
 		return o instanceof Collect &&
+				((Collect)o).target.equals(target) && 
 				((Collect)o).variable.equals(variable);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(target, variable);
+	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

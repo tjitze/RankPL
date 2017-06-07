@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -90,6 +91,11 @@ public class BoolBoolBoolOp extends AbstractExpression {
 				((BoolBoolBoolOp)o).e1.equals(e1) &&
 				((BoolBoolBoolOp)o).e2.equals(e2) &&
 				((BoolBoolBoolOp)o).f == f;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(e1, e2, f);
 	}
 
 }

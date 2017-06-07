@@ -3,6 +3,7 @@ package com.tr.rp.ast.statements;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractStatement;
@@ -206,6 +207,18 @@ public class Program extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		getAssignedVariables(variables);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Program &&
+				((Program)o).body.equals(body) &&
+				((Program)o).functionScope.equals(functionScope);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(body, functionScope);
 	}	
 
 

@@ -159,5 +159,8 @@ public abstract class AbstractExpression implements LanguageElement {
 		}
 	}
 
+	public abstract boolean equals(Object o);
+
+	public abstract int hashCode();
 
 }

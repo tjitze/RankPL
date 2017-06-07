@@ -1,5 +1,6 @@
 package com.tr.rp.ast.statements;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractStatement;
@@ -42,6 +43,11 @@ public class Skip extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
+	}	
+
+	@Override
+	public int hashCode() {
+		return 1;
 	}	
 
 

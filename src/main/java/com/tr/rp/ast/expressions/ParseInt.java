@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -86,6 +87,11 @@ public class ParseInt extends AbstractExpression {
 
 	public boolean equals(Object o) {
 		return (o instanceof ParseInt) && ((ParseInt)o).e.equals(e);
+	}
+
+	@Override
+	public int hashCode() {
+		return e.hashCode();
 	}
 
 }

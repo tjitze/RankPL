@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -87,4 +88,9 @@ public class NumNumNumOp extends AbstractExpression {
 				((NumNumNumOp)o).f == f;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(e1, e2, f);
+	}
+
 }

@@ -114,4 +114,9 @@ public class Equals extends AbstractExpression {
 				((Equals)o).e2.equals(e2);
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(e1, e2);
+	}
+
 }

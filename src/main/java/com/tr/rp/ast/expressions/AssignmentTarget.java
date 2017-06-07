@@ -1,6 +1,7 @@
 package com.tr.rp.ast.expressions;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -115,6 +116,11 @@ public class AssignmentTarget extends AbstractExpression {
 		return (o instanceof AssignmentTarget) &&
 				((AssignmentTarget)o).name.equals(name) &&
 				Arrays.deepEquals(((AssignmentTarget)o).indices, indices);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode() + Arrays.hashCode(indices);
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -105,6 +106,11 @@ public class Assign extends AbstractStatement {
 				((Assign)o).target.equals(target) &&
 				((Assign)o).value.equals(value);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(target, value);
+	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

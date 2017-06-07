@@ -3,6 +3,7 @@ package com.tr.rp.ast.statements;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -100,6 +101,11 @@ public class ObserveL extends AbstractStatement {
 		return o instanceof ObserveL &&
 				((ObserveL)o).b.equals(b) &&
 				((ObserveL)o).rank == rank;
+	}	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(b, rank);
 	}	
 
 	@Override

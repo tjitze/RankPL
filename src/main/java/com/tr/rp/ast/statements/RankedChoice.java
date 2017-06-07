@@ -1,6 +1,7 @@
 package com.tr.rp.ast.statements;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.List;
 
@@ -117,6 +118,12 @@ public class RankedChoice extends AbstractStatement {
 				((RankedChoice)o).s2.equals(s2) &&
 				((RankedChoice)o).rank.equals(rank);
 	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(s1, s2, rank);
+	}	
+
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -127,11 +128,18 @@ public class ForStatement extends AbstractStatement {
 	
 	public boolean equals(Object o) {
 		return o instanceof ForStatement &&
+				Objects.equals(((ForStatement)o).preConditionStatement, preConditionStatement) &&
 				((ForStatement)o).forCondition.equals(forCondition) &&
 				((ForStatement)o).init.equals(init) &&
 				((ForStatement)o).body.equals(body) &&
 				((ForStatement)o).next.equals(next);
 	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(preConditionStatement, forCondition, init, body, next);
+	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

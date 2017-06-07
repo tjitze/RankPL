@@ -1,5 +1,6 @@
 package com.tr.rp.ast.statements;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -60,6 +61,11 @@ public class Cut extends AbstractStatement {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(rank);
+	}	
+
+	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return this;
 	}
@@ -75,6 +81,6 @@ public class Cut extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
-	}	
+	}
 
 }

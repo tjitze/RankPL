@@ -2,6 +2,7 @@ package com.tr.rp.ast.statements;
 
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -143,6 +144,11 @@ public class While extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		body.getAssignedVariables(variables);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(preStatement, whileCondition, body);
 	}	
 
 }

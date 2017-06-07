@@ -112,4 +112,9 @@ public class NotEquals extends AbstractExpression {
 				((NotEquals)o).e2.equals(e2);
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(e1, e2);
+	}
+
 }

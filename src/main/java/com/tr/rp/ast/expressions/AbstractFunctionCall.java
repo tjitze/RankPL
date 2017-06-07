@@ -78,6 +78,10 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 	public abstract String toString();
 	
 	public abstract boolean equals(Object o);
+	
+	public int hashCode() {
+		return Objects.hash(functionScope, functionName) + Arrays.hashCode(arguments);
+	}
 	@Override
 	public final Object getValue(VarStore e) throws RPLException {
 		throw new RuntimeException("Illegal operation (evaluating untransformed function call)");

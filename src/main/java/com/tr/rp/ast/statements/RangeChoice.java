@@ -1,5 +1,6 @@
 package com.tr.rp.ast.statements;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -139,6 +140,11 @@ public class RangeChoice extends AbstractStatement {
 				((RangeChoice)o).endExp.equals(endExp) &&
 				((RangeChoice)o).target.equals(target);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(beginExp, endExp, target);
+	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

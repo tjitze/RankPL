@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -122,6 +123,18 @@ public class ReadFile extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		variables.add(target.getAssignedVariable());
-	}	
+	}
 
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof ReadFile) &&
+					((ReadFile)o).target.equals(target) &&
+					((ReadFile)o).path.equals(path) &&
+					((ReadFile)o).mode.equals(mode);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(target, path, mode);
+	}	
 }

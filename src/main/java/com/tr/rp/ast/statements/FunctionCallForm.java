@@ -3,6 +3,7 @@ package com.tr.rp.ast.statements;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -140,6 +141,11 @@ public class FunctionCallForm extends AbstractStatement {
 				((FunctionCallForm)o).assignments.equals(assignments) &&
 				((FunctionCallForm)o).statement.equals(statement);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(assignments, statement);
+	}	
 
 	public boolean semanticEquals(FunctionCallForm fcf) {
 		fcf = (FunctionCallForm)fcf.replaceVariable("", "");

@@ -143,6 +143,11 @@ public class IndexElementExpression extends AbstractExpression {
 				Arrays.deepEquals(((IndexElementExpression)o).indices, indices);
 	}
 
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(indices) + exp.hashCode();
+	}
+
 	/**
 	 * @return True iff value of this element is defined (not null)
 	 */

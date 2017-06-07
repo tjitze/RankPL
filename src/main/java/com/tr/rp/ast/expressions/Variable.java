@@ -92,4 +92,9 @@ public class Variable extends AbstractExpression {
 		return (o instanceof Variable) && ((Variable)o).name.equals(name);
 	}
 
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
 }

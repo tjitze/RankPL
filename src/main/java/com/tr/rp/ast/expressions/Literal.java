@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
@@ -80,6 +81,11 @@ public class Literal<T> extends AbstractExpression {
 	
 	public boolean equals(Object o) {
 		return ((o instanceof Literal<?>) && Objects.equals(((Literal<?>)o).value, value));
+	}
+
+	@Override
+	public int hashCode() {
+		return value.hashCode();
 	}
 
 	public T getLiteralValue() {

@@ -1,5 +1,7 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -89,6 +91,19 @@ public class Conditional extends AbstractExpression {
 	
 	public String toString() {
 		return "(" + condition + "? " + e1 + ": " + e2 + ")";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof Conditional) &&
+				((Conditional)o).condition.equals(condition) &&
+				((Conditional)o).e1.equals(e1) &&
+				((Conditional)o).e2.equals(e2);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(condition, e1, e2);
 	}
 
 }

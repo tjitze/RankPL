@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -74,6 +75,11 @@ public class RankExpr extends AbstractExpression {
 	
 	public boolean equals(Object o) {
 		return o instanceof RankExpr && ((RankExpr)o).b.equals(b);
+	}
+	
+	@Override
+	public int hashCode() {
+		return b.hashCode();
 	}
 
 	@Override

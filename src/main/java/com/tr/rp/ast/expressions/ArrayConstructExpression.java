@@ -1,6 +1,7 @@
 package com.tr.rp.ast.expressions;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -114,6 +115,11 @@ public class ArrayConstructExpression extends AbstractExpression {
 	public boolean equals(Object o) {
 		return (o instanceof ArrayConstructExpression) &&
 				Arrays.deepEquals(((ArrayConstructExpression)o).values, values);
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(values);
 	}
 
 }

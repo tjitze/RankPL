@@ -107,5 +107,10 @@ public class Min extends AbstractExpression {
 	public boolean equals(Object o) {
 		return (o instanceof Min) && Arrays.deepEquals(((Min)o).es, es);
 	}
+	
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(es);
+	}
 
 }

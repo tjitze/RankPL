@@ -2,6 +2,7 @@ package com.tr.rp.ast.statements;
 
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -138,6 +139,11 @@ public class Observe extends AbstractStatement {
 		return o instanceof Observe && ((Observe)o).exp.equals(exp);
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(exp);
+	}	
+
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new Observe((AbstractExpression)exp.replaceVariable(a, b));

@@ -1,6 +1,7 @@
 package com.tr.rp.ast.expressions;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -106,6 +107,11 @@ public class Max extends AbstractExpression {
 
 	public boolean equals(Object o) {
 		return (o instanceof Max) && Arrays.deepEquals(((Max)o).es, es);
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(es);
 	}
 
 }

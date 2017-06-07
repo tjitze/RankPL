@@ -2,6 +2,7 @@ package com.tr.rp.ast.statements;
 
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -124,6 +125,11 @@ public class IfElse extends AbstractStatement {
 				((IfElse)o).b.equals(b) &&
 				((IfElse)o).exp.equals(exp);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(a, b, exp);
+	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {

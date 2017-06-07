@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -83,6 +84,11 @@ public class Len extends AbstractExpression {
 
 	public boolean equals(Object o) {
 		return (o instanceof Len) && ((Len)o).e.equals(e);
+	}
+
+	@Override
+	public int hashCode() {
+		return e.hashCode();
 	}
 
 }

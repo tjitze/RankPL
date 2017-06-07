@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -70,6 +71,17 @@ public class CustomFunction<T> extends AbstractExpression {
 	@Override
 	public Object getDefiniteValue() throws RPLException {
 		return null;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof CustomFunction<?>) &&
+				((CustomFunction<?>)o).fn.equals(fn);
+	}
+
+	@Override
+	public int hashCode() {
+		return fn.hashCode();
 	}
 
 }

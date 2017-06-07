@@ -34,7 +34,7 @@ public class Dec extends AbstractStatement {
 	}
 
 	public Dec(Variable targetVariable) {
-		this(new AssignmentTarget(targetVariable));
+		this(new AssignmentTarget(targetVariable.toString()));
 	}
 
 	@Override

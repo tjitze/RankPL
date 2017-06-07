@@ -1,23 +1,17 @@
 package com.tr.rp.ast.statements;
 
-import java.util.ArrayList;
 import java.util.Set;
-import java.util.List;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.AbstractFunctionCall;
 import com.tr.rp.ast.expressions.AssignmentTarget;
-import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.expressions.Literal;
-import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
 /**

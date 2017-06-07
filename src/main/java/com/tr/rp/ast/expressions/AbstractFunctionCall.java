@@ -1,22 +1,15 @@
 package com.tr.rp.ast.expressions;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.Function;
-import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLFunctionUndefinedException;
-import com.tr.rp.exceptions.RPLMissingReturnValueException;
-import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
-import com.tr.rp.iterators.ranked.MultiMergeIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.FunctionScope;
-import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
 /**

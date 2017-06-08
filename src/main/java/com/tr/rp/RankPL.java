@@ -65,32 +65,16 @@ public class RankPL {
 			return;
 		}
 
-		RankPLLexer lexer = new RankPLLexer(new ANTLRInputStream(source));
-		TokenStream tokens = new CommonTokenStream(lexer);
-		RankPLParser parser = new RankPLParser(tokens);
-		parser.setErrorHandler(new BailErrorStrategy());
-		ConcreteParser classVisitor = new ConcreteParser();
-
 		// Parse
 		Program program = null;
 		try {
-			program = (Program) classVisitor.visit(parser.program());
-		} catch (ParseCancellationException e) {
-			// Ugly hack to get handle exceptions: re-parse but now without the
-			// bail error strategy, so that errors are printed to console
-			System.out.println("Syntax error");
-			try {
-				lexer = new RankPLLexer(new ANTLRInputStream(source));
-				tokens = new CommonTokenStream(lexer);
-				parser = new RankPLParser(tokens);
-				classVisitor = new ConcreteParser();
-				classVisitor.visit(parser.program());
-			} catch (Exception ex) {
-				// Ignore
-			}
-			System.exit(-1);
+			program = parse(source);
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(-1);
+		}
+		
+		if (program == null) {
 			System.exit(-1);
 		}
 
@@ -117,6 +101,24 @@ public class RankPL {
 			System.exit(-1);
 		}
 	}
+	
+	public static Program parse(String source) {
+		RankPLLexer lexer = new RankPLLexer(new ANTLRInputStream(source));
+		TokenStream tokens = new CommonTokenStream(lexer);
+		RankPLParser parser = new RankPLParser(tokens);
+		parser.setErrorHandler(new BailErrorStrategy());
+		ConcreteParser classVisitor = new ConcreteParser();
+
+		// Parse
+		Program program = null;
+		try {
+			program = (Program) classVisitor.visit(parser.program());
+		} catch (ParseCancellationException e) {
+			System.out.println("Syntax error");
+			return null;
+		}
+		return program;
+	}
 
 	/**
 	 * Execute program, keeping track of timeout, and print results to console.
@@ -124,7 +126,7 @@ public class RankPL {
 	 * @param program Program to execute
 	 * @throws RPLException Exception occurring during execution of program
 	 */
-	private static void execute(Program program) throws RPLException {
+	public static void execute(Program program) throws RPLException {
 		
 		ExecutionContext c = new ExecutionContext();
 
@@ -288,7 +290,7 @@ public class RankPL {
 		formatter.printHelp("java -jar RankPL.jar", createOptions(), true);
 	}
 
-	private static String getFileContent(String sourceFile) throws IOException {
+	public static String getFileContent(String sourceFile) throws IOException {
 		File file = new File(sourceFile);
 		FileInputStream fis = new FileInputStream(file);
 		StringBuilder sb = new StringBuilder();

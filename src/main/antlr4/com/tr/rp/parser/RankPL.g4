@@ -36,6 +36,7 @@ stat
  | Return exp											# ReturnStatement
  | Print exp											# PrintStatement
  | Cut exp												# CutStatement
+ | Assert '(' exp (',' exp)* ')'						# AssertStatement
  ;
 
 
@@ -107,6 +108,7 @@ Or: 			'or' | 'OR';
 Return: 		'return' | 'RETURN';
 Print: 			'print' | 'PRINT';
 Cut: 			'cut' | 'CUT';
+Assert: 		'assert' | 'ASSERT';
 True: 			'true' | 'TRUE';
 False: 			'false' | 'FALSE';
 Infer: 			'infer' | 'INFER';

@@ -195,7 +195,7 @@ The program does the same as before, but instead of returning a ranking over ret
  5 	a := 10 << 1 >> 20;
  6 	b := 10 << 1 >> 20;
  7 	c := a * b;
- 8 	observe c > 1;
+ 8 	observe c > 150;
  9  	return "a = " + a + ", b = " + b;
 10  };
 ```

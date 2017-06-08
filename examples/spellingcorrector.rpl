@@ -1,7 +1,7 @@
 # A spelling correction algorithm.
 
 # Input (possibly misspelled)
-input := "cemistryy";
+input := "tweleven";
 
 # Read dictionary of possible words
 dictionary := [
@@ -53,6 +53,5 @@ while (i < len(input) & k < len(potential_match)) do {
 observe i == len(input) & k == len(potential_match);
 
 return potential_match;
-
 
 

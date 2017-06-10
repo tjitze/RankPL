@@ -115,6 +115,11 @@ public class RankPL {
 			program = (Program) classVisitor.visit(parser.program());
 		} catch (ParseCancellationException e) {
 			System.out.println("Syntax error");
+			lexer = new RankPLLexer(new ANTLRInputStream(source));
+			tokens = new CommonTokenStream(lexer);
+			parser = new RankPLParser(tokens);
+			classVisitor = new ConcreteParser();
+			program = (Program) classVisitor.visit(parser.program());
 			return null;
 		}
 		return program;

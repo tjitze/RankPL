@@ -71,7 +71,7 @@ public class BoolBoolBoolOp extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return f.apply((boolean)e1.getDefiniteValue(), (boolean)e2.getDefiniteValue());
+		return f.apply((boolean)e1.getDefiniteBoolValue(), (boolean)e2.getDefiniteBoolValue());
 	}
 	
 	public AbstractExpression getE1() {

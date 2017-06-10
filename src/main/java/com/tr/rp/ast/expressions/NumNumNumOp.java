@@ -66,7 +66,7 @@ public class NumNumNumOp extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return f.apply((int)e1.getDefiniteValue(), (int)e2.getDefiniteValue());
+		return f.apply((int)e1.getDefiniteIntValue(), (int)e2.getDefiniteIntValue());
 	}
 	
 	public AbstractExpression getE1() {

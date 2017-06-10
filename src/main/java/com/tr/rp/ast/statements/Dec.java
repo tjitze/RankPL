@@ -48,9 +48,10 @@ public class Dec extends AbstractStatement {
 	
 				@Override
 				public VarStore getItem() throws RPLException {
-					if (rt.getItem() == null) return null;
+					VarStore item = rt.getItem();
+					if (item == null) return null;
 					try {
-						return target.assign(rt.getItem(), target.convertToRHSExpression().getIntValue(rt.getItem()) + 1);
+						return target.assign(item, target.convertToRHSExpression().getIntValue(item) + 1);
 					} catch (RPLException e) {
 						e.setStatement(Dec.this);
 						throw e;

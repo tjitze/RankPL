@@ -134,7 +134,7 @@ public class ParseTest extends RPLBaseTest {
 					new IfElse(
 							eq(var("x"),lit(10)),
 							new Assign("x",20),
-							new RankedChoice(new Assign("x",30), new Assign("x", 40), 1)),
+							new RankedChoice(new Assign("x",30), new Assign("x", 40), lit(1))),
 					new Assign("x", 50))));
 	}
 
@@ -148,26 +148,26 @@ public class ParseTest extends RPLBaseTest {
 	public void testParseAssignChoose() {
 		String program = "x := 0 << 5 >> 20;";
 		assertEquals(parseStatement(program), (new RankedChoice(
-				new Assign("x",0), new Assign("x",20), 5)));
+				new Assign("x",0), new Assign("x",20), lit(5))));
 	}
 
 	public void testParseChoose() {
 		assertEquals(parseStatement("normally(5) x := 0 exceptionally x := 20;"), (new RankedChoice(
-				new Assign("x",0), new Assign("x",20), 5)));
+				new Assign("x",0), new Assign("x",20), lit(5))));
 		assertEquals(parseStatement("x := 0 << 5 >> 20;"), (new RankedChoice(
-				new Assign("x",0), new Assign("x",20), 5)));
+				new Assign("x",0), new Assign("x",20), lit(5))));
 		assertEquals(parseStatement("x[0] := 0 << 5 >> 20;"), (new RankedChoice(
 				new Assign(target("x", 0), 0), 
-				new Assign(target("x", 0), 20), 5)));
+				new Assign(target("x", 0), 20), lit(5))));
 		assertEquals(parseStatement("x[1][2] := 1 << 5 >> 20;"), (new RankedChoice(
 				new Assign(target("x", 1, 2), 1), 
-				new Assign(target("x", 1, 2), 20), 5)));
+				new Assign(target("x", 1, 2), 20), lit(5))));
 		assertEquals(parseStatement("x[x + y] := 2 << 5 >> 20;"), (new RankedChoice(
 				new Assign(target("x", plus(var("x"), var("y"))), 2), 
-				new Assign(target("x", plus(var("x"), var("y"))), 20), 5)));
+				new Assign(target("x", plus(var("x"), var("y"))), 20), lit(5))));
 		assertEquals(parseStatement("x[x + y][p * q] := 3 << 5 >> 20;"), (new RankedChoice(
 				new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 3), 
-				new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20), 5)));
+				new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20), lit(5))));
 	}
 
 	public void testParseObserve() {

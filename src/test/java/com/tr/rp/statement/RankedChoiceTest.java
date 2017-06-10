@@ -21,7 +21,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		AbstractStatement s2 = new Assign("b", plus(var("a"), new Literal<Integer>(20)));
 		
 		// s1 [0] s2
-		RankedChoice c = new RankedChoice(s1, s2, 0);
+		RankedChoice c = new RankedChoice(s1, s2, lit(0));
 		RankedIterator<VarStore> result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
@@ -51,7 +51,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		assertEquals(false, result.next());
 		
 		// s1 [1] s2
-		c = new RankedChoice(s1, s2, 1);
+		c = new RankedChoice(s1, s2, lit(1));
 		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
@@ -81,7 +81,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		assertEquals(false, result.next());
 
 		// s1 [2] s2
-		c = new RankedChoice(s1, s2, 2);
+		c = new RankedChoice(s1, s2, lit(2));
 		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -111,7 +111,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		assertEquals(false, result.next());
 
 		// s1 [3] s2
-		c = new RankedChoice(s1, s2, 3);
+		c = new RankedChoice(s1, s2, lit(3));
 		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -141,7 +141,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		assertEquals(false, result.next());
 
 		// skip left
-		c = new RankedChoice(new Skip(), s1, 3);
+		c = new RankedChoice(new Skip(), s1, lit(3));
 		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
@@ -171,7 +171,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		assertEquals(false, result.next());
 		
 		// skip right
-		c = new RankedChoice(s1, new Skip(), 3);
+		c = new RankedChoice(s1, new Skip(), lit(3));
 		result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());
@@ -206,7 +206,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		AbstractStatement s1 = new Assign("b", plus(var("a"), new Literal<Integer>(10)));
 		
 		// {observe false [3] b = a + 10}
-		RankedChoice c = new RankedChoice(new Observe(new Literal<Boolean>(false)), s1, 3);
+		RankedChoice c = new RankedChoice(new Observe(new Literal<Boolean>(false)), s1, lit(3));
 		RankedIterator<VarStore> result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		// Note: shifted down to 0
@@ -230,7 +230,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 		AbstractStatement s1 = new Assign("b", plus(var("a"), new Literal<Integer>(10)));
 		
 		// {observe b = a + 10 [3] false}
-		RankedChoice c = new RankedChoice(s1, new Observe(new Literal<Boolean>(false)), 3);
+		RankedChoice c = new RankedChoice(s1, new Observe(new Literal<Boolean>(false)), lit(3));
 		RankedIterator<VarStore> result = c.getIterator(getTestIterator(), ExecutionContext.createDefault());
 		
 		assertEquals(true, result.next());

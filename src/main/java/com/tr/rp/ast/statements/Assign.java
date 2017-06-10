@@ -57,38 +57,34 @@ public class Assign extends AbstractStatement {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			RankTransformIterator rt = new RankTransformIterator(in, this, target, value);
-			final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
-			final AbstractExpression exp = rt.getExpression(1);
-			RankedIterator<VarStore> ai = new RankedIterator<VarStore>() {
-	
-				@Override
-				public boolean next() throws RPLException {
-					return rt.next();
+		RankTransformIterator rt = new RankTransformIterator(in, this, target, value);
+		final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
+		final AbstractExpression exp = rt.getExpression(1);
+		RankedIterator<VarStore> ai = new RankedIterator<VarStore>() {
+
+			@Override
+			public boolean next() throws RPLException {
+				return rt.next();
+			}
+
+			@Override
+			public VarStore getItem() throws RPLException {
+				VarStore item = rt.getItem();
+				if (item == null) return null;
+				try {
+					return target.assign(item, exp.getValue(item));
+				} catch (RPLException e) {
+					e.setStatement(Assign.this);
+					throw e;
 				}
-	
-				@Override
-				public VarStore getItem() throws RPLException {
-					if (rt.getItem() == null) return null;
-					try {
-						return target.assign(rt.getItem(), exp.getValue(rt.getItem()));
-					} catch (RPLException e) {
-						e.setStatement(Assign.this);
-						throw e;
-					}
-				}
-	
-				@Override
-				public int getRank() {
-					return rt.getRank();
-				}
-			};
-			return ai;
-		} catch (RPLException e) {
-			e.setStatement(this);
-			throw e;
-		}
+			}
+
+			@Override
+			public int getRank() {
+				return rt.getRank();
+			}
+		};
+		return ai;
 	}
 	
 	

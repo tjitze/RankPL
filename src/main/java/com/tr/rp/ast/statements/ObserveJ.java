@@ -24,7 +24,7 @@ import com.tr.rp.varstore.VarStore;
  * This is equivalent to 
  *   observe b [x] observe -b
  */
-public class ObserveJ extends AbstractStatement {
+public class ObserveJ extends AbstractStatement implements ObserveErrorHandler, RankedChoiceErrorHandler {
 
 	private AbstractExpression b;
 	private AbstractExpression rank;
@@ -39,12 +39,7 @@ public class ObserveJ extends AbstractStatement {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			return new RankedChoice(new Observe(b), new Observe(new Not(b)), rank).getIterator(in, c);
-		} catch (RPLException e) {
-			e.setStatement(this);
-			throw e;
-		}
+		return new RankedChoice(new Observe(b, this), new Observe(new Not(b), this), rank, this).getIterator(in, c);
 	}
 
 	public String toString() {
@@ -97,6 +92,20 @@ public class ObserveJ extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
+	}
+	
+	@Override
+	public void observeConditionError(RPLException e) throws RPLException {
+		e.setExpression(b);
+		e.setStatement(this);
+		throw e;
+	}
+
+	@Override
+	public void handleRankExpressionError(RPLException e) throws RPLException {
+		e.setExpression(rank);
+		e.setStatement(this);
+		throw e;
 	}	
 
 }

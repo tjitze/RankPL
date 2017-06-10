@@ -1,6 +1,9 @@
 package com.tr.rp.ast.statements;
 
 import java.util.Set;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,25 +22,25 @@ import com.tr.rp.ranks.Rank;
 import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
-public class Observe extends AbstractStatement {
+public class Observe extends AbstractStatement implements ObserveErrorHandler {
 
 	private AbstractExpression exp;
-	private AbstractStatement exceptionSource;
+	private ObserveErrorHandler errorHandler;
 	
 	public Observe(AbstractExpression exp) {
 		this.exp = exp;
-		this.exceptionSource = this;
+		this.errorHandler = this;
 	}
 
-	public Observe(AbstractExpression exp, AbstractStatement exceptionSource) {
+	public Observe(AbstractExpression exp, ObserveErrorHandler errorHandler) {
 		this.exp = exp;
-		this.exceptionSource = exceptionSource;
+		this.errorHandler = errorHandler;
 	}
 
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		AbstractExpression exp2 = null;
-		try {
+		
 			// If exp is contradiction/tautology we
 			// can immediately return result.
 			if (exp.hasDefiniteValue()) {
@@ -66,7 +69,7 @@ public class Observe extends AbstractStatement {
 			// (if there is no varstore then hasnext will be false)
 			final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(rt);
 			boolean hasNext = bi.next();
-			while (hasNext && !exp2.getBoolValue(bi.getItem())) { 
+			while (hasNext && !getCheckedValue(exp2, bi)) { 
 				hasNext = bi.next();
 			}
 			// Remember rank of this varstore
@@ -79,29 +82,17 @@ public class Observe extends AbstractStatement {
 				
 				@Override
 				public boolean next() throws RPLException {
-					try {
-						// Find next varstore satisfying condition
-						boolean hasNext = bi.next();
-						while (hasNext && !exp2f.getBoolValue(bi.getItem())) { 
-							hasNext = bi.next();
-						}
-						return hasNext;
-					} catch (RPLException e) {
-						if (e.getExpression() == exp2f) {
-							e.setStatement(exceptionSource);
-						}
-						throw e;
+					// Find next varstore satisfying condition
+					boolean hasNext = bi.next();
+					while (hasNext && !getCheckedValue(exp2f, bi)) { 
+						hasNext = bi.next();
 					}
+					return hasNext;
 				}
 	
 				@Override
 				public VarStore getItem() throws RPLException {
-					try {
-						return bi.getItem();
-					} catch (RPLException e) {
-						e.setStatement(Observe.this);
-						throw e;
-					}
+					return bi.getItem();
 				}
 	
 				@Override
@@ -119,10 +110,13 @@ public class Observe extends AbstractStatement {
 					return "ObserveIterator(exp=" + exp2f + ", buffer=" + bi + ")";
 				}
 			};
+	}
+
+	private boolean getCheckedValue(AbstractExpression exp2, BufferingIterator<VarStore> bi) throws RPLException {
+		try {
+			return exp2.getBoolValue(bi.getItem());
 		} catch (RPLException e) {
-			if (e.getExpression() == exp2) {
-				e.setStatement(exceptionSource);
-			}
+			errorHandler.observeConditionError(e);
 			throw e;
 		}
 	}
@@ -167,6 +161,13 @@ public class Observe extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
+	}
+
+	@Override
+	public void observeConditionError(RPLException e) throws RPLException {
+		e.setStatement(this);
+		e.setExpression(exp);
+		throw e;
 	}	
 
 }

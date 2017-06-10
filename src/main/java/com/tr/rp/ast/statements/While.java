@@ -17,7 +17,7 @@ import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
-public class While extends AbstractStatement {
+public class While extends AbstractStatement implements IfElseErrorHandler {
 
 	/** Optional statement to execute before evaluating while condition */
 	private AbstractStatement preStatement;
@@ -79,17 +79,10 @@ public class While extends AbstractStatement {
 	
 	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		IfElse ifElse = new IfElse(whileCondition, body, new Skip(), this);
-		try {
-			if (preStatement == null) {
-				return ifElse.getIterator(in, c);
-			} else {
-				return new Composition(preStatement, ifElse).getIterator(in, c);
-			}
-		} catch (RPLException e) {
-			if (e.getStatement() == ifElse || e.getStatement() == preStatement) {
-				e.setStatement(this);
-			}
-			throw e;
+		if (preStatement == null) {
+			return ifElse.getIterator(in, c);
+		} else {
+			return new Composition(preStatement, ifElse).getIterator(in, c);
 		}
 	}
 	
@@ -149,6 +142,23 @@ public class While extends AbstractStatement {
 	@Override
 	public int hashCode() {
 		return Objects.hash(preStatement, whileCondition, body);
+	}
+
+	@Override
+	public void ifElseConditionError(RPLException e) throws RPLException {
+		e.setStatement(this);
+		e.setExpression(whileCondition);
+		throw e;
+	}
+
+	@Override
+	public void ifElseThenError(RPLException e) throws RPLException {
+		throw e;
+	}
+
+	@Override
+	public void ifElseElseError(RPLException e) throws RPLException {
+		throw e;
 	}	
 
 }

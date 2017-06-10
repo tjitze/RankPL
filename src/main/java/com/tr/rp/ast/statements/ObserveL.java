@@ -33,7 +33,7 @@ import com.tr.rp.varstore.VarStore;
  *	else
  *		observe -b [rank(b)-x] observe b
  */
-public class ObserveL extends AbstractStatement {
+public class ObserveL extends AbstractStatement implements ObserveErrorHandler, RankedChoiceErrorHandler, IfElseErrorHandler {
 
 	private AbstractExpression b;
 	private AbstractExpression rank;
@@ -49,40 +49,39 @@ public class ObserveL extends AbstractStatement {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			AbstractExpression rb = new RankExpr(b);
-			AbstractExpression rnb = new RankExpr(new Not(b));
-			// Do rank transformation here
-			RankTransformIterator rt = 
-					new RankTransformIterator(in, this, rb, rnb);
-			rb = rt.getExpression(0);
-			rnb = rt.getExpression(1);
-			// Normal behavior if rank(b) is infinity, is to leave the prior ranking
-			// unchanged. If iterative deepening is enabled we need to block execution.
-			if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
-				return new AbsurdIterator<VarStore>();
-			}
-			// Construct observe-L statement
-			AbstractExpression cond = Expressions.leq(rb, rank);
-			AbstractExpression r1 = Expressions.minus(Expressions.plus(rank, rnb), rb);
-			AbstractExpression r2 = Expressions.minus(rb, rank);
-			AbstractStatement c1 = new RankedChoice(
-					new Observe(b),
-					new Observe(new Not(b)),
-					r1);
-			AbstractStatement c2 = new RankedChoice(
-					new Observe(new Not(b)),
-					new Observe(b),
-					r2);
-			AbstractStatement statement = new ProgramBuilder()
-					.add(new IfElse(cond, c1, c2))
-					.build();
-			// Execute
-			return statement.getIterator(rt, c);
-		} catch (RPLException e) {
-			e.setStatement(this);
-			throw e;
+		AbstractExpression rb = new RankExpr(b);
+		AbstractExpression rnb = new RankExpr(new Not(b));
+		
+		// Do rank transformation here
+		RankTransformIterator rt = 
+				new RankTransformIterator(in, this, rb, rnb);
+		rb = rt.getExpression(0);
+		rnb = rt.getExpression(1);
+
+		// Normal behavior if rank(b) is infinity, is to leave the prior ranking
+		// unchanged. If iterative deepening is enabled we need to block execution.
+		if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
+			return new AbsurdIterator<VarStore>();
 		}
+		
+		// Construct observe-L statement
+		AbstractExpression cond = Expressions.leq(rb, rank);
+		AbstractExpression r1 = Expressions.minus(Expressions.plus(rank, rnb), rb);
+		AbstractExpression r2 = Expressions.minus(rb, rank);
+		AbstractStatement c1 = new RankedChoice(
+				new Observe(b, this),
+				new Observe(new Not(b), this),
+				r1, this);
+		AbstractStatement c2 = new RankedChoice(
+				new Observe(new Not(b), this),
+				new Observe(b, this),
+				r2, this);
+		AbstractStatement statement = new ProgramBuilder()
+				.add(new IfElse(cond, c1, c2, this))
+				.build();
+		
+		// Execute
+		return statement.getIterator(rt, c);
 	}
 
 	public String toString() {
@@ -136,6 +135,35 @@ public class ObserveL extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
+	}
+
+	@Override
+	public void observeConditionError(RPLException e) throws RPLException {
+		e.setExpression(b);
+		e.setStatement(this);
+		throw e;
+	}
+
+	@Override
+	public void handleRankExpressionError(RPLException e) throws RPLException {
+		e.setExpression(rank);
+		e.setStatement(this);
+		throw e;
+	}
+
+	@Override
+	public void ifElseConditionError(RPLException e) throws RPLException {
+		handleRankExpressionError(e);
+	}
+
+	@Override
+	public void ifElseThenError(RPLException e) throws RPLException {
+		throw e;
+	}
+
+	@Override
+	public void ifElseElseError(RPLException e) throws RPLException {
+		throw e;
 	}	
 
 }

@@ -12,6 +12,7 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.IsSet;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.InterruptableIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
@@ -83,7 +84,22 @@ public class Composition extends AbstractStatement {
 
 		// Execute second (but skip if return value is set)
 		if (firstContainsReturn) {
-			IfElse ifElse = new IfElse(new IsSet(new Variable("$return")), new Skip(), second);
+			IfElse ifElse = new IfElse(new IsSet(new Variable("$return")), new Skip(), second,
+					new IfElseErrorHandler() {
+						@Override
+						public void ifElseConditionError(RPLException e) throws RPLException {
+							throw new RPLMiscException("Internall error", Composition.this);
+						}
+						@Override
+						public void ifElseThenError(RPLException e) throws RPLException {
+							throw new RPLMiscException("Internall error", Composition.this);
+						}
+						@Override
+						public void ifElseElseError(RPLException e) throws RPLException {
+							e.setStatement(second);
+							throw e;
+						}
+			});
 			in = ifElse.getIterator(in, c);
 		} else {
 			in = second.getIterator(in, c);

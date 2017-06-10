@@ -46,7 +46,8 @@ public class FunctionFormTest extends RPLBaseTest {
 	public static Function getTestFunction2() {
 		String[] params = new String[] { "x" };
 		return new Function("test2", new Composition(
-				new RankedChoice(target("y"), Expressions.plus(new Variable("x"), Expressions.lit(100)), Expressions.plus(new Variable("x"), Expressions.lit(1000)), 5),
+				new RankedChoice(target("y"), Expressions.plus(new Variable("x"), Expressions.lit(100)), 
+						Expressions.plus(new Variable("x"), Expressions.lit(1000)), lit(5)),
 				new Return("y")), params);
 	}
 	

@@ -1,6 +1,5 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
@@ -8,7 +7,6 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
-import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ChooseMergingIterator;
@@ -25,67 +23,44 @@ import com.tr.rp.varstore.VarStore;
  * executed, and "exceptionally" (with rank r) s2 is executed. Different constructors 
  * are provided for ease of use.
  */
-public class RankedChoice extends AbstractStatement {
+public class RankedChoice extends AbstractStatement implements RankedChoiceErrorHandler {
 
-	public final AbstractStatement s1;
-	public final AbstractStatement s2;
-	public final AbstractExpression rank;
+	private final AbstractStatement s1;
+	private final AbstractStatement s2;
+	private final AbstractExpression rank;
+	private final RankedChoiceErrorHandler errorHandler;
+	
+	public RankedChoice(AbstractStatement s1, AbstractStatement s2, AbstractExpression rank, 
+			RankedChoiceErrorHandler errorHandler) {
+		this.s1 = s1;
+		this.s2 = s2;
+		this.rank = rank;
+		this.errorHandler = errorHandler;
+	}
+
+	public RankedChoice(AssignmentTarget target, AbstractExpression v1, AbstractExpression v2, 
+			AbstractExpression rank, RankedChoiceErrorHandler errorHandler) {
+		this.s1 = new Assign(target, v1);
+		this.s2 = new Assign(target, v2);
+		this.rank = rank;
+		this.errorHandler = errorHandler;
+	}
 
 	public RankedChoice(AbstractStatement s1, AbstractStatement s2, AbstractExpression rank) {
 		this.s1 = s1;
 		this.s2 = s2;
 		this.rank = rank;
+		this.errorHandler = this;
 	}
 
-	public RankedChoice(AssignmentTarget target, AbstractExpression v1, AbstractExpression v2, int rank) {
-		this(target, v1, v2, new Literal<Integer>(rank));
-	}
-
-	public RankedChoice(AssignmentTarget target, AbstractExpression v1, AbstractExpression v2, AbstractExpression rank) {
+	public RankedChoice(AssignmentTarget target, AbstractExpression v1, AbstractExpression v2, 
+			AbstractExpression rank) {
 		this.s1 = new Assign(target, v1);
 		this.s2 = new Assign(target, v2);
 		this.rank = rank;
+		this.errorHandler = this;
 	}
 
-	public RankedChoice(String variable, AbstractExpression v1, AbstractExpression v2, int rank) {
-		this(new AssignmentTarget(variable), v1, v2, rank);
-	}
-
-	public RankedChoice(AbstractStatement s1, AbstractStatement s2, int rank) {
-		this.s1 = s1;
-		this.s2 = s2;
-		this.rank = new Literal<Integer>(rank);
-	}
-	
-	public RankedChoice(AbstractStatement s1, AbstractStatement s2) {
-		this.s1 = s1;
-		this.s2 = s2;
-		this.rank = Literal.ZERO;
-	}
-	
-	public RankedChoice(AssignmentTarget var, int[] values, int rankIncrement) {
-		this.rank = new Literal<Integer>(rankIncrement);
-		if (values.length == 2) {
-			this.s1 = new Assign(var, values[0]);
-			this.s2 = new Assign(var, values[1]);
-		} else {
-			this.s1 = new Assign(var, values[0]);
-			this.s2 = new RankedChoice(var, Arrays.copyOfRange(values, 1, values.length), rankIncrement);
-		}
-	}
-
-	public RankedChoice(AssignmentTarget var, int[] values, int[] ranks) {
-		if (ranks.length == 0) throw new IllegalArgumentException();
-		if (values.length != ranks.length + 1) throw new IllegalArgumentException();
-		this.rank = new Literal<Integer>(ranks[0]);
-		this.s1 = new Assign(var, values[0]);
-		if (values.length == 2) {
-			this.s2 = new Assign(var, values[1]);
-		} else {
-			this.s2 = new RankedChoice(var, Arrays.copyOfRange(values, 1, values.length), 
-					Arrays.copyOfRange(ranks, 1, ranks.length));
-		}
-	}
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
@@ -96,7 +71,7 @@ public class RankedChoice extends AbstractStatement {
 				s1.getIterator(split.getA(), c), 
 				s2.getIterator(split.getB(), c), 
 				rank2,
-				this);
+				errorHandler);
 		return new DuplicateRemovingIterator<VarStore>(merge);
 	}
 	
@@ -151,6 +126,13 @@ public class RankedChoice extends AbstractStatement {
 	public void getAssignedVariables(Set<String> variables) {
 		s1.getAssignedVariables(variables);
 		s2.getAssignedVariables(variables);
-	}	
+	}
 
+	@Override
+	public void handleRankExpressionError(RPLException e) throws RPLException {
+		e.setStatement(this);
+		e.setExpression(rank);
+		throw e;
+	}	
+	
 }

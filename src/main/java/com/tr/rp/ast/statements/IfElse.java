@@ -7,7 +7,6 @@ import java.util.Objects;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
@@ -18,27 +17,26 @@ import com.tr.rp.iterators.ranked.MergingIterator;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.Rank;
-import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
-public class IfElse extends AbstractStatement {
+public class IfElse extends AbstractStatement implements IfElseErrorHandler, ObserveErrorHandler {
 
 	private AbstractExpression exp;
 	private AbstractStatement a, b;
-	private AbstractStatement exceptionSource;
+	private IfElseErrorHandler errorHandler;
 	
 	public IfElse(AbstractExpression exp, AbstractStatement a, AbstractStatement b) {
 		this.exp = exp;
 		this.a = a;
 		this.b = b;
-		this.exceptionSource = this;
+		this.errorHandler = this;
 	}
 
-	public IfElse(AbstractExpression exp, AbstractStatement a, AbstractStatement b, AbstractStatement exceptionSource) {
+	public IfElse(AbstractExpression exp, AbstractStatement a, AbstractStatement b, IfElseErrorHandler errorHandler) {
 		this.exp = exp;
 		this.a = a;
 		this.b = b;
-		this.exceptionSource = exceptionSource;
+		this.errorHandler = errorHandler;
 	}
 
 	public IfElse(AbstractExpression exp, AbstractStatement a) {
@@ -52,45 +50,46 @@ public class IfElse extends AbstractStatement {
 
 		// If exp is contradiction/tautology we
 		// can immediately pass the a/b iterator.
-		if (exp.hasDefiniteValue()) {
-			if (exp.getDefiniteBoolValue()) {
-				return a.getIterator(parent, c);
-			} else {
-				return b.getIterator(parent, c);
+		try {
+			if (exp.hasDefiniteValue()) {
+				if (exp.getDefiniteBoolValue()) {
+					return a.getIterator(parent, c);
+				} else {
+					return b.getIterator(parent, c);
+				}
 			}
+		} catch (RPLException e) {
+			errorHandler.ifElseConditionError(e);
 		}
-		
+
 		// Replace rank expressions in exp
 		RankTransformIterator i = 
 				new RankTransformIterator(parent, this, this.exp);
 		AbstractExpression exp2 = i.getExpression(0);
 		
 		// Check contradiction/tautology again.
-		if (exp.hasDefiniteValue()) {
-			if (exp.getDefiniteBoolValue()) {
-				return a.getIterator(parent, c);
-			} else {
-				return b.getIterator(parent, c);
+		try {
+			if (exp.hasDefiniteValue()) {
+				if (exp.getDefiniteBoolValue()) {
+					return a.getIterator(parent, c);
+				} else {
+					return b.getIterator(parent, c);
+				}
 			}
+		} catch (RPLException e) {
+			errorHandler.ifElseConditionError(e);
 		}
 		
 		// Split input
 		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
 
 		// Apply condition 
-		obs1 = new Observe(exp2);
-		obs2 = new Observe(new Not(exp2));
+		obs1 = new Observe(exp2, this);
+		obs2 = new Observe(new Not(exp2), this);
 		RankedIterator<VarStore> ia1;
 		RankedIterator<VarStore> ia2;
-		try {
-			ia1 = obs1.getIterator(split.getA(), c);
-			ia2 = obs2.getIterator(split.getB(), c);
-		} catch (RPLException e) {
-			if (e.getStatement() == obs1 || e.getStatement() == obs2) {
-				e.setStatement(exceptionSource);
-			}
-			throw e;
-		}
+		ia1 = obs1.getIterator(split.getA(), c);
+		ia2 = obs2.getIterator(split.getB(), c);
 		
 		// Remember offsets (prior ranks of the conditions)
 		int offset1 = ia1.getConditioningOffset();
@@ -110,6 +109,25 @@ public class IfElse extends AbstractStatement {
 		return rc;
 
 	}
+
+	public void ifElseConditionError(RPLException e) throws RPLException {
+		e.setStatement(this);
+		e.setExpression(exp);
+		throw e;
+	}
+	
+	public void ifElseThenError(RPLException e) throws RPLException {
+		throw e;
+	};
+	
+	public void ifElseElseError(RPLException e) throws RPLException {
+		throw e;
+	};
+	
+	@Override
+	public void observeConditionError(RPLException e) throws RPLException {
+		errorHandler.ifElseConditionError(e);
+	}	
 
 	public String toString() {
 		String expString = exp.toString();
@@ -161,6 +179,7 @@ public class IfElse extends AbstractStatement {
 	public void getAssignedVariables(Set<String> variables) {
 		a.getAssignedVariables(variables);
 		b.getAssignedVariables(variables);
-	}	
+	}
+
 
 }

@@ -68,12 +68,23 @@ public class RangeChoice extends AbstractStatement {
 				
 				@Override
 				public boolean next() throws RPLException {
-					try {
-						if (finalized) {
+					if (finalized) {
+						return false;
+					}
+					if (!initialized) {
+						initialized = true;
+						if (in.next()) {
+							a = begin.getIntValue(in.getItem());
+							b = end.getIntValue(in.getItem());
+							i = a;
+							return true;
+						} else {
+							finalized = true;
 							return false;
 						}
-						if (!initialized) {
-							initialized = true;
+					} else {
+						i++;
+						if (i >= b) {
 							if (in.next()) {
 								a = begin.getIntValue(in.getItem());
 								b = end.getIntValue(in.getItem());
@@ -83,39 +94,18 @@ public class RangeChoice extends AbstractStatement {
 								finalized = true;
 								return false;
 							}
-						} else {
-							i++;
-							if (i >= b) {
-								if (in.next()) {
-									a = begin.getIntValue(in.getItem());
-									b = end.getIntValue(in.getItem());
-									i = a;
-									return true;
-								} else {
-									finalized = true;
-									return false;
-								}
-							}
-							return true;
 						}
-					} catch (RPLException e) {
-						e.setStatement(RangeChoice.this);
-						throw e;
+						return true;
 					}
 				}
 	
 				@Override
 				public VarStore getItem() throws RPLException {
-					try {
-						VarStore vs = in.getItem();
-						if (vs == null) {
-							return null;
-						} else {
-							return target.assign(vs, i);
-						}
-					} catch (RPLException e) {
-						e.setStatement(RangeChoice.this);
-						throw e;
+					VarStore vs = in.getItem();
+					if (vs == null) {
+						return null;
+					} else {
+						return target.assign(vs, i);
 					}
 				}
 	

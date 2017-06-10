@@ -302,7 +302,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		if (idx == choices.length) {
 			return e;
 		} else {
-			return new RankedChoice(e, constructIndifferentChoice(choices, idx), 0);
+			return new RankedChoice(e, constructIndifferentChoice(choices, idx), new Literal<Integer>(0));
 		}
 	}
 

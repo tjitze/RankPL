@@ -8,7 +8,7 @@ Semantically, RankPL draws a parallel with probabilistic programming in terms of
 
 # Ranking theory<a name="sec-rankingtheory"></a>
 
-Here we present a brief overview ranking theory. We discuss the basic definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [1](#ref-gp) or [2](#ref-survey). 
+Here we present a brief overview ranking theory. We discuss the basic definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [[1](#ref-gp)] or [[2](#ref-survey)]. 
 
 ## Ranking functions
 
@@ -16,24 +16,17 @@ The definition of a *ranking function* presupposes a set *Ω* of elements called
 A ranking function *K* assigns to every *w ∈ Ω* a non-negative integer or ∞, such that *K(w) = 0* for at least one *w ∈ Ω*.
 Intuitively, these numbers (called ranks) represent relative degrees of surprise: if *K(w) = 0* then *w* is not surprising, if *K(w) = 1* then *w* is surprising, if *K(w) = 2* then *w* is very suprising, and so on, until *K(w) = ∞*, which means that *w* is impossible.
 
-Non-empty subsets of *Ω* are called *events*.
-The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the elements of *A*. In other words, an event *A* is as surprising as the least surprising possibility *w ∈ A* that gives rise to it. In this respect, ranks behave different from probabilities, because the probability of an event is defined to be the *sum* of its elements.
+Non-empty subsets of *Ω* are called *events*. The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the elements of *A*. In other words, an event *A* is as surprising as the least surprising possibility *w ∈ A* that gives rise to it. In this respect, ranks behave different from probabilities, because the probability of an event is defined to be the *sum* of its elements.
 
 ## Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*. 
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*. This can be thought of as a shifting operation: the possibilities in *B* are uniformly shifted down so that *K(B|B) = 0* (i.e., *B* is unsurprising given *B*), and the possibilities in *not-B* are shifted up so that *K(not-B|B) = ∞* (i.e., *not-B* is impossible given *B*). 
 
-How do conditional ranks compare to conditional probabilities? Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Here, taking the intersection *A∩B* ensures that *P(not-B|B) = 0*, while division by *P(B)* can be thought of as a normalization step, which ensures that *P(B|B) = 1*. 
-
-In the definition of *K(A|B)*, the rank of *K(B)* is subtracted from the rank of *K(A∩B)*. Here, taking the intersection *A∩B* ensures that *K(not-B|B) = ∞* (i.e., *not-B* is impossible given *B*). Subtracting *K(B)* can, like division by *P(B)*, be thought of as a normalization step. It ensures that *K(B|B) = 0* (i.e., *B* is not surprising given *B*).
-
-Just like *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*, we can rewrite *K(A|B) = K(A∩B)-K(B)* as *K(A∩B) = K(B) + K(A|B)*. In this form, the definition says that the degree of surprise of *A and B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
+Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Just like *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*, we can rewrite *K(A|B) = K(A∩B)-K(B)* as *K(A∩B) = K(B) + K(A|B)*. In this form, the definition says that the degree of surprise of *A and B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
 
 # Ranked programming in RankPL
 
-RankPL is a simple imperative programming language extended with statements to draw choices at random from a ranking function and to perform ranking-theoretic conditioning. Drawing choices at random from a ranking function is done through the *ranked choice* statement. Ranking-theoretic conditioning is done using the *observe* statement. Other special statements are the *infer* statement and the special observe statements *observe-j* and *observe-l*. 
-
-We discuss these statements in this section. Because the rest of the language is fairly standard, the examples provided here should be easy to understand. A complete specification of the language is provided in the next section.
+RankPL is a simple imperative programming language extended with statements to draw choices at random from a ranking function and to perform conditioning due to observations. Drawing choices at random from a ranking function is done through the *ranked choice* statement. Conditioning is done using the *observe* statement. Other special statements are the *infer* statement and the special observe statements *observe-j* and *observe-l*. We discuss these statements in this section. Because the rest of the language is fairly standard, the examples provided here should be easy to understand. A complete specification is provided in the next section.
 
 ## The ranked choice statement
 
@@ -130,12 +123,12 @@ For complex programs, this can result in significant savings in terms of computa
 
 ## The *observe* statement
 
-The *observe* statement revises the ranking of alternatives due to a given condition that we observe or learn to hold. How does this work? Intuitively, if we would halt the execution of a RankPL program at a given point, we end up with a ranking function over alternative program states. The observe statement does two things: 
+The *observe* statement revises the ranking over alternative program flows due to a given condition that we observe or learn to hold. How does this work? The observe statement does two things: 
 
-1. it rules out (or blocks) all alternatives that do not satisfy the observed condition, and 
-2. it uniformly shifts down the ranks of the remaining alternatives so that the result is, again, a proper ranking function over alternatives. 
+1. it uniformly shifts down the ranks of the alternatives that satisfy `b` to zero.
+1. it blocks execution of the remaining alternatives. 
 
-Of course, this is exactly what the ranking-theoretic conditioning operation does, which we described in the [section on ranking theory](#sec-rankingtheory). 
+Of course, this is exactly what ranking-theoretic conditioning does (discussed [above](#sec-rankingtheory)) except that we block the execution of alternatives that do not satisfy the observed condition, instead of shifting their ranks up to ∞.
 
 To demonstate the observe statement we adapt the previous example as follows.
 ```
@@ -147,7 +140,7 @@ To demonstate the observe statement we adapt the previous example as follows.
 ```
 The result is the same ranking as above, except that
 	the outcome `100` is ruled out,
-	and the ranks of the outcomes `200` and `400` are shifted down:
+	and the ranks of the outcomes `200` and `400` are shifted down by one unit of rank:
 ```
 Rank 0: result: 200
 Rank 1: result: 400
@@ -205,63 +198,92 @@ Most plausible outcomes:[(a = 10, b = 20), (a = 20, b = 10)]
 
 ## J-observation
 
-Instead of learning that a condition `b` holds with absolute certainty, we may also learn that b *normally* holds. In other words, instead of completely ruling out alternatives not satisfying `b`, which is what the observe statement does, we merely increase their rank. We penalise them, so to say, because they do not satisfy what we expect to normally hold. This is what J-observation does. It implements a special form of conditioning called J-conditioning [1](#ref-gp). The statement has the form:
+The statement `observe b` completely rules out the alternatives not satisfying `b`. This amounts to learning that `b` holds with absolute certainty. What if we learn that `b` *normally* holds? This is what J-conditioning does [[1](#ref-gp)]. J-conditioning is a generalized form of conditioning parameterized by a rank `n`. In RankPL, J-conditioning is implemented by the `observe-j` statement. This statement has the form:
 ```
 observe-j (n) b
 ```
-Here, `n` is an integer-valued expression that indicates the degree of surprise that `b` does *not* hold. Like with the normal `observe` statement, the effect is that the ranks of the alternatives satisfying `b` are uniformly shifted down to zero. However, the ranks of the alternatives not satisfying `b` are shifted up only by `n` units, rather than ∞ units, as with the normal observe statement. An example:
+The effect is that the ranks of the alternatives satisfying `b` are uniformly shifted down to zero, just like the regular `observe` statement does. However, the ranks of the alternatives not satisfying `b` are uniformly shifted up or down so that the posterior rank of `!b` becomes `n`. Thus, the effect of the statement `observe-j (n) b` is that the degree of surprise that `b` does *not* hold becomes `n`.
+
+An example. Consider the following program. It contains a range assignment statement that assigns to `a` the value 0, 1, 2 or 3, all ranked zero.
 ```
-a := << 0 ... 4 >>;
-observe-j (2) a < 2;
-return “a = “ + a;
+	a := << 0 ... 4 >>;
+	return “a = “ + a;
 ```
 Result:
 ```
-Rank 0: a = 0
-Rank 0: a = 1
-Rank 2: a = 2
-Rank 2: a = 3
+	Rank 0: a = 0
+	Rank 0: a = 1
+	Rank 0: a = 2
+	Rank 0: a = 3
+```
+If we add a regular `observe` statement with the condition `a < 2`, the alternatives `a = 2` and `a = 3` are ruled out.
+```
+	a := << 0 ... 4 >>;
+	observe a < 2;
+	return “a = “ + a;
+```
+Result:
+```
+	Rank 0: a = 0
+	Rank 0: a = 1
+```
+Now we replace the regular `observe` statement with the statement `observe-j (10) a < 2`. That is, we learn that normally, `a < 2` holds, but exceptionally (to degree 10) we may have `a >= 2`. The result is that the alternatives `a = 2` and `a = 3` are ranked 10.
+```
+	a := << 0 ... 4 >>;
+	observe-j (10) a < 2;
+	return “a = “ + a;
+```
+Result:
+```
+	Rank 0: a = 0
+	Rank 0: a = 1
+	Rank 10: a = 2
+	Rank 10: a = 3
 ```
 
 ## L-observation
 
-The second generalised kind of observation is *L-observation*. It implements a special form of conditioning called L-conditioning [1](#ref-gp). L-conditioning is especially useful when we have to deal with multiple sequential observations. The statement has the form:
+The second generalized kind of conditioning is *L-conditioning* [[1](#ref-gp)]. Like J-conditioning, L-conditioning is parameterized by a rank `n`. This time, `n` indicates the degree by which want to strenghthen the prior belief in the observed condition. In RankPL, L-observation is implemented by the `observe-l` statement, which has the form:
 ```
 observe-l (n) b
 ```
-Here, `n` indicates, intuitively, the degree by which want to strenghthen the prior belief in `b`. The effect is that the ranks of the alternatives satisfying `b` are improved by `n` units with respect to the alternatives not satisfying `b`. Depending on the prior ranks of `b` and `!b`, this means that the rank of `b` is decreased, that the rank of `!b` is increased, or both. Consider the following example. 
+The effect is that the ranks of the alternatives satisfying `b` are improved by `n` units with respect to the ranks of the alternatives not satisfying `b`. Depending on the prior ranks of `b` and `!b`, this means that the rank of `b` is decreased (`b` becomes less surprising), that the rank of `!b` is increased (`!b` becomes more surprising), or both. 
+
+L-conditioning is especially useful when we have to deal with multiple sequential observations. This is because it nicely models the accumulation of confidence due to observations that strengthen already-held beliefs, as well as the reversal of confidence that occurs when new observations contradict previous ones. 
+
+An example. In the program below, the range assignment statement assigns to `a` the value 0, 1, 2 or 3, all ranked zero. The statement `observe-l (10) a < 2` improves the rank of `a < 2` by 10 units of rank w.r.t. `a >= 2`. In this case, this means that the rank of `a = 2` and `a = 3` becomes 10.
 ```
 a := << 0 ... 4 >>;
-observe-l (2) a < 2;
+observe-l (10) a < 2;
 return “a = “ + a;
 ```
 Result:
 ```
 Rank 0: a = 0
 Rank 0: a = 1
-Rank 2: a = 2
-Rank 2: a = 3
+Rank 10: a = 2
+Rank 10: a = 3
 ```
-Note that the the rank of `a < 2` has improved by 2 units of rank w.r.t. `a >= 2`. In this instance, the result is the same as with the `observe-j` statement in the earlier example. This changes if we consider multiple observations. In the following example, the rank of `a < 2` is improved *twice* by 2 units of rank w.r.t. `a >= 2`.
+Now we consider multiple observations. In the following example, the rank of `a < 2` is improved *twice* by 10 units of rank w.r.t. `a >= 2`.
 ```
 a := << 0 ... 4 >>;
-observe-l (2) a < 2;
-observe-l (2) a < 2;
+observe-l (10) a < 2;
+observe-l (10) a < 2;
 return “a = “ + a;
 ```
 Result:
 ```
 Rank 0: a = 0
 Rank 0: a = 1
-Rank 4: a = 2
-Rank 4: a = 3
+Rank 20: a = 2
+Rank 20: a = 3
 ```
-The following example shows that observations done with the `observe-l` statement can be undone. 
-Here, the first observation increases the rank of `a >= 2` by two, while the second statement decreases the rank of `a >= 2` by two.
+The following example shows how an observation can reverse the effect of a previous observation. 
+Here, the first `observe-l` statement increases the rank of `a >= 2` by 10, while the second `observe-l` statement decreases the rank of `a >= 2` by 10.
 ```
 a := << 0 ... 4 >>;
-observe-l (2) a < 2;
-observe-l (2) a >= 2;
+observe-l (10) a < 2;
+observe-l (10) a >= 2;
 return “a = “ + a;
 ```
 Result:
@@ -271,8 +293,9 @@ Rank 0: a = 1
 Rank 0: a = 2
 Rank 0: a = 3
 ```
-Note that the normal `observe` statement is less suitable to deal with multple observations, because alteranatives not satisfying the observation are completely ruled out and their ranks cannot (as in the example above) be shifted down afterwards due to subsequent observations. While J-observation does allow this, it often produces undersirable results. The main problem is that a statement `observe-J (n) b` does not take the prior ranks of `b` and `!b` into account. L-conditioning does take these prior ranks into account. For more information about J-conditioning and L-conditioning we refer the reader to [1](#ref-gp).
-A practical example using L observation is included in the examples section ([link](#spelling-corrector)).
+Note that the normal `observe b` statement does not adequately model multple observations, because alternatives not satisfying `b` are completely ruled out and their ranks cannot (as in the example above) be shifted down afterwards due to subsequent observations. While the `observe-j (n) b` statement does allow this, it often produces undesirable results, because it does not take the prior ranks of `b` and `!b` into account. The `observe-l (n) b` statement does take these prior ranks into account. 
+
+For a more detailed explanation of J-conditioning and L-conditioning and their relation to generalized forms of probabilistic conditioning, we refer the reader to [[1](#ref-gp)]. A practical example using the `observe-l` statement is included in the examples section ([link](#spelling-corrector)).
 
 # Building and running RankPL
 
@@ -340,8 +363,8 @@ The table below provides an overview of all available statements in RankPL. We u
 |If-else		| `if b then s_1 else s_2`		| Regular if-else statement. **(2)** |
 |while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
 |for loop		| `for (s_1; b; s_2) s_3`		| Java-style for loop. `s_1` is the init statement, `b` the termination condition and `s_2` the increment statement. |
-|observe		| `observe b`				| Observe condition `b` to hold (eliminate alternatives not satisfying `b` and uniformly shift down alternatives that remain`).	|
-|observe-j		| `observe-j (n) b`			| Like `observe b`, but increase rank of alternatives not satisfying `b` by value of `n`. **(3)**		|
+|observe		| `observe b`				| Observe that `b` is true (uniformly shift down alternatives that satisfy `b` and eliminate alternatives not satisfying `b`).	|
+|observe-j		| `observe-j (n) b`			| Observe that `b` is normally (to degree `n`) true. (like `observe b`, but uniformly shifts the rank of alternatives not satisfying `b` to `n`). **(3)**		|
 |observe-l		| `observe-l (n) b`			| Improve rank of alternatives satisfying `b` by `n` units w.r.t. alternatives not satisfying `b`. **(3)**		|
 |Ranked choice  	| `normally (n) s_1 exceptionally s_2`	| Normally execute `s_1`, exceptionally (to degree `n`) execute `s_2`. **(3,4)**	|
 |Indifferent choice  	| `either s_1 or s_2`			| Same as `normally (0) s_1 exceptionally s_2`. 		|
@@ -471,69 +494,85 @@ They represent explanations that are less plausible because they involve more th
 
 The following example implements a spelling correction algorithm. 
 The rough idea is as follows.
-On line 1 we set `input`, which is a (possibly) misspelled word.
+On line 4 we set `input`, which is a (possibly) misspelled word.
 We then pick a word (`potential_match`) at random from a dictionary (lines 3-12).
 We then compare, one by one, the characters of `input` and `potential_match`.
 For each character we observe that the characters of `input` and `potential_match` 
 	are the same (`input[i] == potential_match[k]`). 
 This is done using L-conditioning, which means that the rank of a match is improved by one unit w.r.t. the rank of a non-match.
 Next, if the characters match, we increase the pointers `i` and `k` and repeat the process (lines 28-29).
-If the characters don't match, we consider three possibilities and generate the corresponding alternatives using an either-or statement (lines 26-36):
+If the characters don't match, we consider three possibilities and generate the corresponding alternatives using an either-or statement (lines 38-48):
 - There is a misspelling (e.g. when writing c*o*t instead of cat). We increase `i` and `k`.
 - There is an insertion (e.g. when writing ca*r*t instead of cat). We increase only `i`.
 - There is an omission (e.g. when writing ct instead of c*a*t). We increase only `k`.
-
 At the end we use a normal `observe` statement to condition on the fact that all characters were processed.
 
 ```
- 1  input := "foorteen";
- 2
- 3  dictionary := [
- 4  	"one", "two", "three", "four", "five", 
- 5  	"six", "seven", "eight", "nine", "ten", "eleven", 
- 6  	"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
- 7  	"seventeen", "eighteen", "nineteen", "twenty"
- 8  ]; 
- 9
-10  # Randomly choose word from dictionary
-11  choice := << 0 ... len(dictionary) >>;
-12  potential_match := dictionary[choice];
+ 1  # A spelling correction algorithm.
+ 2 
+ 3  # Input (possibly misspelled)
+ 4  input := "tweleven";
+ 5
+ 6  # Read dictionary of possible words
+ 7  dictionary := [
+ 8 	"one", "two", "three", "four", "five",
+ 9	"six", "seven", "eight", "nine", "ten", "eleven",
+10	"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+11	"seventeen", "eighteen", "nineteen", "twenty"
+12  ];
 13
-14  # Initialize counters (i iterates over input, k over match)
-15  i := 0; k := 0;
-16
-17  # While there are characters left to match ...
-18  while (i < len(input) & k < len(potential_match)) do {
-19	# Normally we expect characters i and k to match
-19  	observe-l (1) input[i] == potential_match[k];
-20
-21	# If characters match, increase both indices
-22	if (input[i] == potential_match[k]) then {
-23		i := i + 1;
-24		k := k + 1;
-25	} else {
-26		either {
-27			# Misspelling
-28			i := i + 1;
-29			k := k + 1;
-30		} or {
-31			# Insertion 
-32			i := i + 1;
-33		} or {
-34			# Omission
-35			k := k + 1;
-36		}
-37  	}
-38  };
-39  # Condition on all characters being matched
-40  observe i == len(input) & k == len(potential_match);
-41  return potential_match;
+14  # Randomly choose word from dictionary
+15  choice := << 0 ... len(dictionary) >>;
+16  potential_match := dictionary[choice];
+17
+18  # Initialize counters (i iterates over input, k over match)
+19  i := 0; k := 0;
+20 
+21  # Append * to end of input and potential_match, to match end-of-word
+22  input := input + "*";
+23  potential_match := potential_match + "*";
+24
+25  # While there are characters left to match ...
+26  while (i < len(input) & k < len(potential_match)) do {
+27	# Improve rank of match with 1 unit of rank w.r.t. rank of a mis-match.
+28	observe-l (1) (input[i] == potential_match[k]);
+29
+30	# If match, increase pointers
+31	if (input[i] == potential_match[k]) then {
+32		i := i + 1;
+33		k := k + 1;
+34	}
+35
+36	# If mis-match, consider three possibilities:
+37	else {
+38		either {
+39			# misspelling (as in cot instead of cat)
+40			i := i + 1; 
+41			k := k + 1;
+42		} or {
+43			# insertion (as in cart instead of cat)
+44			i := i + 1; 
+45		} or {
+46			# omission (as in ct instead of cat)
+47			k := k + 1;
+48  		};
+49  	};
+50  };
+51
+52  # Filter on event that all characters were matched
+53  observe i == len(input) & k == len(potential_match);
+54
+55  return potential_match;
+
+
 ```
 Result
 ```
-Rank 0: fourteen
-Rank 2: thirteen
-Rank 2: fifteen
+Rank 0: eleven*
+Rank 0: twelve*
+Rank 2: seven*
+Rank 3: fifteen*
+Rank 3: twenty*
 ...
 ```
 

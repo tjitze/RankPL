@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import static com.tr.rp.ast.expressions.Expressions.*;
+import static com.tr.rp.ast.statements.Statements.*;
 
 import com.tr.rp.ast.statements.ObserveL;
 import com.tr.rp.exceptions.RPLException;
@@ -13,7 +14,7 @@ public class ObserveLTest extends RPLBaseTest {
 	
 	public void testObserveL() throws RPLException {
 		
-		ObserveL o = new ObserveL(eq(var("a"), lit(3)), 0);
+		ObserveL o = observeL(eq(var("a"), lit(3)), 0);
 		RankedIterator<VarStore> result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -27,7 +28,7 @@ public class ObserveLTest extends RPLBaseTest {
 		assertEquals(2, result.getRank());
 		assertEquals(false, result.next());
 
-		o = new ObserveL(eq(var("a"), lit(3)), 1);
+		o = observeL(eq(var("a"), lit(3)), 1);
 		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -41,7 +42,7 @@ public class ObserveLTest extends RPLBaseTest {
 		assertEquals(1, result.getRank());
 		assertEquals(false, result.next());
 
-		o = new ObserveL(eq(var("a"), lit(3)), 2);
+		o = observeL(eq(var("a"), lit(3)), 2);
 		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -55,7 +56,7 @@ public class ObserveLTest extends RPLBaseTest {
 		assertEquals(1, result.getRank());
 		assertEquals(false, result.next());
 
-		o = new ObserveL(eq(var("a"), lit(3)), 3);
+		o = observeL(eq(var("a"), lit(3)), 3);
 		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -69,7 +70,7 @@ public class ObserveLTest extends RPLBaseTest {
 		assertEquals(2, result.getRank());
 		assertEquals(false, result.next());
 
-		o = new ObserveL(eq(var("a"), lit(3)), 4);
+		o = observeL(eq(var("a"), lit(3)), 4);
 		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());

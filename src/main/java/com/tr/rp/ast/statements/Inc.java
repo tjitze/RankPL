@@ -24,10 +24,6 @@ public class Inc extends AbstractStatement {
 		this.target = var;
 	}
 
-	public Inc(String targetVariable) {
-		this(new AssignmentTarget(targetVariable));
-	}
-
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		try {

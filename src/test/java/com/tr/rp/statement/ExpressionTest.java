@@ -1,5 +1,8 @@
 package com.tr.rp.statement;
 
+import static com.tr.rp.ast.expressions.Expressions.*;
+import static com.tr.rp.ast.statements.Statements.*;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -38,7 +41,7 @@ public class ExpressionTest extends RPLBaseTest {
         AbstractExpression exp = (AbstractExpression)classVisitor.visit(ctx);
         assertNotNull(exp);
 
-        AbstractStatement st = new Assign("$return", exp);
+        AbstractStatement st = assign("$return", exp);
         RankedIterator<VarStore> it = st.getIterator(new InitialVarStoreIterator(new TestVarStore()), ExecutionContext.createDefault());
         assert (it.next());
         VarStore res = it.getItem();

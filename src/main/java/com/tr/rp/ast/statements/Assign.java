@@ -11,7 +11,6 @@ import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.Literal;
-import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
@@ -37,22 +36,6 @@ public class Assign extends AbstractStatement {
 	public Assign(AssignmentTarget target, AbstractExpression exp) {
 		this.target = target;
 		this.value = exp;
-	}
-
-	public Assign(AssignmentTarget target, int value) {
-		this(target, new Literal<Integer>(value));
-	}
-
-	public Assign(String targetVariable, int value) {
-		this(new AssignmentTarget(targetVariable), new Literal<Integer>(value));
-	}
-
-	public Assign(String targetVariable, AbstractExpression value) {
-		this(new AssignmentTarget(targetVariable), value);
-	}
-
-	public Assign(String targetVariable, String otherVariable) {
-		this(new AssignmentTarget(targetVariable), new Variable(otherVariable));
 	}
 
 	@Override

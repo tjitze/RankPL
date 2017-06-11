@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import static com.tr.rp.ast.expressions.Expressions.*;
+import static com.tr.rp.ast.statements.Statements.*;
 
 import com.tr.rp.ast.statements.ObserveJ;
 import com.tr.rp.exceptions.RPLException;
@@ -12,7 +13,7 @@ public class ObserveJTest extends RPLBaseTest {
 
 	public void testObserveJ() throws RPLException {
 		
-		ObserveJ o = new ObserveJ(eq(var("a"), lit(3)), 0);
+		ObserveJ o = observeJ(eq(var("a"), lit(3)), 0);
 		RankedIterator<VarStore> result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -26,7 +27,7 @@ public class ObserveJTest extends RPLBaseTest {
 		assertEquals(1, result.getRank());
 		assertEquals(false, result.next());
 
-		o = new ObserveJ(eq(var("a"), lit(3)), 1);
+		o = observeJ(eq(var("a"), lit(3)), 1);
 		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());
@@ -40,7 +41,7 @@ public class ObserveJTest extends RPLBaseTest {
 		assertEquals(2, result.getRank());
 		assertEquals(false, result.next());
 
-		o = new ObserveJ(eq(var("a"), lit(3)), 2);
+		o = observeJ(eq(var("a"), lit(3)), 2);
 		result = o.getIterator(this.getTestIterator(), ExecutionContext.createDefault());
 
 		assertEquals(true, result.next());

@@ -7,8 +7,8 @@ import java.util.Objects;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.FunctionCall;
-import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
@@ -32,13 +32,9 @@ public class Return extends AbstractStatement {
 		this.exp = exp;
 	}
 
-	public Return(String variable) {
-		this.exp = new Variable(variable);
-	}
-
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		Assign assign = new Assign("$return", exp);
+		Assign assign = new Assign(new AssignmentTarget("$return"), exp);
 		RankedIterator<VarStore> it = assign.getIterator(in, c);
 		return new RankedIterator<VarStore>() {
 			@Override

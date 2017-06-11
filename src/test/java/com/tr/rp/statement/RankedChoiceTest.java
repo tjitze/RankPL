@@ -1,6 +1,7 @@
 package com.tr.rp.statement;
 
 import static com.tr.rp.ast.expressions.Expressions.*;
+import static com.tr.rp.ast.statements.Statements.*;
 
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.expressions.Literal;
@@ -17,8 +18,8 @@ import com.tr.rp.varstore.VarStore;
 public class RankedChoiceTest extends RPLBaseTest {
 	
 	public void testDefaultChoice() throws RPLException {
-		AbstractStatement s1 = new Assign("b", plus(var("a"), new Literal<Integer>(10)));
-		AbstractStatement s2 = new Assign("b", plus(var("a"), new Literal<Integer>(20)));
+		AbstractStatement s1 = assign("b", plus(var("a"), new Literal<Integer>(10)));
+		AbstractStatement s2 = assign("b", plus(var("a"), new Literal<Integer>(20)));
 		
 		// s1 [0] s2
 		RankedChoice c = new RankedChoice(s1, s2, lit(0));
@@ -203,7 +204,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 	}
 	
 	public void testBlockedLeft() throws RPLException {
-		AbstractStatement s1 = new Assign("b", plus(var("a"), new Literal<Integer>(10)));
+		AbstractStatement s1 = assign("b", plus(var("a"), new Literal<Integer>(10)));
 		
 		// {observe false [3] b = a + 10}
 		RankedChoice c = new RankedChoice(new Observe(new Literal<Boolean>(false)), s1, lit(3));
@@ -227,7 +228,7 @@ public class RankedChoiceTest extends RPLBaseTest {
 	}
 
 	public void testBlockedRight() throws RPLException {
-		AbstractStatement s1 = new Assign("b", plus(var("a"), new Literal<Integer>(10)));
+		AbstractStatement s1 = assign("b", plus(var("a"), new Literal<Integer>(10)));
 		
 		// {observe b = a + 10 [3] false}
 		RankedChoice c = new RankedChoice(s1, new Observe(new Literal<Boolean>(false)), lit(3));
@@ -300,8 +301,8 @@ public class RankedChoiceTest extends RPLBaseTest {
 	
 //	public testVariableRank() {
 //
-//		DStatement s1 = new Assign("b", new Plus(var("a"), 10));
-//		DStatement s2 = new Assign("b", new Plus(var("a"), 20));
+//		DStatement s1 = assign("b", new Plus(var("a"), 10));
+//		DStatement s2 = assign("b", new Plus(var("a"), 20));
 //		NumExpression e = new Var(var("a"));
 //		
 //		// 0

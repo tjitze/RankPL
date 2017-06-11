@@ -6,7 +6,6 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
-import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
@@ -23,14 +22,6 @@ public class Dec extends AbstractStatement {
 	
 	public Dec(AssignmentTarget var) {
 		this.target = var;
-	}
-
-	public Dec(String targetVariable) {
-		this(new AssignmentTarget(targetVariable));
-	}
-
-	public Dec(Variable targetVariable) {
-		this(new AssignmentTarget(targetVariable.toString()));
 	}
 
 	@Override

@@ -39,10 +39,6 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		this.errorHandler = errorHandler;
 	}
 
-	public IfElse(AbstractExpression exp, AbstractStatement a) {
-		this(exp, a, new Skip());
-	}
-
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
 		Observe obs1;

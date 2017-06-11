@@ -38,10 +38,6 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 	private AbstractExpression b;
 	private AbstractExpression rank;
 
-	public ObserveL(AbstractExpression b, int rank) {
-		this(b, new Literal<Integer>(rank));
-	}
-	
 	public ObserveL(AbstractExpression b, AbstractExpression rank) {
 		this.b = b;
 		this.rank = rank;

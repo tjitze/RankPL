@@ -1,6 +1,7 @@
 package com.tr.rp.core;
 
 import static com.tr.rp.ast.expressions.Expressions.*;
+import static com.tr.rp.ast.statements.Statements.*;
 
 import java.util.ArrayList;
 
@@ -43,131 +44,131 @@ public class ParseTest extends RPLBaseTest {
 
 	public void testParseVariable() {
 		String program = "x := 0;";
-		assertEquals(parseStatement(program), (new Assign("x",0)));
+		assertEquals(parseStatement(program), (assign("x",0)));
 		program = "x1 := 0;";
 		AbstractStatement s = (AbstractStatement) parseStatement(program);
-		assertEquals(s, (new Assign("x1",0)));
+		assertEquals(s, (assign("x1",0)));
 	}
 	
 	public void testParseAssign() {
-		assertEquals(parseStatement("x := 20;"), (new Assign("x",20)));
-		assertEquals(parseStatement("x[1] := 20;"), (new Assign(target("x", 1), 20)));
-		assertEquals(parseStatement("x[1][2] := 20;"), (new Assign(target("x", 1, 2), 20)));
-		assertEquals(parseStatement("x[x + y] := 20;"), (new Assign(target("x", plus(var("x"), var("y"))), 20)));
-		assertEquals(parseStatement("x[x + y][p * q] := 20;"), (new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20)));
+		assertEquals(parseStatement("x := 20;"), (assign("x",20)));
+		assertEquals(parseStatement("x[1] := 20;"), (assign(target("x", 1), 20)));
+		assertEquals(parseStatement("x[1][2] := 20;"), (assign(target("x", 1, 2), 20)));
+		assertEquals(parseStatement("x[x + y] := 20;"), (assign(target("x", plus(var("x"), var("y"))), 20)));
+		assertEquals(parseStatement("x[x + y][p * q] := 20;"), (assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20)));
 	}
 
 	public void testParseArrayAssign() {
 		ProgramBuilder b = new ProgramBuilder();
-		b.add(new Assign("x", new ArrayConstructExpression(10, 11, 12)));
+		b.add(assign("x", new ArrayConstructExpression(10, 11, 12)));
 		assertEquals(parseStatement("x := [10, 11, 12];"), b.build());
 
 		b = new ProgramBuilder();
-		b.add(new Assign("x", new ArrayConstructExpression(plus(var("x"),var("y")))));
+		b.add(assign("x", new ArrayConstructExpression(plus(var("x"),var("y")))));
 		assertEquals(parseStatement("x := [x + y];"), (b.build()));
 
 		
 		b = new ProgramBuilder();
-		b.add(new Assign("x", new ArrayConstructExpression(plus(var("x"),var("y")), times(var("p"),var("q")))));
+		b.add(assign("x", new ArrayConstructExpression(plus(var("x"),var("y")), times(var("p"),var("q")))));
 		assertEquals(parseStatement("x := [x + y, p * q];"), (b.build()));
 
 		b = new ProgramBuilder();
-		b.add(new Assign(target("x", 1), new ArrayConstructExpression(10, 11, 12)));
+		b.add(assign(target("x", 1), new ArrayConstructExpression(10, 11, 12)));
 		assertEquals(parseStatement("x[1] := [10, 11, 12];"), (b.build()));
 
 		b = new ProgramBuilder();
-		b.add(new Assign(target("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")))));
+		b.add(assign(target("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")))));
 		assertEquals(parseStatement("x[10][20] := [x + y];"), (b.build()));
 
 		b = new ProgramBuilder();
-		b.add(new Assign(target("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")), times(var("p"),var("q")))));
+		b.add(assign(target("x", 10, 20), new ArrayConstructExpression(plus(var("x"),var("y")), times(var("p"),var("q")))));
 		assertEquals(parseStatement("x[10][20] := [x + y, p * q];"), (b.build()));
 	}
 	
 	public void testParseComposition() {
 		String program = "{x := 20; x := 30; x := 40}";
 		assertEquals(parseStatement(program), (new Composition(
-				new Assign("x",20),
-				new Assign("x",30),
-				new Assign("x",40))));
+				assign("x",20),
+				assign("x",30),
+				assign("x",40))));
 		program = "{{x := 20; x := 30 }; x := 40}";
 		assertEquals(parseStatement(program), (new Composition(
 				new Composition(
-						new Assign("x",20),
-						new Assign("x",30)),
-				new Assign("x",40))));
+						assign("x",20),
+						assign("x",30)),
+				assign("x",40))));
 		program = "{x := 20; {x := 30; x := 40}}";
 		assertEquals(parseStatement(program), (new Composition(
-				new Assign("x",20),
+				assign("x",20),
 				new Composition(
-						new Assign("x",30),
-						new Assign("x",40)))));
+						assign("x",30),
+						assign("x",40)))));
 		program = "{{x := 20}; {x := 30}; {x := 40}}";
 		assertEquals(parseStatement(program), (new Composition(
-				new Assign("x",20),
-				new Assign("x",30),
-				new Assign("x",40))));
+				assign("x",20),
+				assign("x",30),
+				assign("x",40))));
 	}
 
 	public void testParseIfElse() {
 		String program = "if (x == 10) THEN x := 20 else x := 30;";
 		assertEquals(parseStatement(program), (new IfElse(
 				eq(var("x"), lit(10)),
-				new Assign("x",20),
-				new Assign("x",30))));
+				assign("x",20),
+				assign("x",30))));
 		program = "if (x == 10) THEN { x := 20 } ELSE { x := 30 };";
 		assertEquals(parseStatement(program), (new IfElse(
 				eq(var("x"),lit(10)),
-				new Assign("x",20),
-				new Assign("x",30))));
+				assign("x",20),
+				assign("x",30))));
 		program = "{ if (x == 10) THEN { x := 20 } ELSE x := 30; x := 40; }";
 		assertEquals(parseStatement(program), (
 				new Composition(
 					new IfElse(
 							eq(var("x"),lit(10)),
-							new Assign("x",20),
-							new Assign("x",30)),
-					new Assign("x", 40))));
+							assign("x",20),
+							assign("x",30)),
+					assign("x", 40))));
 		program = "{ if (x == 10) THEN { x := 20 } ELSE NORMALLY (1) x := 30 EXCEPTIONALLY x := 40; x := 50; }";
 		assertEquals(parseStatement(program), (
 				new Composition(
 					new IfElse(
 							eq(var("x"),lit(10)),
-							new Assign("x",20),
-							new RankedChoice(new Assign("x",30), new Assign("x", 40), lit(1))),
-					new Assign("x", 50))));
+							assign("x",20),
+							new RankedChoice(assign("x",30), assign("x", 40), lit(1))),
+					assign("x", 50))));
 	}
 
 	public void testParseWhile() {
 		String program = "while (x == 0) DO x := 0;";
 		assertEquals(parseStatement(program), (new While(
 				eq(var("x"), lit(0)),
-				new Assign("x",0))));
+				assign("x",0))));
 	}
 
 	public void testParseAssignChoose() {
 		String program = "x := 0 << 5 >> 20;";
 		assertEquals(parseStatement(program), (new RankedChoice(
-				new Assign("x",0), new Assign("x",20), lit(5))));
+				assign("x",0), assign("x",20), lit(5))));
 	}
 
 	public void testParseChoose() {
 		assertEquals(parseStatement("normally(5) x := 0 exceptionally x := 20;"), (new RankedChoice(
-				new Assign("x",0), new Assign("x",20), lit(5))));
+				assign("x",0), assign("x",20), lit(5))));
 		assertEquals(parseStatement("x := 0 << 5 >> 20;"), (new RankedChoice(
-				new Assign("x",0), new Assign("x",20), lit(5))));
+				assign("x",0), assign("x",20), lit(5))));
 		assertEquals(parseStatement("x[0] := 0 << 5 >> 20;"), (new RankedChoice(
-				new Assign(target("x", 0), 0), 
-				new Assign(target("x", 0), 20), lit(5))));
+				assign(target("x", 0), 0), 
+				assign(target("x", 0), 20), lit(5))));
 		assertEquals(parseStatement("x[1][2] := 1 << 5 >> 20;"), (new RankedChoice(
-				new Assign(target("x", 1, 2), 1), 
-				new Assign(target("x", 1, 2), 20), lit(5))));
+				assign(target("x", 1, 2), 1), 
+				assign(target("x", 1, 2), 20), lit(5))));
 		assertEquals(parseStatement("x[x + y] := 2 << 5 >> 20;"), (new RankedChoice(
-				new Assign(target("x", plus(var("x"), var("y"))), 2), 
-				new Assign(target("x", plus(var("x"), var("y"))), 20), lit(5))));
+				assign(target("x", plus(var("x"), var("y"))), 2), 
+				assign(target("x", plus(var("x"), var("y"))), 20), lit(5))));
 		assertEquals(parseStatement("x[x + y][p * q] := 3 << 5 >> 20;"), (new RankedChoice(
-				new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 3), 
-				new Assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20), lit(5))));
+				assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 3), 
+				assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20), lit(5))));
 	}
 
 	public void testParseObserve() {
@@ -216,8 +217,8 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseExpr("10 - 4 - 2"), minus(lit(10), minus(lit(4), lit(2))));
 		assertEquals(parseExpr("10 - 4 + 2"), minus(lit(10), plus(lit(4), lit(2))));
 		assertEquals(parseExpr("10 + 4 - 2"), plus(lit(10), minus(lit(4), lit(2))));
-		assertEquals(parseStatement("i++"), new Inc("i"));
-		assertEquals(parseStatement("i--"), new Dec("i"));
+		assertEquals(parseStatement("i++"), inc("i"));
+		assertEquals(parseStatement("i--"), dec("i"));
 	}
 
 	public void testParseArrayExpr() {
@@ -230,11 +231,11 @@ public class ParseTest extends RPLBaseTest {
 	}
 
 	public void testParseFunctionDefinition() {
-		assertEquals(parseFunctionDef("define fun() { return 0; }"), (new Function("fun", new Return(lit(0)), new String[]{})));
-		assertEquals(parseFunctionDef("define fun(a) { return a; }"), (new Function("fun", new Return("a"), new String[]{"a"})));
-		assertEquals(parseFunctionDef("define fun(a) { skip; skip; return a; }"), (new Function("fun", new Composition(new Skip(), new Skip(), new Return("a")), new String[]{"a"})));
-		assertEquals(parseFunctionDef("define fun(a) { skip; {skip;}; return a; }"), (new Function("fun", new Composition(new Skip(), new Skip(), new Return("a")), new String[]{"a"})));
-		assertEquals(parseFunctionDef("define fun(a, b) { return a + b; }"), (new Function("fun", new Return(plus(new Variable("a"), new Variable("b"))), new String[]{"a", "b"})));
+		assertEquals(parseFunctionDef("define fun() { return 0; }"), (new Function("fun", returnStatement(lit(0)), new String[]{})));
+		assertEquals(parseFunctionDef("define fun(a) { return a; }"), (new Function("fun", returnStatement("a"), new String[]{"a"})));
+		assertEquals(parseFunctionDef("define fun(a) { skip; skip; return a; }"), (new Function("fun", new Composition(new Skip(), new Skip(), returnStatement("a")), new String[]{"a"})));
+		assertEquals(parseFunctionDef("define fun(a) { skip; {skip;}; return a; }"), (new Function("fun", new Composition(new Skip(), new Skip(), returnStatement("a")), new String[]{"a"})));
+		assertEquals(parseFunctionDef("define fun(a, b) { return a + b; }"), (new Function("fun", returnStatement(plus(new Variable("a"), new Variable("b"))), new String[]{"a", "b"})));
 	}
 	
 	public void testParseFunctionCall() {
@@ -261,14 +262,14 @@ public class ParseTest extends RPLBaseTest {
 	}
 	
 	public void testParseStrings() {
-		assertEquals(parseStatement("x := \"\""), new Assign("x", lit("")));
-		assertEquals(parseStatement("x := \"\\\"\""), new Assign("x", lit("\"")));
-		assertEquals(parseStatement("x := \"abc\""), new Assign("x", lit("abc")));
-		assertEquals(parseStatement("x := \"abc\" + \"def\""), new Assign("x", plus(lit("abc"), lit("def"))));
+		assertEquals(parseStatement("x := \"\""), assign("x", lit("")));
+		assertEquals(parseStatement("x := \"\\\"\""), assign("x", lit("\"")));
+		assertEquals(parseStatement("x := \"abc\""), assign("x", lit("abc")));
+		assertEquals(parseStatement("x := \"abc\" + \"def\""), assign("x", plus(lit("abc"), lit("def"))));
 		// test white spaces in string literals
-		assertEquals(parseStatement("x := \"x \""), new Assign("x", lit("x ")));
-		assertEquals(parseStatement("x := \"x x\""), new Assign("x", lit("x x")));
-		assertEquals(parseStatement("x := \" x\""), new Assign("x", lit(" x")));
+		assertEquals(parseStatement("x := \"x \""), assign("x", lit("x ")));
+		assertEquals(parseStatement("x := \"x x\""), assign("x", lit("x x")));
+		assertEquals(parseStatement("x := \" x\""), assign("x", lit(" x")));
 	}
 	
 	private LanguageElement parseStatement(String code) {

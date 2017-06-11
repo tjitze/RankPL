@@ -319,7 +319,9 @@ Basic usage of the executable jar file is:
 ```
 java -jar RankPL.jar -source <source_file> [-r <max_output_rank>]
 ```
-where `source_file` is the RankPL source file to execute, and the optional argument `-r <max_output_rank>` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the argument is omitted. The possible outcomes of the program (returned via the `return` statement) are generated in ascending order with respect to their rank and printed on the console.
+where `source_file` is the RankPL source file to execute, and the optional argument `-r <max_output_rank>` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the argument is omitted. The possible outcomes of the program (i.e., the values returned by a `return` statement) are generated and printed on the console in ascending order with respect to rank.
+
+Programs that involve large sets of alternatives (100000 or more) may run slowly. Enabling the *iterative deepening* execution mode, by including the `-d` flag, will significantly speed up the generation of the lowest-ranked outcomes of such programs. Note that, at this stage, this is an experimental feature.
 
 # Language reference
 

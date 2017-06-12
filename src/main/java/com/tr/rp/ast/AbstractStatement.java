@@ -1,6 +1,5 @@
 package com.tr.rp.ast;
 
-import java.util.List;
 import java.util.Set;
 
 import com.tr.rp.iterators.ranked.IteratorProvider;

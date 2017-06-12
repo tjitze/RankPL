@@ -1,7 +1,5 @@
 package com.tr.rp.ast;
 
-import java.util.List;
-
 import com.tr.rp.ast.expressions.AbstractFunctionCall;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;

@@ -89,14 +89,14 @@ var := e_1 <<rank>> e_2       is equivalent to            } exceptionally {
                                                           }
 ```
 The third is the *range assignment*. It represents the random choice, all equally likely, among the integer values between 
-`i_1` (inclusive) and `i_2` (exclusive). 
+`n_1` (inclusive) and `n_2` (exclusive). 
 ```
                                                           either {
-                                                              a := i_1;
+                                                              a := n_1;
 					                  } or {
-a := << i_1 ... i_2 >>        is equivalent to                ...
+a := << n_1 ... n_2 >>        is equivalent to                ...
                                                           } or {
-                                                              a := i_2 - 1;
+                                                              a := n_2 - 1;
                                                           }
 ```
 An example.
@@ -145,7 +145,7 @@ The result is the same ranking as above, except that
 Rank 0: result: 200
 Rank 1: result: 400
 ```
-The observe statement makes it possible to infer the most plausible causes for a given observation. 
+We can also reason *backwards* using the observe statement. 
 To see a very simple example of this, let's adapt our program.
 Instead of returning `c`, we return the values of `a` and `b`.
 ```
@@ -161,10 +161,13 @@ Rank 0: result: a = 20, b = 10
 Rank 0: result: a = 10, b = 20
 Rank 1: result: a = 20, b = 20
 ```
-This tells us that the most plausible cause for `c > 150` is that either `a` or `b` is 20, but not both. 
-While `a` and `b` both being 20 does explain the observation, 
-	it is more surprising and therefore less plauisible than just `a` or just `b` being 20.
-A practical application of this principle to the problem of circuit diagnosis is included in the examples section ([link](#circuit-diagnosis)).
+Here, we observe that `c > 150` and focus on the values `a` or `b`, which determine the value of `c`.
+The result tells us that the most likely (least surprising) explanation for `c > 150` is `a` being 20 or `b` being 20 but not both. 
+While the event that both `a` and `b` are 20 does explain `c > 150`, it is more suprising than either `a` or `b` being 20. 
+Therefore it is not among the most likely explanations for `c > 150`.
+
+This is a simple example of what is called *abduction*, or *inference to the best explanation*.
+The circuit diagnosis example included in section [link](#circuit-diagnosis) is a more practical application of this principle.
 
 ## The *infer* expression
 
@@ -321,7 +324,7 @@ java -jar RankPL.jar -source <source_file> [-r <max_output_rank>]
 ```
 where `source_file` is the RankPL source file to execute, and the optional argument `-r <max_output_rank>` specifies the maximum rank (inclusive) that is generated, which defaults to zero if the argument is omitted. The possible outcomes of the program (i.e., the values returned by a `return` statement) are generated and printed on the console in ascending order with respect to rank.
 
-Programs that involve large sets of alternatives (100000 or more) may run slowly. Enabling the *iterative deepening* execution mode, by including the `-d` flag, will significantly speed up the generation of the lowest-ranked outcomes of such programs. Note that, at this stage, this is an experimental feature.
+Programs that involve large sets of alternatives (say, 10000 or more) may become impractically slow. Enabling the *iterative deepening* execution mode, by including the `-d` flag, will significantly speed up the execution of such programs. This setting will force the maximum rank that is generated to be zero. Note that, at this stage, this is an experimental feature.
 
 # Language reference
 
@@ -350,12 +353,13 @@ The main entry point of a program is the `main()` function. The values returned 
 
 Statements in RankPL are separated by semicolons. If a statement contains sub-statements (such as the `if b then s1 else s2` statement) then these sub-statements may be *block statements*, which are sequeences of statements enclosed in curly brackets ({ ... }). 
 
-The table below provides an overview of all available statements in RankPL. We use the following symbols to refer to specific types of expressions:
+The table below provides an overview of all available statements in RankPL. We use the following symbols (possibly with subscript) to refer to specific types of expressions:
+- `s`: 		a statement
 - `var`: 	a variable
 - `e`: 		an expression (any type)
 - `n`: 		an integer expression
 - `b`: 		a boolean expression
-- `s`: 		a string expression
+- `str`: 	a string expression
 
 |Statement      	|Form					|Description	|
 |-----------------------|-----------------------------------------|---------------|
@@ -363,14 +367,14 @@ The table below provides an overview of all available statements in RankPL. We u
 |Ranked assignment  	| `var := e_1 << n >> e_2`		| Normally assign to `var` the value of `e_1`, exceptionally (to degree `n`) assign the value of `e2`. **(1)**	|
 |Range assignment	| `var := << n_1 ... n_2 >>`  		| Assign to `var` a random value between `n_1`(inclusive) and `n_2` (exclusive), all ranked 0. **(1)**		|
 |If-else		| `if b then s_1 else s_2`		| Regular if-else statement. **(2)** |
-|while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to TRUE.		|
+|while-do		| `while b do s`			| Execute `s` as long as `b` evaluates to true.		|
 |for loop		| `for (s_1; b; s_2) s_3`		| Java-style for loop. `s_1` is the init statement, `b` the termination condition and `s_2` the increment statement. |
 |observe		| `observe b`				| Observe that `b` is true (uniformly shift down alternatives that satisfy `b` and eliminate alternatives not satisfying `b`).	|
-|observe-j		| `observe-j (n) b`			| Observe that `b` is normally (to degree `n`) true. (like `observe b`, but uniformly shifts the rank of alternatives not satisfying `b` to `n`). **(3)**		|
+|observe-j		| `observe-j (n) b`			| Observe that `b` is normally, to degree `n`, true (like `observe b`, but uniformly shifts the rank of alternatives not satisfying `b` to `n`). **(3)**		|
 |observe-l		| `observe-l (n) b`			| Improve rank of alternatives satisfying `b` by `n` units w.r.t. alternatives not satisfying `b`. **(3)**		|
 |Ranked choice  	| `normally (n) s_1 exceptionally s_2`	| Normally execute `s_1`, exceptionally (to degree `n`) execute `s_2`. **(3,4)**	|
 |Indifferent choice  	| `either s_1 or s_2`			| Same as `normally (0) s_1 exceptionally s_2`. 		|
-|Print			| `print s`				| Print `s` to console.		|
+|Print			| `print str`				| Print `str` to console.		|
 |Cut			| `cut(n)`				| Eliminate all alternatives ranked higher than `n`. |
 |Return			| `return e`				| Return `e` as value of program or function.		|
 |Skip			| `skip`				| Does nothing.		|
@@ -384,48 +388,48 @@ The table below provides an overview of all available statements in RankPL. We u
 
 Expressions in RankPL are either integer, boolean, string, or array-valued. All expressions are dynamically typed. This means, for example, that an expression like `"ab"” <= "def"` is syntactically correct but will lead to a type error during execution. In this section we provide an overview of all expressions in RankPL.
 
-In the list below, we use the following symbols to refer to expressions with specific types:
+In the list below, we use the following symbols (possibly with subscript) to refer to expressions with specific types:
 - `var`: 	a variable
 - `e`: 		an expression (any type)
 - `n`: 		an integer expression
 - `b`: 		a boolean expression
-- `s`: 		a string expression
+- `str`: 	a string expression
 
 Expressions
 
 |Expression			|Evaluates to	|Description						|
 |-------------------------------|---------------|-------------------------------------------------------|
-|`abs(n)`			|int		|Absolute value of `i`					|
-|`array(i)`			|array		|Array of length `i`. Elements not initialised.		|
-|`array(i,e)`			|array		|Array of length `i`. Elements initialised to `e`.	|
-|`[e_1, …, e_n]`		|array		|Array of length `n` initialised with values `e_1`,...,`e_n`|
-|`b? e_1: e_2`			|any		|Evaluates to `e_1` iF `B` is TRUE. Evaluates to `e_2` otherwise. |
+|`abs(n)`			|int		|Absolute value of `n`					|
+|`array(n)`			|array		|Array of length `n`. Elements not initialised.		|
+|`array(n,e)`			|array		|Array of length `n`. Elements initialised to `e`.	|
+|`[e_1, …, e_k]`		|array		|Array of length `k` initialised with values `e_1`,...,`e_n`|
+|`b? e_1: e_2`			|any		|Evaluates to `e_1` if `b` is true. Evaluates to `e_2` otherwise. |
 |`b_1 & b_2`			|boolean	|Boolean AND						|
 |`b_1 \| b_2`			|boolean	|Boolean OR						|
 |`b_1 ^ b_2`			|boolean	|Boolean XOR						|
 |`!b`				|boolean	|Boolean NOT						|
-|`e_1 == e_2`			|boolean	|Equality of e1 and e2 **(1)**				|
-|`e_1 != e_2`			|boolean	|Inequality of e1 and e2 **(1)**			|
+|`e_1 == e_2`			|boolean	|Equality of `e1` and `e2` **(1)**				|
+|`e_1 != e_2`			|boolean	|Inequality of `e1` and `e2` **(1)**			|
 |`isset(var)`			|boolean	|True iff variable `var` is set, false if not		|
 |`len(v)`			|int		|Length of array or string `v`				|
-|`max(i_1, ..., i_n)`		|int		|Maximum of `i_1` ... `i_n`				|
-|`min(i_1, ..., i_n)`		|int		|Maximum of `i_1` ... `i_n`				|
-|`parseint(s)`			|int		|`s` parsed as integer					|
-|`i_1 < i_2`			|boolean	|True iff `i_1` less than `i_2`				|
-|`i_1 > i_2`			|boolean	|True iff `i_1` more than `i_2`				|
-|`i_1 =< i_2`			|boolean	|True iff `i_1` less than or equal to `i_2`		|
-|`i_1 => i_2`			|boolean	|True iff `i_1` more than or equal to `i_2`		|
-|`e_1 + e_2`			|int/string	|Sum of integers or concatenation of strings **(2)**	|
-|`i_1 - i_2`			|int		|Subtraction						|
-|`i_1 * i_2`			|int		|Multiplication						|
-|`i_1 / i_2`			|int		|Division (integer, rounding down)			|
-|`i_1 % i_2`			|int		|Remainder						|
-|`-i`				|int		|Negative `i`						|
+|`max(n_1, ..., i_k)`		|int		|Maximum of `n_1` ... `n_k`				|
+|`min(n_1, ..., i_k)`		|int		|Maximum of `n_1` ... `n_k`				|
+|`parseint(str)`		|int		|`str` parsed as integer					|
+|`n_1 < n_2`			|boolean	|True iff `n_1` less than `n_2`				|
+|`n_1 > n_2`			|boolean	|True iff `n_1` more than `n_2`				|
+|`n_1 =< n_2`			|boolean	|True iff `n_1` less than or equal to `n_2`		|
+|`n_1 => n_2`			|boolean	|True iff `n_1` more than or equal to `n_2`		|
+|`e_1 + e_2`			|int/string	|Sum of integers or concatenation of stnings **(2)**	|
+|`n_1 - n_2`			|int		|Subtraction						|
+|`n_1 * n_2`			|int		|Multiplication						|
+|`n_1 / n_2`			|int		|Division (integer, rounding down)			|
+|`n_1 % n_2`			|int		|Remainder						|
+|`-n`				|int		|Negative `n`						|
 |`rank(b)`			|int		|Rank of boolean expression b **(3)**			|
-|`substring(s, i_1, i_2)`	|string		|Substring of s between index `i_1` (inclusive) and `i_2` (exclusive)|
+|`substring(str, n_1, n_2)`	|string		|Substring of `str` between index `n_1` (inclusive) and `n_2` (exclusive)|
 |`var`				|any		|Value of variable `var` 				|
-|`var[e_1]...[e_n]`		|any		|Indexed value of (multi-dimensional) arryay stored in `var`|
-|`functionname(e_1, … e_n)`	|any		|Function call with arguments `e_1`,...,`e_n`		|
+|`var[n_1]...[n_k]`		|any		|Indexed value of (multi-dimensional) array stored in `var` at index `n_1` ...`n_k`|
+|`functionname(e_1, … e_k)`	|any		|Function call with arguments `e_1`,...,`e_k`		|
 
 Remarks:
 - **(1)**: Equality is always based on value, never on reference. This includes arrays.

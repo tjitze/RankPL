@@ -16,7 +16,6 @@ import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
 import com.tr.rp.iterators.ranked.MultiMergeIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.FunctionScope;
-import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
 /**

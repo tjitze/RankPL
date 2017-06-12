@@ -9,26 +9,23 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AbstractFunctionCall;
-import com.tr.rp.ast.expressions.AssignmentTarget;
-import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
 public class FunctionCallForm extends AbstractStatement {
 
-	private final List<Pair<String, AbstractFunctionCall>> assignments;
+	private final List<Assignment> assignments;
 	private final AbstractStatement statement;
 
 	@SafeVarargs
-	public FunctionCallForm(AbstractStatement statement, List<Pair<String, AbstractFunctionCall>> ... assignments) {
+	public FunctionCallForm(AbstractStatement statement, List<Assignment> ... assignments) {
 		if (assignments.length == 1) {
 			this.assignments = assignments[0];
 		} else {
-			this.assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
-			for (List<Pair<String, AbstractFunctionCall>> a: assignments) {
+			this.assignments = new ArrayList<Assignment>();
+			for (List<Assignment> a: assignments) {
 				this.assignments.addAll(a);
 			}
 		}
@@ -46,8 +43,8 @@ public class FunctionCallForm extends AbstractStatement {
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
 		RankedIterator<VarStore> chainedIterator = parent;
 		// For each function assignment ...
-		for (Pair<String, AbstractFunctionCall> assignment: assignments) {
-			chainedIterator = assignment.b.getIterator(c, assignment.b.getArguments(), assignment.a, chainedIterator);
+		for (Assignment assignment: assignments) {
+			chainedIterator = assignment.functionCall.getIterator(c, assignment.functionCall.getArguments(), assignment.var, chainedIterator);
 		}
 		// Execute statement
 		chainedIterator = statement.getIterator(chainedIterator, c);
@@ -56,16 +53,16 @@ public class FunctionCallForm extends AbstractStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		List<Pair<String, AbstractFunctionCall>> rewrittenAssingments = new ArrayList<Pair<String, AbstractFunctionCall>>();
-		for (Pair<String, AbstractFunctionCall> assignment: assignments) {
-			rewrittenAssingments.add(new Pair<String, AbstractFunctionCall>(assignment.a, (AbstractFunctionCall)assignment.b.replaceVariable(a, b)));
+		List<Assignment> rewrittenAssingments = new ArrayList<Assignment>();
+		for (Assignment assignment: assignments) {
+			rewrittenAssingments.add(new Assignment(assignment.var, (AbstractFunctionCall)assignment.functionCall.replaceVariable(a, b)));
 		}
 		return new FunctionCallForm((AbstractStatement)statement.replaceVariable(a, b), rewrittenAssingments);
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		assignments.forEach(p -> p.b.getVariables(list));
+		assignments.forEach(p -> p.functionCall.getVariables(list));
 		statement.getVariables(list);
 	}
 	
@@ -93,7 +90,7 @@ public class FunctionCallForm extends AbstractStatement {
 	 * the placeholder variables with the associated function calls.)
 	 */
 	public static final class ExtractedExpression {
-		private List<Pair<String, AbstractFunctionCall>> assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
+		private List<Assignment> assignments = new ArrayList<Assignment>();
 		private AbstractExpression expression;
 		private boolean isRewritten = false;
 		
@@ -105,13 +102,13 @@ public class FunctionCallForm extends AbstractStatement {
 			return expression;
 		}
 
-		public List<Pair<String, AbstractFunctionCall>> getAssignments() {
+		public List<Assignment> getAssignments() {
 			return assignments;
 		}
 
 		private void rewrite(String var, AbstractFunctionCall fc) {
 			expression = expression.replaceEmbeddedFunctionCall(fc, var);
-			assignments.add(new Pair<String, AbstractFunctionCall>(var, fc));
+			assignments.add(new Assignment(var, fc));
 			isRewritten = true;
 		}
 		
@@ -127,7 +124,7 @@ public class FunctionCallForm extends AbstractStatement {
 	
 	public String transformStatement(String s) {
 		for (int i = assignments.size()-1; i >= 0; i--) {
-			s = s.replace(assignments.get(i).a, assignments.get(i).b.toString());
+			s = s.replace(assignments.get(i).var, assignments.get(i).functionCall.toString());
 		}
 		return s;
 	}
@@ -154,13 +151,13 @@ public class FunctionCallForm extends AbstractStatement {
 		}
 		AbstractStatement s = fcf.statement;
 		outer: for (int i = 0; i < assignments.size(); i++) {
-			Pair<String, AbstractFunctionCall> a = assignments.get(i);
-			for (Pair<String, AbstractFunctionCall> b: fcf.assignments) {
-				if (a.b.equals(b.b)) {
-					s = (AbstractStatement)s.replaceVariable(b.a, a.a);
+			Assignment a = assignments.get(i);
+			for (Assignment b: fcf.assignments) {
+				if (a.functionCall.equals(b.functionCall)) {
+					s = (AbstractStatement)s.replaceVariable(b.var, a.var);
 					for (int j = i + 1; j < assignments.size(); j++) {
-						Pair<String, AbstractFunctionCall> c = fcf.assignments.get(j);
-						fcf.assignments.set(j, new Pair<String, AbstractFunctionCall>(c.a, (AbstractFunctionCall)c.b.replaceVariable(b.a, a.a)));
+						Assignment c = fcf.assignments.get(j);
+						fcf.assignments.set(j, new Assignment(c.var, (AbstractFunctionCall)c.functionCall.replaceVariable(b.var, a.var)));
 					}
 					continue outer;
 				}
@@ -175,5 +172,12 @@ public class FunctionCallForm extends AbstractStatement {
 		statement.getAssignedVariables(variables);
 	}	
 
-
+	public static class Assignment {
+		public final String var;
+		public final AbstractFunctionCall functionCall;
+		public Assignment(String var, AbstractFunctionCall functionCall) {
+			this.var = var;
+			this.functionCall = functionCall;
+		}
+	}
 }

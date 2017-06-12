@@ -1,16 +1,11 @@
 package com.tr.rp.ast.statements;
 
 import java.util.Set;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.List;
 import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.AbsurdIterator;
@@ -19,7 +14,6 @@ import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.Rank;
-import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
 public class Observe extends AbstractStatement implements ObserveErrorHandler {

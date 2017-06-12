@@ -18,6 +18,7 @@ import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.ast.statements.Composition;
 import com.tr.rp.ast.statements.FunctionCallForm;
+import com.tr.rp.ast.statements.FunctionCallForm.Assignment;
 import com.tr.rp.ast.statements.RankedChoice;
 import com.tr.rp.ast.statements.Return;
 import com.tr.rp.exceptions.RPLException;
@@ -25,7 +26,6 @@ import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.FunctionScope;
-import com.tr.rp.tools.Pair;
 import com.tr.rp.varstore.VarStore;
 
 public class FunctionFormTest extends RPLBaseTest {
@@ -60,8 +60,8 @@ public class FunctionFormTest extends RPLBaseTest {
 				.build();
 		
 		// Construct expected function call form
-		List<Pair<String, AbstractFunctionCall>> assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
-		assignments.add(new Pair<String, AbstractFunctionCall>("x", new FunctionCall("test1", scope, args)));
+		List<Assignment> assignments = new ArrayList<Assignment>();
+		assignments.add(new Assignment("x", new FunctionCall("test1", scope, args)));
 		AbstractStatement rs = assign("b", var("x"));
 		FunctionCallForm fcf = new FunctionCallForm(rs, assignments);
 		
@@ -101,10 +101,10 @@ public class FunctionFormTest extends RPLBaseTest {
 				.build();
 		
 		// Construct expected function call form
-		List<Pair<String, AbstractFunctionCall>> assignments = new ArrayList<Pair<String, AbstractFunctionCall>>();
+		List<Assignment> assignments = new ArrayList<Assignment>();
 		AbstractExpression[] args3 = new AbstractExpression[] { new Variable("x") };
-		assignments.add(new Pair<String, AbstractFunctionCall>("x", new FunctionCall("test1", scope, args1)));
-		assignments.add(new Pair<String, AbstractFunctionCall>("y", new FunctionCall("test1", scope,  args3)));
+		assignments.add(new Assignment("x", new FunctionCall("test1", scope, args1)));
+		assignments.add(new Assignment("y", new FunctionCall("test1", scope,  args3)));
 		AbstractStatement rs = assign("b", var("y"));
 		FunctionCallForm fcf = new FunctionCallForm(rs, assignments);
 		

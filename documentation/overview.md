@@ -8,19 +8,19 @@ Semantically, RankPL draws a parallel with probabilistic programming in terms of
 
 # Ranking theory<a name="sec-rankingtheory"></a>
 
-Here we present a brief overview ranking theory. We discuss the basic definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [[1](#ref-gp)] or [[2](#ref-survey)]. 
+Here we present a brief overview ranking theory. We discuss the formal definitions and contrast ranking theory with probability theory. For a more thorough description, the reader is referred to [[1](#ref-gp)] or [[2](#ref-survey)]. 
 
 ## Ranking functions
 
-The definition of a *ranking function* presupposes a set *Ω* of elements called *possibilities*. 
-A ranking function *K* assigns to every *w ∈ Ω* a non-negative integer or ∞, such that *K(w) = 0* for at least one *w ∈ Ω*.
-Intuitively, these numbers (called ranks) represent relative degrees of surprise: if *K(w) = 0* then *w* is not surprising, if *K(w) = 1* then *w* is surprising, if *K(w) = 2* then *w* is very suprising, and so on, until *K(w) = ∞*, which means that *w* is impossible.
+The definition of a *ranking function* presupposes a set *Ω* of elements called *possibilities*. A ranking function *K* assigns to every *w ∈ Ω* a non-negative integer or ∞, such that *K(w) = 0* for at least one *w ∈ Ω*. Intuitively, these numbers (called *ranks*) represent relative degrees of surprise: if *K(w) = 0* then *w* is not surprising, if *K(w) = 1* then *w* is surprising, if *K(w) = 2* then *w* is very suprising, and so on, until *K(w) = ∞*, which means that *w* is impossible. 
 
 Non-empty subsets of *Ω* are called *events*. The rank of an event *A ⊆ Ω* is defined to be the minimum of the ranks of the elements of *A*. In other words, an event *A* is as surprising as the least surprising possibility *w ∈ A* that gives rise to it. In this respect, ranks behave different from probabilities, because the probability of an event is defined to be the *sum* of its elements.
 
 ## Conditional ranks
 
-Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B)-K(B)*. This can be thought of as a shifting operation: the possibilities in *B* are uniformly shifted down so that *K(B|B) = 0* (i.e., *B* is unsurprising given *B*), and the possibilities in *not-B* are shifted up so that *K(not-B|B) = ∞* (i.e., *not-B* is impossible given *B*). 
+Given two events *A* and *B*, the rank of *A* *conditional on* *B* is denoted by *K(A|B)*. The rank of *A* conditional on *B* is defined only if *K(B) < ∞* (i.e., if *B* is not impossible). If *K(B) < ∞*. then *K(A|B)* is defined by *K(A|B) = K(A∩B) - K(B)*. 
+
+Conditioning on *B* can be thought of as a shifting operation: the possibilities in *B* are uniformly shifted down so that *K(B|B) = 0* (i.e., *B* is unsurprising given *B*) and the possibilities in *not-B* are shifted up so that *K(not-B|B) = ∞* (i.e., *not-B* is impossible given *B*). 
 
 Recall that the probability of *A* *conditional on* *B* is defined by *P(A|B) = P(A∩B) / P(B)*. Just like *P(A|B) = P(A∩B) / P(B)* can be rewritten as *P(A∩B) = P(B)P(A|B)*, we can rewrite *K(A|B) = K(A∩B)-K(B)* as *K(A∩B) = K(B) + K(A|B)*. In this form, the definition says that the degree of surprise of *A and B* is the degree of surprise of *B* plus the degree of surprise of *A* *given* *B*.
 

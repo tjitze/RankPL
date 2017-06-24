@@ -61,6 +61,13 @@ public class BufferingIterator<T> implements RankedIterator<T> {
 	}
 
 	/**
+	 * Move back one item
+	 */
+	public void moveBack() {
+		reset(getIndex() - 1);
+	}
+	
+	/**
 	 * The current buffer index. This is -1 if not initialized,
 	 * 0 for the first element, etc.
      *

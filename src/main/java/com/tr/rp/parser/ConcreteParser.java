@@ -52,6 +52,7 @@ import com.tr.rp.ast.statements.Program;
 import com.tr.rp.ast.statements.RangeChoice;
 import com.tr.rp.ast.statements.RankedChoice;
 import com.tr.rp.ast.statements.ReadFile;
+import com.tr.rp.ast.statements.Reset;
 import com.tr.rp.ast.statements.Return;
 import com.tr.rp.ast.statements.Skip;
 import com.tr.rp.ast.statements.While;
@@ -100,6 +101,7 @@ import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.RankExprContext;
 import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
+import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
 import com.tr.rp.parser.RankPLParser.SkipStatementContext;
 import com.tr.rp.parser.RankPLParser.StatContext;
@@ -174,6 +176,13 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitAssertStatement(AssertStatementContext ctx) {
 		AbstractExpression arg = (AbstractExpression)visit(ctx.exp());
 		Assert s = new Assert(arg);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitResetStatement(ResetStatementContext ctx) {
+		Reset s = new Reset();
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

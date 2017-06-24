@@ -7,9 +7,11 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ChooseMergingIterator;
+import com.tr.rp.iterators.ranked.ChooseMergingIteratorFixed;
+import com.tr.rp.iterators.ranked.ChooseMergingIteratorVariable;
 import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.IteratorSplitter;
@@ -67,11 +69,20 @@ public class RankedChoice extends AbstractStatement implements RankedChoiceError
 		RankTransformIterator rt = new RankTransformIterator(in, this, rank);
 		AbstractExpression rank2 = rt.getExpression(0);
 		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(rt);
-		RankedIterator<VarStore> merge = new ChooseMergingIterator(
-				s1.getIterator(split.getA(), c), 
-				s2.getIterator(split.getB(), c), 
-				rank2,
-				errorHandler);
+		RankedIterator<VarStore> merge;
+		if (rank2.hasDefiniteValue()) {
+			merge = new ChooseMergingIteratorFixed(
+					s1.getIterator(split.getA(), c), 
+					s2.getIterator(split.getB(), c), 
+					rank2.getDefiniteIntValue(),
+					errorHandler);
+		} else {
+			merge = new ChooseMergingIteratorVariable(
+					s1.getIterator(split.getA(), c), 
+					s2.getIterator(split.getB(), c), 
+					rank2,
+					errorHandler);
+		}
 		return new DuplicateRemovingIterator<VarStore>(merge);
 	}
 	

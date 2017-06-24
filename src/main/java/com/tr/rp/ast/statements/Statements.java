@@ -40,10 +40,11 @@ public class Statements {
 	public static Assign assign(AssignmentTarget target, AbstractExpression value) {
 		return new Assign(target, value);
 	}
-
-	public static Composition comp(AbstractStatement s1, AbstractStatement s2) {
-		return new Composition(s1, s2);
+	
+	public static Composition comp(AbstractStatement ... s1) {
+		return new Composition(s1);
 	}
+
 	
 	public static Cut cut(int rank) {
 		return new Cut(lit(rank));
@@ -105,6 +106,18 @@ public class Statements {
 		return new PrintStatement(e);
 	}
 	
+	public static PrintStatement print(String s) {
+		return new PrintStatement(lit(s));
+	}
+	
+	public static PrintStatement print(int i) {
+		return new PrintStatement(lit(i));
+	}
+
+	public static PrintStatement print(boolean b) {
+		return new PrintStatement(lit(b));
+	}
+
 	public static RangeChoice rangeChoice(AssignmentTarget target, AbstractExpression beginExp, AbstractExpression endExp) {
 		return new RangeChoice(target, beginExp, endExp);
 	}

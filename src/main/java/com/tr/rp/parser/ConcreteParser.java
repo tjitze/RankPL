@@ -602,6 +602,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		for (Functiondef_or_statementContext fsc: ctx.functiondef_or_statement()) {
 			if (fsc.stat() != null) {
 				AbstractStatement s = (AbstractStatement)visit(fsc.stat());
+				if (s == null) {
+					return null; 
+				}
 				s = s.rewriteEmbeddedFunctionCalls();
 				s.setLineNumber(fsc.stat().getStart().getLine());
 				statements.add(s);

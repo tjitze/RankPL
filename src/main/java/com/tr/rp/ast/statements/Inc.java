@@ -42,7 +42,7 @@ public class Inc extends AbstractStatement {
 					VarStore item = rt.getItem();
 					if (item == null) return null;
 					try {
-						return target.assign(item, target.convertToRHSExpression().getIntValue(item) - 1);
+						return target.assign(item, target.convertToRHSExpression().getIntValue(item) + 1);
 					} catch (RPLException e) {
 						e.setStatement(Inc.this);
 						throw e;

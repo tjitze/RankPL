@@ -1,0 +1,96 @@
+define test() {
+	normally(1) {
+		return 1;
+	} exceptionally {
+		normally (1) {
+			return 2;
+		} exceptionally {
+			return 3;
+		};
+	};
+};
+
+# shift down
+a := test();
+observe-l (1) a > 1;
+assert-ranked(a,
+	[0, 1],
+	[0, 2],
+	[1, 3]);
+reset;
+
+# shift down and up
+a := test();
+observe-l (2) a > 1;
+assert-ranked(a,
+	[0, 2],
+	[1, 3],
+	[1, 1]);
+reset;
+
+# shift down and up twice
+a := test();
+observe-l (1) a > 1;
+observe-l (1) a > 1;
+assert-ranked(a,
+	[0, 2],
+	[1, 3],
+	[1, 1]);
+reset;
+
+# reverse 
+a := test();
+observe-l (1) a > 1;
+observe-l (1) a <= 1;
+assert-ranked(a,
+	[0, 1],
+	[1, 2],
+	[2, 3]);
+reset;
+
+# shift up 
+a := test();
+observe-l (1) a == 1;
+assert-ranked(a,
+	[0, 1],
+	[2, 2],
+	[3, 3]);
+reset;
+
+# shift up twice
+a := test();
+observe-l (1) a == 1;
+observe-l (1) a == 1;
+assert-ranked(a,
+	[0, 1],
+	[3, 2],
+	[4, 3]);
+reset;
+
+# reverse 
+a := test();
+observe-l (1) a == 1;
+observe-l (1) a != 1;
+assert-ranked(a,
+	[0, 1],
+	[1, 2],
+	[2, 3]);
+reset;
+
+# false 
+a := test();
+observe-l (1) false;
+assert-ranked(a,
+	[0, 1],
+	[1, 2],
+	[2, 3]);
+reset;
+
+# true 
+a := test();
+observe-l (1) false;
+assert-ranked(a,
+	[0, 1],
+	[1, 2],
+	[2, 3]);
+reset;

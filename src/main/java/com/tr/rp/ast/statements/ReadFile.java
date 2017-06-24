@@ -44,7 +44,7 @@ public class ReadFile extends AbstractStatement {
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		RankTransformIterator rt = new RankTransformIterator(in, this, target, path);
 		final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
-		final AssignmentTarget path = (AssignmentTarget)rt.getExpression(1);
+		final AbstractExpression path = (AbstractExpression)rt.getExpression(1);
 		return new RankedIterator<VarStore>() {
 
 			private String lastPath;
@@ -52,30 +52,30 @@ public class ReadFile extends AbstractStatement {
 			
 			@Override
 			public boolean next() throws RPLException {
-				return in.next();
+				return rt.next();
 			}
 
 			@Override
 			public VarStore getItem() throws RPLException {
-				VarStore v = in.getItem();
+				VarStore v = rt.getItem();
 				if (v == null) {
 					return null;
 				}
-				String currentPath = path.getStringValue(in.getItem());
+				String currentPath = path.getStringValue(rt.getItem());
 				if (lines == null || !lastPath.equals(currentPath)) {
 					try {
 						lastPath = currentPath;
-						lines = new PersistentList(readFile(path.getStringValue(in.getItem())).toArray());
+						lines = new PersistentList(readFile(path.getStringValue(rt.getItem())).toArray());
 					} catch (IOException e) {
 						throw new RPLMiscException(e.toString());
 					}
 				}
-				return target.assign(in.getItem(), lines);
+				return target.assign(rt.getItem(), lines);
 			}
 
 			@Override
 			public int getRank() {
-				return in.getRank();
+				return rt.getRank();
 			}
 			
 		};

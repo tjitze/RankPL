@@ -2,7 +2,7 @@ a := 10 <<1>> 20;
 b := 10 <<1>> 20;
 c := a * b;
 observe c > 150;
-assert(c,
+assert-ranked(c,
 	[0,200],
 	[1,400]);
 

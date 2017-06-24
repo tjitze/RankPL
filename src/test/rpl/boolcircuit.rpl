@@ -11,17 +11,17 @@ a2_broken := FALSE <<1>> TRUE;
 o1_broken := FALSE <<1>> TRUE;
 
 # Circuit logic
-if (x1_broken) then l1 := FALSE <<0>> TRUE else l1 := (i1 ^ i2);
-if (a1_broken) then l2 := FALSE <<0>> TRUE else l2 := (i1 & i2);
-if (a2_broken) then l3 := FALSE <<0>> TRUE else l3 := (l1 & i3);
-if (x2_broken) then b2 := FALSE <<0>> TRUE else b2 := (l1 ^ i3);
-if (o1_broken) then b1 := FALSE <<0>> TRUE else b1 := (l3 | l2);
+if (x1_broken) l1 := FALSE <<0>> TRUE else l1 := (i1 ^ i2);
+if (a1_broken) l2 := FALSE <<0>> TRUE else l2 := (i1 & i2);
+if (a2_broken) l3 := FALSE <<0>> TRUE else l3 := (l1 & i3);
+if (x2_broken) b2 := FALSE <<0>> TRUE else b2 := (l1 ^ i3);
+if (o1_broken) b1 := FALSE <<0>> TRUE else b1 := (l3 | l2);
   
 # Observe output  
 observe b1 & !b2;
  
 # Return state of gates
-assert([x1_broken, x2_broken, a1_broken, a2_broken, o1_broken],
+assert-ranked([x1_broken, x2_broken, a1_broken, a2_broken, o1_broken],
 	[0, [true, false, false, false, false]],
 	[1, [false, true, false, true, false]],
 	[1, [false, true, false, false, true]],

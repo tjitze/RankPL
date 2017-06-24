@@ -23,15 +23,15 @@ import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
 
 /**
- * The assert statement is intended for testing purposes. It takes as input
- * a value
+ * The assert-ranked (e, [n₁, e₁], [n₂, e₂], ...) statement is intended for testing purposes. 
+ * Checks that e equals e₁ with rank n₁, e₂ with rank n₂, etc. Aborts otherwise. 
  */
-public class Assert extends AbstractStatement {
+public class AssertRanked extends AbstractStatement {
 
 	private AbstractExpression expression;
 	private AbstractExpression[] expected;
 	
-	public Assert(AbstractExpression expression, AbstractExpression[] expected) {
+	public AssertRanked(AbstractExpression expression, AbstractExpression[] expected) {
 		this.expression = expression;
 		this.expected = expected;
 	}
@@ -92,17 +92,17 @@ public class Assert extends AbstractStatement {
 					Object checkValue = dri.getItem();
 					if (expectedValues.containsKey(checkValue)) {
 						if (!expectedValues.get(checkValue).equals(getRank())) {
-							throw new RPLAssertionException("Outcome " + checkValue + " has wrong rank (is " + getRank() + " but should be " + expectedValues.get(checkValue) + ")", Assert.this);
+							throw new RPLAssertionException("Outcome " + checkValue + " has wrong rank (is " + getRank() + " but should be " + expectedValues.get(checkValue) + ")", AssertRanked.this);
 						}
 						expectedValues.remove(checkValue);
 					} else {
-						throw new RPLAssertionException("Unexpected value " + checkValue + " (ranked " + getRank() + ")", Assert.this);
+						throw new RPLAssertionException("Unexpected value " + checkValue + " (ranked " + getRank() + ")", AssertRanked.this);
 					}
 				} else {
 					if (!expectedValues.isEmpty()) {
 						String missingValuesString = 
 								expectedValues.entrySet().stream().map(e -> "[" + e.getKey() + ", rank " + e.getValue() + "]").collect(Collectors.joining(", "));
-						throw new RPLAssertionException("Missing values: " + missingValuesString, Assert.this);
+						throw new RPLAssertionException("Missing values: " + missingValuesString, AssertRanked.this);
 					}
 				}
 				return next;
@@ -142,7 +142,7 @@ public class Assert extends AbstractStatement {
 		for (int i = 0; i < expected.length; i++) {
 			newExpected[i] = (AbstractExpression)expected[i].replaceVariable(a, b);
 		}
-		return new Assert(newValue, newExpected);
+		return new AssertRanked(newValue, newExpected);
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class Assert extends AbstractStatement {
 		ExtractedExpression rewrittenExpression = FunctionCallForm.extractFunctionCalls(expression);
 		if (rewrittenExpression.isRewritten()) {
 			return new FunctionCallForm(
-					new Assert(rewrittenExpression.getExpression(), expected), rewrittenExpression.getAssignments());
+					new AssertRanked(rewrittenExpression.getExpression(), expected), rewrittenExpression.getAssignments());
 		} else {
 			return this;
 		}
@@ -164,15 +164,15 @@ public class Assert extends AbstractStatement {
 	}
 	
 	public String toString() {
-		return "assert("+expression+","+
+		return "assert-ranked("+expression+","+
 				Arrays.stream(expected).map(e -> e.toString()).collect(Collectors.joining(", ")) + ")";
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		return (o instanceof Assert) &&
-				((Assert)o).expression.equals(expression) &&
-				Arrays.deepEquals(((Assert)o).expected, expected);
+		return (o instanceof AssertRanked) &&
+				((AssertRanked)o).expression.equals(expression) &&
+				Arrays.deepEquals(((AssertRanked)o).expected, expected);
 	}
 	
 	@Override

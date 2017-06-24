@@ -36,6 +36,7 @@ import com.tr.rp.ast.expressions.ParseInt;
 import com.tr.rp.ast.expressions.RankExpr;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.Assert;
+import com.tr.rp.ast.statements.AssertRanked;
 import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.ast.statements.Composition;
 import com.tr.rp.ast.statements.Cut;
@@ -60,6 +61,7 @@ import com.tr.rp.parser.RankPLParser.Arithmetic1ExpressionContext;
 import com.tr.rp.parser.RankPLParser.Arithmetic2ExpressionContext;
 import com.tr.rp.parser.RankPLParser.ArrayConstructExprContext;
 import com.tr.rp.parser.RankPLParser.ArrayInitExprContext;
+import com.tr.rp.parser.RankPLParser.AssertRankedStatementContext;
 import com.tr.rp.parser.RankPLParser.AssertStatementContext;
 import com.tr.rp.parser.RankPLParser.AssignmentStatementContext;
 import com.tr.rp.parser.RankPLParser.Assignment_targetContext;
@@ -157,13 +159,21 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitAssertStatement(AssertStatementContext ctx) {
+	public LanguageElement visitAssertRankedStatement(AssertRankedStatementContext ctx) {
 		AbstractExpression arg1 = (AbstractExpression)visit(ctx.exp().get(0));
 		AbstractExpression[] argRest = new AbstractExpression[ctx.exp().size() - 1];
 		for (int i = 1; i < ctx.exp().size(); i++) {
 			argRest[i-1] = (AbstractExpression)visit(ctx.exp().get(i));
 		}
-		Assert s = new Assert(arg1, argRest);
+		AssertRanked s = new AssertRanked(arg1, argRest);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitAssertStatement(AssertStatementContext ctx) {
+		AbstractExpression arg = (AbstractExpression)visit(ctx.exp());
+		Assert s = new Assert(arg);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

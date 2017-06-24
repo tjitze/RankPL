@@ -8,6 +8,6 @@ define program() {
 
 result := infer(program());
 
-assert(result, [0, ["(a = 10, b = 20)", "(a = 20, b = 10)"]]);
+assert-ranked(result, [0, ["(a = 10, b = 20)", "(a = 20, b = 10)"]]);
 
 

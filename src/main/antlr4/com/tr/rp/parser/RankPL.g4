@@ -36,7 +36,8 @@ stat
  | Return exp											# ReturnStatement
  | Print exp											# PrintStatement
  | Cut exp												# CutStatement
- | Assert '(' exp (',' exp)* ')'						# AssertStatement
+ | AssertRanked '(' exp (',' exp)* ')'					# AssertRankedStatement
+ | Assert exp											# AssertStatement
  ;
 
 
@@ -109,6 +110,7 @@ Return: 		'return' | 'RETURN';
 Print: 			'print' | 'PRINT';
 Cut: 			'cut' | 'CUT';
 Assert: 		'assert' | 'ASSERT';
+AssertRanked: 	'assert-ranked' | 'ASSERT-RANKED';
 True: 			'true' | 'TRUE';
 False: 			'false' | 'FALSE';
 Infer: 			'infer' | 'INFER';

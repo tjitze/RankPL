@@ -52,7 +52,7 @@ while (i < len(input) & k < len(potential_match)) do {
 # Filter on event that all characters were matched
 observe i == len(input) & k == len(potential_match);
 
-assert(potential_match,
+assert-ranked(potential_match,
 	[0, "eleven*"],
 	[0, "twelve*"],
 	[2, "seven*"],

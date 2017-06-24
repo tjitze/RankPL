@@ -19,6 +19,10 @@ public class PersistentList {
 	private final Object[][] segments;
 	private final int size;
 	private final int square;
+
+	// Hash code caching
+	private int hashCode = 0;
+	private boolean hashCodeComputed = false;
 	
 	public PersistentList(Collection<Object> values) {
 		this(values.size());
@@ -138,10 +142,15 @@ public class PersistentList {
 	}
 	
 	public int hashCode() {
-		int hash = 0;
-		for (int i = 0; i < size; i++) {
-			hash += i * get(i).hashCode();
+		synchronized (this) {
+			if (!hashCodeComputed) {
+				hashCode = 0;
+				for (int i = 0; i < size; i++) {
+					hashCode += i * get(i).hashCode();
+				}
+				hashCodeComputed = true;
+			}
 		}
-		return hash;
+		return hashCode;
 	}
 }

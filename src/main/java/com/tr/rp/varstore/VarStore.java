@@ -186,9 +186,11 @@ public class VarStore {
 	}
 	
 	public int hashCode() {
-		if (!hashCodeComputed) {
-			hashCode = varStore.hashCode() + (parent != null? parent.hashCode: 0);
-			hashCodeComputed = true;
+		synchronized (this) {
+			if (!hashCodeComputed) {
+				hashCode = varStore.hashCode() + (parent != null? parent.hashCode: 0);
+				hashCodeComputed = true;
+			}
 		}
 		return hashCode;
 	}

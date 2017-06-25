@@ -33,77 +33,61 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		AbstractExpression exp2 = null;
 		
-			// If exp is contradiction/tautology we
-			// can immediately return result.
-			if (exp.hasDefiniteValue()) {
-				if (exp.getDefiniteBoolValue()) {
-					return in;
-				} else {
-					return new AbsurdIterator<VarStore>();
-				}
+		// If exp is contradiction/tautology we
+		// can immediately return result.
+		if (exp.hasDefiniteValue()) {
+			if (exp.getDefiniteBoolValue()) {
+				return in;
+			} else {
+				return new AbsurdIterator<VarStore>();
 			}
-	
-			// Replace rank expressions in exp
-			RankTransformIterator rt = 
-					new RankTransformIterator(in, this, this.exp);
-			exp2 = rt.getExpression(0);
+		}
+
+		// Replace rank expressions in exp
+		RankTransformIterator rt = 
+				new RankTransformIterator(in, this, this.exp);
+		final AbstractExpression exp2 = rt.getExpression(0);
+		
+		// Check contradiction/tautology again.
+		if (exp2.hasDefiniteValue()) {
+			if (exp2.getDefiniteBoolValue()) {
+				return rt;
+			} else {
+				return new AbsurdIterator<VarStore>();
+			}
+		}
+		
+		return new RankedIterator<VarStore>() {
 			
-			// Check contradiction/tautology again.
-			if (exp.hasDefiniteValue()) {
-				if (exp.getDefiniteBoolValue()) {
-					return rt;
-				} else {
-					return new AbsurdIterator<VarStore>();
+			private int conditioningOffset = Rank.MAX;
+			
+			@Override
+			public boolean next() throws RPLException {
+				// Find next varstore satisfying condition
+				boolean hasNext = rt.next();
+				while (hasNext && !getCheckedValue(exp2, rt)) { 
+					hasNext = rt.next();
 				}
+				// Store conditioning offset
+				if (hasNext && conditioningOffset == Rank.MAX) {
+					conditioningOffset = rt.getRank();
+				}
+				return hasNext;
+			}
+
+			@Override
+			public VarStore getItem() throws RPLException {
+				return rt.getItem();
+			}
+
+			@Override
+			public int getRank() {
+				// Subtract offset so that ranks start with zero
+				return Rank.sub(rt.getRank(), conditioningOffset);
 			}
 			
-			// Find first varstore satisfying condition
-			// (if there is no varstore then hasnext will be false)
-			final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(rt);
-			boolean hasNext = bi.next();
-			while (hasNext && !getCheckedValue(exp2, bi)) { 
-				hasNext = bi.next();
-			}
-			// Remember rank of this varstore
-			final int conditioningOffset = hasNext? bi.getRank(): Rank.MAX;
-			// Move back one item so that we can reuse the buffering iterator
-			if (hasNext) bi.reset(bi.getIndex() - 1);
-			
-			final AbstractExpression exp2f = exp2;
-			return new RankedIterator<VarStore>() {
-				
-				@Override
-				public boolean next() throws RPLException {
-					// Find next varstore satisfying condition
-					boolean hasNext = bi.next();
-					while (hasNext && !getCheckedValue(exp2f, bi)) { 
-						hasNext = bi.next();
-					}
-					return hasNext;
-				}
-	
-				@Override
-				public VarStore getItem() throws RPLException {
-					return bi.getItem();
-				}
-	
-				@Override
-				public int getRank() {
-					// Subtract offset so that ranks start with zero
-					return Rank.sub(bi.getRank(),  conditioningOffset);
-				}
-				
-				@Override
-				public int getConditioningOffset() {
-					return conditioningOffset;
-				}
-				
-				public String toString() {
-					return "ObserveIterator(exp=" + exp2f + ", buffer=" + bi + ")";
-				}
-			};
+		};
 	}
 
 	private boolean getCheckedValue(AbstractExpression exp2, BufferingIterator<VarStore> bi) throws RPLException {

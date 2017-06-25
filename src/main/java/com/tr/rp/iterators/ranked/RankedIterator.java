@@ -46,13 +46,4 @@ public interface RankedIterator<T> {
 	 */
 	public int getRank();
 
-	/**
-	 * Optional method to return the prior rank of the lowest ranked
-	 * item passed through by this iterator (used by observe and
-	 * if-then-else).
-	 */
-	default public int getConditioningOffset() {
-		return 0;
-	}
-
 }

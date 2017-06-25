@@ -11,6 +11,7 @@ import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.AbsurdIterator;
+import com.tr.rp.iterators.ranked.BufferingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.IteratorSplitter;
 import com.tr.rp.iterators.ranked.MergingIterator;
@@ -41,8 +42,6 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
-		Observe obs1;
-		Observe obs2;
 
 		// If exp is contradiction/tautology we
 		// can immediately pass the a/b iterator.
@@ -65,8 +64,8 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		
 		// Check contradiction/tautology again.
 		try {
-			if (exp.hasDefiniteValue()) {
-				if (exp.getDefiniteBoolValue()) {
+			if (exp2.hasDefiniteValue()) {
+				if (exp2.getDefiniteBoolValue()) {
 					return a.getIterator(parent, c);
 				} else {
 					return b.getIterator(parent, c);
@@ -80,12 +79,8 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
 
 		// Apply condition 
-		obs1 = new Observe(exp2, this);
-		obs2 = new Observe(new Not(exp2), this);
-		RankedIterator<VarStore> ia1;
-		RankedIterator<VarStore> ia2;
-		ia1 = obs1.getIterator(split.getA(), c);
-		ia2 = obs2.getIterator(split.getB(), c);
+		IteratorWithOffSet<VarStore> ia1 = getConditioningIterator(exp2, split.getA(), c);
+		IteratorWithOffSet<VarStore> ia2 = getConditioningIterator(new Not(exp2), split.getB(), c);
 		
 		// Remember offsets (prior ranks of the conditions)
 		int offset1 = ia1.getConditioningOffset();
@@ -177,5 +172,54 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		b.getAssignedVariables(variables);
 	}
 
+	private IteratorWithOffSet<VarStore> getConditioningIterator(final AbstractExpression exp2f, final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+		final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
+		boolean hasNext = bi.next();
+		while (hasNext && !getCheckedValue(exp2f, bi)) { 
+			hasNext = bi.next();
+		}
+		final int conditioningOffset = hasNext? bi.getRank(): Rank.MAX;
+		if (hasNext) bi.reset(bi.getIndex() - 1);
+		return new IteratorWithOffSet<VarStore>() {
+			
+			@Override
+			public boolean next() throws RPLException {
+				// Find next varstore satisfying condition
+				boolean hasNext = bi.next();
+				while (hasNext && !getCheckedValue(exp2f, bi)) { 
+					hasNext = bi.next();
+				}
+				return hasNext;
+			}
+
+			@Override
+			public VarStore getItem() throws RPLException {
+				return bi.getItem();
+			}
+
+			@Override
+			public int getRank() {
+				return Rank.sub(bi.getRank(),  conditioningOffset);
+			}
+			
+			@Override
+			public int getConditioningOffset() {
+				return conditioningOffset;
+			}
+		};
+	}
+
+	private boolean getCheckedValue(AbstractExpression exp2, BufferingIterator<VarStore> bi) throws RPLException {
+		try {
+			return exp2.getBoolValue(bi.getItem());
+		} catch (RPLException e) {
+			observeConditionError(e);
+			throw e;
+		}
+	}
+
+	private static interface IteratorWithOffSet<T> extends RankedIterator<T> {
+		public int getConditioningOffset();
+	}
 
 }

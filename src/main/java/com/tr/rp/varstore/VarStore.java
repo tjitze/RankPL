@@ -177,10 +177,9 @@ public class VarStore {
 
 	public boolean equals(Object o) {
 		if (o instanceof VarStore) {
-			if (parent != null && !parent.equals(((VarStore)o).parent)) {
-				return false;
-			}
-			return ((VarStore)o).varStore.equals(varStore);
+			VarStore other = (VarStore)o;
+			return Objects.equals(parent, other.parent)
+					&& Objects.equals(varStore, other.varStore);
 		}
 		return false;
 	}

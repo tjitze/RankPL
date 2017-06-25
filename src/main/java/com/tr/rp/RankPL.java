@@ -174,12 +174,14 @@ public class RankPL {
 		try { 
 		  future.get(timeOut, TimeUnit.MILLISECONDS); 
 		} catch (InterruptedException ie) { 
-			// Ignore
+			ie.printStackTrace();
 		} catch (ExecutionException ee) { 
 			// Re-throw the RPL exception thrown inside the thread
 			c.setInterruptRequested();
 			if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLException) {
 				throw (RPLException)ee.getCause().getCause();
+			} else {
+				ee.printStackTrace();
 			}
 		} catch (TimeoutException te) { 
 			c.setInterruptRequested();

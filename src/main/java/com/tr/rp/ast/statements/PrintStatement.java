@@ -26,7 +26,7 @@ public class PrintStatement extends AbstractStatement {
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
 		RankTransformIterator rt = new RankTransformIterator(in, this, exp);
 		final AbstractExpression exp = rt.getExpression(0);
-		final RankedIterator<VarStore> in2 = new DuplicateRemovingIterator<VarStore>(in);
+		final RankedIterator<VarStore> in2 = new DuplicateRemovingIterator<VarStore>(rt);
 		return new RankedIterator<VarStore>() {
 
 			@Override

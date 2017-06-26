@@ -150,13 +150,15 @@ public class RankPL {
 						;
 						it = program.run(c);
 					}
-
+					if (!noRanks) {
+						System.out.println("Rank    Outcome");
+					}
 					// Print outcomes
 					while (it.next() && it.getRank() <= maxRank) {
 						if (noRanks) {
 							System.out.println(it.getItem());
 						} else {
-							System.out.println("Rank " + it.getRank() + ": " + it.getItem());
+							System.out.println(String.format(" %3d    ", it.getRank()) + it.getItem());
 						}
 						if (terminateAfterFirst) {
 							return;

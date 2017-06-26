@@ -1,81 +1,16 @@
-#
-# This example shows how RPL can be used to represent ranking networks. Ranking net-
-# works are the ranking-based counterpart of Bayesian networks [1]. They have also
-# been called OCF networks [2]. The figure below depicts a ranking network for the 
-# typical rain-sprinkler-wet example. There are three boolean variables: R (rain),
-# S (sprinkler on) and W (grass is wet), each associated with a conditional ranking
-# table. They encode that (1) It normally rains (firmness 1); (2) the sprinkler is 
-# off if it rains (firmness 3) and on otherwise (firmness 1); (3) rain and sprinkler 
-# affect wetness of the grass, which is dry if both are false (firmness ∞), wet if 
-# just one is true (firmness 2), and wet if both are true (firmness 5).
-#
-#       R
-#      T F         
-#      ---      R	
-#      0 1      |\        | W
-#               | \     SR|T F
-#     | S       |  \    --+----- 
-#    R|T F      |   \   FF|∞ 0
-#    -+---      |    |  FT|0 2
-#    F|0 1      v    v  TF|0 2
-#    T|3 0      S--->W  TT|0 5
-#               
-# The program below encodes this ranking network. We use the variables r, s and w 
-# for the events and the values 0 and 1 to represent false and true. To encode the 
-# network we use a recipe similar to the one used to encode Bayesian networks in 
-# probabilistic programming languages (see, e.g., [3]). That is, we traverse the 
-# network in topological order and encode the CRTs using default choice inside 
-# if-then-else statements. 
-#
-# Running this program yields the ranking represented by this ranking network: 
-#
-#  java -jar RankPL.jar examples/rankingnetwork.rpl 10 (ENTER)
-#
-# Rank 0: rain: true	 sprinkler: false	 wet_grass: true
-# Rank 1: rain: false	 sprinkler: true	 wet_grass: true
-# Rank 2: rain: false	 sprinkler: false	 wet_grass: false
-# Rank 2: rain: true	 sprinkler: false	 wet_grass: false
-# Rank 3: rain: true	 sprinkler: true	 wet_grass: true
-# Rank 3: rain: false	 sprinkler: true	 wet_grass: false
-# Rank 8: rain: true	 sprinkler: true	 wet_grass: false
-#
-# Inference can be modeled simply by adding an observe statement at the end. 
-# Suppose we observe that the sprinkler is on, i.e., we add the statement
-# 
-#    observe sprinkler;
-# 
-# and run it as above. The program then yields the outcome shown below. It tells
-# us that it normally does not rain but that the grass is wet.
-#
-# Rank 0: rain: false	 sprinkler: true	 wet_grass: true
-# Rank 2: rain: true	 sprinkler: true	 wet_grass: true
-# Rank 2: rain: false	 sprinkler: true	 wet_grass: false
-# Rank 7: rain: true	 sprinkler: true	 wet_grass: false
-#
-# [1] Spohn, W., The Laws of Belief (Ranking Theory and Its Philosophical Appli-
-#     cations. Oxford University Press (2014).
-#
-# [2] Benferhat, S., Tabia, K., Belief change in OCF-based networks in presence 
-#     of sequences of observations and interventions: Application to alert cor-
-#     relation. In: Proceedings of PRICAI 2010: Trends in Artificial Intelligence,
-#	  Lecture Notes in Computer Science, vol. 6230, pp. 14–26. Springer (2010).
-#
-# [3] Gordon, A.D., Henzinger, T.A., Nori, A.V., Rajamani, S.K.: Probabilistic 
-#     programming. Proceedings of FOSE 2014, 2014. pp. 167–181. ACM (2014).
-#
-
 rain := true << 1 >> false;
-if (!rain) then {
+if (!rain) {
 	sprinkler := true << 1 >> false;
 } else {
 	sprinkler := false << 3 >> true;
 };
-if (!rain & !sprinkler) then {
-	wet_grass := false; 
-} else if (rain & sprinkler) then {
-	wet_grass := true << 5 >> false;
+if (!rain & !sprinkler) { 	
+	grass_wet := false; 
+} else if (rain & sprinkler) {
+	grass_wet := true << 5 >> false;
 } else {
-	wet_grass := true << 2 >> false;
+	grass_wet := true << 2 >> false;
 };
-#observe sprinkler;
-return "rain: " + rain + "\t sprinkler: " + sprinkler + "\t wet_grass: " + wet_grass;
+observe sprinkler;
+return "rain: " + rain + "\tsprinkler: " + sprinkler + "\tgrass_wet: " + grass_wet;
+

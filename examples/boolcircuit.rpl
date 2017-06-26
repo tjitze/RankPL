@@ -2,14 +2,14 @@
 #
 # example of how to run:
 #
-#   java -jar RankPL.jar boolcircuit.rpl 2 fx1 fx2 fa1 fa2 fo1
+#   java -jar RankPL.jar -source boolcircuit.rpl
 
 # Set input variables
-i1 := FALSE;
-i2 := FALSE;
-i3 := TRUE;
+in1 := FALSE;
+in2 := FALSE;
+in3 := TRUE; 
 
-# Set state of gates (TRUE is functioning, FALSE is faulty)
+# Set state of gates (TRUE is functioning, FALSE is broken)
 x1_broken := FALSE <<1>> TRUE;
 x2_broken := FALSE <<1>> TRUE;
 a1_broken := FALSE <<1>> TRUE;
@@ -17,17 +17,16 @@ a2_broken := FALSE <<1>> TRUE;
 o1_broken := FALSE <<1>> TRUE;
 
 # Circuit logic
-if (x1_broken) then l1 := FALSE <<0>> TRUE else l1 := (i1 ^ i2);
-if (a1_broken) then l2 := FALSE <<0>> TRUE else l2 := (i1 & i2);
-if (a2_broken) then l3 := FALSE <<0>> TRUE else l3 := (l1 & i3);
-if (x2_broken) then b2 := FALSE <<0>> TRUE else b2 := (l1 ^ i3);
-if (o1_broken) then b1 := FALSE <<0>> TRUE else b1 := (l3 | l2);
-
+if (x1_broken) then l1 := FALSE <<0>> TRUE else l1 := (in1 ^ in2);
+if (a1_broken) then l2 := FALSE <<0>> TRUE else l2 := (in1 & in2);
+if (a2_broken) then l3 := FALSE <<0>> TRUE else l3 := (l1 & in3);
+if (x2_broken) then out2 := FALSE <<0>> TRUE else out2 := (l1 ^ in3);
+if (o1_broken) then out1 := FALSE <<0>> TRUE else out1 := (l3 | l2);
+ 
 # Observe output
-observe b1 & !b2;
-
+observe out1 & !out2;
+   
 # Return state of gates
-return "x1_broken: " + x1_broken + ", x2_broken " + x2_broken + 
-  	", a1_broken " + a1_broken + ", a2_broken " + a2_broken + 
-	", o1_broken " + o1_broken;
+return "X1 broken: " + x1_broken + ", X2 broken: " + x2_broken + 
+	", A1 broken: " + a1_broken +  ", a2 broken: " + a2_broken +  ", O1 broken: " + o1_broken;
 

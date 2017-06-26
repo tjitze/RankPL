@@ -10,6 +10,8 @@ dictionary := [
 	"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
 	"seventeen", "eighteen", "nineteen", "twenty"
 ];
+# The above can be replaced with:
+# dictionary := readfile("examples/google-10000-english-no-swears.txt");
 
 # Randomly choose word from dictionary
 choice := << 0 ... len(dictionary) >>;

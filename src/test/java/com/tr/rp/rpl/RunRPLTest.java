@@ -36,6 +36,9 @@ public class RunRPLTest extends TestCase {
 			System.out.print("Running " + file + "... ");
 			String source = RankPL.getFileContent(file);
 			Program program = RankPL.parse(source);
+			if (program == null) {
+				fail("Parse error");
+			}
 			RankPL.execute(program);
 			System.out.println("OK");
 		} catch (Exception e) {

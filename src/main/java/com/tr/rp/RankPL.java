@@ -206,8 +206,10 @@ public class RankPL {
 		Options options = new Options();
 		options.addOption(Option.builder("source").hasArg().required().argName("source_file")
 				.desc("source file to execute").build());
-		options.addOption(Option.builder("r").hasArg().type(Number.class).argName("max_output_rank")
-				.desc("maximum rank of results to generate (default 0)").build());
+		options.addOption(Option.builder("rank").hasArg().type(Number.class).argName("max_rank")
+				.desc("generate outcomes with ranks up to max_rank (defaults to 0)").build());
+		options.addOption(Option.builder("all")
+				.desc("generate all outcomes").build());
 		options.addOption(Option.builder("c").hasArg().type(Number.class).argName("rank_cutoff")
 				.desc("discard computations above this rank (default ∞)").build());
 		options.addOption(Option.builder("d")
@@ -235,18 +237,27 @@ public class RankPL {
 			if (cmd.hasOption("source")) {
 				fileName = cmd.getOptionValue("source");
 			}
-			if (cmd.hasOption("r")) {
+			if (cmd.hasOption("rank")) {
 				try {
 					maxRank = ((Number) cmd.getParsedOptionValue("r")).intValue();
 				} catch (Exception e) {
-					System.err.println("Illegal value provided for -r option.");
+					System.err.println("Illegal value provided for -rank option.");
+					return false;
 				}
+			}
+			if (cmd.hasOption("all")) {
+				if (cmd.hasOption("rank")) {
+					System.err.println("Cannot use both -rank and -all options.");
+					return false;
+				}
+				maxRank = Rank.MAX;
 			}
 			if (cmd.hasOption("t")) {
 				try {
 					timeOut = ((Number) cmd.getParsedOptionValue("t")).intValue();
 				} catch (Exception e) {
 					System.err.println("Illegal value provided for -t option.");
+					return false;
 				}
 			}
 			if (cmd.hasOption("c")) {
@@ -254,6 +265,7 @@ public class RankPL {
 					rankCutOff = ((Number) cmd.getParsedOptionValue("c")).intValue();
 				} catch (Exception e) {
 					System.err.println("Illegal value provided for -c option.");
+					return false;
 				}
 			}
 			if (cmd.hasOption("d")) {

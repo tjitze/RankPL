@@ -3,6 +3,7 @@ package com.tr.rp.ast.expressions;
 import java.util.function.BiFunction;
 
 import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ranks.Rank;
 
 public class Expressions {
 
@@ -71,6 +72,36 @@ public class Expressions {
 	public static Plus plus(AbstractExpression a, AbstractExpression b) {
 		return new Plus(a, b);
 	}
+
+	private static BiFunction<Integer, Integer, Integer> rankPlus = new BiFunction<Integer, Integer, Integer>() {
+		@Override
+		public Integer apply(Integer t, Integer u) {
+			return Rank.add(t, u);
+		}
+		public String toString() {
+			return "$1 - $2";
+		}
+	};
+
+	public static NumNumNumOp rankPlus(AbstractExpression a, AbstractExpression b) {
+		return new NumNumNumOp(rankPlus, a, b);
+	}
+	
+	private static BiFunction<Integer, Integer, Integer> rankMinus = new BiFunction<Integer, Integer, Integer>() {
+		@Override
+		public Integer apply(Integer t, Integer u) {
+			return Rank.sub(t, u);
+		}
+		public String toString() {
+			return "$1 - $2";
+		}
+	};
+
+
+	public static NumNumNumOp rankMinus(AbstractExpression a, AbstractExpression b) {
+		return new NumNumNumOp(rankMinus, a, b);
+	}
+
 
 	private static BiFunction<Integer, Integer, Integer> minus = new BiFunction<Integer, Integer, Integer>() {
 		@Override

@@ -187,7 +187,7 @@ public class VarStore {
 	public int hashCode() {
 		synchronized (this) {
 			if (!hashCodeComputed) {
-				hashCode = varStore.hashCode() + (parent != null? parent.hashCode: 0);
+				hashCode = varStore.hashCode() + (parent != null? parent.hashCode(): 0);
 				hashCodeComputed = true;
 			}
 		}

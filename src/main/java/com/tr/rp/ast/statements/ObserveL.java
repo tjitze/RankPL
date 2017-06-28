@@ -56,8 +56,8 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 		
 		// Construct observe-L statement
 		AbstractExpression cond = Expressions.leq(rb, rank);
-		AbstractExpression r1 = Expressions.minus(Expressions.plus(rank, rnb), rb);
-		AbstractExpression r2 = Expressions.minus(rb, rank);
+		AbstractExpression r1 = Expressions.rankMinus(Expressions.rankPlus(rank, rnb), rb);
+		AbstractExpression r2 = Expressions.rankMinus(rb, rank);
 		AbstractStatement c1 = new RankedChoice(
 				new Observe(b, this),
 				new Observe(new Not(b), this),

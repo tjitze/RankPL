@@ -42,8 +42,7 @@ public class RunRPLTest extends TestCase {
 			RankPL.execute(program);
 			System.out.println("OK");
 		} catch (Exception e) {
-			System.out.println("Failure: " + e.toString());
-			assert(false);
+			fail("Failure: " + e.toString());
 		}
 	}
 	

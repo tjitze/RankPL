@@ -9,6 +9,7 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
@@ -97,6 +98,11 @@ public class ObserveJ extends AbstractStatement implements ObserveErrorHandler, 
 		e.setExpression(rank);
 		e.setStatement(this);
 		throw e;
+	}	
+
+	@Override
+	public void illegalRank(int ri) throws RPLException {
+		throw new RPLIllegalRankException(ri, rank, this);
 	}	
 
 }

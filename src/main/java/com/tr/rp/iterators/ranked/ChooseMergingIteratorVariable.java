@@ -6,6 +6,7 @@ import java.util.PriorityQueue;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.ranks.Rank;
 import com.tr.rp.ranks.RankedItem;
 import com.tr.rp.varstore.VarStore;
@@ -61,6 +62,11 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 			public void handleRankExpressionError(RPLException e) throws RPLException {
 				throw e;
 			}
+
+			@Override
+			public void illegalRank(int ri) throws RPLException {
+				throw new RPLIllegalRankException(ri, rankIncrease, null);
+			}
 		});
 	}
 
@@ -77,6 +83,9 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 				VarStore vs = in2.getItem();
 				try {
 					ri = rankIncrease.getIntValue(vs);
+					if (ri < 0) {
+						errorHandler.illegalRank(ri);
+					}
 				} catch (RPLException e) {
 					errorHandler.handleRankExpressionError(e);
 				}
@@ -98,6 +107,9 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 				VarStore vs = in2.getItem();
 				try {
 					ri = rankIncrease.getIntValue(vs);
+					if (ri < 0) {
+						errorHandler.illegalRank(ri);
+					}
 				} catch (RPLException e) {
 					errorHandler.handleRankExpressionError(e);
 				}

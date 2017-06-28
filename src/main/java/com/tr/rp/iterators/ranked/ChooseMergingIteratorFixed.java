@@ -14,7 +14,6 @@ public class ChooseMergingIteratorFixed implements RankedIterator<VarStore> {
 
 	private final BufferingIterator<VarStore> in1;
 	private final BufferingIterator<VarStore> in2;
-	private final ChooseMergingIteratorErrorHandler errorHandler;
 	
 	private boolean getB = false;
 	
@@ -33,21 +32,10 @@ public class ChooseMergingIteratorFixed implements RankedIterator<VarStore> {
 	 * @throws RPLException
 	 */
 	public ChooseMergingIteratorFixed(RankedIterator<VarStore> in1, 
-			RankedIterator<VarStore> in2, int rankIncrease,
-			ChooseMergingIteratorErrorHandler errorHandler) throws RPLException {
-		this.errorHandler = errorHandler;
+			RankedIterator<VarStore> in2, int rankIncrease) throws RPLException {
 		this.in1 = new BufferingIterator<VarStore>(in1);
 		this.in2 = new BufferingIterator<VarStore>(in2);
 		this.rankIncrease = rankIncrease;
-	}
-
-	public ChooseMergingIteratorFixed(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, int rankIncrease) throws RPLException {
-		this(in1, in2, rankIncrease, new ChooseMergingIteratorErrorHandler() {
-			@Override
-			public void handleRankExpressionError(RPLException e) throws RPLException {
-				throw e;
-			}
-		});
 	}
 
 	@Override

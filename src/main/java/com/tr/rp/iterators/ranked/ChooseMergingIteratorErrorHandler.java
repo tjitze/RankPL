@@ -6,4 +6,6 @@ public interface ChooseMergingIteratorErrorHandler {
 
 	void handleRankExpressionError(RPLException e) throws RPLException;
 
+	void illegalRank(int ri) throws RPLException;
+
 }

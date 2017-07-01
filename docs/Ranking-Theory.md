@@ -20,7 +20,7 @@ Ranks can also be interpreted as **order of magnitude** probabilities: if **K(A)
 
 ### Plain Conditionalization 
 
-Like in probability theory, conditionalization in ranking theory makes it possible to update a ranking function due to new information. The rank of a possibility **w** *conditional on* a proposition **B** is denoted by **K(w|B)**. If **K(B) < ∞** (**B** is not impossible) then **K(w|B)** is defined as 
+Like in probability theory, conditionalization in ranking theory makes it possible to update a ranking function due to new information. The rank of a possibility **w** *conditional on* a proposition **B** is denoted by **K(w\|B)**. If **K(B) < ∞** (**B** is not impossible) then **K(w\|B)** is defined as 
 
 <p align="center"><b>K(w|B) = K(w) - K(B)</b> if <b>w ∈ B</b>, and</p>
 <p align="center"><b>K(w|B) = ∞</b> if <b>w ∉ B</b>.</p>
@@ -29,7 +29,7 @@ In terms of propositions, this definition can be written more compactly as
 
 <p align="center"><b>K(A|B) = K(A∩B)-K(B)</b>.</p>
 
-Conditionalization on **B** can be thought of as a shifting operation: the possibilities in **B** are uniformly shifted down by **K(B)** units of rank and the possibilities in **B̅** are shifted up to **∞**. The effect is that **K(B|B) = 0** and **K(**B̅**|B) = ∞** (i.e., **B** is believed with firmness **∞**).
+Conditionalization on **B** can be thought of as a shifting operation: the possibilities in **B** are uniformly shifted down by **K(B)** units of rank and the possibilities in **B̅** are shifted up to **∞**. The effect is that **K(B\|B) = 0** and **K(**B̅**\|B) = ∞** (i.e., **B** is believed with firmness **∞**).
 
 ### J-Conditionalization 
 
@@ -73,7 +73,7 @@ What about the similarities? In general, **1** and **0** in probability theory p
 | Conditional Independence | **P(A∩B\|C) = P(A\|C)P(B\|C)**     | **K(A∩B\|C) = K(A\|C) + K(B\|C)**   |
 | Bayes' Theorem           | **P(A\|B) = P(B\|A)P(A) / P(B)**   | **K(A\|B) = K(B\|A) + K(A) - K(B)** |
 
-The probabilistic **order of magnitude** interpretation of ranks establishes a more direct correspondence between ranks and probabilities [\[2\]](#references). Let **P** be a probability function over **Ω** such that, for each **w ∈ Ω**, **P(w)** is a polynomial function of one unknown **ε** (e.g., **a**, **bε**, **cε²**). Note that this implies that any **P(A)** or **P(A|B)** is also a polynomial function of **ε**. We can think of the exponent of the most significant term of such a polynomial as the order of magnitude of the probability, with 0 being the highest, 1 the second-highest, and so on. These orders of magnitude are encoded by the ranking function **K** defined as follows.
+The probabilistic **order of magnitude** interpretation of ranks establishes a more direct correspondence between ranks and probabilities [\[2\]](#references). Let **P** be a probability function over **Ω** such that, for each **w ∈ Ω**, **P(w)** is a polynomial function of one unknown **ε** (e.g., **a**, **bε**, **cε²**). Note that this implies that any **P(A)** or **P(A\|B)** is also a polynomial function of **ε**. We can think of the exponent of the most significant term of such a polynomial as the order of magnitude of the probability, with 0 being the highest, 1 the second-highest, and so on. These orders of magnitude are encoded by the ranking function **K** defined as follows.
 
 <p align="center"><b>K(A)</b> is the lowest <b>n</b> s.t. <b>P(A)/εⁿ</b> is nonzero as <b>ε</b> approaches 0.</p>
 

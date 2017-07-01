@@ -1,3 +1,6 @@
+---
+title: Examples
+---
 # Examples
 
 ## Causal Reasoning<a name="spelling-corrector"></a>

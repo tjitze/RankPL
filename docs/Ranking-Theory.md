@@ -1,3 +1,5 @@
+## Ranking Theory
+
 Ranking theory [\[1\]](#references) is a qualitative abstraction of probability theory in which events receive integer-valued *ranks* that indicate degrees of surprise. Ranks allow reasoning about uncertainty expressible by distinguishing “normal” from “surprising” events. While ranks are computationally simpler than probabilities, ranking theory still shares many powerful features with probability theory. This includes a ranking-theoretic equivalents of conditioning and Bayesian networks.
 
 Ranking theory originates from the field of formal epistemology and found application in logic-based AI approaches such as belief revision and non-monotonic reasoning [\[2\]](#references). Ranking theory is also the semantic basis for the RankPL programming language, which can be thought of as ranking-based variant of a probabilistic programming language (a "ranked programming language").

@@ -26,4 +26,4 @@ The self-contained Jar file will be written to `target/RankPL-{version}-jar-with
 
 # License
 
-TODO
+RankPL is licensed under the MIT license.

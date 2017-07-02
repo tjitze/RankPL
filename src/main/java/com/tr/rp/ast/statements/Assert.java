@@ -18,6 +18,7 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.iterators.ranked.BufferingIterator;
 import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
@@ -35,14 +36,20 @@ public class Assert extends AbstractStatement {
 	
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
+
+		// Do rank expression transformation
+		RankTransformIterator rt = 
+				new RankTransformIterator(parent, this, expression);
+		final AbstractExpression exp = rt.getExpression(0);
+
 		return new RankedIterator<VarStore>() {
 
 			@Override
 			public boolean next() throws RPLException {
 				boolean next = parent.next();
 				if (next) {
-					if (!expression.getBoolValue(getItem())) {
-						throw new RPLAssertionException("Failed assertion: " + expression, Assert.this);
+					if (!exp.getBoolValue(getItem())) {
+						throw new RPLAssertionException("Failed assertion: " + exp, Assert.this);
 					}
 				}
 				return next;

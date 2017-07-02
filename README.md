@@ -16,15 +16,11 @@ This work is also described in the paper ["RankPL: A Qualitative Probabilistic P
 
 # Usage
 
-The RankPL interpreter is distributed as a self-contained jar file RankPL.jar. The latest release can be found [here](https://github.com/tjitze/RankPL/releases). Basic usage is:
+The RankPL interpreter is distributed as a self-contained jar file `RankPL.jar`. The jar file for the latest release can be downloaded [here](https://github.com/tjitze/RankPL/releases). Basic usage is:
 ```
 java -jar RankPL.jar -source source_file.rpl
 ```
 where source_file.rpl is the program to run. Command line options are discussed in the [wiki](https://github.com/tjitze/RankPL/wiki).
-
-# Download
-
-RankPL comes in the form of a self-contained Jar file. The latest version can be downloaded [here](https://github.com/tjitze/RankPL/releases). 
 
 # Build Instructions
 

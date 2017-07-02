@@ -1,0 +1,47 @@
+define test() {
+	normally(1) {
+		return 1;
+	} exceptionally {
+		normally (1) {
+			return 2;
+		} exceptionally {
+			return 3;
+		};
+	};
+};
+
+# Test all at once
+a := test();
+assert(rank(false) == 2147483647);
+assert(rank(a == 1) == 1);
+assert(rank(a == 2) == 1);
+assert(rank(a == 1 || a == 2) == 0);
+assert(rank(a == 3) == 2);
+assert(rank(a == 1 || a == 3) == 0);
+assert(rank(a == 2 || a == 3) == 1);
+assert(rank(true) == 0);
+
+# Test all separately
+a := test();
+assert(rank(false) == 2147483647);
+reset;
+a := test();
+assert(rank(a == 1) == 0);
+reset;
+a := test();
+assert(rank(a == 2) == 1);
+reset;
+a := test();
+assert(rank(a == 1 || a == 2) == 0);
+reset;
+a := test();
+assert(rank(a == 3) == 2);
+reset;
+a := test();
+assert(rank(a == 1 || a == 3) == 0);
+reset;
+a := test();
+assert(rank(a == 2 || a == 3) == 1);
+reset;
+a := test();
+assert(rank(true) == 0);

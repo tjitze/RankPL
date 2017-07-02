@@ -1,0 +1,153 @@
+# Basic arithmetic
+assert(-100 == 0 - 100);
+assert(1 + 2 == 3);
+assert(-1 + 2 == 1);
+assert(1 + -2 == -1);
+assert(-1 + -2 == -3);
+assert(3 - 2 == 1);
+assert(-3 - 2 == -5);
+assert(3 - -2 == 5);
+assert(-3 - -2 == -1);
+assert(2 * 3 == 6);
+assert(-2 * 3 == -6);
+assert(2 * -3 == -6);
+assert(-2 * -3 == 6);
+assert(10 / 2 == 5);
+assert(-10 / 2 == -5);
+assert(10 / -2 == -5);
+assert(-10 / -2 == 5);
+assert(10 / 3 == 3);
+assert(-10 / 3 == -3);
+assert(10 / -3 == -3);
+assert(-10 / -3 == 3);
+assert(10 % 3 == 1);
+assert(10 % -3 == 1);
+#assert(-10 % 3 == 1);  ?
+assert(-10 % -3 == -1);
+
+# Boolean operators
+assert(!true == false);
+assert(!false == true);
+assert((true | true) == true);
+assert((true | false) == true);
+assert((false | true) == true);
+assert((false | false) == false);
+assert((true & true) == true);
+assert((true & false) == false);
+assert((false & true) == false);
+assert((false & false) == false);
+assert((true ^ true) == false);
+assert((true ^ false) == true);
+assert((false ^ true) == true);
+assert((false ^ false) == false);
+
+# Equality, Inequality
+assert((0 == 1) == false);
+assert((1 == 1) == true);
+assert((0 != 1) == true);
+assert((1 != 1) == false);
+assert((0 <= 1) == true);
+assert((1 <= 1) == true);
+assert((2 <= 1) == false);
+assert((0 >= 1) == false);
+assert((1 >= 1) == true);
+assert((2 >= 1) == true);
+assert((0 < 1) == true);
+assert((1 < 1) == false);
+assert((2 < 1) == false);
+assert((0 > 1) == false);
+assert((1 > 1) == false);
+assert((2 > 1) == true);
+
+# Equality other types
+assert(("abc" == "abc") == true);
+assert(("abc" == "abcdef") == false);
+assert(("abc" == "def") == false);
+assert(("abc" == "") == false);
+assert(("" == "") == true);
+assert(("abc" != "abc") == false);
+assert(("abc" != "abcdef") == true);
+assert(("abc" != "def") == true);
+assert(("abc" != "") == true);
+assert(("" != "") == false);
+
+assert(([0,1,2] == [0,1,2]) == true);
+assert(([0,1,2] == [0,1,2,3,4,5]) == false);
+assert(([0,1,2] == [3,4,5]) == false);
+assert(([0,1,2] == []) == false);
+assert(([] == []) == true);
+assert(([0,1,2] != [0,1,2]) == false);
+assert(([0,1,2] != [0,1,2,3,4,5]) == true);
+assert(([0,1,2] != [3,4,5]) == true);
+assert(([0,1,2] != []) == true);
+assert(([] != []) == false);
+
+assert([["a"]] == [["a"]]);
+assert([["a"]] != [["b"]]);
+assert([["a"]] != ["a"]);
+assert([[0,1], [2,3]] == [[0,1], [2,3]]);
+assert([[0,1], [2,3]] != [[0,1]]);
+assert([[0,1], [2,3]] != [[2,3], [1,2]]);
+
+# String plus
+assert("abc" + "def" == "abcdef");
+assert("" + "def" == "def");
+assert("abc" + "" == "abc");
+assert("x" + 1 == "x1");
+assert("x" + true == "xtrue");
+assert("x" + false == "xfalse");
+# TODO: string concat with arrays
+
+# Arithmetic functions
+assert(abs(100) == 100);
+assert(abs(-100) == 100);
+assert(abs(0) == 0);
+
+# Indexing
+assert("a" == "abcde"[0]);
+assert("b" == "abcde"[1]);
+assert("c" == "abcde"[2]);
+assert("d" == "abcde"[3]);
+assert("e" == "abcde"[4]);
+assert(4 == [4,3,2,1,0][0]);
+assert(3 == [4,3,2,1,0][1]);
+assert(2 == [4,3,2,1,0][2]);
+assert(1 == [4,3,2,1,0][3]);
+assert(0 == [4,3,2,1,0][4]);
+
+# IsSet
+assert(!isset(not_set));
+is_set := 1;
+assert(isset(is_set));
+
+# Len
+assert(len("") == 0);
+assert(len("a") == 1);
+assert(len("abc") == 3);
+assert(len([]) == 0);
+assert(len([0]) == 1);
+assert(len([0,1,2]) == 3);
+assert(len([[0],[],2]) == 3);
+
+# Substring
+assert("abcde" == substring("abcde", 0, 5));
+assert("bcde" == substring("abcde", 1, 5));
+assert("bcd" == substring("abcde", 1, 4));
+assert("abcd" == substring("abcde", 0, 4));
+
+# Conditional
+assert((true? "a": "b") == "a");
+assert((false? "a": "b") == "b");
+
+# Array constructors
+assert(len(array(2)) == 2);
+assert(!isset(array(2)[0]));
+assert(!isset(array(2)[1]));
+
+assert(array(0, 0) == []);
+assert(array(2, 0) == [0, 0]);
+assert(array(2, true) == [true, true]);
+assert(array(2, "a") == ["a", "a"]);
+assert(array(2, array(2, "a")) == [["a", "a"], ["a", "a"]]);
+
+

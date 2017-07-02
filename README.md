@@ -14,11 +14,19 @@ Detailed documentation can be found in the [wiki](https://github.com/tjitze/Rank
 
 This work is also described in the paper ["RankPL: A Qualitative Probabilistic Programming Language"](https://github.com/tjitze/RankPL/tree/master/paper/rankpl.pdf) (to be presented at [ECSQARU 2017](http://www2.idsia.ch/cms/isipta-ecsqaru/)). Note that the syntax described in this paper is outdated. Consult the [wiki](https://github.com/tjitze/RankPL/wiki) for an up-to-date description.
 
+# Usage
+
+The RankPL interpreter is distributed as a self-contained jar file RankPL.jar. The latest release can be found [here](https://github.com/tjitze/RankPL/releases). Basic usage is:
+```
+java -jar RankPL.jar -source source_file.rpl
+```
+where source_file.rpl is the program to run. Command line options are discussed in the [wiki](https://github.com/tjitze/RankPL/wiki).
+
 # Download
 
 RankPL comes in the form of a self-contained Jar file. The latest version can be downloaded [here](https://github.com/tjitze/RankPL/releases). 
 
-# Build
+# Build Instructions
 
 RankPL is built using Maven. The process is straightforward. For example, to build the self-contained Jar file, run the following command from the project's root directory:
 ```

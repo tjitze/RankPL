@@ -12,6 +12,8 @@ Semantically, RankPL is based on *ranking theory*, a qualitative abstraction of 
 
 Detailed documentation can be found in the [wiki](https://github.com/tjitze/RankPL/wiki).
 
+This work is also described in the paper ["RankPL: A Qualitative Probabilistic Programming Language"](https://github.com/tjitze/RankPL/tree/master/paper/rankpl.pdf) (to be presented at [ECSQARU 2017](http://www2.idsia.ch/cms/isipta-ecsqaru/)). Note that the syntax described in this paper is outdated. Consult the [wiki](https://github.com/tjitze/RankPL/wiki) for an up-to-date description.
+
 # Download
 
 RankPL comes in the form of a self-contained Jar file. The latest version can be downloaded [here](https://github.com/tjitze/RankPL/releases). 

@@ -1,5 +1,6 @@
 package com.tr.rp.varstore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -146,7 +147,8 @@ public class PersistentList {
 			if (!hashCodeComputed) {
 				hashCode = 0;
 				for (int i = 0; i < size; i++) {
-					hashCode += i * get(i).hashCode();
+					Object o = get(i);
+		            hashCode = 31*hashCode + (o==null ? 0 : o.hashCode());
 				}
 				hashCodeComputed = true;
 			}

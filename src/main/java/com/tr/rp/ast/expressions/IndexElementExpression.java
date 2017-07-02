@@ -110,6 +110,9 @@ public class IndexElementExpression extends AbstractExpression {
 					throw new RPLIndexOutOfBoundsException(index, list.size(), this);
 				}
 				o = list.get(index);
+				if (o == null) {
+					throw new RPLUndefinedException(this);
+				}
 			} else {
 				throw new RPLTypeError("list", o, this);
 			}

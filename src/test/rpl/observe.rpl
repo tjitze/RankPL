@@ -11,7 +11,7 @@ define test() {
 };
 
 a := test();
-assert(rank(false) == 0);
+assert(rank(false) == 2147483647);
 assert(rank(a == 1) == 0);
 assert(rank(a == 2) == 1);
 assert(rank(a == 1 || a == 2) == 0);

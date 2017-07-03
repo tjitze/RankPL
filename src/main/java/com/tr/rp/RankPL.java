@@ -239,7 +239,7 @@ public class RankPL {
 			}
 			if (cmd.hasOption("rank")) {
 				try {
-					maxRank = ((Number) cmd.getParsedOptionValue("r")).intValue();
+					maxRank = ((Number) cmd.getParsedOptionValue("rank")).intValue();
 				} catch (Exception e) {
 					System.err.println("Illegal value provided for -rank option.");
 					return false;

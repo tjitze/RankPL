@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>RankPL</groupId>
   <artifactId>RankPL</artifactId>
-  <version>0.4</version>
+  <version>0.5-SNAPSHOT</version>
   <name>RankPL</name>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>

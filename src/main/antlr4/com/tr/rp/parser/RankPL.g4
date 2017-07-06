@@ -30,7 +30,7 @@ stat
  | ObserveL ('(' exp ')')? exp							# ObserveLStatement
  | ObserveJ ('(' exp ')')? exp							# ObserveJStatement
  | Skip													# SkipStatement
- | Nrm ('(' exp ')')? stat Exc stat 					# RankedChoiceStatement
+ | Nrm ('(' exp ')')? stat (Exc stat)? 					# RankedChoiceStatement
  | Either stat (Or stat)+								# IndifferentChoiceStatement
  | '{' stat (';' stat)* ';'? '}'						# StatementSequence
  | Return exp											# ReturnStatement

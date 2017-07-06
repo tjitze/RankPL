@@ -278,7 +278,12 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitRankedChoiceStatement(RankedChoiceStatementContext ctx) {
 		AbstractExpression rank = ctx.exp() == null? lit(1): (AbstractExpression)visit(ctx.exp());
 		AbstractStatement a = (AbstractStatement)visit(ctx.stat().get(0));
-		AbstractStatement b = (AbstractStatement)visit(ctx.stat().get(1));
+		AbstractStatement b;
+		if (ctx.stat().size() > 1) {
+			b = (AbstractStatement)visit(ctx.stat().get(1));
+		} else {
+			b = new Skip();
+		}
 		AbstractStatement s = new RankedChoice(a, b, rank);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;

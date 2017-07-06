@@ -31,6 +31,7 @@ stat
  | ObserveJ ('(' exp ')')? exp							# ObserveJStatement
  | Skip													# SkipStatement
  | Nrm ('(' exp ')')? stat (Exc stat)? 					# RankedChoiceStatement
+ | Exc ('(' exp ')')? stat								# ExceptionallyStatement
  | Either stat (Or stat)+								# IndifferentChoiceStatement
  | '{' stat (';' stat)* ';'? '}'						# StatementSequence
  | Return exp											# ReturnStatement

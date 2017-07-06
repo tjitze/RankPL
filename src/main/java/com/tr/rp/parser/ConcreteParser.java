@@ -100,6 +100,7 @@ import com.tr.rp.parser.RankPLParser.ProgramContext;
 import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.RankExprContext;
 import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
+import com.tr.rp.parser.RankPLParser.ExceptionallyStatementContext;
 import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
 import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
@@ -285,6 +286,15 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			b = new Skip();
 		}
 		AbstractStatement s = new RankedChoice(a, b, rank);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitExceptionallyStatement(ExceptionallyStatementContext ctx) {
+		AbstractExpression rank = ctx.exp() == null? lit(1): (AbstractExpression)visit(ctx.exp());
+		AbstractStatement a = (AbstractStatement)visit(ctx.stat());
+		AbstractStatement s = new RankedChoice(new Skip(), a, rank);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

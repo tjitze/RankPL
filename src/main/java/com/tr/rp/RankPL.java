@@ -119,7 +119,11 @@ public class RankPL {
 			tokens = new CommonTokenStream(lexer);
 			parser = new RankPLParser(tokens);
 			classVisitor = new ConcreteParser();
-			program = (Program) classVisitor.visit(parser.program());
+			try {
+				program = (Program) classVisitor.visit(parser.program());
+			} catch (Exception ex) {
+				// Ignore
+			}
 			return null;
 		}
 		return program;

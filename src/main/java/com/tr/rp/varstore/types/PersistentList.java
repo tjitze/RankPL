@@ -71,7 +71,6 @@ public class PersistentList {
 		return size;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public synchronized Object get(int index) {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
@@ -83,7 +82,6 @@ public class PersistentList {
 		return segment[getSegmentIndex(index)];
 	}
 	
-	@SuppressWarnings("unchecked")
 	private synchronized void set(int index, Object value) {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
@@ -140,16 +138,10 @@ public class PersistentList {
 		return false;
 	}
 	
-	public int hashCode() {
-		synchronized (this) {
-			if (!hashCodeComputed) {
-				hashCode = 0;
-				for (int i = 0; i < size; i++) {
-					Object o = get(i);
-		            hashCode = 31*hashCode + (o==null ? 0 : o.hashCode());
-				}
-				hashCodeComputed = true;
-			}
+	public synchronized int hashCode() {
+		if (!hashCodeComputed) {
+			hashCode = Objects.hash(size, Arrays.deepHashCode(segments));
+			hashCodeComputed = true;
 		}
 		return hashCode;
 	}

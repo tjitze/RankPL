@@ -10,6 +10,10 @@ public class PersistentSet<T> {
 
 	private final PersistentHashSet<T> set;
 	
+	// Hash code caching
+	private int hashCode = 0;
+	private boolean hashCodeComputed = false;
+
 	public PersistentSet() {
 		this.set = PersistentHashSet.empty();
 	}
@@ -40,5 +44,20 @@ public class PersistentSet<T> {
 		return set.size();
 	}
 	
+	public synchronized int hashCode() {
+		if (!hashCodeComputed) {
+			hashCode = set.hashCode();
+			hashCodeComputed = true;
+		}
+		return hashCode;
+	}
+	
+	public boolean equals(Object o) {
+		if (o instanceof PersistentSet) {
+			PersistentSet<?> other = (PersistentSet<?>)o;
+			return hashCode() == other.hashCode() && set.equals(other.set);
+		}
+		return false;
+	}
 	
 }

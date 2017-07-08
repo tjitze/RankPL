@@ -14,6 +14,7 @@ public class PersistentStack<T> {
 	private final PersistentStack<T> parent;
 	private final T element;
 	private final int size;
+	private final int hashCode;
 	
 	/**
 	 * Construct a new empty stack
@@ -22,6 +23,7 @@ public class PersistentStack<T> {
 		parent = null;
 		element = null;
 		size = 0;
+		hashCode = 0;
 	}
 
 	private PersistentStack(T element, PersistentStack<T> parent) {
@@ -30,6 +32,7 @@ public class PersistentStack<T> {
 		this.parent = parent;
 		this.element = element;
 		this.size = parent.size + 1;
+		this.hashCode = Objects.hash(parent, element);
 	}
 
 	/**
@@ -54,13 +57,33 @@ public class PersistentStack<T> {
 		return parent;
 	}
 	
+	/**
+	 * @return Top value of stack
+	 */
 	public T peek() {
 		return element;
 	}
 	
+	/**
+	 * @return Size of stack
+	 */
 	public int size() {
 		return size;
 	}
 	
+	public int hashCode() {
+		return hashCode;
+	}
 	
+	public boolean equals(Object o) {
+		if (o instanceof PersistentStack) {
+			PersistentStack<?> other = (PersistentStack<?>)o;
+			return hashCode == other.hashCode && internalEquals(other);
+		}
+		return false;
+	}
+	
+	private boolean internalEquals(PersistentStack<?> other) {
+		return other.element.equals(element) && other.internalEquals(this);
+	}
 }

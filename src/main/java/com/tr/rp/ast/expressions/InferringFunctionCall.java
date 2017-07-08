@@ -15,16 +15,10 @@ import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
 import com.tr.rp.iterators.ranked.MultiMergeIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.FunctionScope;
-import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.PersistentList;
 
-/**
- * Function call expression. Represents a function call constructed with
- * a function name, a function scope (to retrieve the function) and a 
- * sequence of argument expressions. The arguments must match the function's
- * parameters. Otherwise an exception is thrown at runtime.
- */
-public class InferringFunctionCall extends AbstractFunctionCall {
+public class InferringFunctionCall extends FunctionCall {
 	
 	public InferringFunctionCall(String functionName, FunctionScope functionScope, AbstractExpression ... arguments) {
 		super(functionName, functionScope, arguments);
@@ -79,19 +73,11 @@ public class InferringFunctionCall extends AbstractFunctionCall {
 
 			@Override
 			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
-				String[] parameters = getFunction().getParameters();
-				if (parameters.length != arguments.length) {
-					throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, arguments.length);
-				}
-				VarStore closure = in.createClosure(getFunction().getParameters(), arguments);
-				RankedIterator<VarStore> i = new InitialVarStoreIterator(closure);
-				RankedIterator<VarStore> pre = getFunction().getBody().getIterator(i, c);
+				String var = VarStore.getFreeVariable("acc");
+				RankedIterator<VarStore> it = getIteratorForFunctionCall(arguments, var, in, c);
 				List<Object> values = new ArrayList<Object>();
-				while (pre.next() && pre.getRank() == 0) {
-					if (!pre.getItem().containsVar("$return")) {
-						throw new RPLMissingReturnValueException(getFunction());
-					}
-					values.add(pre.getItem().getValue("$return"));
+				while (it.next() && it.getRank() == 0) {
+					values.add(it.getItem().getValue(var));
 				}
 				return new InitialVarStoreIterator(in.create(assignToVar, new PersistentList(values)));
 			}

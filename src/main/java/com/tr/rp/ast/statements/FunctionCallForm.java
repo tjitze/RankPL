@@ -77,7 +77,7 @@ public class FunctionCallForm extends AbstractStatement {
 		ExtractedExpression ee = new ExtractedExpression(exp);
 		AbstractFunctionCall fc = exp.getEmbeddedFunctionCall();
 		while (fc != null) {
-			String var = VarStore.getFreeVariable(fc.getFunctionName());
+			String var = VarStore.getFreeVariable("subst");
 			ee.rewrite(var, fc);
 			fc = ee.getExpression().getEmbeddedFunctionCall();
 		}

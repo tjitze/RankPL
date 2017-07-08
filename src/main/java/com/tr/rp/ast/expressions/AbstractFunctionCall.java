@@ -20,19 +20,12 @@ import com.tr.rp.varstore.VarStore;
  */
 public abstract class AbstractFunctionCall extends AbstractExpression {
 
-	private final FunctionScope functionScope;
-	private final String functionName;
 	private final AbstractExpression[] arguments;
 	
-	public AbstractFunctionCall(String functionName, FunctionScope functionScope, AbstractExpression ... arguments) {
-		this.functionName = functionName;
-		this.functionScope = functionScope;
+	public AbstractFunctionCall(AbstractExpression ... arguments) {
 		this.arguments = arguments;
 	}
 
-	public final String getFunctionName() {
-		return functionName;
-	}
 
 	@Override
 	public final boolean hasRankExpression() {
@@ -62,15 +55,6 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 		}
 	}
 	
-	public final Function getFunction() throws RPLException {
-		try {
-			return functionScope.getFunction(functionName);
-		} catch (RPLException e) {
-			e.setExpression(this);
-			throw e;
-		}
-	}
-
 	public final AbstractExpression[] getArguments() {
 		return arguments;
 	}
@@ -80,7 +64,7 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 	public abstract boolean equals(Object o);
 	
 	public int hashCode() {
-		return Objects.hash(functionScope, functionName) + Arrays.hashCode(arguments);
+		return Arrays.hashCode(arguments);
 	}
 	@Override
 	public final Object getValue(VarStore e) throws RPLException {
@@ -95,10 +79,6 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 	@Override
 	public Object getDefiniteValue() throws RPLException {
 		return null;
-	}
-
-	public FunctionScope getFunctionScope() {
-		return functionScope;
 	}
 	
 	public abstract RankedIterator<VarStore> getIterator(ExecutionContext c, AbstractExpression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException;

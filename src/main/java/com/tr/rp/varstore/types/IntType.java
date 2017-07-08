@@ -2,7 +2,7 @@ package com.tr.rp.varstore.types;
 
 public class IntType extends Type<Integer> {
 
-	public IntType() {
+	IntType() {
 		super("integer");
 	}
 	

@@ -16,8 +16,8 @@ import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.parser.RankPLParser.ExpContext;
-import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.PersistentList;
 
 import junit.framework.TestCase;
 

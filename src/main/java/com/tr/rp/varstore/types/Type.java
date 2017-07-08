@@ -1,7 +1,5 @@
 package com.tr.rp.varstore.types;
 
-import com.tr.rp.varstore.PersistentList;
-
 public abstract class Type<T> {
 
 	private final String name;
@@ -25,4 +23,5 @@ public abstract class Type<T> {
 	public static final Type<Boolean> BOOL = new BoolType();
 	public static final Type<PersistentList> ARRAY = new ArrayType();
 	public static final Type<String> STRING = new StringType();
+	public static final Type<PersistentStack<Object>> STACK = new StackType();
 }

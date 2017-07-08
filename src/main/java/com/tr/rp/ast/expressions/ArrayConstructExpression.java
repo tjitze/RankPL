@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.PersistentList;
 
 /**
  * Array construction expression. Evaluates to an array with a given

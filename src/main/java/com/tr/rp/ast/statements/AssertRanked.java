@@ -19,8 +19,8 @@ import com.tr.rp.iterators.ranked.BufferingIterator;
 import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.PersistentList;
 import com.tr.rp.varstore.types.Type;
 
 /**

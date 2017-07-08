@@ -2,7 +2,7 @@ package com.tr.rp.varstore.types;
 
 public class StringType extends Type<String> {
 
-	public StringType() {
+	StringType() {
 		super("string");
 	}
 	

@@ -2,7 +2,7 @@ package com.tr.rp.varstore.types;
 
 public class BoolType extends Type<Boolean> {
 
-	public BoolType() {
+	BoolType() {
 		super("boolean");
 	}
 	

@@ -4,7 +4,6 @@ import com.tr.rp.ast.expressions.AbstractFunctionCall;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
-import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 

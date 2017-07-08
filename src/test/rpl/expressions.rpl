@@ -98,10 +98,20 @@ assert("x" + true == "xtrue");
 assert("x" + false == "xfalse");
 # TODO: string concat with arrays
 
-# Arithmetic functions
+# Abs
 assert(abs(100) == 100);
 assert(abs(-100) == 100);
 assert(abs(0) == 0);
+
+# Max
+assert(max(-10,100) == 100);
+assert(max(-10,-100) == -10);
+assert(max(10,100) == 100);
+
+# Min
+assert(min(-10,100) == -10);
+assert(min(-10,-100) == -100);
+assert(min(10,100) == 10);
 
 # Indexing
 assert("a" == "abcde"[0]);

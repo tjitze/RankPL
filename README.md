@@ -20,7 +20,7 @@ The RankPL interpreter is distributed as a self-contained jar file `RankPL.jar`.
 ```
 java -jar RankPL.jar -source source_file.rpl
 ```
-where source_file.rpl is the program to run. Command line options are discussed in the [wiki](https://github.com/tjitze/RankPL/wiki).
+where `source_file.rpl` is the program to run. Command line options are discussed in the [wiki](https://github.com/tjitze/RankPL/wiki).
 
 # Build Instructions
 

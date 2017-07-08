@@ -7,6 +7,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The Rank expression is an integer-valued expression
@@ -36,14 +37,14 @@ public class RankExpr extends AbstractExpression {
 		// b might be contradiction or tautology.
 		// If so, we can rewrite it immediately
 		if (b.hasDefiniteValue()) {
-			if (b.getDefiniteBoolValue()) {
+			if (b.getDefiniteValue(Type.BOOL)) {
 				return Literal.ZERO;
 			} else {
 				return Literal.MAX;
 			}
 		}
 		// Otherwise, rewrite to rank if expression is true
-		if (v == null || b.getBoolValue(v)) {
+		if (v == null || b.getValue(v, Type.BOOL)) {
 			return new Literal<Integer>(rank);
 		} else {
 			return this;

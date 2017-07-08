@@ -12,6 +12,7 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Takes as input an expression that evaluates to an n-dimensional
@@ -98,14 +99,14 @@ public class IndexElementExpression extends AbstractExpression {
 			} else if (o instanceof String) {
 				// Allow strings to be referenced as 1D array
 				String s = (String)o;
-				int index = indices[i].getIntValue(e);
+				int index = indices[i].getValue(e, Type.INT);
 				if (index < 0 || index >= s.length()) {
 					throw new RPLIndexOutOfBoundsException(index, s.length(), this);
 				}
 				o = s.substring(index, index + 1);
 			} else if (o instanceof PersistentList) {
 				PersistentList list = (PersistentList)o;
-				int index = indices[i].getIntValue(e);
+				int index = indices[i].getValue(e, Type.INT);
 				if (index < 0 || index >= list.size()) {
 					throw new RPLIndexOutOfBoundsException(index, list.size(), this);
 				}

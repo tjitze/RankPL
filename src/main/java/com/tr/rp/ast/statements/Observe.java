@@ -15,6 +15,7 @@ import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.Rank;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class Observe extends AbstractStatement implements ObserveErrorHandler {
 
@@ -37,7 +38,7 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 		// If exp is contradiction/tautology we
 		// can immediately return result.
 		if (exp.hasDefiniteValue()) {
-			if (exp.getDefiniteBoolValue()) {
+			if (exp.getDefiniteValue(Type.BOOL)) {
 				return in;
 			} else {
 				return new AbsurdIterator<VarStore>();
@@ -51,7 +52,7 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 		
 		// Check contradiction/tautology again.
 		if (exp2.hasDefiniteValue()) {
-			if (exp2.getDefiniteBoolValue()) {
+			if (exp2.getDefiniteValue(Type.BOOL)) {
 				return rt;
 			} else {
 				return new AbsurdIterator<VarStore>();
@@ -92,7 +93,7 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 
 	private boolean getCheckedValue(AbstractExpression exp2, BufferingIterator<VarStore> bi) throws RPLException {
 		try {
-			return exp2.getBoolValue(bi.getItem());
+			return exp2.getValue(bi.getItem(), Type.BOOL);
 		} catch (RPLException e) {
 			errorHandler.observeConditionError(e);
 			throw e;

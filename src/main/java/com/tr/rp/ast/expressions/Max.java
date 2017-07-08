@@ -9,6 +9,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Maximum of sequence of integers.
@@ -76,7 +77,7 @@ public class Max extends AbstractExpression {
 	public Object getValue(VarStore e) throws RPLException {
 		int max = Integer.MIN_VALUE;
 		for (int i = 0; i < es.length; i++) {
-			max = Integer.max(max, es[i].getIntValue(e));
+			max = Integer.max(max, es[i].getValue(e, Type.INT));
 		}
 		return max;
 	}
@@ -95,7 +96,7 @@ public class Max extends AbstractExpression {
 	public Object getDefiniteValue() throws RPLException {
 		int max = Integer.MIN_VALUE;
 		for (int i = 0; i < es.length; i++) {
-			max = Integer.max(max, es[i].getDefiniteIntValue());
+			max = Integer.max(max, es[i].getDefiniteValue(Type.INT));
 		}
 		return max;
 	}

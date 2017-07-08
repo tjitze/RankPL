@@ -19,6 +19,7 @@ import com.tr.rp.iterators.ranked.IteratorSplitter;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The RankedChoice class is constructed with two statements (s1, s2) and a rank r. 
@@ -72,7 +73,7 @@ public class RankedChoice extends AbstractStatement implements RankedChoiceError
 		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(rt);
 		RankedIterator<VarStore> merge;
 		if (rank2.hasDefiniteValue()) {
-			int rankValue = rank2.getDefiniteIntValue();
+			int rankValue = rank2.getDefiniteValue(Type.INT);
 			if (rankValue < 0) {
 				throw new RPLIllegalRankException(rankValue, rank, this);
 			}

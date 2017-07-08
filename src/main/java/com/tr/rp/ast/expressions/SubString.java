@@ -9,6 +9,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class SubString extends AbstractExpression {
 
@@ -75,12 +76,12 @@ public class SubString extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore vs) throws RPLException {
-		String s = input.getStringValue(vs);
-		int beginIndex = begin.getIntValue(vs);
+		String s = input.getValue(vs, Type.STRING);
+		int beginIndex = begin.getValue(vs, Type.INT);
 		if (beginIndex < 0 || beginIndex >= s.length()) {
 			throw new RPLIndexOutOfBoundsException(beginIndex, s.length(), this);
 		}
-		int endIndex = end.getIntValue(vs);
+		int endIndex = end.getValue(vs, Type.INT);
 		if (endIndex < beginIndex) {
 			throw new RPLMiscException("Illegal substring range (" + beginIndex + ", " + endIndex + ")");
 		}
@@ -99,12 +100,12 @@ public class SubString extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		String s = input.getDefiniteStringValue();
-		int beginIndex = begin.getDefiniteIntValue();
+		String s = input.getDefiniteValue(Type.STRING);
+		int beginIndex = begin.getDefiniteValue(Type.INT);
 		if (beginIndex < 0 || beginIndex >= s.length()) {
 			throw new RPLIndexOutOfBoundsException(beginIndex, s.length(), this);
 		}
-		int endIndex = end.getDefiniteIntValue();
+		int endIndex = end.getDefiniteValue(Type.INT);
 		if (endIndex < beginIndex) {
 			throw new RPLMiscException("Illegal substring range (" + beginIndex + ", " + endIndex + ")");
 		}

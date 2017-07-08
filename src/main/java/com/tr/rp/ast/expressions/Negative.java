@@ -7,6 +7,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The boolean NOT operator.
@@ -51,7 +52,7 @@ public class Negative extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore v) throws RPLException {
-		return - e.getIntValue(v);
+		return - e.getValue(v, Type.INT);
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class Negative extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return - e.getDefiniteIntValue();
+		return - e.getDefiniteValue(Type.INT);
 	}
 
 	public String toString() {

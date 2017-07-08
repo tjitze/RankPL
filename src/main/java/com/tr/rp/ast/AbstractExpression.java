@@ -6,6 +6,7 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Abstract class for expressions.
@@ -72,88 +73,26 @@ public abstract class AbstractExpression implements LanguageElement {
 	public abstract boolean hasDefiniteValue();
 	
 	public abstract Object getDefiniteValue() throws RPLException;
-	
-	public boolean getBoolValue(VarStore e) throws RPLException {
-		Object o = getValue(e);
-		if (o == null) {
-			throw new RPLUndefinedException(this);
-		} else if (o instanceof Boolean) {
-			return ((Boolean)o);
-		} else {
-			throw new RPLTypeError("boolean", o, this);
-		}
-	}
-	
-	public int getIntValue(VarStore e) throws RPLException {
-		Object o = getValue(e);
-		if (o == null) {
-			throw new RPLUndefinedException(this);
-		} else if (o instanceof Integer) {
-			return ((Integer)o);
-		} else {
-			throw new RPLTypeError("integer", o, this);
-		}
-	}
-	
-	public String getStringValue(VarStore e) throws RPLException {
-		Object o = getValue(e);
-		if (o == null) {
-			throw new RPLUndefinedException(this);
-		} else if (o instanceof String) {
-			return ((String)o);
-		} else {
-			throw new RPLTypeError("string", o, this);
-		}
-	}
 
-	public PersistentList getListValue(VarStore e) throws RPLException {
+	public <T> T getValue(VarStore e, Type<T> type) throws RPLException {
 		Object o = getValue(e);
 		if (o == null) {
 			throw new RPLUndefinedException(this);
-		} else if (o instanceof PersistentList) {
-			return ((PersistentList)o);
+		} else if (type.test(o)) {
+			return type.cast(o);
 		} else {
-			throw new RPLTypeError("list", o, this);
-		}
-	}
-
-	public boolean getDefiniteBoolValue() throws RPLException {
-		Object o = getDefiniteValue();
-		if (o == null) {
-			throw new RPLUndefinedException(this);
-		} else if (o instanceof Boolean) {
-			return ((Boolean)o);
-		} else {
-			throw new RPLTypeError("bool", o, this);
+			throw new RPLTypeError(type.getName(), o, this);
 		}
 	}
 	
-	public int getDefiniteIntValue() throws RPLException {
+	public <T> T getDefiniteValue(Type<T> type) throws RPLException {
 		Object o = getDefiniteValue();
 		if (o == null) {
 			throw new RPLUndefinedException(this);
-		} else if (o instanceof Integer) {
-			return ((Integer)o);
+		} else if (type.test(o)) {
+			return type.cast(o);
 		} else {
-			throw new RPLTypeError("integer", o, this);
-		}
-	}
-	
-	public String getDefiniteStringValue() throws RPLException {
-		Object o = getDefiniteValue();
-		if (o instanceof String) {
-			return ((String)o);
-		} else {
-			throw new RPLTypeError("string", o, this);
-		}
-	}
-
-	public PersistentList getDefiniteListValue() throws RPLException {
-		Object o = getDefiniteValue();
-		if (o instanceof PersistentList) {
-			return ((PersistentList)o);
-		} else {
-			throw new RPLTypeError("list", o, this);
+			throw new RPLTypeError(type.getName(), o, this);
 		}
 	}
 

@@ -21,6 +21,7 @@ import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class ReadFile extends AbstractStatement {
 
@@ -61,11 +62,11 @@ public class ReadFile extends AbstractStatement {
 				if (v == null) {
 					return null;
 				}
-				String currentPath = path.getStringValue(rt.getItem());
+				String currentPath = path.getValue(rt.getItem(), Type.STRING);
 				if (lines == null || !lastPath.equals(currentPath)) {
 					try {
 						lastPath = currentPath;
-						lines = new PersistentList(readFile(path.getStringValue(rt.getItem())).toArray());
+						lines = new PersistentList(readFile(path.getValue(rt.getItem(), Type.STRING)).toArray());
 					} catch (IOException e) {
 						throw new RPLMiscException(e.toString());
 					}

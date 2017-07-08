@@ -27,6 +27,7 @@ import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class FunctionFormTest extends RPLBaseTest {
 
@@ -86,8 +87,8 @@ public class FunctionFormTest extends RPLBaseTest {
 		VarStore v = it.getItem();
 		assertEquals(false, it.next());
 
-		assertEquals(20, v.getIntValue("a"));
-		assertEquals(120, v.getIntValue("b"));
+		assertEquals(20, (int)v.getValue("a", Type.INT));
+		assertEquals(120, (int)v.getValue("b", Type.INT));
 		assertEquals(null, v.getValue("x"));
 		assertEquals(null, v.getValue("y"));
 	}
@@ -131,8 +132,8 @@ public class FunctionFormTest extends RPLBaseTest {
 		VarStore v = it.getItem();
 		assertEquals(false, it.next());
 
-		assertEquals(20, v.getIntValue("a"));
-		assertEquals(220, v.getIntValue("b"));
+		assertEquals(20, (int)v.getValue("a", Type.INT));
+		assertEquals(220, (int)v.getValue("b", Type.INT));
 		assertEquals(null, v.getValue("x"));
 		assertEquals(null, v.getValue("y"));
 	}
@@ -154,13 +155,13 @@ public class FunctionFormTest extends RPLBaseTest {
 		VarStore v2 = it.getItem();
 		assertEquals(false, it.next());
 
-		assertEquals(20, v1.getIntValue("a"));
-		assertEquals(120, v1.getIntValue("b"));
+		assertEquals(20, (int)v1.getValue("a", Type.INT));
+		assertEquals(120, (int)v1.getValue("b", Type.INT));
 		assertEquals(null, v1.getValue("x"));
 		assertEquals(null, v1.getValue("y"));
 
-		assertEquals(20, v2.getIntValue("a"));
-		assertEquals(1020, v2.getIntValue("b"));
+		assertEquals(20, (int)v2.getValue("a", Type.INT));
+		assertEquals(1020, (int)v2.getValue("b", Type.INT));
 		assertEquals(null, v2.getValue("x"));
 		assertEquals(null, v2.getValue("y"));
 	}

@@ -8,6 +8,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class Conditional extends AbstractExpression {
 
@@ -72,7 +73,7 @@ public class Conditional extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore v) throws RPLException {
-		return condition.getBoolValue(v)?
+		return condition.getValue(v, Type.BOOL)?
 				e1.getValue(v): e2.getValue(v);
 	}
 
@@ -85,7 +86,7 @@ public class Conditional extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return condition.getDefiniteBoolValue()?
+		return condition.getDefiniteValue(Type.BOOL)?
 				e1.getDefiniteValue(): e2.getDefiniteValue();
 	}
 	

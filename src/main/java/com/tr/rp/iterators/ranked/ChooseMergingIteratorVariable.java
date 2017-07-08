@@ -10,6 +10,7 @@ import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.ranks.Rank;
 import com.tr.rp.ranks.RankedItem;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 
@@ -82,7 +83,7 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 				int ri = 0;
 				VarStore vs = in2.getItem();
 				try {
-					ri = rankIncrease.getIntValue(vs);
+					ri = rankIncrease.getValue(vs, Type.INT);
 					if (ri < 0) {
 						errorHandler.illegalRank(ri);
 					}
@@ -106,7 +107,7 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 				int ri = 0;
 				VarStore vs = in2.getItem();
 				try {
-					ri = rankIncrease.getIntValue(vs);
+					ri = rankIncrease.getValue(vs, Type.INT);
 					if (ri < 0) {
 						errorHandler.illegalRank(ri);
 					}

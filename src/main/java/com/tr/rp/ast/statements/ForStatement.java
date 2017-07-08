@@ -15,6 +15,7 @@ import com.tr.rp.iterators.ranked.BufferingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class ForStatement extends AbstractStatement {
 
@@ -84,12 +85,12 @@ public class ForStatement extends AbstractStatement {
 				// If optimal, the for condition is the same in all variable stores,
 				// and therefore we only have to check the first.
 				if (isOptimal) {
-					if (forCondition.getBoolValue(bi.getItem())) {
+					if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
 						conditionSatisfied = true;
 					}
 				} else {
 					while (hasNext) {
-						if (forCondition.getBoolValue(bi.getItem())) {
+						if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
 							conditionSatisfied = true;
 							break;
 						}

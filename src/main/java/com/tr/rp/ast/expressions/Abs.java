@@ -7,6 +7,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Abs expression. Returns absolute value of its integer argument.
@@ -51,7 +52,7 @@ public class Abs extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return Math.abs(this.e.getIntValue(e));
+		return Math.abs(this.e.getValue(e, Type.INT));
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class Abs extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return Math.abs(this.e.getDefiniteIntValue());
+		return Math.abs(this.e.getDefiniteValue(Type.INT));
 	}
 
 	public String toString() {

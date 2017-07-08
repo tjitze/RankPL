@@ -10,6 +10,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The Cut statement removes all alternatives with a rank equal to or higher
@@ -35,7 +36,7 @@ public class Cut extends AbstractStatement {
 			@Override
 			public boolean next() throws RPLException {
 				boolean next = in.next();
-				return next && in.getRank() < rank.getIntValue(in.getItem());
+				return next && in.getRank() < rank.getValue(in.getItem(), Type.INT);
 			}
 
 			@Override

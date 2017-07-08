@@ -14,6 +14,7 @@ import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The RangeChoice statement takes as input an assignment target, a begin 
@@ -74,8 +75,8 @@ public class RangeChoice extends AbstractStatement {
 					if (!initialized) {
 						initialized = true;
 						if (in.next()) {
-							a = begin.getIntValue(in.getItem());
-							b = end.getIntValue(in.getItem());
+							a = begin.getValue(in.getItem(), Type.INT);
+							b = end.getValue(in.getItem(), Type.INT);
 							i = a;
 							return true;
 						} else {
@@ -86,8 +87,8 @@ public class RangeChoice extends AbstractStatement {
 						i++;
 						if (i >= b) {
 							if (in.next()) {
-								a = begin.getIntValue(in.getItem());
-								b = end.getIntValue(in.getItem());
+								a = begin.getValue(in.getItem(), Type.INT);
+								b = end.getValue(in.getItem(), Type.INT);
 								i = a;
 								return true;
 							} else {

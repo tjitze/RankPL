@@ -21,6 +21,7 @@ import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The assert-ranked (e, [n₁, e₁], [n₂, e₂], ...) statement is intended for testing purposes. 
@@ -44,7 +45,7 @@ public class AssertRanked extends AbstractStatement {
 			if (!e.hasDefiniteValue()) {
 				throw new RPLMiscException("Expected expression must be a definite expression", this);
 			}
-			PersistentList pl = e.getDefiniteListValue();
+			PersistentList pl = e.getDefiniteValue(Type.ARRAY);
 			if (pl.size() != 2) {
 				throw new RPLMiscException("Expected list [rank, value]", e);
 			}

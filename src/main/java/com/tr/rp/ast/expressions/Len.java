@@ -9,6 +9,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The len expression. Returns the length of the given array or string.
@@ -71,7 +72,7 @@ public class Len extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return this.e.getDefiniteListValue().size();
+		return this.e.getDefiniteValue(Type.ARRAY).size();
 	}
 
 	public String toString() {

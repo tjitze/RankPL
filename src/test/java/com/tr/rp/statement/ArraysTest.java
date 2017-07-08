@@ -12,6 +12,7 @@ import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class ArraysTest extends RPLBaseTest {
 
@@ -151,9 +152,9 @@ public class ArraysTest extends RPLBaseTest {
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(1, (indexedExp(var("x"), 0)).getIntValue(vs));
-		assertEquals(2, (indexedExp(var("x"), 1)).getIntValue(vs));
-		assertEquals(100, (indexedExp(var("x"), 2)).getIntValue(vs));
+		assertEquals(1, (int)(indexedExp(var("x"), 0)).getValue(vs, Type.INT));
+		assertEquals(2, (int)(indexedExp(var("x"), 1)).getValue(vs, Type.INT));
+		assertEquals(100, (int)(indexedExp(var("x"), 2)).getValue(vs, Type.INT));
 	}
 	
 	public void test2DArrayAssignment() throws RPLException {
@@ -173,9 +174,9 @@ public class ArraysTest extends RPLBaseTest {
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(1, (indexedExp(var("x"), 0, 1)).getIntValue(vs));
-		assertEquals(2, (indexedExp(var("x"), 1, 2)).getIntValue(vs));
-		assertEquals(100, (indexedExp(var("x"), 2, 3)).getIntValue(vs));
+		assertEquals(1, (int)(indexedExp(var("x"), 0, 1)).getValue(vs, Type.INT));
+		assertEquals(2, (int)(indexedExp(var("x"), 1, 2)).getValue(vs, Type.INT));
+		assertEquals(100, (int)(indexedExp(var("x"), 2, 3)).getValue(vs, Type.INT));
 	}
 	
 	public void testIndexed1DExpression() throws RPLException {
@@ -190,8 +191,8 @@ public class ArraysTest extends RPLBaseTest {
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(100, (indexedExp(var("x"), 2)).getIntValue(vs));
-		assertEquals(100, vs.getIntValue("y"));
+		assertEquals(100, (int)(indexedExp(var("x"), 2)).getValue(vs, Type.INT));
+		assertEquals(100, (int)vs.getValue("y", Type.INT));
 	}
 	
 	public void testIndexed2DExpression() throws RPLException {
@@ -205,8 +206,8 @@ public class ArraysTest extends RPLBaseTest {
 		assert(result.next());
 		VarStore vs = result.getItem();
 		assert(!result.next());
-		assertEquals(100, indexedExp(var("x"), 2, 3).getIntValue(vs));
-		assertEquals(100, vs.getIntValue("y"));
+		assertEquals(100, (int)indexedExp(var("x"), 2, 3).getValue(vs, Type.INT));
+		assertEquals(100, (int)vs.getValue("y", Type.INT));
 	}
 
 }

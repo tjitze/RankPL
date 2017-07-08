@@ -8,6 +8,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Minimum of sequence of integers.
@@ -75,7 +76,7 @@ public class Min extends AbstractExpression {
 	public Object getValue(VarStore e) throws RPLException {
 		int min = Integer.MAX_VALUE;
 		for (int i = 0; i < es.length; i++) {
-			min = Integer.min(min, es[i].getIntValue(e));
+			min = Integer.min(min, es[i].getValue(e, Type.INT));
 		}
 		return min;
 	}
@@ -94,7 +95,7 @@ public class Min extends AbstractExpression {
 	public Object getDefiniteValue() throws RPLException {
 		int min = Integer.MAX_VALUE;
 		for (int i = 0; i < es.length; i++) {
-			min = Integer.min(min, es[i].getDefiniteIntValue());
+			min = Integer.min(min, es[i].getDefiniteValue(Type.INT));
 		}
 		return min;
 	}

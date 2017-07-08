@@ -8,6 +8,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class NumNumNumOp extends AbstractExpression {
 
@@ -55,8 +56,8 @@ public class NumNumNumOp extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		int o1 = e1.getIntValue(e);
-		int o2 = e2.getIntValue(e);
+		int o1 = e1.getValue(e, Type.INT);
+		int o2 = e2.getValue(e, Type.INT);
 		return f.apply(o1, o2);
 	}
 	@Override
@@ -66,7 +67,7 @@ public class NumNumNumOp extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return f.apply((int)e1.getDefiniteIntValue(), (int)e2.getDefiniteIntValue());
+		return f.apply((int)e1.getDefiniteValue(Type.INT), (int)e2.getDefiniteValue(Type.INT));
 	}
 	
 	public AbstractExpression getE1() {

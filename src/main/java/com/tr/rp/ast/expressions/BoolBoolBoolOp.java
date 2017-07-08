@@ -8,6 +8,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class BoolBoolBoolOp extends AbstractExpression {
 
@@ -55,12 +56,12 @@ public class BoolBoolBoolOp extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		boolean b1 = e1.getBoolValue(e);
+		boolean b1 = e1.getValue(e, Type.BOOL);
 		// Can we skip evaluating second operand?
 		if (f.apply(b1, false) == f.apply(b1, true)) {
 			return f.apply(b1, false);
 		}
-		boolean b2 = e2.getBoolValue(e);
+		boolean b2 = e2.getValue(e, Type.BOOL);
 		return f.apply(b1, b2);
 	}
 	
@@ -71,7 +72,7 @@ public class BoolBoolBoolOp extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return f.apply((boolean)e1.getDefiniteBoolValue(), (boolean)e2.getDefiniteBoolValue());
+		return f.apply((boolean)e1.getDefiniteValue(Type.BOOL), (boolean)e2.getDefiniteValue(Type.BOOL));
 	}
 	
 	public AbstractExpression getE1() {

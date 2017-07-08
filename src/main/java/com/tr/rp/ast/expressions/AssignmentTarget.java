@@ -13,6 +13,7 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * An assignment target. This expression cannot be evaluated 
@@ -135,13 +136,13 @@ public class AssignmentTarget extends AbstractExpression {
 		if (indices.length == 0) {
 			return vs.create(name, value);
 		} else {
-			return vs.create(name, mutateList(0, vs.getListValue(name), value, vs));
+			return vs.create(name, mutateList(0, vs.getValue(name, Type.ARRAY), value, vs));
 		}
 	}
 	
 	private PersistentList mutateList(int i, PersistentList in, Object value, VarStore vs) throws RPLException {
 		PersistentList list = (PersistentList)in;
-		int position = indices[i].getIntValue(vs);
+		int position = indices[i].getValue(vs, Type.INT);
 		if (position < 0 || position >= list.size()) {
 			throw new RPLIndexOutOfBoundsException(position, list.size(), this);
 		}

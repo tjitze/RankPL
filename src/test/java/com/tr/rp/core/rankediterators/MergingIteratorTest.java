@@ -9,6 +9,7 @@ import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.statement.RPLBaseTest;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class MergingIteratorTest extends RPLBaseTest {
 
@@ -30,9 +31,9 @@ public class MergingIteratorTest extends RPLBaseTest {
 						count++;
 						VarStore v = s.getItem();
 						if (v.getValue("a") != null) {
-							assertEquals(s.getRank(), v.getIntValue("a"));
+							assertEquals(s.getRank(), (int)v.getValue("a", Type.INT));
 						} else if (v.getValue("b") != null) {
-							assertEquals(s.getRank() - i, v.getIntValue("b"));
+							assertEquals(s.getRank() - i, (int)v.getValue("b", Type.INT));
 						}
 					}
 					assert(count == as + bs);
@@ -47,7 +48,7 @@ public class MergingIteratorTest extends RPLBaseTest {
 				ChooseMergingIteratorFixed s = new ChooseMergingIteratorFixed(new AbsurdIterator<VarStore>(), getIterator("b", bs), i);
 				for (int j = 0; j < bs; j++) {
 					assert(s.next());
-					assertEquals(s.getItem().getIntValue("b"), j);
+					assertEquals((int)s.getItem().getValue("b", Type.INT), j);
 				}
 				assert(!s.next());
 			}
@@ -60,7 +61,7 @@ public class MergingIteratorTest extends RPLBaseTest {
 				ChooseMergingIteratorFixed s = new ChooseMergingIteratorFixed(getIterator("a", as), new AbsurdIterator<VarStore>(), i);
 				for (int j = 0; j < as; j++) {
 					assert(s.next());
-					assertEquals(s.getItem().getIntValue("a"), j);
+					assertEquals((int)s.getItem().getValue("a", Type.INT), j);
 				}
 				assert(!s.next());
 			}
@@ -85,9 +86,9 @@ public class MergingIteratorTest extends RPLBaseTest {
 						count++;
 						VarStore v = s.getItem();
 						if (v.getValue("a") != null) {
-							assertEquals(s.getRank(), v.getIntValue("a"));
+							assertEquals(s.getRank(), (int)s.getItem().getValue("a", Type.INT));
 						} else if (v.getValue("b") != null) {
-							assertEquals(s.getRank() - i, v.getIntValue("b"));
+							assertEquals(s.getRank() - i, (int)s.getItem().getValue("b", Type.INT));
 						}
 					}
 					assert(count == as + bs);
@@ -102,7 +103,7 @@ public class MergingIteratorTest extends RPLBaseTest {
 				ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(new AbsurdIterator<VarStore>(), getIterator("b", bs), new Literal<Integer>(i));
 				for (int j = 0; j < bs; j++) {
 					assert(s.next());
-					assertEquals(s.getItem().getIntValue("b"), j);
+					assertEquals((int)s.getItem().getValue("b", Type.INT), j);
 				}
 				assert(!s.next());
 			}
@@ -115,7 +116,7 @@ public class MergingIteratorTest extends RPLBaseTest {
 				ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(getIterator("a", as), new AbsurdIterator<VarStore>(), new Literal<Integer>(i));
 				for (int j = 0; j < as; j++) {
 					assert(s.next());
-					assertEquals(s.getItem().getIntValue("a"), j);
+					assertEquals((int)s.getItem().getValue("a", Type.INT), j);
 				}
 				assert(!s.next());
 			}

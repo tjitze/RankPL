@@ -11,6 +11,7 @@ import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Represents a variable store: an assignment of values to variables.
@@ -49,80 +50,22 @@ public class VarStore {
 	/**
 	 * @return Value of given variable (0 if not initialized).
 	 */
-	public Object getValue(String var) {
-		return varStore.get(var);
-	}
-	
-	/**
-	 * Get integer value of variable
-	 * 
-	 * @param var Name of variable to get
-	 * @return Integer value of variable
-	 * @throws RPLException If variable is undefined or not an integer
-	 */
-	public int getIntValue(String var) throws RPLException {
+	public <T> T getValue(String var, Type<T> asType) throws RPLUndefinedException, RPLTypeError {
 		Object o = getValue(var);
-		if (o != null && o instanceof Integer) {
-			return (Integer)o;
-		} else if (o == null) {
+		if (o == null) {
 			throw new RPLUndefinedException(var);
-		} else {
-			throw new RPLTypeError("integer", o, new Variable(var));
 		}
+		if (!asType.test(o)) {
+			throw new RPLTypeError(asType.getName(), o, new Variable(var));
+		}
+		return asType.cast(o);
 	}
 
 	/**
-	 * Get boolean value of variable
-	 * 
-	 * @param var Name of variable to get
-	 * @return Boolean value of variable
-	 * @throws RPLException If variable is undefined or not boolean
+	 * @return Value of given variable (0 if not initialized).
 	 */
-	public boolean getBoolValue(String var) throws RPLException {
-		Object o = getValue(var);
-		if (o != null && o instanceof Boolean) {
-			return (Boolean)o;
-		} else if (o == null) {
-			throw new RPLUndefinedException(var);
-		} else {
-			throw new RPLTypeError("boolean", o, new Variable(var));
-		}
-	}
-	
-	/**
-	 * Get String value of variable
-	 * 
-	 * @param var Name of variable to get
-	 * @return String value of variable
-	 * @throws RPLException If variable is undefined or not String
-	 */
-	public String getStringValue(String var) throws RPLException {
-		Object o = getValue(var);
-		if (o != null && o instanceof String) {
-			return (String)o;
-		} else if (o == null) {
-			throw new RPLUndefinedException(var);
-		} else {
-			throw new RPLTypeError("string", o, new Variable(var));
-		}
-	}
-	
-	/**
-	 * Get List value of variable
-	 * 
-	 * @param var Name of variable to get
-	 * @return String value of variable
-	 * @throws RPLException If variable is undefined or not String
-	 */
-	public PersistentList getListValue(String var) throws RPLException {
-		Object o = getValue(var);
-		if (o != null && o instanceof PersistentList) {
-			return (PersistentList)o;
-		} else if (o == null) {
-			throw new RPLUndefinedException(var);
-		} else {
-			throw new RPLTypeError("list", o, new Variable(var));
-		}
+	public Object getValue(String var) {
+		return varStore.get(var);
 	}
 	
 	/**

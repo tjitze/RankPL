@@ -19,6 +19,7 @@ import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.Rank;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 public class IfElse extends AbstractStatement implements IfElseErrorHandler, ObserveErrorHandler {
 
@@ -47,7 +48,7 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		// can immediately pass the a/b iterator.
 		try {
 			if (exp.hasDefiniteValue()) {
-				if (exp.getDefiniteBoolValue()) {
+				if (exp.getDefiniteValue(Type.BOOL)) {
 					return a.getIterator(parent, c);
 				} else {
 					return b.getIterator(parent, c);
@@ -65,7 +66,7 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		// Check contradiction/tautology again.
 		try {
 			if (exp2.hasDefiniteValue()) {
-				if (exp2.getDefiniteBoolValue()) {
+				if (exp2.getDefiniteValue(Type.BOOL)) {
 					return a.getIterator(parent, c);
 				} else {
 					return b.getIterator(parent, c);
@@ -211,7 +212,7 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 
 	private boolean getCheckedValue(AbstractExpression exp2, BufferingIterator<VarStore> bi) throws RPLException {
 		try {
-			return exp2.getBoolValue(bi.getItem());
+			return exp2.getValue(bi.getItem(), Type.BOOL);
 		} catch (RPLException e) {
 			observeConditionError(e);
 			throw e;

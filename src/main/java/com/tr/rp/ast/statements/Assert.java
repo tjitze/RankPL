@@ -22,6 +22,7 @@ import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.PersistentList;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * The "assert b" statement is intended for testing purposes. Aborts if b is false. 
@@ -48,7 +49,7 @@ public class Assert extends AbstractStatement {
 			public boolean next() throws RPLException {
 				boolean next = parent.next();
 				if (next) {
-					if (!exp.getBoolValue(getItem())) {
+					if (!exp.getValue(getItem(), Type.BOOL)) {
 						throw new RPLAssertionException("Failed assertion: " + exp, Assert.this);
 					}
 				}

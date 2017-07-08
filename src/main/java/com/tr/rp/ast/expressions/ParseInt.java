@@ -8,6 +8,7 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Parse string as integer.
@@ -53,7 +54,7 @@ public class ParseInt extends AbstractExpression {
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
 		try {
-			return Integer.parseInt(this.e.getStringValue(e));
+			return Integer.parseInt(this.e.getValue(e, Type.STRING));
 		} catch (NumberFormatException nfe) {
 			RPLMiscException ex = new RPLMiscException(nfe.getMessage());
 			ex.setExpression(this);
@@ -69,7 +70,7 @@ public class ParseInt extends AbstractExpression {
 	@Override
 	public Object getDefiniteValue() throws RPLException {
 		try {
-			return Integer.parseInt(this.e.getDefiniteStringValue());
+			return Integer.parseInt(this.e.getDefiniteValue(Type.STRING));
 		} catch (NumberFormatException nfe) {
 			RPLMiscException ex = new RPLMiscException(nfe.getMessage());
 			ex.setExpression(this);

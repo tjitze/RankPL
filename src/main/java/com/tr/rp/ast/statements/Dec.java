@@ -12,6 +12,7 @@ import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Increase integer variable by one
@@ -42,7 +43,7 @@ public class Dec extends AbstractStatement {
 					VarStore item = rt.getItem();
 					if (item == null) return null;
 					try {
-						return target.assign(item, target.convertToRHSExpression().getIntValue(item) - 1);
+						return target.assign(item, target.convertToRHSExpression().getValue(item, Type.INT) - 1);
 					} catch (RPLException e) {
 						e.setStatement(Dec.this);
 						throw e;

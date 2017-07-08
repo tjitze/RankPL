@@ -1,0 +1,96 @@
+define test() {
+	normally(1) {
+		return 1;
+	} exceptionally {
+		normally (1) {
+			return 2;
+		} exceptionally {
+			return 3;
+		};
+	};
+};
+
+# Simple function call
+a := test();
+assert-ranked(a, 
+	[0, 1],
+	[1, 2],
+	[2, 3]);
+reset;
+
+# Double function call
+a := test();
+b := test();
+assert-ranked([a,b], 
+	[0 + 0, [1,1]],
+	[0 + 1, [2,1]],
+	[0 + 2, [3,1]],
+	[1 + 0, [1,2]],
+	[1 + 1, [2,2]],
+	[1 + 2, [3,2]],
+	[2 + 0, [1,3]],
+	[2 + 1, [2,3]],
+	[2 + 2, [3,3]]);
+reset;
+
+# Infer function call (singleton result)
+a := infer(test());
+assert(a == [1]);
+reset;
+
+# Infer function call (empty result)
+define test_false() {
+	observe false;
+};
+a := infer(test_false());
+assert(a == []);
+reset;
+
+# Infer function call (multiple results)
+define test_multi() {
+	either {
+		return 10;
+	} or {
+		return 20;
+	};
+};
+a := infer(test_false());
+assert(a == [10, 20]);
+reset;
+
+# Test arguments
+define test_args(a, b) {
+	return a + b;
+};
+a := test_args(10, 20);
+assert(a == 30);
+reset;
+
+# Test arguments (ranked1)
+define test_args_ranked1(a, b) {
+	either {
+		return a;
+	} or {
+		return b;
+	};
+};
+a := infer(test_args_ranked1(50, 60));
+assert(a == [50, 60]);
+reset;
+
+# Test arguments (ranked2)
+define test_args_ranked2(a, b) {
+	normally (a) {
+		return 1;
+	} exceptionally {
+		return b;
+	};
+};
+a := infer(test_args_ranked2(0, 20));
+assert(a == [1, 20]);
+reset;
+a := infer(test_args_ranked2(1, 20));
+assert(a == [1]);
+reset;
+
+

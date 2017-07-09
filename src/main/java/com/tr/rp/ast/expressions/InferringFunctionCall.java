@@ -68,13 +68,13 @@ public class InferringFunctionCall extends FunctionCall {
 		return false;
 	}
 
-	public RankedIterator<VarStore> getIterator(ExecutionContext c, AbstractExpression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
+	public RankedIterator<VarStore> getIterator(ExecutionContext c, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
 		return new MultiMergeIterator<VarStore>(parent) {
 
 			@Override
 			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
 				String var = VarStore.getFreeVariable("acc");
-				RankedIterator<VarStore> it = getIteratorForFunctionCall(arguments, var, in, c);
+				RankedIterator<VarStore> it = getIteratorForFunctionCall(var, in, c);
 				List<Object> values = new ArrayList<Object>();
 				while (it.next() && it.getRank() == 0) {
 					values.add(it.getItem().getValue(var));

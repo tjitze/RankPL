@@ -96,12 +96,12 @@ public class FunctionCall extends AbstractFunctionCall {
 		return false;
 	}
 
-	protected RankedIterator<VarStore> getIteratorForFunctionCall(AbstractExpression[] arguments, String assignToVar, VarStore in, ExecutionContext c) throws RPLException {
+	protected RankedIterator<VarStore> getIteratorForFunctionCall(String assignToVar, VarStore in, ExecutionContext c) throws RPLException {
 		String[] parameters = getFunction().getParameters();
-		if (parameters.length != arguments.length) {
-			throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, arguments.length);
+		if (parameters.length != getArguments().length) {
+			throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, getArguments().length);
 		}
-		RankedIterator<VarStore> it = new InitialVarStoreIterator(in.createClosure(parameters, arguments));
+		RankedIterator<VarStore> it = new InitialVarStoreIterator(in.createClosure(parameters, getArguments()));
 		final RankedIterator<VarStore> pre = getFunction().getBody().getIterator(it, c);
 		return new RankedIterator<VarStore>() {
 
@@ -126,11 +126,11 @@ public class FunctionCall extends AbstractFunctionCall {
 		};
 	}
 	
-	public RankedIterator<VarStore> getIterator(ExecutionContext c, AbstractExpression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
+	public RankedIterator<VarStore> getIterator(ExecutionContext c, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
 		return new MultiMergeIterator<VarStore>(parent) {
 			@Override
 			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
-				return getIteratorForFunctionCall(arguments, assignToVar, in, c);
+				return getIteratorForFunctionCall(assignToVar, in, c);
 			}
 		};
 	}

@@ -44,7 +44,7 @@ public class FunctionCallForm extends AbstractStatement {
 		RankedIterator<VarStore> chainedIterator = parent;
 		// For each function assignment ...
 		for (Assignment assignment: assignments) {
-			chainedIterator = assignment.functionCall.getIterator(c, assignment.functionCall.getArguments(), assignment.var, chainedIterator);
+			chainedIterator = assignment.functionCall.getIterator(c, assignment.var, chainedIterator);
 		}
 		// Execute statement
 		chainedIterator = statement.getIterator(chainedIterator, c);

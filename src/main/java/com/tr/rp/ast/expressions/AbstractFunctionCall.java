@@ -81,6 +81,6 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 		return null;
 	}
 	
-	public abstract RankedIterator<VarStore> getIterator(ExecutionContext c, AbstractExpression[] arguments, String assignToVar, RankedIterator<VarStore> parent) throws RPLException;
+	public abstract RankedIterator<VarStore> getIterator(ExecutionContext c, String assignToVar, RankedIterator<VarStore> parent) throws RPLException;
 
 }

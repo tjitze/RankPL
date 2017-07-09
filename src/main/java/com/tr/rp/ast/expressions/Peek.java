@@ -9,7 +9,7 @@ import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * Peek top of stack.
+ * peek(stack): returns top of stack.
  */
 public class Peek extends AbstractExpression {
 

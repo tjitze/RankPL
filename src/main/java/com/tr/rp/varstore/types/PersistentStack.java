@@ -26,6 +26,12 @@ public class PersistentStack<T> {
 		hashCode = 0;
 	}
 
+	/**
+	 * Construct stack based on 'bottom' stack plus top element.
+	 * 
+	 * @param element Top element
+	 * @param parent Bottom stack
+	 */
 	private PersistentStack(T element, PersistentStack<T> parent) {
 		Objects.requireNonNull(element);
 		Objects.requireNonNull(parent);

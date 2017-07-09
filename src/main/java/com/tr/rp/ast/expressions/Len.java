@@ -7,8 +7,11 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
+import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentSet;
+import com.tr.rp.varstore.types.PersistentStack;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -60,9 +63,16 @@ public class Len extends AbstractExpression {
 				return ((String)o).length();
 			} else if (o instanceof PersistentList) {
 				return ((PersistentList)o).size();
+			} else if (o instanceof PersistentStack) {
+				return ((PersistentStack<?>)o).size();
+			} else if (o instanceof PersistentSet) {
+				return ((PersistentSet<?>)o).size();
+			} else {
+				throw new RPLTypeError("string, array, set or stack", o, e);
 			}
+		} else {
+			throw new RPLUndefinedException(e);
 		}
-		throw new RPLTypeError("list or string", o, e);
 	}
 
 	@Override
@@ -72,7 +82,22 @@ public class Len extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return this.e.getDefiniteValue(Type.ARRAY).size();
+		Object o = e.getDefiniteValue();
+		if (o != null) {
+			if (o instanceof String) {
+				return ((String)o).length();
+			} else if (o instanceof PersistentList) {
+				return ((PersistentList)o).size();
+			} else if (o instanceof PersistentStack) {
+				return ((PersistentStack<?>)o).size();
+			} else if (o instanceof PersistentSet) {
+				return ((PersistentSet<?>)o).size();
+			} else {
+				throw new RPLTypeError("string, array, set or stack", o, e);
+			}
+		} else {
+			throw new RPLUndefinedException(e);
+		}
 	}
 
 	public String toString() {

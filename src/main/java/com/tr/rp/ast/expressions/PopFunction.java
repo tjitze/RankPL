@@ -10,6 +10,9 @@ import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
+/**
+ * pop(stack): pops top element from stack
+ */
 public class PopFunction extends AbstractFunctionCall {
 
 	private final String stackVar;

@@ -18,22 +18,23 @@ import com.tr.rp.varstore.types.PersistentStack;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * put(set, element) - adds element to set
+ * push(stack, element) - push element on stack
  */
-public class Put extends AbstractStatement {
+public class StackPush extends AbstractStatement {
 	
-	private final String setVar;
+	private final AssignmentTarget assignmentTarget;
 	private final AbstractExpression value;
 	
-	public Put(String stackVar, AbstractExpression value) {
-		this.setVar = stackVar;
+	public StackPush(AssignmentTarget assignmentTarget, AbstractExpression value) {
+		this.assignmentTarget = assignmentTarget;
 		this.value = value;
 	}
 
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		RankTransformIterator rt = new RankTransformIterator(in, this, value);
-		final AssignmentTarget value = (AssignmentTarget)rt.getExpression(0);
+		RankTransformIterator rt = new RankTransformIterator(in, this, assignmentTarget, value);
+		final AssignmentTarget setVar = (AssignmentTarget)rt.getExpression(0);
+		final AbstractExpression value = (AbstractExpression)rt.getExpression(1);
 		RankedIterator<VarStore> ai = new RankedIterator<VarStore>() {
 
 			@Override
@@ -44,8 +45,8 @@ public class Put extends AbstractStatement {
 			@Override
 			public VarStore getItem() throws RPLException {
 				VarStore item = rt.getItem();
-				PersistentSet<Object> set = item.getValue(setVar, Type.SET);
-				return item.create(setVar, set.put(value.getValue(item)));
+				PersistentStack<Object> set = setVar.convertToRHSExpression().getValue(item, Type.STACK);
+				return setVar.assign(item, set.push(value.getValue(item)));
 			}
 
 			@Override
@@ -59,38 +60,41 @@ public class Put extends AbstractStatement {
 	
 	public String toString() {
 		String expString = value.toString();
-		return "put(" + setVar + ", " + expString + ")";
+		return "remove(" + assignmentTarget + ", " + expString + ")";
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof Put &&
-				((Put)o).setVar.equals(setVar) &&
-				((Put)o).value.equals(value);
+		return o instanceof StackPush &&
+				((StackPush)o).assignmentTarget.equals(assignmentTarget) &&
+				((StackPush)o).value.equals(value);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(setVar, value);
+		return Objects.hash(assignmentTarget, value);
 	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new Put(setVar.equals(a)? b: setVar, (AbstractExpression)value.replaceVariable(a, b));
+		return new StackPush((AssignmentTarget) assignmentTarget.replaceVariable(a, b), 
+				(AbstractExpression)value.replaceVariable(a, b));
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		list.add(setVar);
+		assignmentTarget.getVariables(list);
 		value.getVariables(list);
 	}
 
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
+		ExtractedExpression rewrittenAssignmentTarget = FunctionCallForm.extractFunctionCalls(assignmentTarget);
 		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
-		if (rewrittenValue.isRewritten()) {
+		if (rewrittenAssignmentTarget.isRewritten() || rewrittenValue.isRewritten()) {
 			return new FunctionCallForm(
-					new Put(setVar, rewrittenValue.getExpression()), 
-						rewrittenValue.getAssignments());
+					new StackPush((AssignmentTarget) rewrittenAssignmentTarget.getExpression(), 
+							rewrittenValue.getExpression()), 
+					rewrittenValue.getAssignments());
 		} else {
 			return this;
 		}
@@ -98,6 +102,6 @@ public class Put extends AbstractStatement {
 
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
-		variables.add(setVar);
+		variables.add(assignmentTarget.getAssignedVariable());
 	}	
 }

@@ -62,7 +62,7 @@ public class PersistentStack<T> {
 		value.accept(element);
 		return parent;
 	}
-	
+
 	/**
 	 * @return Top value of stack
 	 */
@@ -92,4 +92,5 @@ public class PersistentStack<T> {
 	private boolean internalEquals(PersistentStack<?> other) {
 		return other.element.equals(element) && other.internalEquals(this);
 	}
+
 }

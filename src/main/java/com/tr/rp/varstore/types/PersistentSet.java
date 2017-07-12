@@ -40,6 +40,11 @@ public class PersistentSet<T> {
 		return new PersistentSet<T>(set.without(o));
 	}
 	
+	
+	public PersistentSet<T> removeAll() {
+		return new PersistentSet<T>();
+	}
+	
 	public int size() {
 		return set.size();
 	}
@@ -59,5 +64,5 @@ public class PersistentSet<T> {
 		}
 		return false;
 	}
-	
+
 }

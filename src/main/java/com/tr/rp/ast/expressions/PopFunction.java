@@ -1,13 +1,12 @@
 package com.tr.rp.ast.expressions;
 
-import java.util.function.Consumer;
-
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.PersistentStack;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -15,26 +14,26 @@ import com.tr.rp.varstore.types.Type;
  */
 public class PopFunction extends AbstractFunctionCall {
 
-	private final String stackVar;
+	private final AssignmentTarget assignmentTarget;
 	
-	public PopFunction(String stackVar) {
-		this.stackVar = stackVar;
+	public PopFunction(AssignmentTarget assignmentTarget) {
+		this.assignmentTarget = assignmentTarget;
 	}
 	
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return this;
+		return new PopFunction((AssignmentTarget) assignmentTarget.replaceVariable(a, b));
 	}
 
 	@Override
 	public String toString() {
-		return "pop("+stackVar+")";
+		return "pop("+assignmentTarget+")";
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof PopFunction) {
-			return ((PopFunction)o).stackVar.equals(stackVar);
+			return ((PopFunction)o).assignmentTarget.equals(assignmentTarget);
 		}
 		return false;
 	}
@@ -62,7 +61,10 @@ public class PopFunction extends AbstractFunctionCall {
 			@Override
 			public VarStore getItem() throws RPLException {
 				VarStore v = parent.getItem();
-				v = v.create(stackVar, v.getValue(stackVar, Type.STACK).pop(this::setPoppedValue));
+				PersistentStack<Object> newStack = assignmentTarget.convertToRHSExpression()
+						.getValue(v, Type.STACK)
+						.pop(this::setPoppedValue);
+				v = assignmentTarget.assign(v, newStack);
 				v = v.create(assignToVar, getPoppedValue());
 				return v;
 			}
@@ -77,12 +79,16 @@ public class PopFunction extends AbstractFunctionCall {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return this;
+		return new PopFunction((AssignmentTarget) assignmentTarget.transformRankExpressions(v, rank));
 	}
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return this;
+		if (fc == this) {
+			return new Variable(var);
+		} else {
+			return new PopFunction((AssignmentTarget) assignmentTarget.replaceEmbeddedFunctionCall(fc, var));
+		}
 	}
 
 }

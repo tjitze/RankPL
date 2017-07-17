@@ -11,9 +11,9 @@ import com.tr.rp.varstore.types.PersistentStack;
 /**
  * Returns a new, empty stack
  */
-public class NewStack extends AbstractExpression {
+public class StackNew extends AbstractExpression {
 	
-	public NewStack() {
+	public StackNew() {
 	}
 	
 	@Override

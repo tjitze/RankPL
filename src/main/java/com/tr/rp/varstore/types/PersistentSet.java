@@ -26,7 +26,7 @@ public class PersistentSet<T> {
 		return set.contains(o);
 	}
 
-	public PersistentSet<T> put(T o) {
+	public PersistentSet<T> add(T o) {
 		if (set.contains(o)) {
 			return this;
 		}
@@ -34,7 +34,7 @@ public class PersistentSet<T> {
 	}
 	
 	public PersistentSet<T> remove(T o) {
-		if (set.contains(o)) {
+		if (!set.contains(o)) {
 			return this;
 		}
 		return new PersistentSet<T>(set.without(o));

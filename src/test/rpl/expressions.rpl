@@ -130,14 +130,14 @@ assert(!isset(not_set));
 is_set := 1;
 assert(isset(is_set));
 
-# Len
-assert(len("") == 0);
-assert(len("a") == 1);
-assert(len("abc") == 3);
-assert(len([]) == 0);
-assert(len([0]) == 1);
-assert(len([0,1,2]) == 3);
-assert(len([[0],[],2]) == 3);
+# Size
+assert(size("") == 0);
+assert(size("a") == 1);
+assert(size("abc") == 3);
+assert(size([]) == 0);
+assert(size([0]) == 1);
+assert(size([0,1,2]) == 3);
+assert(size([[0],[],2]) == 3);
 
 # Substring
 assert("abcde" == substring("abcde", 0, 5));
@@ -150,7 +150,7 @@ assert((true? "a": "b") == "a");
 assert((false? "a": "b") == "b");
 
 # Array constructors
-assert(len(array(2)) == 2);
+assert(size(array(2)) == 2);
 assert(!isset(array(2)[0]));
 assert(!isset(array(2)[1]));
 

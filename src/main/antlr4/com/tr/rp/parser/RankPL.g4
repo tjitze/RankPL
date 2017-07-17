@@ -40,6 +40,10 @@ stat
  | AssertRanked '(' exp (',' exp)* ')'					# AssertRankedStatement
  | Assert exp											# AssertStatement
  | Reset												# ResetStatement
+ | Remove '(' assignment_target ',' exp ')'				# SetRemoveStatement
+ | Add '(' assignment_target ',' exp ')'				# SetAddStatement
+ | Put '(' assignment_target ',' exp ',' exp ')'		# MapPutStatement
+ | Push '(' assignment_target ',' exp ')'				# StackPushStatement
  ;
 
 
@@ -83,8 +87,15 @@ expr6
  | Abs '(' exp ')'      				   				# AbsExpr
  | Min '(' (exp (',' exp)*) ')'      				   	# MinExpr
  | Max '(' (exp (',' exp)*) ')'      				   	# MaxExpr
+ | NewSet empty_args									# NewSetExpr
+ | NewMap empty_args									# NewMapExpr
+ | NewStack empty_args									# NewStackExpr
+ | Contains '(' exp ',' exp ')'							# SetContainsExpr
+ | Get '(' exp ',' exp ')'							    # MapGetExpr
+ | Peek '(' exp ')'										# StackPeekExpr
+ | Pop '(' assignment_target ')'						# StackPopExpr
  | ParseInt '(' exp ')'       				   			# ParseIntExpr
- | Len '(' exp ')' 		 								# LenExpr
+ | Size '(' exp ')' 		 							# SizeExpr
  | Substring '(' exp ',' exp ',' exp ')' 				# SubStringExpr
  | Rank '(' exp ')' 	 								# RankExpr
  | Array '(' exp (',' exp)? ')' 						# ArrayInitExpr
@@ -122,10 +133,23 @@ Abs: 			'abs' | 'ABS';
 ParseInt:		'parseint' | 'parseInt' | 'PARSEINT';
 Min: 			'min' | 'MIN';
 Max: 			'max' | 'MAX';
-Len: 			'len' | 'LEN';
+Size: 			'size' | 'SIZE';
 Substring: 		'substring' | 'SUBSTRING';
 Rank: 			'rank' | 'RANK';
 Array: 			'array' | 'ARRAY';
+Remove: 		'remove' | 'REMOVE';
+Add:	 		'add' | 'ADD';
+Put:	 		'put' | 'PUT';
+Push:	 		'push' | 'PUSH';
+NewSet:	 		'newset' | 'NEWSET' | 'newSet';
+NewMap:	 		'newmap' | 'NEWMAP' | 'newMap';
+NewStack:	 	'newstack' | 'NEWSTACK' | 'newStack';
+Contains:	 	'contains' | 'CONTAINS';
+Peek:	 		'peek' | 'PEEK';
+Pop:	 		'pop' | 'POP';
+Get:	 		'get' | 'GET';
+
+empty_args:		'()' | '(' ')';
 
 variable
  : VAR

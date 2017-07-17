@@ -1,0 +1,43 @@
+# Tests for map functions:
+#
+#   newmap()
+#   remove(map, key)				implemented by SetRemove statement
+#   put(map, key, value)			implemented by MapPut statement
+#   contains(map, key)			    implemented by SetContains expression
+#   get(map, key)					MapGet function
+#   size(map)						
+
+map := newmap();
+assert size(map) == 0;
+
+put(map, 1, "a");
+assert contains(map, 1);
+assert !contains(map, 2);
+assert get(map, 1) == "a";
+assert size(map) == 1;
+
+put(map, 1, "a");
+assert contains(map, 1);
+assert !contains(map, 2);
+assert get(map, 1) == "a";
+assert size(map) == 1;
+
+put(map, 2, "b");
+assert contains(map, 1);
+assert contains(map, 2);
+assert get(map, 1) == "a";
+assert get(map, 2) == "b";
+assert size(map) == 2;
+
+remove(map, 1);
+assert !contains(map, 1);
+assert contains(map, 2);
+assert get(map, 2) == "b";
+assert size(map) == 1;
+
+put(map, 1, "b");
+assert contains(map, 1);
+assert contains(map, 2);
+assert get(map, 1) == "b";
+assert get(map, 2) == "b";
+assert size(map) == 2;

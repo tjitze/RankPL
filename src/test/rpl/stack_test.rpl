@@ -1,0 +1,26 @@
+stack := newstack();
+assert size(stack) == 0;
+
+push(stack, 10);
+assert peek(stack) == 10;
+assert size(stack) == 1;
+
+stack := newstack();
+assert size(stack) == 0;
+
+push(stack, 10);
+assert peek(stack) == 10;
+assert size(stack) == 1;
+
+push(stack, 20);
+assert peek(stack) == 20;
+assert size(stack) == 2;
+
+x := pop(stack);
+assert x == 20;
+assert peek(stack) == 10;
+assert size(stack) == 1;
+
+x := pop(stack);
+assert x == 10;
+assert size(stack) == 0;

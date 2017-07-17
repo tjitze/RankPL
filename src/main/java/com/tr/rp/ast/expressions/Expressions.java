@@ -209,8 +209,8 @@ public class Expressions {
 		return new BoolBoolBoolOp(xor, a, b);
 	}
 
-	public static Len len(AbstractExpression e) {
-		return new Len(e);
+	public static Size len(AbstractExpression e) {
+		return new Size(e);
 	}
 	
 	public static Abs abs(AbstractExpression e) {

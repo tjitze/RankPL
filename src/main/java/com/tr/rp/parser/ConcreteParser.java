@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -26,14 +27,21 @@ import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.expressions.IndexElementExpression;
 import com.tr.rp.ast.expressions.InferringFunctionCall;
 import com.tr.rp.ast.expressions.IsSet;
-import com.tr.rp.ast.expressions.Len;
+import com.tr.rp.ast.expressions.Size;
 import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.expressions.MapGet;
+import com.tr.rp.ast.expressions.MapNew;
 import com.tr.rp.ast.expressions.Max;
 import com.tr.rp.ast.expressions.Min;
 import com.tr.rp.ast.expressions.Negative;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.expressions.ParseInt;
 import com.tr.rp.ast.expressions.RankExpr;
+import com.tr.rp.ast.expressions.SetContains;
+import com.tr.rp.ast.expressions.SetNew;
+import com.tr.rp.ast.expressions.StackNew;
+import com.tr.rp.ast.expressions.StackPeek;
+import com.tr.rp.ast.expressions.StackPop;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.Assert;
 import com.tr.rp.ast.statements.AssertRanked;
@@ -54,7 +62,11 @@ import com.tr.rp.ast.statements.RankedChoice;
 import com.tr.rp.ast.statements.ReadFile;
 import com.tr.rp.ast.statements.Reset;
 import com.tr.rp.ast.statements.Return;
+import com.tr.rp.ast.statements.SetAdd;
+import com.tr.rp.ast.statements.MapPut;
+import com.tr.rp.ast.statements.SetRemove;
 import com.tr.rp.ast.statements.Skip;
+import com.tr.rp.ast.statements.StackPush;
 import com.tr.rp.ast.statements.While;
 import com.tr.rp.parser.RankPLBaseVisitor;
 import com.tr.rp.parser.RankPLParser.AbsExprContext;
@@ -82,7 +94,7 @@ import com.tr.rp.parser.RankPLParser.IndexedExpressionContext;
 import com.tr.rp.parser.RankPLParser.IndifferentChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.InferringFunctionCallContext;
 import com.tr.rp.parser.RankPLParser.IsSetExprContext;
-import com.tr.rp.parser.RankPLParser.LenExprContext;
+import com.tr.rp.parser.RankPLParser.SizeExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralBoolExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralIntExpressionContext;
 import com.tr.rp.parser.RankPLParser.LiteralStringExprContext;
@@ -90,6 +102,10 @@ import com.tr.rp.parser.RankPLParser.MaxExprContext;
 import com.tr.rp.parser.RankPLParser.MinExprContext;
 import com.tr.rp.parser.RankPLParser.MinusExprContext;
 import com.tr.rp.parser.RankPLParser.NegateExprContext;
+import com.tr.rp.parser.RankPLParser.NewSetExprContext;
+import com.tr.rp.parser.RankPLParser.NewMapExprContext;
+import com.tr.rp.parser.RankPLParser.MapGetExprContext;
+import com.tr.rp.parser.RankPLParser.NewStackExprContext;
 import com.tr.rp.parser.RankPLParser.ObserveStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveJStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveLStatementContext;
@@ -104,7 +120,14 @@ import com.tr.rp.parser.RankPLParser.ExceptionallyStatementContext;
 import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
 import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
+import com.tr.rp.parser.RankPLParser.SetAddStatementContext;
+import com.tr.rp.parser.RankPLParser.MapPutStatementContext;
+import com.tr.rp.parser.RankPLParser.SetContainsExprContext;
+import com.tr.rp.parser.RankPLParser.SetRemoveStatementContext;
 import com.tr.rp.parser.RankPLParser.SkipStatementContext;
+import com.tr.rp.parser.RankPLParser.StackPeekExprContext;
+import com.tr.rp.parser.RankPLParser.StackPopExprContext;
+import com.tr.rp.parser.RankPLParser.StackPushStatementContext;
 import com.tr.rp.parser.RankPLParser.StatContext;
 import com.tr.rp.parser.RankPLParser.StatementSequenceContext;
 import com.tr.rp.parser.RankPLParser.SubStringExprContext;
@@ -187,6 +210,43 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}
+
+	@Override
+	public LanguageElement visitSetAddStatement(SetAddStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
+		SetAdd s = new SetAdd(target, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitMapPutStatement(MapPutStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractExpression key = (AbstractExpression)visit(ctx.exp(0));
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
+		MapPut s = new MapPut(target, key, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitSetRemoveStatement(SetRemoveStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
+		SetRemove s = new SetRemove(target, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+	@Override
+	public LanguageElement visitStackPushStatement(StackPushStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
+		StackPush s = new StackPush(target, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
 
 	@Override
 	public LanguageElement visitIndex(IndexContext ctx) {
@@ -475,9 +535,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitLenExpr(LenExprContext ctx) {
+	public LanguageElement visitSizeExpr(SizeExprContext ctx) {
 		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
-		return new Len(e);
+		return new Size(e);
 	}
 
 	@Override
@@ -540,6 +600,47 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			if (cop.equals(">=")) return Expressions.geq(a, b);
 		}
 		throw new RuntimeException("Internal parse error");
+	}
+
+	@Override
+	public LanguageElement visitNewSetExpr(NewSetExprContext ctx) {
+		return new SetNew();
+	}
+
+	@Override
+	public LanguageElement visitNewMapExpr(NewMapExprContext ctx) {
+		return new MapNew();
+	}
+
+	@Override
+	public LanguageElement visitNewStackExpr(NewStackExprContext ctx) {
+		return new StackNew();
+	}
+
+	@Override
+	public LanguageElement visitSetContainsExpr(SetContainsExprContext ctx) {
+		AbstractExpression set = (AbstractExpression)visit(ctx.exp(0));
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
+		return new SetContains(set, value);
+	}
+
+	@Override
+	public LanguageElement visitMapGetExpr(MapGetExprContext ctx) {
+		AbstractExpression map = (AbstractExpression)visit(ctx.exp(0));
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
+		return new MapGet(map, value);
+	}
+
+	@Override
+	public LanguageElement visitStackPeekExpr(StackPeekExprContext ctx) {
+		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
+		return new StackPeek(e);
+	}
+
+	@Override
+	public LanguageElement visitStackPopExpr(StackPopExprContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		return new StackPop(target);
 	}
 
 	@Override

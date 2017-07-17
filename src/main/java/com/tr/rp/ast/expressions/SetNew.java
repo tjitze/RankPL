@@ -12,9 +12,9 @@ import com.tr.rp.varstore.types.PersistentStack;
 /**
  * Returns a new, empty set
  */
-public class NewSet extends AbstractExpression {
+public class SetNew extends AbstractExpression {
 	
-	public NewSet() {
+	public SetNew() {
 	}
 	
 	@Override

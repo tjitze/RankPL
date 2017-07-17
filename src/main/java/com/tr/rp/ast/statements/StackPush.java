@@ -60,7 +60,7 @@ public class StackPush extends AbstractStatement {
 	
 	public String toString() {
 		String expString = value.toString();
-		return "remove(" + assignmentTarget + ", " + expString + ")";
+		return "push(" + assignmentTarget + ", " + expString + ")";
 	}
 	
 	public boolean equals(Object o) {

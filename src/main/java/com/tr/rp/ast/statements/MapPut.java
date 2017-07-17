@@ -9,7 +9,6 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
@@ -19,15 +18,17 @@ import com.tr.rp.varstore.types.PersistentSet;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * remove(mapOrSet, element) - remove element from set or map
+ * put(map, key, value) - add value to map
  */
-public class SetRemove extends AbstractStatement {
+public class MapPut extends AbstractStatement {
 	
 	private final AssignmentTarget assignmentTarget;
+	private final AbstractExpression key;
 	private final AbstractExpression value;
 	
-	public SetRemove(AssignmentTarget mapOrSet, AbstractExpression value) {
-		this.assignmentTarget = mapOrSet;
+	public MapPut(AssignmentTarget assignmentTarget, AbstractExpression key, AbstractExpression value) {
+		this.assignmentTarget = assignmentTarget;
+		this.key = key;
 		this.value = value;
 	}
 
@@ -46,16 +47,8 @@ public class SetRemove extends AbstractStatement {
 			@Override
 			public VarStore getItem() throws RPLException {
 				VarStore item = rt.getItem();
-				AbstractExpression rhsExpression = setVar.convertToRHSExpression();
-				if (Type.SET.test(rhsExpression.getValue(item))) {
-					PersistentSet<Object> set = rhsExpression.getValue(item, Type.SET);
-					return setVar.assign(item, set.remove(value.getValue(item)));
-				} else if (Type.MAP.test(rhsExpression.getValue(item))) {
-					PersistentMap<Object, Object> map = rhsExpression.getValue(item, Type.MAP);
-					return setVar.assign(item, map.remove(value.getValue(item)));
-				} else {
-					throw new RPLTypeError("map or set", rhsExpression.getValue(item), rhsExpression);
-				}
+				PersistentMap<Object, Object> map = setVar.convertToRHSExpression().getValue(item, Type.MAP);
+				return setVar.assign(item, map.add(key.getValue(item), value.getValue(item)));
 			}
 
 			@Override
@@ -68,41 +61,46 @@ public class SetRemove extends AbstractStatement {
 	
 	
 	public String toString() {
-		String expString = value.toString();
-		return "remove(" + assignmentTarget + ", " + expString + ")";
+		String keyString = key.toString();
+		String valueString = value.toString();
+		return "put(" + assignmentTarget + ", " + keyString + ", " + valueString + ")";
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof SetRemove &&
-				((SetRemove)o).assignmentTarget.equals(assignmentTarget) &&
-				((SetRemove)o).value.equals(value);
+		return o instanceof MapPut &&
+				((MapPut)o).assignmentTarget.equals(assignmentTarget) &&
+				((MapPut)o).key.equals(key) &&
+				((MapPut)o).value.equals(value);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(assignmentTarget, value);
+		return Objects.hash(assignmentTarget, key, value);
 	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new SetRemove((AssignmentTarget) assignmentTarget.replaceVariable(a, b), 
+		return new MapPut((AssignmentTarget) assignmentTarget.replaceVariable(a, b), 
+				(AbstractExpression)key.replaceVariable(a, b),
 				(AbstractExpression)value.replaceVariable(a, b));
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
 		assignmentTarget.getVariables(list);
+		key.getVariables(list);
 		value.getVariables(list);
 	}
 
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenAssignmentTarget = FunctionCallForm.extractFunctionCalls(assignmentTarget);
+		ExtractedExpression rewrittenKey = FunctionCallForm.extractFunctionCalls(key);
 		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
-		if (rewrittenAssignmentTarget.isRewritten() || rewrittenValue.isRewritten()) {
+		if (rewrittenAssignmentTarget.isRewritten() || rewrittenKey.isRewritten() || rewrittenValue.isRewritten()) {
 			return new FunctionCallForm(
-					new SetRemove((AssignmentTarget) rewrittenAssignmentTarget.getExpression(), 
-							rewrittenValue.getExpression()), 
+					new MapPut((AssignmentTarget) rewrittenAssignmentTarget.getExpression(), 
+							rewrittenKey.getExpression(), rewrittenValue.getExpression()), 
 					rewrittenValue.getAssignments());
 		} else {
 			return this;

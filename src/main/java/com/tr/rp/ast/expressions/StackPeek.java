@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.exceptions.RPLEmptyStackException;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
@@ -11,11 +12,11 @@ import com.tr.rp.varstore.types.Type;
 /**
  * peek(stack): returns top of stack.
  */
-public class Peek extends AbstractExpression {
+public class StackPeek extends AbstractExpression {
 
 	private final AbstractExpression e;
 	
-	public Peek(AbstractExpression e) {
+	public StackPeek(AbstractExpression e) {
 		this.e = e;
 	}
 
@@ -26,7 +27,7 @@ public class Peek extends AbstractExpression {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new Peek((AbstractExpression)e.replaceVariable(a, b));
+		return new StackPeek((AbstractExpression)e.replaceVariable(a, b));
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class Peek extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Peek(e.transformRankExpressions(v, rank));
+		return new StackPeek(e.transformRankExpressions(v, rank));
 	}
 
 	@Override
@@ -46,12 +47,16 @@ public class Peek extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Peek((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		return new StackPeek((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return this.e.getValue(e, Type.STACK).peek();
+		Object peekedValue = this.e.getValue(e, Type.STACK).peek();
+		if (peekedValue == null) {
+			throw new RPLEmptyStackException();
+		}
+		return peekedValue;
 	}
 
 	@Override
@@ -69,7 +74,7 @@ public class Peek extends AbstractExpression {
 	}
 	
 	public boolean equals(Object o) {
-		return (o instanceof Peek) && ((Peek)o).e.equals(e);
+		return (o instanceof StackPeek) && ((StackPeek)o).e.equals(e);
 	}
 	
 	@Override

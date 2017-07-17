@@ -1,0 +1,32 @@
+set := newset();
+assert size(set) == 0;
+
+add(set, 10);
+assert contains(set, 10);
+assert !contains(set, 20);
+assert size(set) == 1;
+
+add(set, 10);
+assert contains(set, 10);
+assert !contains(set, 20);
+assert size(set) == 1;
+
+add(set, 20);
+assert contains(set, 10);
+assert contains(set, 20);
+assert size(set) == 2;
+
+remove(set, 10);
+assert !contains(set, 10);
+assert contains(set, 20);
+assert size(set) == 1;
+
+remove(set, 20);
+assert !contains(set, 10);
+assert !contains(set, 20);
+assert size(set) == 0;
+
+remove(set, 20);
+assert !contains(set, 10);
+assert !contains(set, 20);
+assert size(set) == 0;

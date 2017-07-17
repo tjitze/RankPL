@@ -9,25 +9,23 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentMap;
 import com.tr.rp.varstore.types.PersistentSet;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * remove(mapOrSet, element) - remove element from set or map
+ * set(set, element) - add element to set
  */
-public class SetRemove extends AbstractStatement {
+public class SetAdd extends AbstractStatement {
 	
 	private final AssignmentTarget assignmentTarget;
 	private final AbstractExpression value;
 	
-	public SetRemove(AssignmentTarget mapOrSet, AbstractExpression value) {
-		this.assignmentTarget = mapOrSet;
+	public SetAdd(AssignmentTarget assignmentTarget, AbstractExpression value) {
+		this.assignmentTarget = assignmentTarget;
 		this.value = value;
 	}
 
@@ -46,16 +44,8 @@ public class SetRemove extends AbstractStatement {
 			@Override
 			public VarStore getItem() throws RPLException {
 				VarStore item = rt.getItem();
-				AbstractExpression rhsExpression = setVar.convertToRHSExpression();
-				if (Type.SET.test(rhsExpression.getValue(item))) {
-					PersistentSet<Object> set = rhsExpression.getValue(item, Type.SET);
-					return setVar.assign(item, set.remove(value.getValue(item)));
-				} else if (Type.MAP.test(rhsExpression.getValue(item))) {
-					PersistentMap<Object, Object> map = rhsExpression.getValue(item, Type.MAP);
-					return setVar.assign(item, map.remove(value.getValue(item)));
-				} else {
-					throw new RPLTypeError("map or set", rhsExpression.getValue(item), rhsExpression);
-				}
+				PersistentSet<Object> set = setVar.convertToRHSExpression().getValue(item, Type.SET);
+				return setVar.assign(item, set.add(value.getValue(item)));
 			}
 
 			@Override
@@ -69,13 +59,13 @@ public class SetRemove extends AbstractStatement {
 	
 	public String toString() {
 		String expString = value.toString();
-		return "remove(" + assignmentTarget + ", " + expString + ")";
+		return "add(" + assignmentTarget + ", " + expString + ")";
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof SetRemove &&
-				((SetRemove)o).assignmentTarget.equals(assignmentTarget) &&
-				((SetRemove)o).value.equals(value);
+		return o instanceof SetAdd &&
+				((SetAdd)o).assignmentTarget.equals(assignmentTarget) &&
+				((SetAdd)o).value.equals(value);
 	}
 
 	@Override
@@ -85,7 +75,7 @@ public class SetRemove extends AbstractStatement {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new SetRemove((AssignmentTarget) assignmentTarget.replaceVariable(a, b), 
+		return new SetAdd((AssignmentTarget) assignmentTarget.replaceVariable(a, b), 
 				(AbstractExpression)value.replaceVariable(a, b));
 	}
 
@@ -101,7 +91,7 @@ public class SetRemove extends AbstractStatement {
 		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
 		if (rewrittenAssignmentTarget.isRewritten() || rewrittenValue.isRewritten()) {
 			return new FunctionCallForm(
-					new SetRemove((AssignmentTarget) rewrittenAssignmentTarget.getExpression(), 
+					new SetAdd((AssignmentTarget) rewrittenAssignmentTarget.getExpression(), 
 							rewrittenValue.getExpression()), 
 					rewrittenValue.getAssignments());
 		} else {

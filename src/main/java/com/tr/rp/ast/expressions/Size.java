@@ -1,6 +1,5 @@
 package com.tr.rp.ast.expressions;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -10,18 +9,18 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentMap;
 import com.tr.rp.varstore.types.PersistentSet;
 import com.tr.rp.varstore.types.PersistentStack;
-import com.tr.rp.varstore.types.Type;
 
 /**
- * The len expression. Returns the length of the given array or string.
+ * The size expression. Returns the length of the given array, string, set or stack
  */
-public class Len extends AbstractExpression {
+public class Size extends AbstractExpression {
 
 	private final AbstractExpression e;
 	
-	public Len(AbstractExpression e) {
+	public Size(AbstractExpression e) {
 		this.e = e;
 	}
 
@@ -32,7 +31,7 @@ public class Len extends AbstractExpression {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new Len((AbstractExpression)e.replaceVariable(a, b));
+		return new Size((AbstractExpression)e.replaceVariable(a, b));
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class Len extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Len(e.transformRankExpressions(v, rank));
+		return new Size(e.transformRankExpressions(v, rank));
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class Len extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Len((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		return new Size((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
@@ -67,8 +66,10 @@ public class Len extends AbstractExpression {
 				return ((PersistentStack<?>)o).size();
 			} else if (o instanceof PersistentSet) {
 				return ((PersistentSet<?>)o).size();
+			} else if (o instanceof PersistentMap) {
+				return ((PersistentMap<?,?>)o).size();
 			} else {
-				throw new RPLTypeError("string, array, set or stack", o, e);
+				throw new RPLTypeError("string, array, set, map or stack", o, e);
 			}
 		} else {
 			throw new RPLUndefinedException(e);
@@ -92,8 +93,10 @@ public class Len extends AbstractExpression {
 				return ((PersistentStack<?>)o).size();
 			} else if (o instanceof PersistentSet) {
 				return ((PersistentSet<?>)o).size();
+			} else if (o instanceof PersistentMap) {
+				return ((PersistentMap<?, ?>)o).size();
 			} else {
-				throw new RPLTypeError("string, array, set or stack", o, e);
+				throw new RPLTypeError("string, array, set, map or stack", o, e);
 			}
 		} else {
 			throw new RPLUndefinedException(e);
@@ -105,11 +108,11 @@ public class Len extends AbstractExpression {
 		if (es.startsWith("(") && es.endsWith(")")) {
 			es = es.substring(1, es.length()-1);
 		}
-		return "len(" + es + ")";
+		return "size(" + es + ")";
 	}
 
 	public boolean equals(Object o) {
-		return (o instanceof Len) && ((Len)o).e.equals(e);
+		return (o instanceof Size) && ((Size)o).e.equals(e);
 	}
 
 	@Override

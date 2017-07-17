@@ -11,10 +11,10 @@ dictionary := [
 	"seventeen", "eighteen", "nineteen", "twenty"
 ];
 # The above can be replaced with:
-# dictionary := readfile("examples/google-10000-english-no-swears.txt");
+dictionary := readfile("examples/google-10000-english-no-swears.txt");
 
 # Randomly choose word from dictionary
-choice := << 0 ... len(dictionary) >>;
+choice := << 0 ... size(dictionary) >>;
 potential_match := dictionary[choice];
 
 # Initialize counters (i iterates over input, k over match)
@@ -25,7 +25,7 @@ input := input + "*";
 potential_match := potential_match + "*";
 
 # While there are characters left to match ...
-while (i < len(input) & k < len(potential_match)) do {
+while (i < size(input) & k < size(potential_match)) do {
 	# Improve rank of match with 1 unit of rank w.r.t. rank of a mis-match.
 	observe-l (1) (input[i] == potential_match[k]);
 
@@ -52,7 +52,7 @@ while (i < len(input) & k < len(potential_match)) do {
 };
 
 # Filter on event that all characters were matched
-observe i == len(input) & k == len(potential_match);
+observe i == size(input) & k == size(potential_match);
 
 return potential_match;
 

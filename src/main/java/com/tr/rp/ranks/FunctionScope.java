@@ -16,7 +16,7 @@ public class FunctionScope {
 	
 	public Function getFunction(String name) throws RPLFunctionUndefinedException {
 		if (!definedFunctions.containsKey(name)) {
-			throw new RPLFunctionUndefinedException("Function " + name + " not defined");
+			throw new RPLFunctionUndefinedException(name);
 		}
 		return definedFunctions.get(name);
 	}

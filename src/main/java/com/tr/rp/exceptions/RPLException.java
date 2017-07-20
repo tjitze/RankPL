@@ -14,9 +14,6 @@ public abstract class RPLException extends Exception {
 	 * Set statement from which this exception originates.
 	 */
 	public void setStatement(AbstractStatement statement) {
-		if (statement.toString().equals("if (isset($return)) then skip else return a")) {
-			throw new RuntimeException();
-		}
 		this.statement = statement;
 	}
 	

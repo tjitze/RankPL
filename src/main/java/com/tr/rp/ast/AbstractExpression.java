@@ -16,7 +16,7 @@ public abstract class AbstractExpression implements LanguageElement {
 	 * @return True iff this expression contains a rank expression
 	 * that must be rewritten before it can be evaluated.
 	 */
-	public abstract boolean hasRankExpression();
+	public abstract boolean needsRankExpressionTransformation();
 
 	/**
 	 * Transform this expression by rewriting all (sub) rank expressions,
@@ -32,7 +32,7 @@ public abstract class AbstractExpression implements LanguageElement {
 	 * @return A new object iff something changed.
 	 * @throws RPLException Run time RPL exception
 	 */
-	public abstract AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException;
+	public abstract AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException;
 	
 	/**
 	 * Transform this expression by rewriting all (sub) rank expressions.
@@ -43,7 +43,7 @@ public abstract class AbstractExpression implements LanguageElement {
 	 * @throws RPLException Run time RPL exception
 	 */
 	public final AbstractExpression transformRankExpressions(int rank) throws RPLException {
-		return this.transformRankExpressions(null, rank);
+		return this.doRankExpressionTransformation(null, rank);
 	}
 	
 	/**

@@ -33,13 +33,13 @@ public class BoolBoolBoolOp extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return e1.hasRankExpression() || e2.hasRankExpression();
+	public boolean needsRankExpressionTransformation() {
+		return e1.needsRankExpressionTransformation() || e2.needsRankExpressionTransformation();
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new BoolBoolBoolOp(f, (AbstractExpression)e1.transformRankExpressions(v, rank), (AbstractExpression)e2.transformRankExpressions(v, rank));
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		return new BoolBoolBoolOp(f, (AbstractExpression)e1.doRankExpressionTransformation(v, rank), (AbstractExpression)e2.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override

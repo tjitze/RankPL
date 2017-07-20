@@ -36,18 +36,18 @@ public class Min extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
+	public boolean needsRankExpressionTransformation() {
 		for (int i = 0; i < es.length; i++) {
-			if (es[i].hasRankExpression()) return true;
+			if (es[i].needsRankExpressionTransformation()) return true;
 		}
 		return false;
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
 		AbstractExpression[] newEs = new AbstractExpression[es.length];
 		for (int i = 0; i < newEs.length; i++) {
-			newEs[i] = (AbstractExpression)es[i].transformRankExpressions(v, rank);
+			newEs[i] = (AbstractExpression)es[i].doRankExpressionTransformation(v, rank);
 		}
 		return new Min(newEs);
 	}

@@ -40,14 +40,14 @@ public class MapGet extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return map.hasRankExpression() || key.hasRankExpression();
+	public boolean needsRankExpressionTransformation() {
+		return map.needsRankExpressionTransformation() || key.needsRankExpressionTransformation();
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new MapGet(map.transformRankExpressions(v, rank),
-				key.transformRankExpressions(v, rank));
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		return new MapGet(map.doRankExpressionTransformation(v, rank),
+				key.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override

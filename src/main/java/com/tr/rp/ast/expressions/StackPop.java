@@ -83,8 +83,8 @@ public class StackPop extends AbstractFunctionCall {
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new StackPop((AssignmentTarget) assignmentTarget.transformRankExpressions(v, rank));
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		return new StackPop((AssignmentTarget) assignmentTarget.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override

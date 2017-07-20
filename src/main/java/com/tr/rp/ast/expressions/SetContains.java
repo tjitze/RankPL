@@ -38,14 +38,14 @@ public class SetContains extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return mapOrSet.hasRankExpression() || value.hasRankExpression();
+	public boolean needsRankExpressionTransformation() {
+		return mapOrSet.needsRankExpressionTransformation() || value.needsRankExpressionTransformation();
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new SetContains(mapOrSet.transformRankExpressions(v, rank),
-				value.transformRankExpressions(v, rank));
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		return new SetContains(mapOrSet.doRankExpressionTransformation(v, rank),
+				value.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override

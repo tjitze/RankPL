@@ -62,10 +62,10 @@ public class FunctionCall extends AbstractFunctionCall {
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
 		AbstractExpression[] newArgs = new AbstractExpression[getArguments().length];
 		for (int i = 0; i < newArgs.length; i++) {
-			newArgs[i] = (AbstractExpression)getArguments()[i].transformRankExpressions(v, rank);
+			newArgs[i] = (AbstractExpression)getArguments()[i].doRankExpressionTransformation(v, rank);
 		}
 		return new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
 	}

@@ -31,13 +31,13 @@ public class Negative extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return e.hasRankExpression();
+	public boolean needsRankExpressionTransformation() {
+		return e.needsRankExpressionTransformation();
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Negative(e.transformRankExpressions(v, rank));
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		return new Negative(e.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override

@@ -30,13 +30,13 @@ public class IsSet extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return exp.hasRankExpression();
+	public boolean needsRankExpressionTransformation() {
+		return exp.needsRankExpressionTransformation();
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new IsSet((AbstractExpression)exp.transformRankExpressions(v, rank));
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		return new IsSet((AbstractExpression)exp.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override

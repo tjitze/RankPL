@@ -31,13 +31,13 @@ public class Abs extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return e.hasRankExpression();
+	public boolean needsRankExpressionTransformation() {
+		return e.needsRankExpressionTransformation();
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Abs(e.transformRankExpressions(v, rank));
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		return new Abs(e.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override

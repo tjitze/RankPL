@@ -25,12 +25,12 @@ public class StackNew extends AbstractExpression {
 	}
 
 	@Override
-	public boolean hasRankExpression() {
+	public boolean needsRankExpressionTransformation() {
 		return false;
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
 		return this;
 	}
 

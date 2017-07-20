@@ -6,54 +6,88 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.ranks.Rank;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
-/**
- * The Rank expression is an integer-valued expression
- * that has a boolean expression argument. It evaluates
- * to the rank of its argument. This means that its 
- * actual value depends on a ranking function given which
- * it is evaluated. That's what the transformRankExpression
- * method is for. There are cases where an expression can
- * only be used if all rank expressions have been trans-
- * formed, i.e., replaced with int literals.
- */
 public class RankExpr extends AbstractExpression {
 
+	private final AbstractExpression a;
 	private final AbstractExpression b;
 
-	public RankExpr(AbstractExpression b) {
+	private final int rankB;
+	private final int rankAB;
+	
+	public RankExpr(AbstractExpression a) {
+		this.a = a;
+		this.b = Expressions.lit(true);
+		this.rankB = -1;
+		this.rankAB = -1;
+	}
+
+	public RankExpr(AbstractExpression a, AbstractExpression b) {
+		this.a = a;
 		this.b = b;
+		this.rankB = -1;
+		this.rankAB = -1;
+	}
+
+	private RankExpr(AbstractExpression a, AbstractExpression b, int rankB, int rankAB) {
+		this.a = a;
+		this.b = b;
+		this.rankB = rankB;
+		this.rankAB = rankAB;
 	}
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		throw new RuntimeException("Illegal operation (evaluating untransformed rank expression)");
+		if (needsRankExpressionTransformation()) {
+			throw new RuntimeException("Illegal operation (evaluating uninstantiated rank expression)");
+		}
+		return rankAB - rankB;
 	}
 
 	@Override
-	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		// b might be contradiction or tautology.
-		// If so, we can rewrite it immediately
-		if (b.hasDefiniteValue()) {
-			if (b.getDefiniteValue(Type.BOOL)) {
-				return Literal.ZERO;
+	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+		
+		int newRankB = rankB;
+		int newRankAB = rankAB;
+		
+		// conditions might be contradiction or tautology.
+		// If so, we can rewrite them immediately
+		if (a.hasDefiniteValue() && b.hasDefiniteValue()) {
+			if (a.getDefiniteValue(Type.BOOL) && b.getDefiniteValue(Type.BOOL)) {
+				newRankAB = 0;
 			} else {
-				return Literal.MAX;
+				newRankAB = Rank.MAX;
 			}
 		}
+		if (b.hasDefiniteValue()) {
+			if (b.getDefiniteValue(Type.BOOL)) {
+				newRankB = 0;
+			} else {
+				newRankB = Rank.MAX;
+			}
+		}
+		
 		// Otherwise, rewrite to rank if expression is true
-		if (v == null || b.getValue(v, Type.BOOL)) {
-			return new Literal<Integer>(rank);
+		if (newRankAB < 0 && (v == null || (newRankAB < 0 && a.getValue(v, Type.BOOL) && b.getValue(v, Type.BOOL)))) {
+			newRankAB = rank;
+		}
+		if (newRankB < 0 && (v == null || (newRankB < 0 && b.getValue(v, Type.BOOL)))) {
+			newRankB = rank;
+		}
+
+		if (newRankAB != rankAB || newRankB != rankB) {
+			return new RankExpr(a, b, newRankB, newRankAB);
 		} else {
 			return this;
 		}
 	}
 
 	@Override
-	public boolean hasRankExpression() {
-		return true;
+	public boolean needsRankExpressionTransformation() {
+		return rankB < 0 || rankAB < 0;
 	}
 
 	public String toString() {
@@ -75,31 +109,41 @@ public class RankExpr extends AbstractExpression {
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof RankExpr && ((RankExpr)o).b.equals(b);
+		return o instanceof RankExpr 
+				&& ((RankExpr)o).a.equals(a) 
+				&& ((RankExpr)o).b.equals(b)
+				&& ((RankExpr)o).rankAB == rankAB
+				&& ((RankExpr)o).rankB == rankB;
 	}
 	
 	@Override
 	public int hashCode() {
-		return b.hashCode();
+		return Objects.hash(a, b, rankAB, rankB);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new RankExpr((AbstractExpression)this.b.replaceVariable(a, b));
+		return new RankExpr((AbstractExpression)this.a.replaceVariable(a, b), (AbstractExpression)this.b.replaceVariable(a, b));
 	}
 
 	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
+		AbstractFunctionCall afc = a.getEmbeddedFunctionCall();
+		if (afc != null) {
+			return afc;
+		}
 		return b.getEmbeddedFunctionCall();
 	}
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new RankExpr((AbstractExpression)b.replaceEmbeddedFunctionCall(fc, var));
+		return new RankExpr((AbstractExpression)a.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression)b.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
+		a.getVariables(list);
 		b.getVariables(list);
 	}
 

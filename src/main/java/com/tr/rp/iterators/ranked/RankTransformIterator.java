@@ -30,11 +30,11 @@ public class RankTransformIterator extends BufferingIterator<VarStore> {
 	}
 	
 	private final void transform() throws RPLException {
-		while (hasRankExpression(es) && next()) {
+		while (rankTransformationNeeded(es) && next()) {
 			VarStore v = getItem();
 			for (int i = 0; i < es.length; i++) {
 				try {
-					es[i] = es[i].transformRankExpressions(v, getRank());
+					es[i] = es[i].doRankExpressionTransformation(v, getRank());
 				} catch (RPLException e) {
 					if (exceptionSource != null) {
 						e.setStatement(exceptionSource);
@@ -53,9 +53,9 @@ public class RankTransformIterator extends BufferingIterator<VarStore> {
 		}
 	}
 	
-	private final boolean hasRankExpression(AbstractExpression[] e) {
+	private final boolean rankTransformationNeeded(AbstractExpression[] e) {
 		for (int i = 0; i < es.length; i++) {
-			if (e[i].hasRankExpression()) return true;
+			if (e[i].needsRankExpressionTransformation()) return true;
 		}
 		return false;
 	}

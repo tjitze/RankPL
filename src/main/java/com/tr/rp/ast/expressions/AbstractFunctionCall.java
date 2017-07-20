@@ -28,9 +28,9 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 
 
 	@Override
-	public final boolean hasRankExpression() {
+	public final boolean needsRankExpressionTransformation() {
 		for (AbstractExpression arg: arguments) {
-			if (arg.hasRankExpression()) {
+			if (arg.needsRankExpressionTransformation()) {
 				return true;
 			}
 		}

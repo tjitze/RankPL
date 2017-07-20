@@ -65,54 +65,48 @@ public class ForStatement extends AbstractStatement {
 	}
 					
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			// Init
-			in = init.getIterator(in, c);
+		// Init
+		in = init.getIterator(in, c);
 
-			while (true) {
-				
-				// Do one iteration
-				in = generateIteration(in, c);
-				
-				// Check if condition is still satisfied
-				BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-				boolean conditionSatisfied = false;
-				boolean hasNext = bi.next();
-				if (!hasNext) { // Undefined
-					return new AbsurdIterator<VarStore>(); 
-				}
-				
-				// If optimal, the for condition is the same in all variable stores,
-				// and therefore we only have to check the first.
-				if (isOptimal) {
-					if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
-						conditionSatisfied = true;
-					}
-				} else {
-					while (hasNext) {
-						if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
-							conditionSatisfied = true;
-							break;
-						}
-						hasNext = bi.next();
-					}
-				}
-				
-				bi.reset();
-				bi.stopBuffering();
-	
-				// If exp is not satisfied, we are done
-				if (!conditionSatisfied) {
-					return bi;
-				}
-				
-				// Try another iteration
-				in = bi;
+		while (true) {
+			
+			// Do one iteration
+			in = generateIteration(in, c);
+			
+			// Check if condition is still satisfied
+			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
+			boolean conditionSatisfied = false;
+			boolean hasNext = bi.next();
+			if (!hasNext) { // Undefined
+				return new AbsurdIterator<VarStore>(); 
 			}
 			
-		} catch (RPLException e) {
-			e.setStatement(this);
-			throw e;
+			// If optimal, the for condition is the same in all variable stores,
+			// and therefore we only have to check the first.
+			if (isOptimal) {
+				if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
+					conditionSatisfied = true;
+				}
+			} else {
+				while (hasNext) {
+					if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
+						conditionSatisfied = true;
+						break;
+					}
+					hasNext = bi.next();
+				}
+			}
+			
+			bi.reset();
+			bi.stopBuffering();
+
+			// If exp is not satisfied, we are done
+			if (!conditionSatisfied) {
+				return bi;
+			}
+			
+			// Try another iteration
+			in = bi;
 		}
 	}
 

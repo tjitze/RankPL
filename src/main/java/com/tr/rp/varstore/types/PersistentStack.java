@@ -2,6 +2,7 @@ package com.tr.rp.varstore.types;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import com.tr.rp.exceptions.RPLEmptyStackException;
 
@@ -91,6 +92,23 @@ public class PersistentStack<T> {
 	
 	private boolean internalEquals(PersistentStack<?> other) {
 		return other.element.equals(element) && other.internalEquals(this);
+	}
+	
+	private String toStringInternal() {
+		if (parent == null) {
+			// Empty
+			if (element == null) {
+				return "";
+			} else {
+				return element.toString();
+			}
+		} else {
+			return parent.toString() + ", " + element;
+		}
+	}
+	
+	public String toString() {
+		return "Stack("+toStringInternal()+")";
 	}
 
 }

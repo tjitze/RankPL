@@ -1,5 +1,7 @@
 package com.tr.rp.varstore.types;
 
+import java.util.stream.Collectors;
+
 import org.organicdesign.fp.collections.PersistentHashMap;
 import org.organicdesign.fp.collections.PersistentHashSet;
 
@@ -68,6 +70,12 @@ public class PersistentMap<T, U> {
 			return hashCode() == other.hashCode() && map.equals(other.map);
 		}
 		return false;
+	}
+
+	public String toString() {
+		return "Map(" + map.entrySet().stream()
+				.map(e -> "[" + e.getKey() + " -> " + e.getValue() + "]")
+				.collect(Collectors.joining(", ")) + ")";
 	}
 
 }

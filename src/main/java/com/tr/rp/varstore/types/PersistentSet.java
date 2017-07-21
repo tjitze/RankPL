@@ -1,5 +1,7 @@
 package com.tr.rp.varstore.types;
 
+import java.util.stream.Collectors;
+
 import org.organicdesign.fp.collections.PersistentHashSet;
 
 /**
@@ -63,6 +65,10 @@ public class PersistentSet<T> {
 			return hashCode() == other.hashCode() && set.equals(other.set);
 		}
 		return false;
+	}
+	
+	public String toString() {
+		return "Set(" + set.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")";
 	}
 
 }

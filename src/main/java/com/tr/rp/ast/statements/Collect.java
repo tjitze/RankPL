@@ -17,7 +17,7 @@ import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 		
 public class Collect extends AbstractStatement {
 	
@@ -54,7 +54,7 @@ public class Collect extends AbstractStatement {
 				values.add(v);
 			}
 		}
-		PersistentList rankZeroValues = new PersistentList(values);
+		PersistentArray rankZeroValues = new PersistentArray(values);
 		// Update rank zero var stores
 		for (int i = 0; i < zeroRankVarStores.size(); i++) {
 			zeroRankVarStores.set(i, target.assign(zeroRankVarStores.get(i), rankZeroValues));

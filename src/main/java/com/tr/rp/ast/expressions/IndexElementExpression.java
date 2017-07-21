@@ -11,7 +11,7 @@ import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -104,8 +104,8 @@ public class IndexElementExpression extends AbstractExpression {
 					throw new RPLIndexOutOfBoundsException(index, s.length(), this);
 				}
 				o = s.substring(index, index + 1);
-			} else if (o instanceof PersistentList) {
-				PersistentList list = (PersistentList)o;
+			} else if (o instanceof PersistentArray) {
+				PersistentArray list = (PersistentArray)o;
 				int index = indices[i].getValue(e, Type.INT);
 				if (index < 0 || index >= list.size()) {
 					throw new RPLIndexOutOfBoundsException(index, list.size(), this);

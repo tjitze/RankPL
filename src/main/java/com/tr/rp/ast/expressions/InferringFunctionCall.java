@@ -16,7 +16,7 @@ import com.tr.rp.iterators.ranked.MultiMergeIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 
 public class InferringFunctionCall extends FunctionCall {
 	
@@ -79,7 +79,7 @@ public class InferringFunctionCall extends FunctionCall {
 				while (it.next() && it.getRank() == 0) {
 					values.add(it.getItem().getValue(var));
 				}
-				return new InitialVarStoreIterator(in.create(assignToVar, new PersistentList(values)));
+				return new InitialVarStoreIterator(in.create(assignToVar, new PersistentArray(values)));
 			}
 		};
 	}

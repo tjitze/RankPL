@@ -21,7 +21,7 @@ public abstract class Type<T> {
 	
 	public static final Type<Integer> INT = new IntType();
 	public static final Type<Boolean> BOOL = new BoolType();
-	public static final Type<PersistentList> ARRAY = new ArrayType();
+	public static final Type<PersistentArray> ARRAY = new ArrayType();
 	public static final Type<String> STRING = new StringType();
 	public static final Type<PersistentStack<Object>> STACK = new StackType();
 	public static final Type<PersistentSet<Object>> SET = new SetType();

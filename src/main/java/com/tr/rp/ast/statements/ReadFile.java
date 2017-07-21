@@ -20,7 +20,7 @@ import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 public class ReadFile extends AbstractStatement {
@@ -49,7 +49,7 @@ public class ReadFile extends AbstractStatement {
 		return new RankedIterator<VarStore>() {
 
 			private String lastPath;
-			private PersistentList lines;
+			private PersistentArray lines;
 			
 			@Override
 			public boolean next() throws RPLException {
@@ -66,7 +66,7 @@ public class ReadFile extends AbstractStatement {
 				if (lines == null || !lastPath.equals(currentPath)) {
 					try {
 						lastPath = currentPath;
-						lines = new PersistentList(readFile(path.getValue(rt.getItem(), Type.STRING)).toArray());
+						lines = new PersistentArray(readFile(path.getValue(rt.getItem(), Type.STRING)).toArray());
 					} catch (IOException e) {
 						throw new RPLMiscException(e.toString());
 					}

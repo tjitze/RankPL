@@ -20,7 +20,7 @@ import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -45,7 +45,7 @@ public class AssertRanked extends AbstractStatement {
 			if (!e.hasDefiniteValue()) {
 				throw new RPLMiscException("Expected expression must be a definite expression", this);
 			}
-			PersistentList pl = e.getDefiniteValue(Type.ARRAY);
+			PersistentArray pl = e.getDefiniteValue(Type.ARRAY);
 			if (pl.size() != 2) {
 				throw new RPLMiscException("Expected list [rank, value]", e);
 			}

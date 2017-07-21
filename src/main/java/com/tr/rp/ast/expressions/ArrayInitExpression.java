@@ -8,7 +8,7 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 
 /**
  * Array initialization expression. 
@@ -85,14 +85,14 @@ public class ArrayInitExpression extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		PersistentList list;
+		PersistentArray list;
 		Object dimensionValue = dimension.getValue(e);
 		if (dimensionValue instanceof Integer) {
 			if (initValue != null) {
 				Object iv = initValue.getValue(e);
-				list = new PersistentList((Integer)dimensionValue, () -> iv);
+				list = new PersistentArray((Integer)dimensionValue, () -> iv);
 			} else {
-				list = new PersistentList((Integer)dimensionValue);
+				list = new PersistentArray((Integer)dimensionValue);
 			}
 		} else {
 			throw new RPLTypeError("Integer", dimensionValue, dimension);
@@ -107,14 +107,14 @@ public class ArrayInitExpression extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		PersistentList list;
+		PersistentArray list;
 		Object dimensionValue = dimension.getDefiniteValue();
 		if (dimensionValue instanceof Integer) {
 			if (initValue != null) {
 				Object iv = initValue.getDefiniteValue();
-				list = new PersistentList((Integer)dimensionValue, () -> iv);
+				list = new PersistentArray((Integer)dimensionValue, () -> iv);
 			} else {
-				list = new PersistentList((Integer)dimensionValue);
+				list = new PersistentArray((Integer)dimensionValue);
 			}
 		} else {
 			throw new RPLTypeError("Integer", dimensionValue, dimension);

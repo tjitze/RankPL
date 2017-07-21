@@ -11,7 +11,7 @@ import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 public class ArraysTest extends RPLBaseTest {
@@ -27,7 +27,7 @@ public class ArraysTest extends RPLBaseTest {
 				new ArrayInitExpression(lit(d1), null))
 				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
-		PersistentList list = (PersistentList)result.getItem().getValue("x");
+		PersistentArray list = (PersistentArray)result.getItem().getValue("x");
 		assertEquals(d1, list.size());
 		for (int i = 0; i < d1; i++) {
 			assertEquals(null, list.get(i));
@@ -38,7 +38,7 @@ public class ArraysTest extends RPLBaseTest {
 				new ArrayInitExpression(lit(d1), lit(0)))
 				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
-		list = (PersistentList)result.getItem().getValue("x");
+		list = (PersistentArray)result.getItem().getValue("x");
 		assertEquals(d1, list.size());
 		for (int i = 0; i < d1; i++) {
 			assertEquals(0, list.get(i));
@@ -49,8 +49,8 @@ public class ArraysTest extends RPLBaseTest {
 				new ArrayInitExpression(lit(d1), new Literal<String>("")))
 				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
-		assert(result.getItem().getValue("x") instanceof PersistentList);
-		list = (PersistentList)result.getItem().getValue("x");
+		assert(result.getItem().getValue("x") instanceof PersistentArray);
+		list = (PersistentArray)result.getItem().getValue("x");
 		assertEquals(d1, list.size());
 		for (int i = 0; i < d1; i++) {
 			assertEquals("", list.get(i));
@@ -61,12 +61,12 @@ public class ArraysTest extends RPLBaseTest {
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), null)))
 				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
-		assert(result.getItem().getValue("x") instanceof PersistentList);
-		list = (PersistentList)result.getItem().getValue("x");
+		assert(result.getItem().getValue("x") instanceof PersistentArray);
+		list = (PersistentArray)result.getItem().getValue("x");
 		assertEquals(5, list.size());
 		for (int i = 0; i < d1; i++) {
-			assert(list.get(i) instanceof PersistentList);
-			PersistentList list2 = (PersistentList)list.get(i);
+			assert(list.get(i) instanceof PersistentArray);
+			PersistentArray list2 = (PersistentArray)list.get(i);
 			assert(list2.size() == d2);
 			for (int j = 0; j < d2; j++) {
 				assertEquals(null, list2.get(j));
@@ -78,12 +78,12 @@ public class ArraysTest extends RPLBaseTest {
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), lit(0))))
 				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
-		assert(result.getItem().getValue("x") instanceof PersistentList);
-		list = (PersistentList)result.getItem().getValue("x");
+		assert(result.getItem().getValue("x") instanceof PersistentArray);
+		list = (PersistentArray)result.getItem().getValue("x");
 		assertEquals(5, list.size());
 		for (int i = 0; i < d1; i++) {
-			assert(list.get(i) instanceof PersistentList);
-			PersistentList list2 = (PersistentList)list.get(i);
+			assert(list.get(i) instanceof PersistentArray);
+			PersistentArray list2 = (PersistentArray)list.get(i);
 			assert(list2.size() == d2);
 			for (int j = 0; j < d2; j++) {
 				assertEquals(0, list2.get(j));
@@ -95,16 +95,16 @@ public class ArraysTest extends RPLBaseTest {
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), new ArrayInitExpression(lit(d3), null))))
 				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
-		assert(result.getItem().getValue("x") instanceof PersistentList);
-		list = (PersistentList)result.getItem().getValue("x");
+		assert(result.getItem().getValue("x") instanceof PersistentArray);
+		list = (PersistentArray)result.getItem().getValue("x");
 		assertEquals(5, list.size());
 		for (int i = 0; i < d1; i++) {
-			assert(list.get(i) instanceof PersistentList);
-			PersistentList list2 = (PersistentList)list.get(i);
+			assert(list.get(i) instanceof PersistentArray);
+			PersistentArray list2 = (PersistentArray)list.get(i);
 			assert(list2.size() == d2);
 			for (int j = 0; j < d2; j++) {
-				assert(list2.get(j) instanceof PersistentList);
-				PersistentList list3 = (PersistentList)list2.get(j);
+				assert(list2.get(j) instanceof PersistentArray);
+				PersistentArray list3 = (PersistentArray)list2.get(j);
 				assert(list3.size() == d3);
 				for (int k = 0; k < d3; k++) {
 					assertEquals(null, list3.get(k));
@@ -117,16 +117,16 @@ public class ArraysTest extends RPLBaseTest {
 				new ArrayInitExpression(lit(d1), new ArrayInitExpression(lit(d2), new ArrayInitExpression(lit(d3), lit(0)))))
 				.getIterator(new InitialVarStoreIterator(), ExecutionContext.createDefault());
 		assert(result.next());
-		assert(result.getItem().getValue("x") instanceof PersistentList);
-		list = (PersistentList)result.getItem().getValue("x");
+		assert(result.getItem().getValue("x") instanceof PersistentArray);
+		list = (PersistentArray)result.getItem().getValue("x");
 		assertEquals(5, list.size());
 		for (int i = 0; i < d1; i++) {
-			assert(list.get(i) instanceof PersistentList);
-			PersistentList list2 = (PersistentList)list.get(i);
+			assert(list.get(i) instanceof PersistentArray);
+			PersistentArray list2 = (PersistentArray)list.get(i);
 			assert(list2.size() == d2);
 			for (int j = 0; j < d2; j++) {
-				assert(list2.get(j) instanceof PersistentList);
-				PersistentList list3 = (PersistentList)list2.get(j);
+				assert(list2.get(j) instanceof PersistentArray);
+				PersistentArray list3 = (PersistentArray)list2.get(j);
 				assert(list3.size() == d3);
 				for (int k = 0; k < d3; k++) {
 					assertEquals(0, list3.get(k));

@@ -9,7 +9,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 
 /**
  * Array construction expression. Evaluates to an array with a given
@@ -84,7 +84,7 @@ public class ArrayConstructExpression extends AbstractExpression {
 		for (int i = 0; i < values.length; i++) {
 			evaluatedValues[i] = values[i].getValue(e);
 		}
-		return new PersistentList(evaluatedValues);
+		return new PersistentArray(evaluatedValues);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class ArrayConstructExpression extends AbstractExpression {
 		for (int i = 0; i < values.length; i++) {
 			dimensionValues[i] = values[i].getDefiniteValue();
 		}
-		return new PersistentList(dimensionValues);
+		return new PersistentArray(dimensionValues);
 	}
 	
 	public String toString() {

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * 
  * TODO: consider replacing with PersistentVector
  */
-public class PersistentList {
+public class PersistentArray {
 
 	private final Object[][] segments;
 	private final int size;
@@ -23,7 +23,7 @@ public class PersistentList {
 	private int hashCode = 0;
 	private boolean hashCodeComputed = false;
 	
-	public PersistentList(Collection<Object> values) {
+	public PersistentArray(Collection<Object> values) {
 		this(values.size());
 		int i = 0;
 		for (Object v: values) {
@@ -31,26 +31,26 @@ public class PersistentList {
 		}
 	}
 	
-	public PersistentList(Object ... values) {
+	public PersistentArray(Object ... values) {
 		this(values.length);
 		for (int i = 0; i < size; i++) {
 			set(i, values[i]);
 		}
 	}
 	
-	public PersistentList(int size) {
+	public PersistentArray(int size) {
 		this.size = size;
 		this.square = (int)Math.ceil(Math.sqrt(size));
 		this.segments = new Object[square][square];
 	}
 	
-	private PersistentList(int size, Object[][] segments) {
+	private PersistentArray(int size, Object[][] segments) {
 		this.size = size;
 		this.square = (int)Math.ceil(Math.sqrt(size));
 		this.segments = segments;
 	}
 
-	public PersistentList(int length, Supplier<Object> initValue) {
+	public PersistentArray(int length, Supplier<Object> initValue) {
 		this.size = length;
 		this.square = (int)Math.ceil(Math.sqrt(length));
 		this.segments = new Object[square][square];
@@ -95,13 +95,13 @@ public class PersistentList {
 	}
 
 	
-	public synchronized PersistentList getMutatedCopy(int index, Object value) {
+	public synchronized PersistentArray getMutatedCopy(int index, Object value) {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
 		int segment = getSegment(index);
 		int segmentIndex = getSegmentIndex(index);
-		PersistentList copy = new PersistentList(size, segments);
+		PersistentArray copy = new PersistentArray(size, segments);
 		for (int i = 0; i < square; i++) {
 			if (i == segment) {
 				copy.segments[i] = Arrays.copyOf(segments[i], segments[i].length);
@@ -123,8 +123,8 @@ public class PersistentList {
 	}
 	
 	public boolean equals(Object o) {
-		if (o instanceof PersistentList) {
-			PersistentList other = (PersistentList)o;
+		if (o instanceof PersistentArray) {
+			PersistentArray other = (PersistentArray)o;
 			if (size != other.size) {
 				return false;
 			}

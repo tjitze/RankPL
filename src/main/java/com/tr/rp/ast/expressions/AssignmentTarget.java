@@ -12,7 +12,7 @@ import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -140,8 +140,8 @@ public class AssignmentTarget extends AbstractExpression {
 		}
 	}
 	
-	private PersistentList mutateList(int i, PersistentList in, Object value, VarStore vs) throws RPLException {
-		PersistentList list = (PersistentList)in;
+	private PersistentArray mutateList(int i, PersistentArray in, Object value, VarStore vs) throws RPLException {
+		PersistentArray list = (PersistentArray)in;
 		int position = indices[i].getValue(vs, Type.INT);
 		if (position < 0 || position >= list.size()) {
 			throw new RPLIndexOutOfBoundsException(position, list.size(), this);
@@ -150,8 +150,8 @@ public class AssignmentTarget extends AbstractExpression {
 			return list.getMutatedCopy(position, value);
 		} else {
 			Object o = list.get(position);
-			if (o != null && o instanceof PersistentList) {
-				return list.getMutatedCopy(position, mutateList(i + 1, (PersistentList)o, value, vs));
+			if (o != null && o instanceof PersistentArray) {
+				return list.getMutatedCopy(position, mutateList(i + 1, (PersistentArray)o, value, vs));
 			} else if (o == null) {
 				throw new RPLUndefinedException(this);
 			} else {

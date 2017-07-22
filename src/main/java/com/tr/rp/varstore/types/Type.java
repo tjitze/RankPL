@@ -26,4 +26,5 @@ public abstract class Type<T> {
 	public static final Type<PersistentStack<Object>> STACK = new StackType();
 	public static final Type<PersistentSet<Object>> SET = new SetType();
 	public static final Type<PersistentMap<Object, Object>> MAP = new MapType();
+	public static final Type<PersistentList<Object>> LIST = new ListType();
 }

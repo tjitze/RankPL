@@ -1,6 +1,7 @@
 package com.tr.rp.exceptions;
 
 import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.AbstractStatement;
 
 public class RPLIndexOutOfBoundsException extends RPLException {
 
@@ -15,6 +16,13 @@ public class RPLIndexOutOfBoundsException extends RPLException {
 		setExpression(e);
 	}
 	
+	public RPLIndexOutOfBoundsException(int index, int size, AbstractStatement s) {
+		this.index = index;
+		this.size = size;
+		this.hasIndexAndSize = true;
+		setStatement(s);
+	}
+
 	public RPLIndexOutOfBoundsException() {
 		this.index = -1;
 		this.size = -1;

@@ -1,21 +1,24 @@
 package com.tr.rp.ast.expressions;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentMap;
-import com.tr.rp.varstore.types.PersistentSet;
-import com.tr.rp.varstore.types.PersistentStack;
 
 /**
  * Returns a new, empty map
  */
-public class MapNew extends AbstractExpression {
+public class ConstructorExpression extends AbstractExpression {
 	
-	public MapNew() {
+	private final Supplier<Object> supplier;
+	private final String name;
+	
+	public ConstructorExpression(String name, Supplier<Object> supplier) {
+		this.name = name;
+		this.supplier = supplier;
 	}
 	
 	@Override
@@ -48,7 +51,7 @@ public class MapNew extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return new PersistentMap<Object, Object>();
+		return supplier.get();
 	}
 
 	@Override
@@ -58,11 +61,11 @@ public class MapNew extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return new PersistentMap<Object, Object>();
+		return supplier.get();
 	}
 	
 	public String toString() {
-		return "newMap()";
+		return name;
 	}
 	
 	public boolean equals(Object o) {

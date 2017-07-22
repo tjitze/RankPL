@@ -208,7 +208,9 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseExpr("((100) / 0)"), div(lit(100), lit(0)));
 		assertEquals(parseExpr("a + b * c"), plus(var("a"), times(var("b"), var("c"))));
 		assertEquals(parseExpr("a / b + c"), plus(div(var("a"), var("b")), var("c")));
-		assertEquals(parseExpr("RANK(x == 0)"), rank(eq(var("x"), lit(0))));
+		AbstractExpression exp1 = parseExpr("rank(x == 0)");
+		AbstractExpression exp2 = rank(eq(var("x"), lit(0)));
+		assertEquals(exp1, exp2);
 		// precedence of minus
 		assertEquals(parseExpr("-1 + -2"), plus(lit(-1), lit(-2)));
 		assertEquals(parseExpr("a + -a"), plus(var("a"), minus(var("a"))));

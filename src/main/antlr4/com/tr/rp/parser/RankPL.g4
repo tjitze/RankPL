@@ -78,27 +78,12 @@ expr6
  | True				 					 				# LiteralBoolExpr
  | False			 					 				# LiteralBoolExpr
  | QUOTED_STRING										# LiteralStringExpr
- | variable 											# VariableExpression
  | Infer '(' VAR ('()' | ('(' (exp (',' exp)*) ')')) ')'# InferringFunctionCall
  | VAR ('()' | ('(' (exp (',' exp)*) ')'))				# FunctionCall
+ | Pop '(' assignment_target ')'						# PopFunctionCall
+ | variable 											# VariableExpression
  | '!' expr6 				                 			# NegateExpr
  | '-' expr6 			     	            			# MinusExpr
- | Isset '(' exp ')'    								# IsSetExpr
- | Abs '(' exp ')'      				   				# AbsExpr
- | Min '(' (exp (',' exp)*) ')'      				   	# MinExpr
- | Max '(' (exp (',' exp)*) ')'      				   	# MaxExpr
- | NewSet empty_args									# NewSetExpr
- | NewMap empty_args									# NewMapExpr
- | NewStack empty_args									# NewStackExpr
- | Contains '(' exp ',' exp ')'							# SetContainsExpr
- | Get '(' exp ',' exp ')'							    # MapGetExpr
- | Peek '(' exp ')'										# StackPeekExpr
- | Pop '(' assignment_target ')'						# StackPopExpr
- | ParseInt '(' exp ')'       				   			# ParseIntExpr
- | Size '(' exp ')' 		 							# SizeExpr
- | Substring '(' exp ',' exp ',' exp ')' 				# SubStringExpr
- | Rank '(' exp ')' 	 								# RankExpr
- | Array '(' exp (',' exp)? ')' 						# ArrayInitExpr
  | '[' (exp (',' exp)* )? ']'							# ArrayConstructExpr
  | '(' exp ')' 											# ParExpression
  ;
@@ -128,26 +113,11 @@ Reset: 			'reset' | 'RESET';
 True: 			'true' | 'TRUE';
 False: 			'false' | 'FALSE';
 Infer: 			'infer' | 'INFER';
-Isset: 			'isset' | 'ISSET';
-Abs: 			'abs' | 'ABS';
-ParseInt:		'parseint' | 'parseInt' | 'PARSEINT';
-Min: 			'min' | 'MIN';
-Max: 			'max' | 'MAX';
-Size: 			'size' | 'SIZE';
-Substring: 		'substring' | 'SUBSTRING';
-Rank: 			'rank' | 'RANK';
-Array: 			'array' | 'ARRAY';
 Remove: 		'remove' | 'REMOVE';
 Add:	 		'add' | 'ADD';
 Put:	 		'put' | 'PUT';
-Push:	 		'push' | 'PUSH';
-NewSet:	 		'newset' | 'NEWSET' | 'newSet';
-NewMap:	 		'newmap' | 'NEWMAP' | 'newMap';
-NewStack:	 	'newstack' | 'NEWSTACK' | 'newStack';
-Contains:	 	'contains' | 'CONTAINS';
-Peek:	 		'peek' | 'PEEK';
 Pop:	 		'pop' | 'POP';
-Get:	 		'get' | 'GET';
+Push:	 		'push' | 'PUSH';
 
 empty_args:		'()' | '(' ')';
 

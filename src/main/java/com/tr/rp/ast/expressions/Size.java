@@ -9,6 +9,7 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.varstore.types.PersistentList;
 import com.tr.rp.varstore.types.PersistentMap;
 import com.tr.rp.varstore.types.PersistentSet;
 import com.tr.rp.varstore.types.PersistentStack;
@@ -68,6 +69,8 @@ public class Size extends AbstractExpression {
 				return ((PersistentSet<?>)o).size();
 			} else if (o instanceof PersistentMap) {
 				return ((PersistentMap<?,?>)o).size();
+			} else if (o instanceof PersistentList) {
+				return ((PersistentList<?>)o).size();
 			} else {
 				throw new RPLTypeError("string, array, set, map or stack", o, e);
 			}
@@ -95,6 +98,8 @@ public class Size extends AbstractExpression {
 				return ((PersistentSet<?>)o).size();
 			} else if (o instanceof PersistentMap) {
 				return ((PersistentMap<?, ?>)o).size();
+			} else if (o instanceof PersistentList) {
+				return ((PersistentList<?>)o).size();
 			} else {
 				throw new RPLTypeError("string, array, set, map or stack", o, e);
 			}

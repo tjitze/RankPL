@@ -5,11 +5,14 @@ import static com.tr.rp.ast.expressions.Expressions.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -30,7 +33,7 @@ import com.tr.rp.ast.expressions.IsSet;
 import com.tr.rp.ast.expressions.Size;
 import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.expressions.MapGet;
-import com.tr.rp.ast.expressions.MapNew;
+import com.tr.rp.ast.expressions.ConstructorExpression;
 import com.tr.rp.ast.expressions.Max;
 import com.tr.rp.ast.expressions.Min;
 import com.tr.rp.ast.expressions.Negative;
@@ -38,10 +41,9 @@ import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.expressions.ParseInt;
 import com.tr.rp.ast.expressions.RankExpr;
 import com.tr.rp.ast.expressions.SetContains;
-import com.tr.rp.ast.expressions.SetNew;
-import com.tr.rp.ast.expressions.StackNew;
 import com.tr.rp.ast.expressions.StackPeek;
 import com.tr.rp.ast.expressions.StackPop;
+import com.tr.rp.ast.expressions.SubString;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.Assert;
 import com.tr.rp.ast.statements.AssertRanked;
@@ -69,11 +71,9 @@ import com.tr.rp.ast.statements.Skip;
 import com.tr.rp.ast.statements.StackPush;
 import com.tr.rp.ast.statements.While;
 import com.tr.rp.parser.RankPLBaseVisitor;
-import com.tr.rp.parser.RankPLParser.AbsExprContext;
 import com.tr.rp.parser.RankPLParser.Arithmetic1ExpressionContext;
 import com.tr.rp.parser.RankPLParser.Arithmetic2ExpressionContext;
 import com.tr.rp.parser.RankPLParser.ArrayConstructExprContext;
-import com.tr.rp.parser.RankPLParser.ArrayInitExprContext;
 import com.tr.rp.parser.RankPLParser.AssertRankedStatementContext;
 import com.tr.rp.parser.RankPLParser.AssertStatementContext;
 import com.tr.rp.parser.RankPLParser.AssignmentStatementContext;
@@ -93,28 +93,19 @@ import com.tr.rp.parser.RankPLParser.IndexContext;
 import com.tr.rp.parser.RankPLParser.IndexedExpressionContext;
 import com.tr.rp.parser.RankPLParser.IndifferentChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.InferringFunctionCallContext;
-import com.tr.rp.parser.RankPLParser.IsSetExprContext;
-import com.tr.rp.parser.RankPLParser.SizeExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralBoolExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralIntExpressionContext;
 import com.tr.rp.parser.RankPLParser.LiteralStringExprContext;
-import com.tr.rp.parser.RankPLParser.MaxExprContext;
-import com.tr.rp.parser.RankPLParser.MinExprContext;
 import com.tr.rp.parser.RankPLParser.MinusExprContext;
 import com.tr.rp.parser.RankPLParser.NegateExprContext;
-import com.tr.rp.parser.RankPLParser.NewSetExprContext;
-import com.tr.rp.parser.RankPLParser.NewMapExprContext;
-import com.tr.rp.parser.RankPLParser.MapGetExprContext;
-import com.tr.rp.parser.RankPLParser.NewStackExprContext;
 import com.tr.rp.parser.RankPLParser.ObserveStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveJStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveLStatementContext;
 import com.tr.rp.parser.RankPLParser.ParExpressionContext;
-import com.tr.rp.parser.RankPLParser.ParseIntExprContext;
+import com.tr.rp.parser.RankPLParser.PopFunctionCallContext;
 import com.tr.rp.parser.RankPLParser.PrintStatementContext;
 import com.tr.rp.parser.RankPLParser.ProgramContext;
 import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
-import com.tr.rp.parser.RankPLParser.RankExprContext;
 import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.ExceptionallyStatementContext;
 import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
@@ -122,19 +113,19 @@ import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
 import com.tr.rp.parser.RankPLParser.SetAddStatementContext;
 import com.tr.rp.parser.RankPLParser.MapPutStatementContext;
-import com.tr.rp.parser.RankPLParser.SetContainsExprContext;
 import com.tr.rp.parser.RankPLParser.SetRemoveStatementContext;
 import com.tr.rp.parser.RankPLParser.SkipStatementContext;
-import com.tr.rp.parser.RankPLParser.StackPeekExprContext;
-import com.tr.rp.parser.RankPLParser.StackPopExprContext;
 import com.tr.rp.parser.RankPLParser.StackPushStatementContext;
 import com.tr.rp.parser.RankPLParser.StatContext;
 import com.tr.rp.parser.RankPLParser.StatementSequenceContext;
-import com.tr.rp.parser.RankPLParser.SubStringExprContext;
 import com.tr.rp.parser.RankPLParser.VariableContext;
 import com.tr.rp.parser.RankPLParser.VariableExpressionContext;
 import com.tr.rp.parser.RankPLParser.WhileStatementContext;
 import com.tr.rp.ranks.FunctionScope;
+import com.tr.rp.varstore.types.PersistentList;
+import com.tr.rp.varstore.types.PersistentMap;
+import com.tr.rp.varstore.types.PersistentSet;
+import com.tr.rp.varstore.types.PersistentStack;
 
 public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
@@ -499,56 +490,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitIsSetExpr(IsSetExprContext ctx) {
-		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
-		return new IsSet(e);
-	}
-
-	@Override
-	public LanguageElement visitAbsExpr(AbsExprContext ctx) {
-		AbstractExpression num = (AbstractExpression)visit(ctx.exp());
-		return new Abs(num);
-	}
-
-	@Override
-	public LanguageElement visitParseIntExpr(ParseIntExprContext ctx) {
-		AbstractExpression str = (AbstractExpression)visit(ctx.exp());
-		return new ParseInt(str);
-	}
-
-	@Override
-	public LanguageElement visitMinExpr(MinExprContext ctx) {
-		AbstractExpression[] args = new AbstractExpression[ctx.exp().size()];
-		for (int i = 0; i < args.length; i++) {
-			args[i] = (AbstractExpression)visit(ctx.exp(i));
-		}
-		return new Min(args);
-	}
-
-	@Override
-	public LanguageElement visitMaxExpr(MaxExprContext ctx) {
-		AbstractExpression[] args = new AbstractExpression[ctx.exp().size()];
-		for (int i = 0; i < args.length; i++) {
-			args[i] = (AbstractExpression)visit(ctx.exp(i));
-		}
-		return new Max(args);
-	}
-
-	@Override
-	public LanguageElement visitSizeExpr(SizeExprContext ctx) {
-		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
-		return new Size(e);
-	}
-
-	@Override
-	public LanguageElement visitSubStringExpr(SubStringExprContext ctx) {
-		AbstractExpression s = (AbstractExpression)visit(ctx.exp(0));
-		AbstractExpression begin = (AbstractExpression)visit(ctx.exp(1));
-		AbstractExpression end = (AbstractExpression)visit(ctx.exp(2));
-		return Expressions.subString(s, begin, end);
-	}
-
-	@Override
 	public LanguageElement visitLiteralIntExpression(LiteralIntExpressionContext ctx) {
 		String num = ctx.getText();
 		return new Literal<Integer>(Integer.parseInt(num));
@@ -560,18 +501,26 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	}
 	
 	@Override
-	public LanguageElement visitRankExpr(RankExprContext ctx) {
-		return new RankExpr((AbstractExpression)visit(ctx.exp()));
-	}
-	
-	@Override
 	public LanguageElement visitFunctionCall(FunctionCallContext ctx) {
 		String functionName = ctx.VAR().toString();
 		AbstractExpression[] args = new AbstractExpression[ctx.exp().size()];
 		for (int i = 0; i < args.length; i++) {
 			args[i] = (AbstractExpression)visit(ctx.exp(i));
 		}
+		
+		// Try to parse as built in function
+		AbstractExpression builtInFunction = getBuiltInFunction(functionName, args);
+		if (builtInFunction != null) {
+			return builtInFunction;
+		}
+		
 		return new FunctionCall(functionName, functionScope, args);
+	}
+	
+	@Override
+	public LanguageElement visitPopFunctionCall(PopFunctionCallContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		return new StackPop(target);
 	}
 	
 	@Override
@@ -600,47 +549,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			if (cop.equals(">=")) return Expressions.geq(a, b);
 		}
 		throw new RuntimeException("Internal parse error");
-	}
-
-	@Override
-	public LanguageElement visitNewSetExpr(NewSetExprContext ctx) {
-		return new SetNew();
-	}
-
-	@Override
-	public LanguageElement visitNewMapExpr(NewMapExprContext ctx) {
-		return new MapNew();
-	}
-
-	@Override
-	public LanguageElement visitNewStackExpr(NewStackExprContext ctx) {
-		return new StackNew();
-	}
-
-	@Override
-	public LanguageElement visitSetContainsExpr(SetContainsExprContext ctx) {
-		AbstractExpression set = (AbstractExpression)visit(ctx.exp(0));
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
-		return new SetContains(set, value);
-	}
-
-	@Override
-	public LanguageElement visitMapGetExpr(MapGetExprContext ctx) {
-		AbstractExpression map = (AbstractExpression)visit(ctx.exp(0));
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
-		return new MapGet(map, value);
-	}
-
-	@Override
-	public LanguageElement visitStackPeekExpr(StackPeekExprContext ctx) {
-		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
-		return new StackPeek(e);
-	}
-
-	@Override
-	public LanguageElement visitStackPopExpr(StackPopExprContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		return new StackPop(target);
 	}
 
 	@Override
@@ -687,15 +595,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	    // put back leading spaces
 	    for (int i = 0; i < wsCount; i++) s = " " + s;
 		return new Literal<String>(s);
-	}
-	
-	@Override
-	public LanguageElement visitArrayInitExpr(ArrayInitExprContext ctx) {
-		if (ctx.exp().size() == 2) {
-			return new ArrayInitExpression((AbstractExpression)visit(ctx.exp(0)), (AbstractExpression)visit(ctx.exp(1)));
-		} else {
-			return new ArrayInitExpression((AbstractExpression)visit(ctx.exp(0)), null);		
-		}
 	}
 
 	@Override
@@ -786,4 +685,68 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		return function;
 	}
 
+	public AbstractExpression getBuiltInFunction(String name, AbstractExpression[] args) {
+		name = name.toLowerCase();
+		switch (name) {
+		case "isset":
+			ensureArgSize(name, args, 1);
+			return new IsSet(args[0]);
+		case "abs":
+			ensureArgSize(name, args, 1);
+			return new Abs(args[0]);
+		case "min":
+			return new Min(args);
+		case "max":
+			return new Max(args);
+		case "newset":
+			ensureArgSize(name, args, 0);
+			return new ConstructorExpression("newSet()", () -> new PersistentSet<Object>());
+		case "newmap":
+			ensureArgSize(name, args, 0);
+			return new ConstructorExpression("newSet()", () -> new PersistentMap<Object, Object>());
+		case "newstack":
+			ensureArgSize(name, args, 0);
+			return new ConstructorExpression("newSet()", () -> new PersistentStack<Object>());
+		case "newlist":
+			ensureArgSize(name, args, 0);
+			return new ConstructorExpression("newSet()", () -> new PersistentList<Object>());
+		case "contains":
+			ensureArgSize(name, args, 2);
+			return new SetContains(args[0], args[1]);
+		case "get":
+			ensureArgSize(name, args, 2);
+			return new MapGet(args[0], args[1]);
+		case "peek":
+			ensureArgSize(name, args, 1);
+			return new StackPeek(args[0]);
+		case "parseint":
+			ensureArgSize(name, args, 1);
+			return new ParseInt(args[0]);
+		case "size":
+			ensureArgSize(name, args, 1);
+			return new Size(args[0]);
+		case "substring":
+			ensureArgSize(name, args, 3);
+			return new SubString(args[0], args[1], args[2]);
+		case "rank":
+			ensureArgSize(name, args, 1);
+			return new RankExpr(args[0]);
+		case "array":
+			ensureArgSize(name, args, 1, 2);
+			return args.length == 1? new ArrayInitExpression(args[0], null): new ArrayInitExpression(args[0], args[1]);
+		}
+		return null; 
+	}
+	
+	private void ensureArgSize(String name, AbstractExpression[] args, int ... argSizes) {
+		for (int argSize: argSizes) {
+			if (args.length == argSize) {
+				return;
+			}
+		}
+		throw new IllegalArgumentException("The " + name + " function expects " + 
+				Arrays.stream(argSizes).mapToObj(i -> "" + i).collect(Collectors.joining(" or ")) +
+				" arguments, not " + args.length);
+	}
+	
 }

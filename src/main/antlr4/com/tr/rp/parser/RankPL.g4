@@ -41,6 +41,8 @@ stat
  | Assert exp											# AssertStatement
  | Reset												# ResetStatement
  | Remove '(' assignment_target ',' exp ')'				# SetRemoveStatement
+ | Append '(' assignment_target ',' exp ')'				# ListAppendStatement
+ | Replace '(' assignment_target ',' exp ',' exp ')'	# ListReplaceStatement
  | Add '(' assignment_target ',' exp ')'				# SetAddStatement
  | Put '(' assignment_target ',' exp ',' exp ')'		# MapPutStatement
  | Push '(' assignment_target ',' exp ')'				# StackPushStatement
@@ -118,6 +120,8 @@ Add:	 		'add' | 'ADD';
 Put:	 		'put' | 'PUT';
 Pop:	 		'pop' | 'POP';
 Push:	 		'push' | 'PUSH';
+Append:	 		'append' | 'APPEND';
+Replace:	 	'replace' | 'REPLACE';
 
 empty_args:		'()' | '(' ')';
 

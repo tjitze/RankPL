@@ -32,7 +32,7 @@ import com.tr.rp.ast.expressions.InferringFunctionCall;
 import com.tr.rp.ast.expressions.IsSet;
 import com.tr.rp.ast.expressions.Size;
 import com.tr.rp.ast.expressions.Literal;
-import com.tr.rp.ast.expressions.MapGet;
+import com.tr.rp.ast.expressions.Get;
 import com.tr.rp.ast.expressions.ConstructorExpression;
 import com.tr.rp.ast.expressions.Max;
 import com.tr.rp.ast.expressions.Min;
@@ -54,6 +54,8 @@ import com.tr.rp.ast.statements.Dec;
 import com.tr.rp.ast.statements.ForStatement;
 import com.tr.rp.ast.statements.IfElse;
 import com.tr.rp.ast.statements.Inc;
+import com.tr.rp.ast.statements.ListAppend;
+import com.tr.rp.ast.statements.ListReplace;
 import com.tr.rp.ast.statements.Observe;
 import com.tr.rp.ast.statements.ObserveJ;
 import com.tr.rp.ast.statements.ObserveL;
@@ -93,6 +95,8 @@ import com.tr.rp.parser.RankPLParser.IndexContext;
 import com.tr.rp.parser.RankPLParser.IndexedExpressionContext;
 import com.tr.rp.parser.RankPLParser.IndifferentChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.InferringFunctionCallContext;
+import com.tr.rp.parser.RankPLParser.ListAppendStatementContext;
+import com.tr.rp.parser.RankPLParser.ListReplaceStatementContext;
 import com.tr.rp.parser.RankPLParser.LiteralBoolExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralIntExpressionContext;
 import com.tr.rp.parser.RankPLParser.LiteralStringExprContext;
@@ -207,6 +211,25 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
 		SetAdd s = new SetAdd(target, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitListAppendStatement(ListAppendStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
+		ListAppend s = new ListAppend(target, value);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitListReplaceStatement(ListReplaceStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractExpression index = (AbstractExpression)visit(ctx.exp(0));
+		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
+		ListReplace s = new ListReplace(target, index, value);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}
@@ -715,7 +738,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			return new SetContains(args[0], args[1]);
 		case "get":
 			ensureArgSize(name, args, 2);
-			return new MapGet(args[0], args[1]);
+			return new Get(args[0], args[1]);
 		case "peek":
 			ensureArgSize(name, args, 1);
 			return new StackPeek(args[0]);

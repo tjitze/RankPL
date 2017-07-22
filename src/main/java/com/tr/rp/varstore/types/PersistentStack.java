@@ -91,7 +91,7 @@ public class PersistentStack<T> {
 	}
 	
 	private boolean internalEquals(PersistentStack<?> other) {
-		return other.element.equals(element) && other.internalEquals(this);
+		return Objects.equals(other.element, element) && Objects.equals(other.parent, parent);
 	}
 	
 	private String toStringInternal() {

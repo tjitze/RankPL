@@ -82,6 +82,7 @@ public class RankPL {
 		try {
 			execute(program);
 		} catch (RPLException e) {
+			// e.printStackTrace(); // use this for debugging
 			System.out.println("Exception: " + e.getDescription());
 			String info = "";
 			if (e.getExpression() != null) {
@@ -184,11 +185,11 @@ public class RankPL {
 		} catch (ExecutionException ee) { 
 			// Re-throw the RPL exception thrown inside the thread
 			c.setInterruptRequested();
-			if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLException) {
-				throw (RPLException)ee.getCause().getCause();
-			} else {
-				ee.printStackTrace();
-			}
+			ee.printStackTrace();
+			//if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLException) {
+			throw (RPLException)ee.getCause().getCause();
+			//} else {
+			//}
 		} catch (TimeoutException te) { 
 			c.setInterruptRequested();
 			System.out.println("Remaining results omitted due to timeout.");

@@ -1,0 +1,42 @@
+# Append, size, replace
+list := newlist();
+assert size(list) == 0;
+
+append(list, 10);
+assert(size(list) == 1);
+assert(get(list, 0) == 10); 
+
+append(list, 20);
+assert(size(list) == 2);
+assert(get(list, 0) == 10); 
+assert(get(list, 1) == 20); 
+
+replace(list, 0, 100);
+assert(size(list) == 2);
+assert(get(list, 0) == 100); 
+assert(get(list, 1) == 20); 
+
+replace(list, 1, 200);
+assert(size(list) == 2);
+assert(get(list, 0) == 100); 
+assert(get(list, 1) == 200); 
+
+append(list, 300);
+assert(size(list) == 3);
+assert(get(list, 0) == 100); 
+assert(get(list, 1) == 200); 
+assert(get(list, 2) == 300); 
+
+# Equality
+list1 := newlist();
+list2 := newlist();
+assert(list1 == list2);
+append(list1, 10);
+assert(list1 != list2);
+append(list2, 10);
+assert(list1 == list2);
+append(list1, 20);
+assert(list1 != list2);
+append(list2, 20);
+assert(list1 == list2);
+

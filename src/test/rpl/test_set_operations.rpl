@@ -1,3 +1,4 @@
+# Test add, size
 set := newset();
 assert size(set) == 0;
 
@@ -16,6 +17,7 @@ assert contains(set, 10);
 assert contains(set, 20);
 assert size(set) == 2;
 
+# Test remove
 remove(set, 10);
 assert !contains(set, 10);
 assert contains(set, 20);
@@ -30,3 +32,24 @@ remove(set, 20);
 assert !contains(set, 10);
 assert !contains(set, 20);
 assert size(set) == 0;
+
+# Test equality
+set1 := newset();
+set2 := newset();
+assert(set1 == set2);
+add(set1, 10);
+assert(set1 != set2);
+add(set2, 20);
+assert(set1 != set2);
+add(set1, 20);
+assert(set1 != set2);
+add(set2, 10);
+assert(set1 == set2);
+remove(set1, 10);
+assert(set1 != set2);
+remove(set2, 10);
+assert(set1 == set2);
+remove(set1, 20);
+assert(set1 != set2);
+remove(set2, 20);
+assert(set1 == set2);

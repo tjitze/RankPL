@@ -1,3 +1,4 @@
+# push, peek, size
 stack := newstack();
 assert size(stack) == 0;
 
@@ -24,3 +25,24 @@ assert size(stack) == 1;
 x := pop(stack);
 assert x == 10;
 assert size(stack) == 0;
+
+# Equality
+stack1 := newstack();
+stack2 := newstack();
+assert(stack1 == stack2);
+push(stack1, 10);
+assert(stack1 != stack2);
+push(stack2, 10);
+assert(stack1 == stack2);
+push(stack1, 20);
+assert(stack1 != stack2);
+push(stack2, 20);
+assert(stack1 == stack2);
+x := pop(stack1);
+assert(stack1 != stack2);
+x := pop(stack2);
+assert(stack1 == stack2);
+x := pop(stack1);
+assert(stack1 != stack2);
+x := pop(stack2);
+assert(stack1 == stack2);

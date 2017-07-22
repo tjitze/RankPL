@@ -41,3 +41,21 @@ assert contains(map, 2);
 assert get(map, 1) == "b";
 assert get(map, 2) == "b";
 assert size(map) == 2;
+
+# Equality
+map1 := newmap();
+map2 := newmap();
+assert(map1 == map2);
+put(map1, 1, "a");
+assert(map1 != map2);
+put(map2, 1, "a");
+assert(map1 == map2);
+put(map1, 1, "b");
+assert(map1 != map2);
+put(map2, 1, "b");
+assert(map1 == map2);
+put(map1, 2, "b");
+assert(map1 != map2);
+put(map2, 2, "b");
+assert(map1 == map2);
+

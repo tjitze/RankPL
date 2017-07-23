@@ -91,11 +91,15 @@ public class RankExpr extends AbstractExpression {
 	}
 
 	public String toString() {
+		String as = b.toString();
+		if (as.startsWith("(") && as.endsWith(")")) {
+			as = as.substring(1, as.length()-1);
+		}
 		String bs = b.toString();
 		if (bs.startsWith("(") && bs.endsWith(")")) {
 			bs = bs.substring(1, bs.length()-1);
 		}
-		return "rank(" + bs + ")";
+		return "rank(" + as + ", " + bs + ")";
 	}
 
 	@Override

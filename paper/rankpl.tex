@@ -526,7 +526,7 @@ It is parametrized by a rank $x$ that indicates the firmness with which the evid
 %In the following definition we borrow notation from Spohn ~\cite{DBLP:books/daglib/0035277}.
 
 \begin{definition}\label{defn:resultoriented}
-Let $A \in \Omega$, $\kappa$ a ranking function over $\Omega$ such that $\kappa(A), \kappa(\overline A) < \infty$, and $x$ a rank.
+Let $A \subseteq \Omega$, $\kappa$ a ranking function over $\Omega$ such that $\kappa(A), \kappa(\overline A) < \infty$, and $x$ a rank.
 The \emph{J-conditioning} of $\kappa$ by $A$ with strength $x$, denoted by $\kappa_{A \rightarrow x}$, is defined by
 	$\kappa_{A \rightarrow x}(B) = min ( \kappa(B | A), \kappa(B | \overline A) + x ).$ % option: inline
 \end{definition}
@@ -564,7 +564,7 @@ Here, the parameter $x$ characterizes the `impact' of the evidence. %, rather th
 %Again, we borrow notation from Spohn~\cite{DBLP:books/daglib/0035277}.\looseness=-1
 %Again, it satisfies the DP postulates for iterated revision.\looseness=-1
 \begin{definition}\label{defn:evidenceoriented}
-Let $A \in \Omega$, $\kappa$ a ranking function over $\Omega$ such that $\kappa(A), \kappa(\overline A) < \infty$, and $x$ a rank.
+Let $A \subseteq \Omega$, $\kappa$ a ranking function over $\Omega$ such that $\kappa(A), \kappa(\overline A) < \infty$, and $x$ a rank.
 The \emph{L-conditioning} of $\kappa$ by $A$ with strength $x$ is denoted by $\kappa_{A \uparrow x}$ and is defined by
 	$\kappa_{A \uparrow x}(B) = min ( \kappa(A \cap B) - y, \kappa(\neg A \cap B) + x - y ),$ % removed: inline 
 where $y = min(\kappa(A), x).$

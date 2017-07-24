@@ -72,7 +72,7 @@ public class Size extends AbstractExpression {
 			} else if (o instanceof PersistentList) {
 				return ((PersistentList<?>)o).size();
 			} else {
-				throw new RPLTypeError("string, array, set, map or stack", o, e);
+				throw new RPLTypeError("string, array, set, map, stack or list", o, e);
 			}
 		} else {
 			throw new RPLUndefinedException(e);

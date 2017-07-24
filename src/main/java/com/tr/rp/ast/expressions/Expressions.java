@@ -311,4 +311,8 @@ public class Expressions {
 		return new ParseInt(e);
 	}
 
+	public static Size size(AbstractExpression e) {
+		return new Size(e);
+	}
+
 }

@@ -1,5 +1,6 @@
 package com.tr.rp.varstore.types;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.organicdesign.fp.collections.PersistentHashSet;
@@ -9,7 +10,7 @@ import org.organicdesign.fp.collections.PersistentVector;
  * Persistent list data structure. Mutations create new set objects
  * without changing the original list.
  */
-public class PersistentList<T> {
+public class PersistentList<T> implements CollectionType<T> {
 
 	private final PersistentVector<T> list;
 	
@@ -72,6 +73,11 @@ public class PersistentList<T> {
 	
 	public String toString() {
 		return "List(" + list.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")";
+	}
+
+	@Override
+	public Collection<T> asCollection() {
+		return list;
 	}
 
 }

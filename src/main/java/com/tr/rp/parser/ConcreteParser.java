@@ -44,6 +44,7 @@ import com.tr.rp.ast.expressions.SetContains;
 import com.tr.rp.ast.expressions.StackPeek;
 import com.tr.rp.ast.expressions.StackPop;
 import com.tr.rp.ast.expressions.SubString;
+import com.tr.rp.ast.expressions.ToArray;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.Assert;
 import com.tr.rp.ast.statements.AssertRanked;
@@ -757,6 +758,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		case "array":
 			ensureArgSize(name, args, 1, 2);
 			return args.length == 1? new ArrayInitExpression(args[0], null): new ArrayInitExpression(args[0], args[1]);
+		case "toarray":
+			ensureArgSize(name, args, 1);
+			return new ToArray(args[0]);
 		}
 		return null; 
 	}

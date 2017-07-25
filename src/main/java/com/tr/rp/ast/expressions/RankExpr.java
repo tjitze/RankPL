@@ -44,7 +44,12 @@ public class RankExpr extends AbstractExpression {
 		if (needsRankExpressionTransformation()) {
 			throw new RuntimeException("Illegal operation (evaluating uninstantiated rank expression)");
 		}
-		return rankAB - rankB;
+		// if rankB is infinity, the conditional rank is undefined,
+		// but we have to return something, so we return infinity.
+		if (rankB == Rank.MAX) {
+			return Rank.MAX;
+		}
+		return Rank.sub(rankAB, rankB);
 	}
 
 	@Override

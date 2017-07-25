@@ -18,7 +18,9 @@ import com.tr.rp.iterators.ranked.AbsurdIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.ranks.Rank;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Implements L-conditioning.
@@ -50,8 +52,9 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 		rnb = rt.getExpression(1);
 
 		// Normal behavior if rank(b) is infinity, is to leave the prior ranking
-		// unchanged. If iterative deepening is enabled we need to block execution.
-		if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
+		// unchanged. If destructive conditioning is enabled (for example when we
+		// do iterative deepening) we need to block execution instead.
+		if (rb instanceof RankExpr && ((RankExpr)rb).getValue(null, Type.INT) == Rank.MAX && c.isDestructiveLConditioning()) {
 			return new AbsurdIterator<VarStore>();
 		}
 		

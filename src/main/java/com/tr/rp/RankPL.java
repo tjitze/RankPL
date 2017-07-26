@@ -5,9 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -80,7 +85,8 @@ public class RankPL {
 
 		// Execute
 		try {
-			execute(program);
+			execute(program, rankCutOff, maxRank, iterativeDeepening, noRanks, terminateAfterFirst);
+
 		} catch (RPLException e) {
 			// e.printStackTrace(); // use this for debugging
 			System.out.println("Exception: " + e.getDescription());
@@ -136,8 +142,10 @@ public class RankPL {
 	 * @param program Program to execute
 	 * @throws RPLException Exception occurring during execution of program
 	 */
-	public static void execute(Program program) throws RPLException {
+	public static Map<Integer, Set<String>> execute(Program program, int rankCutOff, int maxRank, boolean iterativeDeepening, boolean noRanks, boolean terminateAfterFirst) throws RPLException {
 		
+		final Map<Integer, Set<String>> resultMap = new LinkedHashMap<Integer, Set<String>>();
+
 		ExecutionContext c = new ExecutionContext();
 
 		long startTime = System.currentTimeMillis();
@@ -160,11 +168,19 @@ public class RankPL {
 					}
 					// Print outcomes
 					while (it.next() && it.getRank() <= maxRank) {
+						// Print outcome
 						if (noRanks) {
 							System.out.println(it.getItem());
 						} else {
 							System.out.println(String.format(" %3d    ", it.getRank()) + it.getItem());
 						}
+						// Store outcome in map
+						Set<String> rankResults = resultMap.get(it.getRank());
+						if (rankResults == null) {
+							rankResults = new LinkedHashSet<String>();
+							resultMap.put(it.getRank(), rankResults);
+						}
+						rankResults.add(it.getItem());
 						if (terminateAfterFirst) {
 							return;
 						}
@@ -201,7 +217,7 @@ public class RankPL {
 		if (!noExecStats) {
 			System.out.println("Took: " + (System.currentTimeMillis() - startTime) + " ms");
 		}
-
+		return resultMap;
 	}
 
 	/**

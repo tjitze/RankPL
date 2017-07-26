@@ -5,10 +5,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.tr.rp.RankPL;
 import com.tr.rp.ast.statements.Program;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.ranks.Rank;
 
 import junit.framework.TestCase;
 
@@ -33,13 +36,13 @@ public class RunRPLTest extends TestCase {
 
 	private void runTest(String file) {
 		try { 
-			System.out.print("Running " + file + "... ");
+			System.out.println("Running test " + file + "... ");
 			String source = RankPL.getFileContent(file);
 			Program program = RankPL.parse(source);
 			if (program == null) {
 				fail("Parse error");
 			}
-			RankPL.execute(program);
+			RankPL.execute(program, Rank.MAX, Rank.MAX, false, false, false);
 			System.out.println("OK");
 		} catch (Exception e) {
 			e.printStackTrace();

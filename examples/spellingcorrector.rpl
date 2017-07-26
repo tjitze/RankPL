@@ -18,4 +18,4 @@ while (i < size(input) & k < size(potential_match)) do {
 };
 
 observe i == size(input) & k == size(potential_match);
-return potential_match;
+return substring(potential_match, 0, size(potential_match) - 1);

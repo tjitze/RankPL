@@ -69,17 +69,51 @@ public class TestRPLExamples extends TestCase {
 		}
 	}
 	
+	public void testRankingNetworkExample() {
+		
+		Map<Integer, Set<String>> expectedResultMap = new HashMap<Integer, Set<String>>();
+		expectedResultMap.put(0, new HashSet<String>(Arrays.asList(
+				"rain: false	sprinkler: true	grass_wet: true"
+		)));
+		expectedResultMap.put(2, new HashSet<String>(Arrays.asList(
+				"rain: true	sprinkler: true	grass_wet: true",
+				"rain: false	sprinkler: true	grass_wet: false"
+		)));
+		expectedResultMap.put(7, new HashSet<String>(Arrays.asList(
+				"rain: true	sprinkler: true	grass_wet: false"
+		)));
+		
+		String file = "./examples/rankingnetwork.rpl";
+		try { 
+			System.out.print("Running test " + file + "... ");
+			String source = RankPL.getFileContent(file);
+			Program program = RankPL.parse(source);
+			if (program == null) {
+				fail("Parse error");
+			}
+			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, false, false, false);
+			assertEquals(resultMap, expectedResultMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failure: " + e.toString());
+		}
+	}
+
 	public void testSpellingCorrectorExample() {
 		
 		// We test a couple of different inputs and compare the first match
 		String actualExample = "inkorrect";
 		Map<String, String> expectedResults = new LinkedHashMap<String, String>();
 		expectedResults.put("inkorrect", "incorrect");
-		expectedResults.put("svvitserland", "switzerland");
-		expectedResults.put("castlx", "castle");
-		expectedResults.put("xastle", "castle");
-		expectedResults.put("casle", "castle");
-		expectedResults.put("casxtle", "castle");
+		expectedResults.put("switzerland", "switzerland");
+		expectedResults.put("swizerland", "switzerland");
+		expectedResults.put("switxzerland", "switzerland");
+		expectedResults.put("svitzerland", "switzerland");
+		expectedResults.put("svvitzerland", "switzerland");
+		expectedResults.put("serbia", "serbia");
+		expectedResults.put("srbia", "serbia");
+		expectedResults.put("serrbia", "serbia");
+		expectedResults.put("serbja", "serbia");
 		
 		for (Entry<String, String> entry: expectedResults.entrySet()) {
 			String file = "./examples/spellingcorrector.rpl";
@@ -99,6 +133,90 @@ public class TestRPLExamples extends TestCase {
 				e.printStackTrace();
 				fail("Failure: " + e.toString());
 			}
+		}
+	}
+	
+	public void testLocalizerExample() {
+		
+		Map<Integer, Set<String>> expectedResultMapK1 = new HashMap<Integer, Set<String>>();
+		expectedResultMapK1.put(0, new HashSet<String>(Arrays.asList(
+				"Inferred location (1, 5)",
+				"Inferred location (2, 5)",
+				"Inferred location (3, 5)",
+				"Inferred location (5, 4)"
+		)));
+		expectedResultMapK1.put(1, new HashSet<String>(Arrays.asList(
+				"Inferred location (10, 4)",
+				"Inferred location (9, 4)",
+				"Inferred location (8, 4)",
+				"Inferred location (4, 5)",
+				"Inferred location (6, 4)",
+				"Inferred location (7, 4)"
+		)));
+		
+		Map<Integer, Set<String>> expectedResultMapK2 = new HashMap<Integer, Set<String>>();
+		expectedResultMapK2.put(0, new HashSet<String>(Arrays.asList(
+				"Inferred location (6, 4)"
+		)));
+		expectedResultMapK2.put(1, new HashSet<String>(Arrays.asList(
+				"Inferred location (2, 5)",
+				"Inferred location (4, 5)",
+				"Inferred location (3, 5)"
+		)));
+
+		Map<Integer, Set<String>> expectedResultMapK3 = new HashMap<Integer, Set<String>>();
+		expectedResultMapK3.put(0, new HashSet<String>(Arrays.asList(
+				"Inferred location (7, 4)"
+		)));
+
+		Map<Integer, Set<String>> expectedResultMapK4 = new HashMap<Integer, Set<String>>();
+		expectedResultMapK4.put(0, new HashSet<String>(Arrays.asList(
+				"Inferred location (8, 4)"
+		)));
+
+		String file = "./examples/localizer.rpl";
+		try { 
+			System.out.print("Running test " + file + "... ");
+			// K1
+			String source = RankPL.getFileContent(file);
+			source = source.replaceFirst("k := 1", "k := 1");
+			Program program = RankPL.parse(source);
+			if (program == null) {
+				fail("Parse error");
+			}
+			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, false, false, false);
+			assertEquals(resultMap, expectedResultMapK1);
+			// K2
+			source = RankPL.getFileContent(file);
+			source = source.replaceFirst("k := 1", "k := 2");
+			program = RankPL.parse(source);
+			if (program == null) {
+				fail("Parse error");
+			}
+			resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, false, false, false);
+			assertEquals(resultMap, expectedResultMapK2);
+			// K3
+			source = RankPL.getFileContent(file);
+			source = source.replaceFirst("k := 1", "k := 3");
+			program = RankPL.parse(source);
+			if (program == null) {
+				fail("Parse error");
+			}
+			resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, false, false, false);
+			assertEquals(resultMap, expectedResultMapK3);
+			// K4
+			source = RankPL.getFileContent(file);
+			source = source.replaceFirst("k := 1", "k := 4");
+			program = RankPL.parse(source);
+			if (program == null) {
+				fail("Parse error");
+			}
+			resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, false, false, false);
+			assertEquals(resultMap, expectedResultMapK4);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failure: " + e.toString());
 		}
 	}
 }

@@ -94,21 +94,14 @@ public class PersistentStack<T> {
 		return Objects.equals(other.element, element) && Objects.equals(other.parent, parent);
 	}
 	
-	private String toStringInternal() {
-		if (parent == null) {
-			// Empty
-			if (element == null) {
-				return "";
-			} else {
-				return element.toString();
-			}
-		} else {
-			return parent.toString() + ", " + element;
-		}
-	}
-	
 	public String toString() {
-		return "Stack("+toStringInternal()+")";
+		PersistentStack<T> s = this;
+		String v = element.toString();
+		while (s.parent != null) {
+			s = s.parent;
+			v = element.toString() + ", " + v;
+		}
+		return "Stack(" + v + ")";
 	}
 
 }

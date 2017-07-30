@@ -3,6 +3,7 @@ package com.tr.rp.ast.statements;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Variable;
 
 import static com.tr.rp.ast.expressions.Expressions.*;
@@ -10,11 +11,11 @@ import static com.tr.rp.ast.expressions.Expressions.*;
 public class Statements {
 
 	public static Assign assign(String variable, int value) {
-		return new Assign(new AssignmentTarget(variable), lit(value));
+		return new Assign(new AssignmentTargetTerminal(variable), lit(value));
 	}
 	
 	public static Assign assign(String variable, boolean value) {
-		return new Assign(new AssignmentTarget(variable), lit(value));
+		return new Assign(new AssignmentTargetTerminal(variable), lit(value));
 	}
 	
 //	public static Assign assign(String variable, String value) {
@@ -22,7 +23,7 @@ public class Statements {
 //	}
 	
 	public static Assign assign(String variable, AbstractExpression value) {
-		return new Assign(new AssignmentTarget(variable), value);
+		return new Assign(new AssignmentTargetTerminal(variable), value);
 	}
 
 	public static Assign assign(AssignmentTarget target, int value) {
@@ -55,7 +56,7 @@ public class Statements {
 	}
 	
 	public static Dec dec(String variable) {
-		return new Dec(new AssignmentTarget(variable));
+		return new Dec(new AssignmentTargetTerminal(variable));
 	}
 
 	public static Dec dec(AssignmentTarget target) {
@@ -75,7 +76,7 @@ public class Statements {
 	}
 
 	public static Inc inc(String variable) {
-		return new Inc(new AssignmentTarget(variable));
+		return new Inc(new AssignmentTargetTerminal(variable));
 	}
 
 	public static Inc inc(AssignmentTarget target) {
@@ -127,11 +128,11 @@ public class Statements {
 	}
 
 	public static RangeChoice rangeChoice(String variable, AbstractExpression beginExp, AbstractExpression endExp) {
-		return new RangeChoice(new AssignmentTarget(variable), beginExp, endExp);
+		return new RangeChoice(new AssignmentTargetTerminal(variable), beginExp, endExp);
 	}
 
 	public static RangeChoice rangeChoice(String variable, int begin, int end) {
-		return new RangeChoice(new AssignmentTarget(variable), lit(begin), lit(end));
+		return new RangeChoice(new AssignmentTargetTerminal(variable), lit(begin), lit(end));
 	}
 	
 	public static RankedChoice rankedChoice(AbstractStatement s1, AbstractStatement s2, AbstractExpression rank) {
@@ -148,7 +149,7 @@ public class Statements {
 	}
 
 	public static ReadFile readFile(String variable, AbstractExpression fileName) {
-		return new ReadFile(new AssignmentTarget(variable), fileName, ReadFile.InputMethod.NEWLINE_SEPARATED);
+		return new ReadFile(new AssignmentTargetTerminal(variable), fileName, ReadFile.InputMethod.NEWLINE_SEPARATED);
 	}
 	
 	public static Return returnStatement(AbstractExpression value) {

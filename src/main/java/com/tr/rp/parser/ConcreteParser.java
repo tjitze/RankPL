@@ -24,6 +24,8 @@ import com.tr.rp.ast.expressions.Abs;
 import com.tr.rp.ast.expressions.ArrayConstructExpression;
 import com.tr.rp.ast.expressions.ArrayInitExpression;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.AssignmentTargetList;
+import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Conditional;
 import com.tr.rp.ast.expressions.Expressions;
 import com.tr.rp.ast.expressions.FunctionCall;
@@ -102,6 +104,7 @@ import com.tr.rp.parser.RankPLParser.LiteralBoolExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralIntExpressionContext;
 import com.tr.rp.parser.RankPLParser.LiteralStringExprContext;
 import com.tr.rp.parser.RankPLParser.MinusExprContext;
+import com.tr.rp.parser.RankPLParser.Multi_assignment_targetContext;
 import com.tr.rp.parser.RankPLParser.NegateExprContext;
 import com.tr.rp.parser.RankPLParser.ObserveStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveJStatementContext;
@@ -262,7 +265,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		return s;
 	}
 
-
 	@Override
 	public LanguageElement visitIndex(IndexContext ctx) {
 		return this.visit(ctx.exp());
@@ -270,13 +272,25 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
 	@Override
 	public LanguageElement visitAssignment_target(Assignment_targetContext ctx) {
+		if (ctx.multi_assignment_target() != null) {
+			return visit(ctx.multi_assignment_target());
+		}
 		TerminalNode tn = ctx.VAR();
 		String varName = tn.toString();
 		AbstractExpression[] index = new AbstractExpression[ctx.index().size()];
 		for (int i = 0; i < index.length; i++) {
 			index[i] = (AbstractExpression)visit(ctx.index(i));
 		}
-		return new AssignmentTarget(varName, index);
+		return new AssignmentTargetTerminal(varName, index);
+	}
+
+	@Override
+	public LanguageElement visitMulti_assignment_target(Multi_assignment_targetContext ctx) {
+		AssignmentTarget[] targets = new AssignmentTarget[ctx.assignment_target().size()];
+		for (int i = 0; i < targets.length; i++) {
+			targets[i] = (AssignmentTarget)visit(ctx.assignment_target(i));
+		}
+		return new AssignmentTargetList(targets);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
@@ -34,7 +35,7 @@ public class Collect extends AbstractStatement {
 	}
 
 	public Collect(String target, String variable) {
-		this(new AssignmentTarget(target), new Variable(variable));
+		this(new AssignmentTargetTerminal(target), new Variable(variable));
 	}
 
 	@Override
@@ -142,6 +143,6 @@ public class Collect extends AbstractStatement {
 
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
-		variables.add(target.getAssignedVariable());
+		target.getAssignedVariables(variables);
 	}	
 }

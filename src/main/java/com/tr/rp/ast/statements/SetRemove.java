@@ -111,6 +111,6 @@ public class SetRemove extends AbstractStatement {
 
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
-		variables.add(assignmentTarget.getAssignedVariable());
+		assignmentTarget.getAssignedVariables(variables);
 	}	
 }

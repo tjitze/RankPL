@@ -134,7 +134,12 @@ index
  ;
 
 assignment_target
- : VAR index*
+ : VAR index* 
+ | multi_assignment_target
+ ;
+
+multi_assignment_target
+ : '[' assignment_target (',' assignment_target)* ']'
  ;
    
 VAR

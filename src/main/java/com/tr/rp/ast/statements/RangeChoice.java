@@ -7,6 +7,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
@@ -42,13 +43,13 @@ public class RangeChoice extends AbstractStatement {
 	}
 
 	public RangeChoice(String targetVariable, AbstractExpression beginExp, AbstractExpression endExp) {
-		this.target = new AssignmentTarget(targetVariable);
+		this.target = new AssignmentTargetTerminal(targetVariable);
 		this.beginExp = beginExp;
 		this.endExp = endExp;
 	}
 
 	public RangeChoice(String targetVariable, int begin, int end) {
-		this.target = new AssignmentTarget(targetVariable);
+		this.target = new AssignmentTargetTerminal(targetVariable);
 		this.beginExp = new Literal<Integer>(begin);
 		this.endExp = new Literal<Integer>(end);
 	}
@@ -172,7 +173,7 @@ public class RangeChoice extends AbstractStatement {
 	
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
-		variables.add(target.getAssignedVariable());
+		target.getAssignedVariables(variables);
 	}	
 
 }

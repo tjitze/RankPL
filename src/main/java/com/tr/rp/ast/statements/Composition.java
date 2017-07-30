@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.IsSet;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.exceptions.RPLException;
@@ -85,7 +86,7 @@ public class Composition extends AbstractStatement {
 
 		// Execute second (but skip if return value is set)
 		if (firstContainsReturn) {
-			IfElse ifElse = new IfElse(new IsSet(new AssignmentTarget("$return")), new Skip(), second,
+			IfElse ifElse = new IfElse(new IsSet(new AssignmentTargetTerminal("$return")), new Skip(), second,
 					new IfElseErrorHandler() {
 						@Override
 						public void ifElseConditionError(RPLException e) throws RPLException {

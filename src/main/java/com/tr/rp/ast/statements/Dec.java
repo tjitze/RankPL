@@ -100,6 +100,6 @@ public class Dec extends AbstractStatement {
 
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
-		variables.add(target.getAssignedVariable());
+		target.getAssignedVariables(variables);
 	}	
 }

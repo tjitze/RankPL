@@ -8,6 +8,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
@@ -33,7 +34,7 @@ public class Return extends AbstractStatement {
 
 	@Override
 	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		Assign assign = new Assign(new AssignmentTarget("$return"), exp);
+		Assign assign = new Assign(new AssignmentTargetTerminal("$return"), exp);
 		RankedIterator<VarStore> it = assign.getIterator(in, c);
 		return new RankedIterator<VarStore>() {
 			@Override

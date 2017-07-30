@@ -1,55 +1,55 @@
 # Test add, size
-set := newset();
+set := newSet();
 assert size(set) == 0;
 
-add(set, 10);
+set := add(set, 10);
 assert contains(set, 10);
 assert !contains(set, 20);
 assert size(set) == 1;
 
-add(set, 10);
+set := add(set, 10);
 assert contains(set, 10);
 assert !contains(set, 20);
 assert size(set) == 1;
 
-add(set, 20);
+set := add(set, 20);
 assert contains(set, 10);
 assert contains(set, 20);
 assert size(set) == 2;
 
 # Test remove
-remove(set, 10);
+set := remove(set, 10);
 assert !contains(set, 10);
 assert contains(set, 20);
 assert size(set) == 1;
 
-remove(set, 20);
+set := remove(set, 20);
 assert !contains(set, 10);
 assert !contains(set, 20);
 assert size(set) == 0;
 
-remove(set, 20);
+set := remove(set, 20);
 assert !contains(set, 10);
 assert !contains(set, 20);
 assert size(set) == 0;
 
 # Test equality
-set1 := newset();
-set2 := newset();
+set1 := newSet();
+set2 := newSet();
 assert(set1 == set2);
-add(set1, 10);
+set1 := add(set1, 10);
 assert(set1 != set2);
-add(set2, 20);
+set2 := add(set2, 20);
 assert(set1 != set2);
-add(set1, 20);
+set1 := add(set1, 20);
 assert(set1 != set2);
-add(set2, 10);
+set2 := add(set2, 10);
 assert(set1 == set2);
-remove(set1, 10);
+set1 := remove(set1, 10);
 assert(set1 != set2);
-remove(set2, 10);
+set2 := remove(set2, 10);
 assert(set1 == set2);
-remove(set1, 20);
+set1 := remove(set1, 20);
 assert(set1 != set2);
-remove(set2, 20);
+set2 := remove(set2, 20);
 assert(set1 == set2);

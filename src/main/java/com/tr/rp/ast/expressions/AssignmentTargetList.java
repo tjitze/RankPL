@@ -118,7 +118,7 @@ public class AssignmentTargetList extends AssignmentTarget {
 		try {
 			values = Type.ARRAY.cast(value);
 		} catch (ClassCastException e) {
-			throw new RPLTypeError("Array of length " + elements.length, value, this);
+			throw new RPLTypeError("Array of length " + elements.length, value.getClass(), this);
 		}
 		if (values.size() != elements.length) {
 			throw new RPLWrongAssignmentTargetSize(elements.length, values.size(), this);

@@ -32,8 +32,15 @@ import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.expressions.IndexElementExpression;
 import com.tr.rp.ast.expressions.InferringFunctionCall;
 import com.tr.rp.ast.expressions.IsSet;
+import com.tr.rp.ast.expressions.ListAppend;
+import com.tr.rp.ast.expressions.ListValueAt;
+import com.tr.rp.ast.expressions.ListReplace;
 import com.tr.rp.ast.expressions.Size;
 import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.expressions.MapContainsKey;
+import com.tr.rp.ast.expressions.MapGet;
+import com.tr.rp.ast.expressions.MapPut;
+import com.tr.rp.ast.expressions.MapRemoveKey;
 import com.tr.rp.ast.expressions.Get;
 import com.tr.rp.ast.expressions.ConstructorExpression;
 import com.tr.rp.ast.expressions.Max;
@@ -42,9 +49,12 @@ import com.tr.rp.ast.expressions.Negative;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.expressions.ParseInt;
 import com.tr.rp.ast.expressions.RankExpr;
+import com.tr.rp.ast.expressions.SetAdd;
 import com.tr.rp.ast.expressions.SetContains;
+import com.tr.rp.ast.expressions.SetRemove;
 import com.tr.rp.ast.expressions.StackPeek;
 import com.tr.rp.ast.expressions.StackPop;
+import com.tr.rp.ast.expressions.StackPush;
 import com.tr.rp.ast.expressions.SubString;
 import com.tr.rp.ast.expressions.ToArray;
 import com.tr.rp.ast.expressions.Variable;
@@ -57,8 +67,6 @@ import com.tr.rp.ast.statements.Dec;
 import com.tr.rp.ast.statements.ForStatement;
 import com.tr.rp.ast.statements.IfElse;
 import com.tr.rp.ast.statements.Inc;
-import com.tr.rp.ast.statements.ListAppend;
-import com.tr.rp.ast.statements.ListReplace;
 import com.tr.rp.ast.statements.Observe;
 import com.tr.rp.ast.statements.ObserveJ;
 import com.tr.rp.ast.statements.ObserveL;
@@ -69,11 +77,7 @@ import com.tr.rp.ast.statements.RankedChoice;
 import com.tr.rp.ast.statements.ReadFile;
 import com.tr.rp.ast.statements.Reset;
 import com.tr.rp.ast.statements.Return;
-import com.tr.rp.ast.statements.SetAdd;
-import com.tr.rp.ast.statements.MapPut;
-import com.tr.rp.ast.statements.SetRemove;
 import com.tr.rp.ast.statements.Skip;
-import com.tr.rp.ast.statements.StackPush;
 import com.tr.rp.ast.statements.While;
 import com.tr.rp.parser.RankPLBaseVisitor;
 import com.tr.rp.parser.RankPLParser.Arithmetic1ExpressionContext;
@@ -98,8 +102,6 @@ import com.tr.rp.parser.RankPLParser.IndexContext;
 import com.tr.rp.parser.RankPLParser.IndexedExpressionContext;
 import com.tr.rp.parser.RankPLParser.IndifferentChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.InferringFunctionCallContext;
-import com.tr.rp.parser.RankPLParser.ListAppendStatementContext;
-import com.tr.rp.parser.RankPLParser.ListReplaceStatementContext;
 import com.tr.rp.parser.RankPLParser.LiteralBoolExprContext;
 import com.tr.rp.parser.RankPLParser.LiteralIntExpressionContext;
 import com.tr.rp.parser.RankPLParser.LiteralStringExprContext;
@@ -119,11 +121,7 @@ import com.tr.rp.parser.RankPLParser.ExceptionallyStatementContext;
 import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
 import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
-import com.tr.rp.parser.RankPLParser.SetAddStatementContext;
-import com.tr.rp.parser.RankPLParser.MapPutStatementContext;
-import com.tr.rp.parser.RankPLParser.SetRemoveStatementContext;
 import com.tr.rp.parser.RankPLParser.SkipStatementContext;
-import com.tr.rp.parser.RankPLParser.StackPushStatementContext;
 import com.tr.rp.parser.RankPLParser.StatContext;
 import com.tr.rp.parser.RankPLParser.StatementSequenceContext;
 import com.tr.rp.parser.RankPLParser.VariableContext;
@@ -206,61 +204,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitResetStatement(ResetStatementContext ctx) {
 		Reset s = new Reset();
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
-	public LanguageElement visitSetAddStatement(SetAddStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
-		SetAdd s = new SetAdd(target, value);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
-	public LanguageElement visitListAppendStatement(ListAppendStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
-		ListAppend s = new ListAppend(target, value);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
-	public LanguageElement visitListReplaceStatement(ListReplaceStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression index = (AbstractExpression)visit(ctx.exp(0));
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
-		ListReplace s = new ListReplace(target, index, value);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
-	public LanguageElement visitMapPutStatement(MapPutStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression key = (AbstractExpression)visit(ctx.exp(0));
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp(1));
-		MapPut s = new MapPut(target, key, value);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
-	public LanguageElement visitSetRemoveStatement(SetRemoveStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
-		SetRemove s = new SetRemove(target, value);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-	@Override
-	public LanguageElement visitStackPushStatement(StackPushStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
-		StackPush s = new StackPush(target, value);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}
@@ -726,6 +669,49 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public AbstractExpression getBuiltInFunction(String name, AbstractExpression[] args) {
 		name = name.toLowerCase();
 		switch (name) {
+		case "pop":
+			ensureArgSize(name, args, 1);
+			return new StackPop(args[0]);
+		case "push":
+			ensureArgSize(name, args, 2);
+			return new StackPush(args[0], args[1]);
+		case "peek":
+			ensureArgSize(name, args, 1);
+			return new StackPeek(args[0]);
+
+		case "add":
+			ensureArgSize(name, args, 2);
+			return new SetAdd(args[0], args[1]);
+		case "contains":
+			ensureArgSize(name, args, 2);
+			return new SetContains(args[0], args[1]);
+		case "remove":
+			ensureArgSize(name, args, 2);
+			return new SetRemove(args[0], args[1]);
+
+		case "put":
+			ensureArgSize(name, args, 3);
+			return new MapPut(args[0], args[1], args[2]);
+		case "get":
+			ensureArgSize(name, args, 2);
+			return new MapGet(args[0], args[1]);
+		case "containskey":
+			ensureArgSize(name, args, 2);
+			return new MapContainsKey(args[0], args[1]);
+		case "removekey":
+			ensureArgSize(name, args, 2);
+			return new MapRemoveKey(args[0], args[1]);
+
+		case "append":
+			ensureArgSize(name, args, 2);
+			return new ListAppend(args[0], args[1]);
+		case "replace":
+			ensureArgSize(name, args, 3);
+			return new ListReplace(args[0], args[1], args[2]);
+		case "valueat":
+			ensureArgSize(name, args, 2);
+			return new ListValueAt(args[0], args[1]);
+		
 		case "isset":
 			ensureArgSize(name, args, 1);
 			return new IsSet(args[0]);
@@ -748,15 +734,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		case "newlist":
 			ensureArgSize(name, args, 0);
 			return new ConstructorExpression("newSet()", () -> new PersistentList<Object>());
-		case "contains":
-			ensureArgSize(name, args, 2);
-			return new SetContains(args[0], args[1]);
-		case "get":
-			ensureArgSize(name, args, 2);
-			return new Get(args[0], args[1]);
-		case "peek":
-			ensureArgSize(name, args, 1);
-			return new StackPeek(args[0]);
 		case "parseint":
 			ensureArgSize(name, args, 1);
 			return new ParseInt(args[0]);

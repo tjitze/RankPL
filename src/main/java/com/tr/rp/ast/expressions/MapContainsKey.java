@@ -6,48 +6,51 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.PersistentMap;
+import com.tr.rp.varstore.types.PersistentSet;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * contains(set, value): returns true iff set contains value 
+ * containsKey(map, value): returns true iff map contains key
  */
-public class SetContains extends AbstractExpression {
+public class MapContainsKey extends AbstractExpression {
 
-	private final AbstractExpression set;
+	private final AbstractExpression map;
 	private final AbstractExpression value;
 	
-	public SetContains(AbstractExpression set, AbstractExpression value) {
-		this.set = set;
+	public MapContainsKey(AbstractExpression map, AbstractExpression value) {
+		this.map = map;
 		this.value = value;
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		set.getVariables(list);
+		map.getVariables(list);
 		value.getVariables(list);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new SetContains((AbstractExpression)set.replaceVariable(a, b), 
+		return new MapContainsKey((AbstractExpression)map.replaceVariable(a, b), 
 				(AbstractExpression)value.replaceVariable(a, b));
 	}
 
 	@Override
 	public boolean needsRankExpressionTransformation() {
-		return set.needsRankExpressionTransformation() || value.needsRankExpressionTransformation();
+		return map.needsRankExpressionTransformation() || value.needsRankExpressionTransformation();
 	}
 
 	@Override
 	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new SetContains(set.doRankExpressionTransformation(v, rank),
+		return new MapContainsKey(map.doRankExpressionTransformation(v, rank),
 				value.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
-		AbstractFunctionCall fc = set.getEmbeddedFunctionCall();
+		AbstractFunctionCall fc = map.getEmbeddedFunctionCall();
 		if (fc == null) {
 			return value.getEmbeddedFunctionCall();
 		} else {
@@ -57,37 +60,37 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new SetContains((AbstractExpression)set.replaceEmbeddedFunctionCall(fc, var),
+		return new MapContainsKey((AbstractExpression)map.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return set.getValue(e, Type.SET).contains(value.getValue(e));
+		return map.getValue(e, Type.MAP).containsKey(value.getValue(e));
 	}
 
 	@Override
 	public boolean hasDefiniteValue() {
-		return set.hasDefiniteValue() && value.hasDefiniteValue();
+		return map.hasDefiniteValue() && value.hasDefiniteValue();
 	}
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return set.getDefiniteValue(Type.SET).contains(value.getDefiniteValue());
+		return map.getDefiniteValue(Type.MAP).containsKey(value.getDefiniteValue());
 	}
 
 	public String toString() {
-		return "contains(" + set + ", "+ value +")";
+		return "containsKey(" + map + ", "+ value +")";
 	}
 	
 	public boolean equals(Object o) {
-		return (o instanceof SetContains) && ((SetContains)o).set.equals(set) 
-				&& ((SetContains)o).value.equals(value);
+		return (o instanceof MapContainsKey) && ((MapContainsKey)o).map.equals(map) 
+				&& ((MapContainsKey)o).value.equals(value);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(getClass().hashCode(), set.hashCode(), value.hashCode());
+		return Objects.hash(map.hashCode(), value.hashCode());
 	}
 
 }

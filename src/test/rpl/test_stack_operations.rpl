@@ -1,48 +1,48 @@
-# push, peek, size
-stack := newstack();
+# Test for stack functions
+stack := newStack();
 assert size(stack) == 0;
 
-push(stack, 10);
+stack := push(stack, 10);
 assert peek(stack) == 10;
 assert size(stack) == 1;
 
-stack := newstack();
+stack := newStack();
 assert size(stack) == 0;
 
-push(stack, 10);
+stack := push(stack, 10);
 assert peek(stack) == 10;
 assert size(stack) == 1;
 
-push(stack, 20);
+stack := push(stack, 20);
 assert peek(stack) == 20;
 assert size(stack) == 2;
 
-x := pop(stack);
+[stack, x] := pop(stack);
 assert x == 20;
 assert peek(stack) == 10;
 assert size(stack) == 1;
 
-x := pop(stack);
+[stack, x] := pop(stack);
 assert x == 10;
 assert size(stack) == 0;
 
 # Equality
-stack1 := newstack();
-stack2 := newstack();
+stack1 := newStack();
+stack2 := newStack();
 assert(stack1 == stack2);
-push(stack1, 10);
+stack1 := push(stack1, 10);
 assert(stack1 != stack2);
-push(stack2, 10);
+stack2 := push(stack2, 10);
 assert(stack1 == stack2);
-push(stack1, 20);
+stack1 := push(stack1, 20);
 assert(stack1 != stack2);
-push(stack2, 20);
+stack2 := push(stack2, 20);
 assert(stack1 == stack2);
-x := pop(stack1);
+[stack1, x] := pop(stack1);
 assert(stack1 != stack2);
-x := pop(stack2);
+[stack2, x] := pop(stack2);
 assert(stack1 == stack2);
-x := pop(stack1);
+[stack1, x] := pop(stack1);
 assert(stack1 != stack2);
-x := pop(stack2);
+[stack2, x] := pop(stack2);
 assert(stack1 == stack2);

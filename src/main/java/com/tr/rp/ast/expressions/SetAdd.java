@@ -10,14 +10,14 @@ import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * contains(set, value): returns true iff set contains value 
+ * set = add(set, item) - add item to set
  */
-public class SetContains extends AbstractExpression {
+public class SetAdd extends AbstractExpression {
 
 	private final AbstractExpression set;
 	private final AbstractExpression value;
 	
-	public SetContains(AbstractExpression set, AbstractExpression value) {
+	public SetAdd(AbstractExpression set, AbstractExpression value) {
 		this.set = set;
 		this.value = value;
 	}
@@ -30,7 +30,7 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new SetContains((AbstractExpression)set.replaceVariable(a, b), 
+		return new SetAdd((AbstractExpression)set.replaceVariable(a, b), 
 				(AbstractExpression)value.replaceVariable(a, b));
 	}
 
@@ -41,7 +41,7 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new SetContains(set.doRankExpressionTransformation(v, rank),
+		return new SetAdd(set.doRankExpressionTransformation(v, rank),
 				value.doRankExpressionTransformation(v, rank));
 	}
 
@@ -57,13 +57,13 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new SetContains((AbstractExpression)set.replaceEmbeddedFunctionCall(fc, var),
+		return new SetAdd((AbstractExpression)set.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return set.getValue(e, Type.SET).contains(value.getValue(e));
+		return set.getValue(e, Type.SET).add(value.getValue(e));
 	}
 
 	@Override
@@ -73,16 +73,16 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return set.getDefiniteValue(Type.SET).contains(value.getDefiniteValue());
+		return set.getDefiniteValue(Type.SET).add(value.getDefiniteValue());
 	}
 
 	public String toString() {
-		return "contains(" + set + ", "+ value +")";
+		return "add(" + set + ", "+ value +")";
 	}
 	
 	public boolean equals(Object o) {
-		return (o instanceof SetContains) && ((SetContains)o).set.equals(set) 
-				&& ((SetContains)o).value.equals(value);
+		return (o instanceof SetAdd) && ((SetAdd)o).set.equals(set) 
+				&& ((SetAdd)o).value.equals(value);
 	}
 	
 	@Override

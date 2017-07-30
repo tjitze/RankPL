@@ -10,44 +10,44 @@ import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * contains(set, value): returns true iff set contains value 
+ * list = append(list, item) - append item to list
  */
-public class SetContains extends AbstractExpression {
+public class ListAppend extends AbstractExpression {
 
-	private final AbstractExpression set;
+	private final AbstractExpression list;
 	private final AbstractExpression value;
 	
-	public SetContains(AbstractExpression set, AbstractExpression value) {
-		this.set = set;
+	public ListAppend(AbstractExpression list, AbstractExpression value) {
+		this.list = list;
 		this.value = value;
 	}
 
 	@Override
-	public void getVariables(Set<String> list) {
-		set.getVariables(list);
-		value.getVariables(list);
+	public void getVariables(Set<String> l) {
+		list.getVariables(l);
+		value.getVariables(l);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new SetContains((AbstractExpression)set.replaceVariable(a, b), 
+		return new ListAppend((AbstractExpression)list.replaceVariable(a, b), 
 				(AbstractExpression)value.replaceVariable(a, b));
 	}
 
 	@Override
 	public boolean needsRankExpressionTransformation() {
-		return set.needsRankExpressionTransformation() || value.needsRankExpressionTransformation();
+		return list.needsRankExpressionTransformation() || value.needsRankExpressionTransformation();
 	}
 
 	@Override
 	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new SetContains(set.doRankExpressionTransformation(v, rank),
+		return new ListAppend(list.doRankExpressionTransformation(v, rank),
 				value.doRankExpressionTransformation(v, rank));
 	}
 
 	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
-		AbstractFunctionCall fc = set.getEmbeddedFunctionCall();
+		AbstractFunctionCall fc = list.getEmbeddedFunctionCall();
 		if (fc == null) {
 			return value.getEmbeddedFunctionCall();
 		} else {
@@ -57,37 +57,37 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new SetContains((AbstractExpression)set.replaceEmbeddedFunctionCall(fc, var),
+		return new ListAppend((AbstractExpression)list.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		return set.getValue(e, Type.SET).contains(value.getValue(e));
+		return list.getValue(e, Type.LIST).append(value.getValue(e));
 	}
 
 	@Override
 	public boolean hasDefiniteValue() {
-		return set.hasDefiniteValue() && value.hasDefiniteValue();
+		return list.hasDefiniteValue() && value.hasDefiniteValue();
 	}
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return set.getDefiniteValue(Type.SET).contains(value.getDefiniteValue());
+		return list.getDefiniteValue(Type.LIST).append(value.getDefiniteValue());
 	}
 
 	public String toString() {
-		return "contains(" + set + ", "+ value +")";
+		return "append(" + list + ", "+ value +")";
 	}
 	
 	public boolean equals(Object o) {
-		return (o instanceof SetContains) && ((SetContains)o).set.equals(set) 
-				&& ((SetContains)o).value.equals(value);
+		return (o instanceof ListAppend) && ((ListAppend)o).list.equals(list) 
+				&& ((ListAppend)o).value.equals(value);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(getClass().hashCode(), set.hashCode(), value.hashCode());
+		return Objects.hash(getClass().hashCode(), list.hashCode(), value.hashCode());
 	}
 
 }

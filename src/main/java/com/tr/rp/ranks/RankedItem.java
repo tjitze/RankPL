@@ -1,5 +1,7 @@
 package com.tr.rp.ranks;
 
+import java.util.Objects;
+
 /**
  * A pair consisting of some object and a rank.
  */
@@ -15,5 +17,16 @@ public class RankedItem<T> {
 	
 	public String toString() {
 		return "<" + rank + ": " + item + ">";
+	}
+	
+	public boolean equals(Object o) {
+		return o instanceof RankedItem && 
+				((RankedItem<?>)o).item.equals(item) &&
+				((RankedItem<?>)o).rank == rank; 
+
+	}
+	
+	public int hashCode() {
+		return Objects.hash(getClass().hashCode(), item, rank);
 	}
 }

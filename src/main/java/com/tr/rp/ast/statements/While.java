@@ -1,6 +1,7 @@
 package com.tr.rp.ast.statements;
 
 import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ import com.tr.rp.iterators.ranked.AbsurdIterator;
 import com.tr.rp.iterators.ranked.BufferingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.ranks.RankedItem;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
@@ -41,40 +43,79 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 		this.body = body;
 		this.preStatement = preStatement;
 	}
-			
+	
+	private BufferingIterator<VarStore> iterate(BufferingIterator<VarStore> in, ExecutionContext c) throws RPLException {
+		in.reset();
+		in.stopBuffering();
+		return new BufferingIterator<VarStore>(generateIteration(in, c));
+	}
+
+	private boolean isDone(VarStore item) throws RPLException {
+		Objects.requireNonNull(item);
+		return !whileCondition.getValue(item, Type.BOOL);
+	}
+
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		while (true) {
+		HashSet<RankedItem<VarStore>> seen = new HashSet<RankedItem<VarStore>>();
 
-			// Do one iteration
-			in = generateIteration(in, c);
+		return new RankedIterator<VarStore>() {
+
+			private BufferingIterator<VarStore> current = null;
+
+			private RankedItem<VarStore> currentItem = null;
 			
-			// Check if exp is still satisfied
-			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-			boolean expSatisfied = false;
-			boolean hasNext = bi.next();
-			if (!hasNext) { // Undefined
-				return new AbsurdIterator<VarStore>(); 
+			private RankedIterator<VarStore> init() throws RPLException {
+				current = new BufferingIterator<VarStore>(in);
+				if (!current.next()) current = null;
+				return this;
 			}
-			while (hasNext) {
-				if (whileCondition.getValue(bi.getItem(), Type.BOOL)) {
-					expSatisfied = true;
-					break;
+			
+			@Override
+			public boolean next() throws RPLException {
+				currentItem = getNextUniqueItem();
+				return currentItem != null;
+			}
+
+			@Override
+			public VarStore getItem() throws RPLException {
+				return currentItem != null? currentItem.item: null;
+			}
+
+			@Override
+			public int getRank() {
+				return currentItem != null? currentItem.rank: -1;
+			}
+
+			private RankedItem<VarStore> getNextItem() throws RPLException {
+				while (true) {
+					if (current == null) {
+						return null;
+					}
+			 		VarStore item = current.getItem();
+					if (isDone(item)) {
+						int rank = current.getRank();
+						if (!current.next()) current = null;
+						return new RankedItem<VarStore>(item, rank);
+					} else {
+						current = iterate(current, c);
+						if (!current.next()) current = null;
+					}
 				}
-				hasNext = bi.next();
 			}
 			
-			bi.reset();
-			bi.stopBuffering();
+			private RankedItem<VarStore> getNextUniqueItem() throws RPLException {
+				RankedItem<VarStore> item = getNextItem();
+				while (item != null && seen.contains(item)) {
+					item = getNextItem();
+				}
+				if (item != null) {
+					seen.add(item);
+				}
+				return item;
+			}
 
-			// If exp is not satisfied, we are done
-			if (!expSatisfied) {
-				return bi;
-			}
-			
-			// Try another iteration
-			in = bi;
-		}
-		
+		}.init();
+
 	}
 	
 	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
@@ -87,14 +128,14 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof While &&
+		return o instanceof While2 &&
 				((While)o).whileCondition.equals(whileCondition) &&
 				((While)o).body.equals(body);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new While((AbstractExpression)whileCondition.replaceVariable(a, b),
+		return new While2((AbstractExpression)whileCondition.replaceVariable(a, b),
 				(AbstractStatement)this.body.replaceVariable(a, b));
 	}
 	

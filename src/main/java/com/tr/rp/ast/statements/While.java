@@ -128,14 +128,14 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 	}
 	
 	public boolean equals(Object o) {
-		return o instanceof While2 &&
+		return o instanceof While &&
 				((While)o).whileCondition.equals(whileCondition) &&
 				((While)o).body.equals(body);
 	}
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new While2((AbstractExpression)whileCondition.replaceVariable(a, b),
+		return new While((AbstractExpression)whileCondition.replaceVariable(a, b),
 				(AbstractStatement)this.body.replaceVariable(a, b));
 	}
 	

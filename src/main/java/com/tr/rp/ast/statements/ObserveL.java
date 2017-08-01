@@ -52,6 +52,7 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 		// Normal behavior if rank(b) is infinity, is to leave the prior ranking
 		// unchanged. If iterative deepening is enabled we need to block execution.
 		if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
+			System.out.println("absurd");
 			return new AbsurdIterator<VarStore>();
 		}
 		

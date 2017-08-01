@@ -35,14 +35,14 @@ public class SetRemove extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return set.needsRankExpressionTransformation() || value.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return set.hasRankExpression() || value.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new SetRemove(set.doRankExpressionTransformation(v, rank),
-				value.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new SetRemove(set.transformRankExpressions(v, rank),
+				value.transformRankExpressions(v, rank));
 	}
 
 	@Override

@@ -39,16 +39,15 @@ public class MapPut extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return map.needsRankExpressionTransformation() || key.needsRankExpressionTransformation()
-				|| value.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return map.hasRankExpression() || key.hasRankExpression() || value.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new MapPut(map.doRankExpressionTransformation(v, rank),
-				key.doRankExpressionTransformation(v, rank),
-				value.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new MapPut(map.transformRankExpressions(v, rank),
+				key.transformRankExpressions(v, rank),
+				value.transformRankExpressions(v, rank));
 	}
 
 	@Override

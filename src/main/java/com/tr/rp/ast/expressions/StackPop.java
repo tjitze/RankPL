@@ -36,8 +36,8 @@ public class StackPop extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return e.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return e.hasRankExpression();
 	}
 
 	@Override
@@ -46,12 +46,12 @@ public class StackPop extends AbstractExpression {
 	}
 
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new StackPop((AssignmentTarget) assignmentTarget.transformRankExpressions(v, rank));
+		return new StackPop(e.transformRankExpressions(v, rank));
 	}
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new StackPop((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		return new StackPop(e.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override

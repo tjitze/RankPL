@@ -40,16 +40,15 @@ public class ListReplace extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return list.needsRankExpressionTransformation() || index.needsRankExpressionTransformation()
-				|| value.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return list.hasRankExpression() || index.hasRankExpression() || value.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new ListReplace(list.doRankExpressionTransformation(v, rank),
-				index.doRankExpressionTransformation(v, rank),
-				value.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new ListReplace(list.transformRankExpressions(v, rank),
+				index.transformRankExpressions(v, rank),
+				value.transformRankExpressions(v, rank));
 	}
 
 	@Override

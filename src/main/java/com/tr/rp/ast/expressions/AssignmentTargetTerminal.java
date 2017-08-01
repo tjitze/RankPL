@@ -56,15 +56,15 @@ public class AssignmentTargetTerminal extends AssignmentTarget {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return Arrays.stream(indices).anyMatch(e -> e.needsRankExpressionTransformation());
+	public boolean hasRankExpression() {
+		return Arrays.stream(indices).anyMatch(e -> e.hasRankExpression());
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
 		AbstractExpression[] newIndices = new AbstractExpression[indices.length];
 		for (int i = 0; i < indices.length; i++) {
-			newIndices[i] = (AbstractExpression)indices[i].doRankExpressionTransformation(v, rank);
+			newIndices[i] = (AbstractExpression)indices[i].transformRankExpressions(v, rank);
 		}
 		return new AssignmentTargetTerminal(name, newIndices);
 	}

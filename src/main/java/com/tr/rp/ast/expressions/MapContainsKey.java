@@ -38,14 +38,14 @@ public class MapContainsKey extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return map.needsRankExpressionTransformation() || value.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return map.hasRankExpression() || value.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new MapContainsKey(map.doRankExpressionTransformation(v, rank),
-				value.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new MapContainsKey(map.transformRankExpressions(v, rank),
+				value.transformRankExpressions(v, rank));
 	}
 
 	@Override

@@ -36,14 +36,14 @@ public class ListValueAt extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return list.needsRankExpressionTransformation() || index.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return list.hasRankExpression() || index.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new ListValueAt(list.doRankExpressionTransformation(v, rank),
-				index.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new ListValueAt(list.transformRankExpressions(v, rank),
+				index.transformRankExpressions(v, rank));
 	}
 
 	@Override

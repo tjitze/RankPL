@@ -43,15 +43,15 @@ public class AssignmentTargetList extends AssignmentTarget {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return Arrays.stream(elements).anyMatch(e -> e.needsRankExpressionTransformation());
+	public boolean hasRankExpression() {
+		return Arrays.stream(elements).anyMatch(e -> e.hasRankExpression());
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
 		AssignmentTarget[] newElements = new AssignmentTarget[elements.length];
 		for (int i = 0; i < elements.length; i++) {
-			newElements[i] = (AssignmentTarget)elements[i].doRankExpressionTransformation(v, rank);
+			newElements[i] = (AssignmentTarget)elements[i].transformRankExpressions(v, rank);
 		}
 		return new AssignmentTargetList(newElements);
 	}

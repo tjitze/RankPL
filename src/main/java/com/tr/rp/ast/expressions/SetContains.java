@@ -36,12 +36,12 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public boolean hasRankExpression() {
-		return mapOrSet.hasRankExpression() || value.hasRankExpression();
+		return set.hasRankExpression() || value.hasRankExpression();
 	}
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new SetContains(mapOrSet.transformRankExpressions(v, rank),
+		return new SetContains(set.transformRankExpressions(v, rank),
 				value.transformRankExpressions(v, rank));
 	}
 

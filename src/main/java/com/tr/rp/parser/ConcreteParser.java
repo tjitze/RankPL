@@ -744,8 +744,8 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			ensureArgSize(name, args, 3);
 			return new SubString(args[0], args[1], args[2]);
 		case "rank":
-			ensureArgSize(name, args, 1, 2);
-			return args.length == 1? new RankExpr(args[0]): new RankExpr(args[0], args[1]);
+			ensureArgSize(name, args, 1);
+			return new RankExpr(args[0]);
 		case "array":
 			ensureArgSize(name, args, 1, 2);
 			return args.length == 1? new ArrayInitExpression(args[0], null): new ArrayInitExpression(args[0], args[1]);

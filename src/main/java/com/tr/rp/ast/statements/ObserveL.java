@@ -48,13 +48,18 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 		// Do rank transformation here
 		RankTransformIterator rt = 
 				new RankTransformIterator(in, this, rb, rnb);
-		rb = rt.getExpression(0);
-		rnb = rt.getExpression(1);
+		rb = (AbstractExpression)rt.getExpression(0);
+		rnb = (AbstractExpression)rt.getExpression(1);
 
+		if (!rb.hasDefiniteValue() || !rnb.hasDefiniteValue()) {
+			throw new IllegalStateException("Illegal state");
+		}
+		
 		// Normal behavior if rank(b) is infinity, is to leave the prior ranking
 		// unchanged. If destructive conditioning is enabled (for example when we
 		// do iterative deepening) we need to block execution instead.
-		if (rb instanceof RankExpr && ((RankExpr)rb).getValue(null, Type.INT) == Rank.MAX && c.isDestructiveLConditioning()) {
+		if (rb.equals(new Literal<Integer>(Rank.MAX)) && c.isDestructiveLConditioning()) {
+			System.out.println("returning absurd");
 			return new AbsurdIterator<VarStore>();
 		}
 		

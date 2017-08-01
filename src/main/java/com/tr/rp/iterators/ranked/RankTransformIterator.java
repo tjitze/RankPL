@@ -1,7 +1,5 @@
 package com.tr.rp.iterators.ranked;
 
-import java.util.Arrays;
-
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.exceptions.RPLException;
@@ -17,7 +15,7 @@ public class RankTransformIterator extends BufferingIterator<VarStore> {
 	public RankTransformIterator(RankedIterator<VarStore> in, AbstractStatement exceptionSource, AbstractExpression ... expressions) throws RPLException {
 		super(in);
 		this.exceptionSource = exceptionSource;
-		this.es = Arrays.copyOf(expressions, expressions.length);
+		this.es = expressions;
 		transform();
 		reset();
 		stopBuffering();

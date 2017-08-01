@@ -47,22 +47,22 @@ a := test();
 assert(rank(true) == 0);
 
 # Test conditional ranks
-#a := test();
+a := test();
 
-#assert(rank(false, false) == 2147483647);
-#assert(rank(false, true) == 2147483647);
-#assert(rank(true, true) == 0);
-#assert(rank(true, true) == 0);
+assert(rank(false, false) == 2147483647);
+assert(rank(false, true) == 2147483647);
+assert(rank(true, true) == 0);
+assert(rank(true, true) == 0);
 
-#assert(rank(111, x) == 0);
+assert(rank(111, x) == 0);
 
-#assert(rank(true, true) == 0);
-#assert(rank(a != 1, true) == 1);
-#assert(rank(a == 2, true) == 1);
-#assert(rank(a == 3, true) == 2);
+assert(rank(true, true) == 0);
+assert(rank(a != 1, true) == 1);
+assert(rank(a == 2, true) == 1);
+assert(rank(a == 3, true) == 2);
 
-#assert(rank(true, a != 1) == 0);
-#assert(rank(a != 1, a != 1) == 0);
-#assert(rank(a == 2, a != 1) == 0);
-#assert(rank(a == 3, a != 1) == 1);
+assert(rank(true, a != 1) == 0);
+assert(rank(a != 1, a != 1) == 0);
+assert(rank(a == 2, a != 1) == 0);
+assert(rank(a == 3, a != 1) == 1);
 

@@ -93,7 +93,6 @@ public class AssertRanked extends AbstractStatement {
 					Object checkValue = dri.getItem();
 					if (expectedValues.containsKey(checkValue)) {
 						if (!expectedValues.get(checkValue).equals(getRank())) {
-							System.out.println("Expected: " + expectedValues);
 							throw new RPLAssertionException("Outcome " + checkValue + " has wrong rank (is " + getRank() + " but should be " + expectedValues.get(checkValue) + ")", AssertRanked.this);
 						}
 						expectedValues.remove(checkValue);

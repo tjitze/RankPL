@@ -38,17 +38,17 @@ public class Conditional extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return condition.needsRankExpressionTransformation() ||
-				e1.needsRankExpressionTransformation() ||
-				e2.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return condition.hasRankExpression() ||
+				e1.hasRankExpression() ||
+				e2.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new Conditional(condition.doRankExpressionTransformation(v, rank),
-				e1.doRankExpressionTransformation(v, rank),
-				e2.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new Conditional(condition.transformRankExpressions(v, rank),
+				e1.transformRankExpressions(v, rank),
+				e2.transformRankExpressions(v, rank));
 	}
 
 	@Override

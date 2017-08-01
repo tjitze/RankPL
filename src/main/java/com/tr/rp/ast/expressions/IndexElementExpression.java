@@ -47,18 +47,18 @@ public class IndexElementExpression extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return exp.needsRankExpressionTransformation() ||
-				Arrays.stream(indices).anyMatch(e -> e.needsRankExpressionTransformation());
+	public boolean hasRankExpression() {
+		return exp.hasRankExpression() ||
+				Arrays.stream(indices).anyMatch(e -> e.hasRankExpression());
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
 		AbstractExpression[] newIndices = new AbstractExpression[indices.length];
 		for (int i = 0; i < indices.length; i++) {
-			newIndices[i] = (AbstractExpression)indices[i].doRankExpressionTransformation(v, rank);
+			newIndices[i] = (AbstractExpression)indices[i].transformRankExpressions(v, rank);
 		}
-		AbstractExpression newExp = (AbstractExpression)exp.doRankExpressionTransformation(v, rank);
+		AbstractExpression newExp = (AbstractExpression)exp.transformRankExpressions(v, rank);
 		return new IndexElementExpression(newExp, newIndices);
 	}
 

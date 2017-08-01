@@ -34,10 +34,10 @@ public class InferringFunctionCall extends FunctionCall {
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
 		AbstractExpression[] newArgs = new AbstractExpression[getArguments().length];
 		for (int i = 0; i < newArgs.length; i++) {
-			newArgs[i] = (AbstractExpression)getArguments()[i].doRankExpressionTransformation(v, rank);
+			newArgs[i] = (AbstractExpression)getArguments()[i].transformRankExpressions(v, rank);
 		}
 		return new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
 	}

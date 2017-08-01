@@ -45,15 +45,15 @@ public class ArrayConstructExpression extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return Arrays.stream(values).anyMatch(e -> e.needsRankExpressionTransformation());
+	public boolean hasRankExpression() {
+		return Arrays.stream(values).anyMatch(e -> e.hasRankExpression());
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
 		AbstractExpression[] newValues = new AbstractExpression[values.length];
 		for (int i = 0; i < values.length; i++) {
-			newValues[i] = (AbstractExpression)values[i].doRankExpressionTransformation(v, rank);
+			newValues[i] = (AbstractExpression)values[i].transformRankExpressions(v, rank);
 		}
 		return new ArrayConstructExpression(newValues);
 	}

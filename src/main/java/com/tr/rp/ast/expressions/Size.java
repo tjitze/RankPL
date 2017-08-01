@@ -36,13 +36,13 @@ public class Size extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return e.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return e.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new Size(e.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new Size(e.transformRankExpressions(v, rank));
 	}
 
 	@Override

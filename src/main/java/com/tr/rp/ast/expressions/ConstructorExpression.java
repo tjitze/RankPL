@@ -30,12 +30,12 @@ public class ConstructorExpression extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
+	public boolean hasRankExpression() {
 		return false;
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
 		return this;
 	}
 

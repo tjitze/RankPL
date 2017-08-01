@@ -39,18 +39,18 @@ public class SubString extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return input.needsRankExpressionTransformation() ||
-					begin.needsRankExpressionTransformation() ||
-					end.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return input.hasRankExpression() ||
+					begin.hasRankExpression() ||
+					end.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
 		return new SubString(
-				(AbstractExpression)input.doRankExpressionTransformation(v, rank),
-				(AbstractExpression)begin.doRankExpressionTransformation(v, rank),
-				(AbstractExpression)end.doRankExpressionTransformation(v, rank));
+				(AbstractExpression)input.transformRankExpressions(v, rank),
+				(AbstractExpression)begin.transformRankExpressions(v, rank),
+				(AbstractExpression)end.transformRankExpressions(v, rank));
 	}
 
 	@Override

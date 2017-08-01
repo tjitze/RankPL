@@ -41,13 +41,12 @@ public class StackPop extends AbstractExpression {
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new StackPop(e.doRankExpressionTransformation(v, rank));
-	}
-
-	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		return e.getEmbeddedFunctionCall();
+	}
+
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new StackPop((AssignmentTarget) assignmentTarget.transformRankExpressions(v, rank));
 	}
 
 	@Override

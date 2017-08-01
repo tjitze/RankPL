@@ -43,18 +43,18 @@ public class ArrayInitExpression extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return dimension.needsRankExpressionTransformation() || (initValue != null && initValue.needsRankExpressionTransformation());
+	public boolean hasRankExpression() {
+		return dimension.hasRankExpression() || (initValue != null && initValue.hasRankExpression());
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		AbstractExpression newDimension = dimension.doRankExpressionTransformation(v, rank);
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		AbstractExpression newDimension = dimension.transformRankExpressions(v, rank);
 		AbstractExpression newInitValue;
 		if (initValue == null) {
 			newInitValue = null;
 		} else {
-			newInitValue = initValue.doRankExpressionTransformation(v, rank);
+			newInitValue = initValue.transformRankExpressions(v, rank);
 		}
 		return new ArrayInitExpression(newDimension, newInitValue);
 	}

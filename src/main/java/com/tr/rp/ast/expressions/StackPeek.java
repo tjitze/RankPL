@@ -31,13 +31,13 @@ public class StackPeek extends AbstractExpression {
 	}
 
 	@Override
-	public boolean needsRankExpressionTransformation() {
-		return e.needsRankExpressionTransformation();
+	public boolean hasRankExpression() {
+		return e.hasRankExpression();
 	}
 
 	@Override
-	public AbstractExpression doRankExpressionTransformation(VarStore v, int rank) throws RPLException {
-		return new StackPeek(e.doRankExpressionTransformation(v, rank));
+	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
+		return new StackPeek(e.transformRankExpressions(v, rank));
 	}
 
 	@Override

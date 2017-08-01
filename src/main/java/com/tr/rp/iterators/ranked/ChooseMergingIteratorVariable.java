@@ -52,7 +52,7 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 		this.rankIncrease = rankIncrease;
 		
 		// Check
-		if (rankIncrease.needsRankExpressionTransformation()) {
+		if (rankIncrease.hasRankExpression()) {
 			throw new IllegalArgumentException("Expression contains rank expressions");
 		}
 	}

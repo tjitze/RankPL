@@ -62,6 +62,7 @@ import com.tr.rp.ast.statements.Assert;
 import com.tr.rp.ast.statements.AssertRanked;
 import com.tr.rp.ast.statements.Assign;
 import com.tr.rp.ast.statements.Composition;
+import com.tr.rp.ast.statements.CurrentRank;
 import com.tr.rp.ast.statements.Cut;
 import com.tr.rp.ast.statements.Dec;
 import com.tr.rp.ast.statements.ForStatement;
@@ -91,6 +92,7 @@ import com.tr.rp.parser.RankPLParser.BoolExpressionContext;
 import com.tr.rp.parser.RankPLParser.ChoiceAssignmentStatementContext;
 import com.tr.rp.parser.RankPLParser.CompareExprContext;
 import com.tr.rp.parser.RankPLParser.ConditionalExpressionContext;
+import com.tr.rp.parser.RankPLParser.CurrentRankStatementContext;
 import com.tr.rp.parser.RankPLParser.CutStatementContext;
 import com.tr.rp.parser.RankPLParser.ForStatementContext;
 import com.tr.rp.parser.RankPLParser.FunctionCallContext;
@@ -396,6 +398,14 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractStatement next = (AbstractStatement)visit(ctx.stat(1));
 		AbstractStatement body = (AbstractStatement)visit(ctx.stat(2));
 		AbstractStatement s = new ForStatement(init, forCondition, next, body);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+	
+	@Override
+	public LanguageElement visitCurrentRankStatement(CurrentRankStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractStatement s = new CurrentRank(target);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

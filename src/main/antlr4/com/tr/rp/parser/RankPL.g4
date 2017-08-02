@@ -40,6 +40,7 @@ stat
  | AssertRanked '(' exp (',' exp)* ')'					# AssertRankedStatement
  | Assert exp											# AssertStatement
  | Reset												# ResetStatement
+ | CurrentRank '(' assignment_target ')'				# CurrentRankStatement
  ;
 
 
@@ -109,6 +110,7 @@ Reset: 			'reset' | 'RESET';
 True: 			'true' | 'TRUE';
 False: 			'false' | 'FALSE';
 Infer: 			'infer' | 'INFER';
+CurrentRank: 	'currentrank' | 'CURRENTRANK' | 'currentRank';
 
 empty_args:		'()' | '(' ')';
 

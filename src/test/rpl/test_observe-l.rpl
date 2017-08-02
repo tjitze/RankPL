@@ -94,3 +94,30 @@ assert-ranked(a,
 	[1, 2],
 	[2, 3]);
 reset;
+
+# increase 
+a := test();
+observe-l (1) a == 1;
+assert-ranked(a,
+	[0, 1],
+	[2, 2],
+	[3, 3]);
+reset;
+
+# decrease 
+a := test();
+observe-l (1) a == 3;
+assert-ranked(a,
+	[0, 1],
+	[1, 2],
+	[1, 3]);
+reset;
+
+# decrease 
+a := test();
+observe-l (2) a == 3;
+assert-ranked(a,
+	[0, 1],
+	[1, 2],
+	[0, 3]);
+reset;

@@ -47,6 +47,7 @@ public class RankPL {
 	private static int maxRank = 0;
 	private static int rankCutOff = Rank.MAX;
 	private static boolean iterativeDeepening = false;
+	private static int minCutOff = 3;
 	private static int timeOut = Integer.MAX_VALUE;
 	private static boolean noExecStats = false;
 	private static boolean noRanks = false;
@@ -85,7 +86,7 @@ public class RankPL {
 
 		// Execute
 		try {
-			execute(program, rankCutOff, maxRank, iterativeDeepening, noRanks, terminateAfterFirst);
+			execute(program, rankCutOff, maxRank, iterativeDeepening, minCutOff, noRanks, terminateAfterFirst);
 
 		} catch (RPLException e) {
 			// e.printStackTrace(); // use this for debugging
@@ -142,7 +143,7 @@ public class RankPL {
 	 * @param program Program to execute
 	 * @throws RPLException Exception occurring during execution of program
 	 */
-	public static Map<Integer, Set<String>> execute(Program program, int rankCutOff, int maxRank, boolean iterativeDeepening, boolean noRanks, boolean terminateAfterFirst) throws RPLException {
+	public static Map<Integer, Set<String>> execute(Program program, int rankCutOff, int maxRank, boolean iterativeDeepening, int minCutOff, boolean noRanks, boolean terminateAfterFirst) throws RPLException {
 		
 		final Map<Integer, Set<String>> resultMap = new LinkedHashMap<Integer, Set<String>>();
 
@@ -157,7 +158,7 @@ public class RankPL {
 					// Run
 					RankedIterator<String> it;
 					if (iterativeDeepening) {
-						it = program.runWithIterativeDeepening(c, rankCutOff);
+						it = program.runWithIterativeDeepening(c, minCutOff, rankCutOff);
 					} else {
 						c.setRankCutOff(rankCutOff);
 						;
@@ -235,6 +236,8 @@ public class RankPL {
 				.desc("discard computations above this rank (default ∞)").build());
 		options.addOption(Option.builder("d")
 				.desc("enable iterative deepening (run repeatedly with increasing rank_cutoff values)").build());
+		options.addOption(Option.builder("m")
+				.desc("use if -d option is provided: minimum rank_cutoff to start with. Lower values are faster but might return incorrect results (default 3)").build());
 		options.addOption(Option.builder("f")
 				.desc("terminate after first answer").build());
 		options.addOption(Option.builder("t").hasArg().type(Number.class).argName("timeout")
@@ -291,6 +294,14 @@ public class RankPL {
 			}
 			if (cmd.hasOption("d")) {
 				iterativeDeepening = true;
+				if (cmd.hasOption("m")) {
+					try {
+						minCutOff = ((Number) cmd.getParsedOptionValue("m")).intValue();
+					} catch (Exception e) {
+						System.err.println("Illegal value provided for -m option.");
+						return false;
+					}
+				}
 				if (maxRank > 0) {
 					System.out
 							.println("Warning: ignoring max_rank setting (must be 0 when iterative deepening is enabled).");
@@ -320,7 +331,7 @@ public class RankPL {
 	private static void printUsage() {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.setWidth(160);
-		List<String> order = Arrays.asList("source", "r", "t", "c", "d", "f", "ns", "nr", "help");
+		List<String> order = Arrays.asList("source", "r", "t", "c", "d", "m", "f", "ns", "nr", "help");
 		formatter.setOptionComparator(new Comparator<Option>() {
 			@Override
 			public int compare(Option o1, Option o2) {

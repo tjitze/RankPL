@@ -42,7 +42,7 @@ public class RunRPLTest extends TestCase {
 			if (program == null) {
 				fail("Parse error");
 			}
-			RankPL.execute(program, Rank.MAX, Rank.MAX, false, false, false);
+			RankPL.execute(program, Rank.MAX, Rank.MAX, false, 0, false, false);
 			System.out.println("OK");
 		} catch (Exception e) {
 			e.printStackTrace();

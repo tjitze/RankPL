@@ -16,7 +16,7 @@ public class RankedItem<T> {
 	}
 	
 	public String toString() {
-		return "<" + rank + ": " + item + ">";
+		return "<" + item + " (rank " + rank + ")>";
 	}
 	
 	public boolean equals(Object o) {

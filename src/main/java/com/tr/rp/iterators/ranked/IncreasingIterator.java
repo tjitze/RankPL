@@ -46,7 +46,7 @@ public class IncreasingIterator implements RankedIterator<VarStore> {
 
 	@Override
 	public int getRank() {
-		return next != null ? next.rank : null;
+		return next != null ? next.rank : -1;
 	}
 
 	private RankedItem<VarStore> getNext() throws RPLException {

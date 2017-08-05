@@ -15,15 +15,12 @@ import com.tr.rp.varstore.VarStore;
 public class IteratorSplitter<T> {
 
 	private final RankedIterator<T> in;
-	private final LinkedList<T> vsA = new LinkedList<T>();
-	private final LinkedList<T> vsB = new LinkedList<T>();
-	private final LinkedList<Integer> rsA = new LinkedList<Integer>();
-	private final LinkedList<Integer> rsB = new LinkedList<Integer>();
+	private final LinkedList<T> items = new LinkedList<T>();
+	private final LinkedList<Integer> ranks = new LinkedList<Integer>();
 
-	private T va = null;
-	private int ra = -1;
-	private T vb = null;
-	private int rb = -1;
+	private int indexA = -1;
+	private int indexB = -1;
+	private boolean done = false;
 	
 	public IteratorSplitter(RankedIterator<T> in) {
 		this.in = in;
@@ -37,29 +34,35 @@ public class IteratorSplitter<T> {
 
 			@Override
 			public boolean next() throws RPLException {
-				if (!rsA.isEmpty()) {
-					va = vsA.removeFirst();
-					ra = rsA.removeFirst();
-					return true;
-				} else if (in.next()) {
-					va = in.getItem();
-					ra = in.getRank();
-					vsB.addLast(va);
-					rsB.addLast(ra);
-					return true;
-				} else {
-					return false;
+				indexA++;
+				if (indexA == items.size()) {
+					if (in.next()) {
+						T item = in.getItem();
+						int rank = in.getRank();
+						items.addLast(item);
+						ranks.addLast(rank);
+					} else {
+						done = true;
+					}
 				}
+				int firstIndexToKeep = Math.min(indexA, indexB);
+				for (int i = 0; i < firstIndexToKeep; i++) {
+					items.removeFirst();
+					ranks.removeFirst();
+					indexA--;
+					indexB--;
+				}
+				return indexA < items.size();
 			}
 
 			@Override
 			public T getItem() throws RPLException {
-				return va;
+				return indexA >= 0 && indexA < items.size()? items.get(indexA): null;
 			}
 
 			@Override
 			public int getRank() {
-				return ra;
+				return indexA >= 0 && indexA < ranks.size()? ranks.get(indexA): -1;
 			}
 			
 		};
@@ -73,29 +76,35 @@ public class IteratorSplitter<T> {
 
 			@Override
 			public boolean next() throws RPLException {
-				if (!rsB.isEmpty()) {
-					vb = vsB.removeFirst();
-					rb = rsB.removeFirst();
-					return true;
-				} else if (in.next()) {
-					vb = in.getItem();
-					rb = in.getRank();
-					vsA.addLast(vb);
-					rsA.addLast(rb);
-					return true;
-				} else {
-					return false;
+				indexB++;
+				if (indexB == items.size()) {
+					if (in.next()) {
+						T item = in.getItem();
+						int rank = in.getRank();
+						items.addLast(item);
+						ranks.addLast(rank);
+					} else {
+						done = true;
+					}
 				}
+				int firstIndexToKeep = Math.min(indexA, indexB);
+				for (int i = 0; i < firstIndexToKeep; i++) {
+					items.removeFirst();
+					ranks.removeFirst();
+					indexA--;
+					indexB--;
+				}
+				return indexB < items.size();
 			}
 
 			@Override
 			public T getItem() throws RPLException {
-				return vb;
+				return indexB >= 0 && indexB < items.size()? items.get(indexB): null;
 			}
 
 			@Override
 			public int getRank() {
-				return rb;
+				return indexB >= 0 && indexB < ranks.size()? ranks.get(indexB): -1;
 			}
 			
 		};	

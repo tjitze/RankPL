@@ -43,7 +43,7 @@ public class SingleBufferingIterator<T> implements RankedIterator<T> {
 			movedBack = false;
 			return !done;
 		} else {
-			if (initialized) {
+			if (!done && initialized) {
 				previousItem = new RankedItem<T>(in.getItem(), in.getRank());
 			} else {
 				initialized = true;

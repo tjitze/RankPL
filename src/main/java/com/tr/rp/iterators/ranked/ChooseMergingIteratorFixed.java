@@ -12,16 +12,20 @@ import com.tr.rp.varstore.VarStore;
 
 public class ChooseMergingIteratorFixed implements RankedIterator<VarStore> {
 
-	private final BufferingIterator<VarStore> in1;
-	private final BufferingIterator<VarStore> in2;
-	
-	private boolean getB = false;
-	
+	private final RankedIterator<VarStore> in1;
+	private final RankedIterator<VarStore> in2;
+		
 	private int rankIncrease;
+
+	private RankedItem<VarStore> next = null;
 	
 	private boolean in1init = false;
-	private boolean in1empty = false;
-		
+	private boolean in2init = false;
+	private boolean in1done = false;
+	private boolean in2done = false;
+
+	private int normalizationOffset = -1;
+	
 	/**
 	 * Construct a choose merging iterator 
 	 * 
@@ -33,57 +37,98 @@ public class ChooseMergingIteratorFixed implements RankedIterator<VarStore> {
 	 */
 	public ChooseMergingIteratorFixed(RankedIterator<VarStore> in1, 
 			RankedIterator<VarStore> in2, int rankIncrease) throws RPLException {
-		this.in1 = new BufferingIterator<VarStore>(in1);
-		this.in2 = new BufferingIterator<VarStore>(in2);
+		this.in1 = in1 ;
+		this.in2 = in2;
 		this.rankIncrease = rankIncrease;
 	}
 
 	@Override
 	public boolean next() throws RPLException {
-		boolean next1 = in1.next();
-		if (!in1init && !next1) {
-			in1empty = true;
+		next = getNextItem();
+		if (normalizationOffset == -1) {
+			normalizationOffset = (next == null)? 0: next.rank;
 		}
-		in1init = true;
-		if (!next1) {
-			getB = true;
-			return in2.next();
-		}
-		// At this point in1 is ready
-		
-		// shortcut: if rank of in1 does not exceed rank increase, we don't need to check in2.
-		if (in1.getRank() <= rankIncrease) {
-			getB = false;
-			return true;
-		}
-		
-		boolean next2 = in2.next();
-		if (!next2) {
-			getB = false;
-			return true;
-		}
-		
-		// At this point both in1 and in2 are ready 
-		
-		// Decide which to use
-		if (in2.getRank() + rankIncrease < in1.getRank()) {
-			getB = true;
-			in1.moveBack();
-		} else {
-			getB = false;
-			in2.moveBack();
-		}
-		return true;
+		return next != null;
 	}
 
 	@Override
 	public VarStore getItem() throws RPLException {
-		return getB? in2.getItem(): in1.getItem();
+		return next != null? next.item: null;
 	}
 
 	@Override
 	public int getRank() {
-		return getB? in2.getRank() + (in1empty? 0: rankIncrease): in1.getRank();
+		return next != null? next.rank - normalizationOffset: -1;
 	}
 
+	// Current items still need to be returned
+	
+	public RankedItem<VarStore> getNextItem() throws RPLException {
+		if (in1done && !in2done) {
+			if (in2init) {
+				RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), in2.getRank() + rankIncrease);
+				in2done = !in2.next();
+				return ret;
+			} else {
+				in2init = true;				
+				if (in2.next()) {
+					RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), in2.getRank() + rankIncrease);
+					in2done = !in2.next();
+					return ret;
+				} else {
+					in2done = true;
+					return null;
+				}
+			}
+		}
+		if (!in1done && in2done) {
+			if (in1init) {
+				RankedItem<VarStore> ret = new RankedItem<VarStore>(in1.getItem(), in1.getRank());
+				in1done = !in1.next();
+				return ret;
+			} else {
+				in1init = true;				
+				if (in1.next()) {
+					RankedItem<VarStore> ret = new RankedItem<VarStore>(in1.getItem(), in1.getRank());
+					in1done = !in1.next();
+					return ret;
+				} else {
+					in1done = true;
+					return null;
+				}
+			}
+		}
+		if (in2done && in1done) {
+			return null;
+		}
+		
+		// Initialize A if necessary
+		if (!in1init) {
+			in1init = true;
+			if (!in1.next()) {
+				in1done = true;
+				return getNextItem();
+			}
+		}
+
+		// Initialize B if necessary
+		if (!in2init && rankIncrease < in1.getRank()) {
+			in2init = true;
+			if (!in2.next()) {
+				in2done = true;
+				return getNextItem();
+			}
+		}
+		
+		// Return A unless B is lower ranked
+		if (in2init && in2.getRank() + rankIncrease < in1.getRank()) {
+			RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), in2.getRank() + rankIncrease);
+			in2done = !in2.next();
+			return ret;
+		} else {
+			RankedItem<VarStore> ret = new RankedItem<VarStore>(in1.getItem(), in1.getRank());
+			in1done = !in1.next();
+			return ret;
+		}
+	}
 }

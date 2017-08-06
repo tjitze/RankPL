@@ -44,10 +44,12 @@ import com.tr.rp.ranks.Rank;
 
 public class RankPL {
 
+	public static final int DEFAULT_MIN_CUTOFF = 2;
+	
 	private static int maxRank = 0;
 	private static int rankCutOff = Rank.MAX;
 	private static boolean iterativeDeepening = false;
-	private static int minCutOff = 3;
+	private static int minCutOff = DEFAULT_MIN_CUTOFF;
 	private static int timeOut = Integer.MAX_VALUE;
 	private static boolean noExecStats = false;
 	private static boolean noRanks = false;
@@ -236,7 +238,7 @@ public class RankPL {
 				.desc("discard computations above this rank (default ∞)").build());
 		options.addOption(Option.builder("d")
 				.desc("enable iterative deepening (run repeatedly with increasing rank_cutoff values)").build());
-		options.addOption(Option.builder("m")
+		options.addOption(Option.builder("m").hasArg().type(Number.class).argName("min_rank_cutoff")
 				.desc("use if -d option is provided: minimum rank_cutoff to start with. Lower values are faster but might return incorrect results (default 3)").build());
 		options.addOption(Option.builder("f")
 				.desc("terminate after first answer").build());

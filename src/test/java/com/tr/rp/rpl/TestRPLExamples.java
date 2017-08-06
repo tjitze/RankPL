@@ -125,7 +125,7 @@ public class TestRPLExamples extends TestCase {
 				if (program == null) {
 					fail("Parse error");
 				}
-				Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, true, 3, false, true);
+				Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, true, RankPL.DEFAULT_MIN_CUTOFF, false, true);
 				assertTrue(resultMap.size() == 1);
 				assertTrue(resultMap.get(0).size() == 1);
 				assertEquals(resultMap.get(0).iterator().next(), entry.getValue());

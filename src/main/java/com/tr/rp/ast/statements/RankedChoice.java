@@ -11,8 +11,8 @@ import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIllegalRankException;
-import com.tr.rp.iterators.ranked.ChooseMergingIteratorFixed;
-import com.tr.rp.iterators.ranked.ChooseMergingIteratorVariable;
+import com.tr.rp.iterators.ranked.MergingIteratorFixed;
+import com.tr.rp.iterators.ranked.MergingIteratorVariable;
 import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.IteratorSplitter;
@@ -77,12 +77,12 @@ public class RankedChoice extends AbstractStatement implements RankedChoiceError
 			if (rankValue < 0) {
 				throw new RPLIllegalRankException(rankValue, rank, this);
 			}
-			merge = new ChooseMergingIteratorFixed(
+			merge = new MergingIteratorFixed(
 					s1.getIterator(split.getA(), c), 
 					s2.getIterator(split.getB(), c), 
 					rankValue);
 		} else {
-			merge = new ChooseMergingIteratorVariable(
+			merge = new MergingIteratorVariable(
 					s1.getIterator(split.getA(), c), 
 					s2.getIterator(split.getB(), c), 
 					rank2,

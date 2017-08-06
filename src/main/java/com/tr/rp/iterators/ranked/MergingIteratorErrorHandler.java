@@ -2,7 +2,7 @@ package com.tr.rp.iterators.ranked;
 
 import com.tr.rp.exceptions.RPLException;
 
-public interface ChooseMergingIteratorErrorHandler {
+public interface MergingIteratorErrorHandler {
 
 	void handleRankExpressionError(RPLException e) throws RPLException;
 

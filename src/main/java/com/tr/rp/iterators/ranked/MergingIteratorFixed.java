@@ -10,7 +10,7 @@ import com.tr.rp.ranks.Rank;
 import com.tr.rp.ranks.RankedItem;
 import com.tr.rp.varstore.VarStore;
 
-public class ChooseMergingIteratorFixed implements RankedIterator<VarStore> {
+public class MergingIteratorFixed implements RankedIterator<VarStore> {
 
 	private final RankedIterator<VarStore> in1;
 	private final RankedIterator<VarStore> in2;
@@ -35,7 +35,7 @@ public class ChooseMergingIteratorFixed implements RankedIterator<VarStore> {
 	 * @param exceptionSource Statement to use as exception source for exceptions coning from rank increase expression
 	 * @throws RPLException
 	 */
-	public ChooseMergingIteratorFixed(RankedIterator<VarStore> in1, 
+	public MergingIteratorFixed(RankedIterator<VarStore> in1, 
 			RankedIterator<VarStore> in2, int rankIncrease) throws RPLException {
 		this.in1 = in1 ;
 		this.in2 = in2;

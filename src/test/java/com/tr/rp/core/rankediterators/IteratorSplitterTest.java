@@ -18,11 +18,6 @@ public class IteratorSplitterTest extends RPLBaseTest {
 	private void mustEqual(RankedIterator a, RankedIterator b) throws RPLException {
 		boolean done = false;
 		while (!done) {
-			System.out.println("Rank a " + a.getRank());
-			System.out.println("Rank b " + b.getRank());
-			System.out.println("Item a " + a.getItem());
-			System.out.println("Item b " + b.getItem());
-			System.out.println("");
 			assertEquals(a.getRank(), b.getRank());
 			assert(Objects.equals(a.getItem(), b.getItem()));
 			boolean aNext = a.next();

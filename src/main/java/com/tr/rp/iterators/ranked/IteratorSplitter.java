@@ -6,11 +6,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 
 /**
- * An IteratorSplitter takes a ranked iterator as input
- * and produces two copies (getA(), getB()). Each copy 
- * is backed by a FIFO buffer to remember elements in 
- * case the consumption of one of the two copies overtakes 
- * the other.
+ * An IteratorSplitter takes a ranked iterator as input and produces two copies (getA(), getB()). 
  */
 public class IteratorSplitter<T> {
 
@@ -20,7 +16,6 @@ public class IteratorSplitter<T> {
 
 	private int indexA = -1;
 	private int indexB = -1;
-	private boolean done = false;
 	
 	public IteratorSplitter(RankedIterator<T> in) {
 		this.in = in;
@@ -41,8 +36,6 @@ public class IteratorSplitter<T> {
 						int rank = in.getRank();
 						items.addLast(item);
 						ranks.addLast(rank);
-					} else {
-						done = true;
 					}
 				}
 				int firstIndexToKeep = Math.min(indexA, indexB);
@@ -83,8 +76,6 @@ public class IteratorSplitter<T> {
 						int rank = in.getRank();
 						items.addLast(item);
 						ranks.addLast(rank);
-					} else {
-						done = true;
 					}
 				}
 				int firstIndexToKeep = Math.min(indexA, indexB);

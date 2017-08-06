@@ -29,8 +29,6 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 	
 	/** While statement body */
 	private AbstractStatement body;
-
-	private static final int SKIP_COUNT = 5;
 	
 	public While(AbstractExpression whileCondition, AbstractStatement body) {
 		this.whileCondition = whileCondition;

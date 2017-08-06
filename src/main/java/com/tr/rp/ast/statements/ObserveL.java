@@ -1,8 +1,10 @@
 package com.tr.rp.ast.statements;
 
 import java.util.Set;
+import java.util.LinkedList;
 import java.util.Objects;
 
+import com.google.common.collect.MinMaxPriorityQueue;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
@@ -15,10 +17,17 @@ import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.iterators.ranked.AbsurdIterator;
+import com.tr.rp.iterators.ranked.BufferingIterator;
+import com.tr.rp.iterators.ranked.DecreasingIterator;
 import com.tr.rp.iterators.ranked.ExecutionContext;
+import com.tr.rp.iterators.ranked.IncreasingIterator;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.iterators.ranked.SingleBufferingIterator;
+import com.tr.rp.ranks.Rank;
+import com.tr.rp.ranks.RankedItem;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Implements L-conditioning.
@@ -40,26 +49,81 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 
 	@Override
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		AbstractExpression rb = new RankExpr(b);
-		AbstractExpression rnb = new RankExpr(new Not(b));
 		
-		// Do rank transformation here
-		RankTransformIterator rt = 
-				new RankTransformIterator(in, this, rb, rnb);
-		rb = rt.getExpression(0);
-		rnb = rt.getExpression(1);
+		// Optimized
+		if (rank.hasDefiniteValue() && !c.isDestructiveLConditioning()) {
+			int rankValue = rank.getDefiniteValue(Type.INT);
+			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
+			int decreaseB = rankValue;
+			int increaseNotB = 0;
+			while (bi.next() && bi.getRank() < rankValue) {
+				if (b.getValue(bi.getItem(), Type.BOOL)) {
+					decreaseB = bi.getRank();
+					increaseNotB = rankValue - decreaseB;
+				}
+			}
+			
+			bi.reset();
+			bi.stopBuffering();
+			RankedIterator<VarStore> ret = bi;
+			if (decreaseB > 0) {
+				ret = new DecreasingIterator(ret, b, decreaseB);
+			}
+			if (increaseNotB > 0) {
+				ret = new IncreasingIterator(ret, new Not(b), increaseNotB);
+			}
 
+			return ret;
+		}
+
+		if (rank.hasDefiniteValue() && c.isDestructiveLConditioning()) {
+			int rankValue = rank.getDefiniteValue(Type.INT);
+			RankTransformIterator rt = new RankTransformIterator(in, this, new RankExpr(b));
+			int rankB = rt.getExpression(0).getDefiniteValue(Type.INT);
+			
+			// Normal behavior if rank(b) is infinity, is to leave the prior ranking
+			// unchanged. If iterative deepening is enabled we need to block execution.
+			if (rankB == Rank.MAX) {
+				return rt;
+			}
+			
+			int decreaseB = Math.min(rankValue, rankB);
+			int increaseNotB = rankValue - decreaseB;
+					
+			RankedIterator<VarStore> ret = rt;
+			if (decreaseB > 0) {
+				ret = new DecreasingIterator(ret, b, decreaseB);
+			}
+			if (increaseNotB > 0) {
+				ret = new IncreasingIterator(ret, new Not(b), increaseNotB);
+			}
+
+			return ret;
+		}
+
+		RankTransformIterator rt = new RankTransformIterator(in, this, new RankExpr(b));
+		int rankB = rt.getExpression(0).getDefiniteValue(Type.INT);
+		int rankNotB = 0;
+		if (rankB == 0) {
+			rt = new RankTransformIterator(rt, this, new RankExpr(new Not(b)));
+			rankNotB = rt.getExpression(0).getDefiniteValue(Type.INT);
+		}
+		
 		// Normal behavior if rank(b) is infinity, is to leave the prior ranking
 		// unchanged. If iterative deepening is enabled we need to block execution.
-		if (rb.equals(Literal.MAX) && c.isDestructiveLConditioning()) {
-			System.out.println("absurd");
-			return new AbsurdIterator<VarStore>();
+		if (rankB == Rank.MAX) {
+			if (c.isDestructiveLConditioning()) {
+				return new AbsurdIterator<VarStore>();
+			} else {
+				return rt;
+			}
 		}
 		
 		// Construct observe-L statement
-		AbstractExpression cond = Expressions.leq(rb, rank);
-		AbstractExpression r1 = Expressions.rankMinus(Expressions.rankPlus(rank, rnb), rb);
-		AbstractExpression r2 = Expressions.rankMinus(rb, rank);
+		AbstractExpression cond = Expressions.leq(new Literal<Integer>(rankB), rank);
+		AbstractExpression r1 = Expressions.rankMinus(
+				Expressions.rankPlus(rank, new Literal<Integer>(rankNotB)), new Literal<Integer>(rankB));
+		AbstractExpression r2 = Expressions.rankMinus(new Literal<Integer>(rankB), rank);
 		AbstractStatement c1 = new RankedChoice(
 				new Observe(b, this),
 				new Observe(new Not(b), this),

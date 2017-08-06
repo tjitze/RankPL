@@ -34,7 +34,7 @@ public class SingleBufferingIterator<T> implements RankedIterator<T> {
 	}
 	
 	public boolean canMoveBack() {
-		return !movedBack && previousItem != null;
+		return !movedBack && initialized;
 	}
 	
 	@Override

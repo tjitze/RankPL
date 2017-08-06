@@ -12,7 +12,8 @@ import com.tr.rp.varstore.types.Type;
  * 
  * TODO: add check for precondition
  */
-public class DecreasingIterator implements RankedIterator<VarStore> {
+public final class DecreasingIterator implements RankedIterator<VarStore> {
+	
 	private final RankedIterator<VarStore> in;
 	private final MinMaxPriorityQueue<RankedItem<VarStore>> queue = MinMaxPriorityQueue
 			.<RankedItem<VarStore>>orderedBy((x, y) -> x.rank - y.rank).create();
@@ -34,22 +35,22 @@ public class DecreasingIterator implements RankedIterator<VarStore> {
 	}
 
 	@Override
-	public boolean next() throws RPLException {
+	public final boolean next() throws RPLException {
 		next = getNext();
 		return next != null;
 	}
 
 	@Override
-	public VarStore getItem() throws RPLException {
+	public final VarStore getItem() throws RPLException {
 		return next != null ? next.item : null;
 	}
 
 	@Override
-	public int getRank() {
+	public final int getRank() {
 		return next != null ? next.rank : -1;
 	}
 
-	private RankedItem<VarStore> getNext() throws RPLException {
+	private final RankedItem<VarStore> getNext() throws RPLException {
 		if (in.next()) {
 			VarStore v = in.getItem();
 			int r = in.getRank();

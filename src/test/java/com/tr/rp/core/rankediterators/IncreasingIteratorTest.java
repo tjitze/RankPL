@@ -1,34 +1,18 @@
 package com.tr.rp.core.rankediterators;
 
-import static com.tr.rp.ast.expressions.Expressions.*;
-import static com.tr.rp.ast.statements.Statements.*;
+import static com.tr.rp.ast.expressions.Expressions.eq;
+import static com.tr.rp.ast.expressions.Expressions.geq;
+import static com.tr.rp.ast.expressions.Expressions.lit;
+import static com.tr.rp.ast.expressions.Expressions.mod;
+import static com.tr.rp.ast.expressions.Expressions.var;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.tr.rp.ast.ProgramBuilder;
-import com.tr.rp.ast.expressions.ArrayInitExpression;
-import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.ranks.RankedItem;
-import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
-import com.tr.rp.varstore.types.Type;
-
-import com.tr.rp.ast.expressions.Expressions;
-import com.tr.rp.ast.expressions.Literal;
-import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.AbsurdIterator;
-import com.tr.rp.iterators.ranked.ChooseMergingIteratorFixed;
-import com.tr.rp.iterators.ranked.ChooseMergingIteratorVariable;
-import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.IncreasingIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.ranks.RankedItem;
 import com.tr.rp.statement.RPLBaseTest;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;

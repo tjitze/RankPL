@@ -13,12 +13,15 @@ import com.tr.rp.varstore.types.Type;
  * 
  * TODO: add check for precondition
  */
-public class IncreasingIterator implements RankedIterator<VarStore> {
+public final class IncreasingIterator implements RankedIterator<VarStore> {
 
 	private final SingleBufferingIterator<VarStore> buffered;
 	private final LinkedList<RankedItem<VarStore>> queue = new LinkedList<RankedItem<VarStore>>();
 	private final AbstractExpression e;
 	private final int inc;
+
+	private RankedItem<VarStore> next = null;
+
 
 	/**
 	 * Construct iterator that reproduces items provided by the in iterator, except that
@@ -31,25 +34,23 @@ public class IncreasingIterator implements RankedIterator<VarStore> {
 		this.inc = inc;
 	}
 
-	RankedItem<VarStore> next = null;
-
 	@Override
-	public boolean next() throws RPLException {
+	public final boolean next() throws RPLException {
 		next = getNext();
 		return next != null;
 	}
 
 	@Override
-	public VarStore getItem() throws RPLException {
+	public final VarStore getItem() throws RPLException {
 		return next != null ? next.item : null;
 	}
 
 	@Override
-	public int getRank() {
+	public final int getRank() {
 		return next != null ? next.rank : -1;
 	}
 
-	private RankedItem<VarStore> getNext() throws RPLException {
+	private final RankedItem<VarStore> getNext() throws RPLException {
 		while (buffered.next()) {
 			VarStore v = buffered.getItem();
 			int r = buffered.getRank();

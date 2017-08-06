@@ -35,6 +35,7 @@ import org.apache.commons.cli.ParseException;
 
 import com.tr.rp.ast.statements.Program;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.parser.ConcreteParser;
@@ -89,7 +90,6 @@ public class RankPL {
 		// Execute
 		try {
 			execute(program, rankCutOff, maxRank, iterativeDeepening, minCutOff, noRanks, terminateAfterFirst);
-
 		} catch (RPLException e) {
 			// e.printStackTrace(); // use this for debugging
 			System.out.println("Exception: " + e.getDescription());
@@ -103,7 +103,7 @@ public class RankPL {
 					info += ", on line " + e.getStatement().getLineNumber();
 				}
 			}
-			info += ".";
+			if (info.length() > 0) info += ".";
 			System.out.println(info);
 			System.exit(0);
 		} catch (Exception e) {
@@ -204,11 +204,12 @@ public class RankPL {
 		} catch (ExecutionException ee) { 
 			// Re-throw the RPL exception thrown inside the thread
 			c.setInterruptRequested();
-			ee.printStackTrace();
-			//if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLException) {
-			throw (RPLException)ee.getCause().getCause();
-			//} else {
-			//}
+			if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLException) {
+				throw (RPLException)ee.getCause().getCause();
+			} else {
+				ee.printStackTrace();
+				throw new RPLMiscException("Abnormal exit");
+			}
 		} catch (TimeoutException te) { 
 			c.setInterruptRequested();
 			System.out.println("Remaining results omitted due to timeout.");

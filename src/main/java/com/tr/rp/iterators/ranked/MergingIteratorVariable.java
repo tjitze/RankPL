@@ -12,11 +12,11 @@ import com.tr.rp.ranks.RankedItem;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
-public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
+public class MergingIteratorVariable implements RankedIterator<VarStore> {
 
 	private final RankedIterator<VarStore> in1;
 	private final RankedIterator<VarStore> in2;
-	private final ChooseMergingIteratorErrorHandler errorHandler;
+	private final MergingIteratorErrorHandler errorHandler;
 	
 	public final PriorityQueue<RankedItem<VarStore>> pq = new PriorityQueue<RankedItem<VarStore>>(
 			new Comparator<RankedItem<VarStore>>() {
@@ -41,9 +41,9 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 	 * @param exceptionSource Statement to use as exception source for exceptions coning from rank increase expression
 	 * @throws RPLException
 	 */
-	public ChooseMergingIteratorVariable(RankedIterator<VarStore> in1, 
+	public MergingIteratorVariable(RankedIterator<VarStore> in1, 
 			RankedIterator<VarStore> in2, AbstractExpression rankIncrease,
-			ChooseMergingIteratorErrorHandler errorHandler) throws RPLException {
+			MergingIteratorErrorHandler errorHandler) throws RPLException {
 		this.errorHandler = errorHandler;
 		this.in1 = in1;
 		this.in2 = in2;
@@ -57,8 +57,8 @@ public class ChooseMergingIteratorVariable implements RankedIterator<VarStore> {
 		}
 	}
 
-	public ChooseMergingIteratorVariable(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, AbstractExpression rankIncrease) throws RPLException {
-		this(in1, in2, rankIncrease, new ChooseMergingIteratorErrorHandler() {
+	public MergingIteratorVariable(RankedIterator<VarStore> in1, RankedIterator<VarStore> in2, AbstractExpression rankIncrease) throws RPLException {
+		this(in1, in2, rankIncrease, new MergingIteratorErrorHandler() {
 			@Override
 			public void handleRankExpressionError(RPLException e) throws RPLException {
 				throw e;

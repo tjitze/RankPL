@@ -3,21 +3,21 @@ package com.tr.rp.core.rankediterators;
 import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.AbsurdIterator;
-import com.tr.rp.iterators.ranked.ChooseMergingIteratorFixed;
-import com.tr.rp.iterators.ranked.ChooseMergingIteratorVariable;
+import com.tr.rp.iterators.ranked.MergingIteratorFixed;
+import com.tr.rp.iterators.ranked.MergingIteratorVariable;
 import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.statement.RPLBaseTest;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
-public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
+public class MergingIteratorVariableTest extends RPLBaseTest {
 
 	// TODO: test behavior when rank increase is not a constant
 	
 	public void testEqualInput1() throws RPLException {
 		for (int i = 0; i < 5; i++) {
-			ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(getTestIterator(), getTestIterator(), new Literal<Integer>(i));
+			MergingIteratorVariable s = new MergingIteratorVariable(getTestIterator(), getTestIterator(), new Literal<Integer>(i));
 			DuplicateRemovingIterator<VarStore> ds = new DuplicateRemovingIterator<VarStore>(s);
 			iteratorsEqual(ds, getTestIterator());
 		}
@@ -28,7 +28,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 			for (int as = 1; as < 6; as++) {
 				for (int bs = 1; bs < 6; bs++) {
 					int count = 0;
-					ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(getIterator("a", as), getIterator("b", bs), new Literal<Integer>(i));
+					MergingIteratorVariable s = new MergingIteratorVariable(getIterator("a", as), getIterator("b", bs), new Literal<Integer>(i));
 					while (s.next()) {
 						count++;
 						VarStore v = s.getItem();
@@ -47,7 +47,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 	public void testWithEmptyA1() throws RPLException {
 		for (int i = 0; i < 10; i++) {
 			for (int bs = 1; bs < 6; bs++) {
-				ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(new AbsurdIterator<VarStore>(), getIterator("b", bs), new Literal<Integer>(i));
+				MergingIteratorVariable s = new MergingIteratorVariable(new AbsurdIterator<VarStore>(), getIterator("b", bs), new Literal<Integer>(i));
 				for (int j = 0; j < bs; j++) {
 					assert(s.next());
 					assertEquals((int)s.getItem().getValue("b", Type.INT), j);
@@ -60,7 +60,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 	public void testWithEmptyB1() throws RPLException {
 		for (int i = 0; i < 10; i++) {
 			for (int as = 1; as < 6; as++) {
-				ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(getIterator("a", as), new AbsurdIterator<VarStore>(), new Literal<Integer>(i));
+				MergingIteratorVariable s = new MergingIteratorVariable(getIterator("a", as), new AbsurdIterator<VarStore>(), new Literal<Integer>(i));
 				for (int j = 0; j < as; j++) {
 					assert(s.next());
 					assertEquals((int)s.getItem().getValue("a", Type.INT), j);
@@ -72,7 +72,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 	
 	public void testEqualInput2() throws RPLException {
 		for (int i = 0; i < 5; i++) {
-			ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(getTestIterator(), getTestIterator(), new Literal<Integer>(i));
+			MergingIteratorVariable s = new MergingIteratorVariable(getTestIterator(), getTestIterator(), new Literal<Integer>(i));
 			DuplicateRemovingIterator<VarStore> ds = new DuplicateRemovingIterator<VarStore>(s);
 			iteratorsEqual(ds, getTestIterator());
 		}
@@ -83,7 +83,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 			for (int as = 1; as < 6; as++) {
 				for (int bs = 1; bs < 6; bs++) {
 					int count = 0;
-					ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(getIterator("a", as), getIterator("b", bs), new Literal<Integer>(i));
+					MergingIteratorVariable s = new MergingIteratorVariable(getIterator("a", as), getIterator("b", bs), new Literal<Integer>(i));
 					while (s.next()) {
 						count++;
 						VarStore v = s.getItem();
@@ -102,7 +102,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 	public void testWithEmptyA2() throws RPLException {
 		for (int i = 0; i < 10; i++) {
 			for (int bs = 1; bs < 6; bs++) {
-				ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(new AbsurdIterator<VarStore>(), getIterator("b", bs), new Literal<Integer>(i));
+				MergingIteratorVariable s = new MergingIteratorVariable(new AbsurdIterator<VarStore>(), getIterator("b", bs), new Literal<Integer>(i));
 				for (int j = 0; j < bs; j++) {
 					assert(s.next());
 					assertEquals((int)s.getItem().getValue("b", Type.INT), j);
@@ -115,7 +115,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 	public void testWithEmptyB2() throws RPLException {
 		for (int i = 0; i < 10; i++) {
 			for (int as = 1; as < 6; as++) {
-				ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(getIterator("a", as), new AbsurdIterator<VarStore>(), new Literal<Integer>(i));
+				MergingIteratorVariable s = new MergingIteratorVariable(getIterator("a", as), new AbsurdIterator<VarStore>(), new Literal<Integer>(i));
 				for (int j = 0; j < as; j++) {
 					assert(s.next());
 					assertEquals((int)s.getItem().getValue("a", Type.INT), j);
@@ -129,7 +129,7 @@ public class ChooseMergingIteratorVariableTest extends RPLBaseTest {
 	public void testNormalization() throws RPLException {
 		for (int i = 0; i < 10; i++) {
 			for (int r = 0; r < 10; r++) {
-				ChooseMergingIteratorVariable s = new ChooseMergingIteratorVariable(new AbsurdIterator<VarStore>(), getIterator("a", i), new Literal<Integer>(r));
+				MergingIteratorVariable s = new MergingIteratorVariable(new AbsurdIterator<VarStore>(), getIterator("a", i), new Literal<Integer>(r));
 				for (int j = 0; j < i; j++) {
 					assert(s.next());
 					assertEquals((int)s.getItem().getValue("a", Type.INT), j);

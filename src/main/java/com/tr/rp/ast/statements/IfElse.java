@@ -1,7 +1,6 @@
 package com.tr.rp.ast.statements;
 
 import java.util.Set;
-import java.util.List;
 import java.util.Objects;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -12,9 +11,9 @@ import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.AbsurdIterator;
 import com.tr.rp.iterators.ranked.BufferingIterator;
+import com.tr.rp.iterators.ranked.MergingIteratorFixed;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.IteratorSplitter;
-import com.tr.rp.iterators.ranked.MergingIterator;
 import com.tr.rp.iterators.ranked.RankTransformIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.Rank;
@@ -97,8 +96,11 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		RankedIterator<VarStore> ib2 = b.getIterator(ia2, c);
 
 		// Merge result
-		RankedIterator<VarStore> rc = new MergingIterator(ib1, ib2, offset1, offset2);
-		return rc;
+		if (offset1 > 0) {
+			return new MergingIteratorFixed(ib2, ib1, offset1);
+		} else {
+			return new MergingIteratorFixed(ib1, ib2, offset2);
+		}
 
 	}
 

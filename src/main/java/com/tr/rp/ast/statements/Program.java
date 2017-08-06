@@ -34,6 +34,9 @@ public class Program extends AbstractStatement {
 	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
 		// Execute body, then main
 		if (functionScope.hasFunction("main")) {
+			if (!body.equals(new Skip())) {
+				throw new RPLMiscException("Found statements outside main() function scope.");
+			}
 			Function f = functionScope.getFunction("main");
 			if (f.getParameters().length != 0) {
 				throw new RPLMiscException("The main function should have zero parameters.");

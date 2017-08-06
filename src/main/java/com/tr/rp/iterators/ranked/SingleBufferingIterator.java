@@ -27,7 +27,7 @@ public class SingleBufferingIterator<T> implements RankedIterator<T> {
 		if (movedBack) {
 			throw new IllegalStateException("Can only move back one step");
 		}
-		if (previousItem == null) {
+		if (!initialized) {
 			throw new IllegalStateException("Can only move back after next() called");
 		}
 		movedBack = true;

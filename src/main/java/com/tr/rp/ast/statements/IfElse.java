@@ -183,6 +183,7 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		}
 		final int conditioningOffset = hasNext? bi.getRank(): Rank.MAX;
 		if (hasNext) bi.reset(bi.getIndex() - 1);
+		bi.stopBuffering();
 		return new IteratorWithOffSet<VarStore>() {
 			
 			@Override

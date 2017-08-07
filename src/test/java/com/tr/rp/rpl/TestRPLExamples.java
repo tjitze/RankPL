@@ -100,6 +100,43 @@ public class TestRPLExamples extends TestCase {
 	}
 
 	public void testSpellingCorrectorExample() {
+		Map<Integer, Set<String>> expectedResultMap = new HashMap<Integer, Set<String>>();
+		expectedResultMap.put(0, new HashSet<String>(Arrays.asList(
+				"twelve", "eleven"
+		)));
+		expectedResultMap.put(2, new HashSet<String>(Arrays.asList(
+				"seven"
+		)));
+		expectedResultMap.put(3, new HashSet<String>(Arrays.asList(
+				"thirteen", "fifteen", "sixteen", "ten", "twenty", "three", "nineteen"
+		)));
+		expectedResultMap.put(4, new HashSet<String>(Arrays.asList(
+				"eighteen", "fourteen", "two", "five", "seventeen"
+		)));
+		expectedResultMap.put(5, new HashSet<String>(Arrays.asList(
+				"eight", "one", "nine"
+		)));
+		expectedResultMap.put(6, new HashSet<String>(Arrays.asList(
+				"four", "six"
+		)));
+		
+		String file = "./examples/spellingcorrector.rpl";
+		try { 
+			System.out.print("Running test " + file + "... ");
+			String source = RankPL.getFileContent(file);
+			Program program = RankPL.parse(source);
+			if (program == null) {
+				fail("Parse error");
+			}
+			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, false, 0, false, false);
+			assertEquals(resultMap, expectedResultMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failure: " + e.toString());
+		}
+	}
+
+	public void testSpellingCorrectorExample10K() {
 		
 		// We test a couple of different inputs and compare the first match
 		String actualExample = "inkorrect";
@@ -116,7 +153,7 @@ public class TestRPLExamples extends TestCase {
 		expectedResults.put("serbja", "serbia");
 		
 		for (Entry<String, String> entry: expectedResults.entrySet()) {
-			String file = "./examples/spellingcorrector.rpl";
+			String file = "./examples/spellingcorrector-10K-words.rpl";
 			try {
 				System.out.println("Running test " + file + " with input " + entry.getKey());
 				String source = RankPL.getFileContent(file);

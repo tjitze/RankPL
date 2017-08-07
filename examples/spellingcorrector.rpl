@@ -1,21 +1,40 @@
-input := "inkorrect";
+# Input (possibly misspelled)
+input := "tweleven";
 
-dictionary := readfile("examples/google-10000-english-no-swears.txt");
+# Dictionary
+dictionary := [
+	"one", "two", "three", "four", "five",
+	"six", "seven", "eight", "nine", "ten", "eleven",
+	"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+	"seventeen", "eighteen", "nineteen", "twenty"
+];
+
+# Randomly choose word from dictionary
 choice := << 0 ... size(dictionary) >>;
 potential_match := dictionary[choice];
 
+# Initialize counters (i iterates over input, k over match)
 i := 0; k := 0;
+
+# Append * to end of input and potential_match, to match end-of-word
 input := input + "*";
 potential_match := potential_match + "*";
 
+# While there are characters left to match ...
 while (i < size(input) & k < size(potential_match)) do {
+	# Improve rank of match with 1 unit of rank w.r.t. rank of a mis-match.
 	observe-l (1) (input[i] == potential_match[k]);
+
 	if (input[i] == potential_match[k]) {
+		# If match, increase pointers
 		i := i + 1; k := k + 1;
 	} else {
+		# If mis-match, consider three possibilities:
 		either { i := i + 1; k := k + 1; } or i := i + 1 or k := k + 1;
 	};
 };
 
+# Filter on event that all characters were matched
 observe i == size(input) & k == size(potential_match);
+
 return substring(potential_match, 0, size(potential_match) - 1);

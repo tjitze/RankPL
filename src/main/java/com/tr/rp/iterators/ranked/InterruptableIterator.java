@@ -30,9 +30,6 @@ public class InterruptableIterator<T> implements RankedIterator<T> {
 
 	@Override
 	public T getItem() throws RPLException {
-		if (interruptCondition.getAsBoolean()) {
-			throw new RPLInterruptedException();
-		}
 		return in.getItem();
 	}
 

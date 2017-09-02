@@ -36,6 +36,7 @@ stat
  | '{' stat (';' stat)* ';'? '}'						# StatementSequence
  | Return exp											# ReturnStatement
  | Print exp											# PrintStatement
+ | PrintRanking exp										# PrintRankingStatement
  | Cut exp												# CutStatement
  | AssertRanked '(' exp (',' exp)* ')'					# AssertRankedStatement
  | Assert exp											# AssertStatement
@@ -103,6 +104,7 @@ Either: 		'either' | 'EITHER';
 Or: 			'or' | 'OR';
 Return: 		'return' | 'RETURN';
 Print: 			'print' | 'PRINT';
+PrintRanking: 	'print-ranking' | 'PRINT-RANKING';
 Cut: 			'cut' | 'CUT';
 Assert: 		'assert' | 'ASSERT';
 AssertRanked: 	'assert-ranked' | 'ASSERT-RANKED';

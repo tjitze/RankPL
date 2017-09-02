@@ -72,6 +72,7 @@ import com.tr.rp.ast.statements.Observe;
 import com.tr.rp.ast.statements.ObserveJ;
 import com.tr.rp.ast.statements.ObserveL;
 import com.tr.rp.ast.statements.PrintStatement;
+import com.tr.rp.ast.statements.PrintRankingStatement;
 import com.tr.rp.ast.statements.Program;
 import com.tr.rp.ast.statements.RangeChoice;
 import com.tr.rp.ast.statements.RankedChoice;
@@ -116,6 +117,7 @@ import com.tr.rp.parser.RankPLParser.ObserveLStatementContext;
 import com.tr.rp.parser.RankPLParser.ParExpressionContext;
 import com.tr.rp.parser.RankPLParser.PopFunctionCallContext;
 import com.tr.rp.parser.RankPLParser.PrintStatementContext;
+import com.tr.rp.parser.RankPLParser.PrintRankingStatementContext;
 import com.tr.rp.parser.RankPLParser.ProgramContext;
 import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
@@ -171,6 +173,14 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitPrintStatement(PrintStatementContext ctx) {
 		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
 		PrintStatement s = new PrintStatement(e);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitPrintRankingStatement(PrintRankingStatementContext ctx) {
+		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
+		PrintRankingStatement s = new PrintRankingStatement(e);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

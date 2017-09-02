@@ -1,5 +1,7 @@
 package com.tr.rp.ast;
 
+import java.util.Objects;
+
 import com.tr.rp.ast.expressions.AbstractFunctionCall;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
@@ -74,6 +76,8 @@ public abstract class AbstractExpression implements LanguageElement {
 	public abstract Object getDefiniteValue() throws RPLException;
 
 	public <T> T getValue(VarStore e, Type<T> type) throws RPLException {
+		Objects.requireNonNull(e);
+		Objects.requireNonNull(type);
 		Object o = getValue(e);
 		if (o == null) {
 			throw new RPLUndefinedException(this);
@@ -85,6 +89,7 @@ public abstract class AbstractExpression implements LanguageElement {
 	}
 	
 	public <T> T getDefiniteValue(Type<T> type) throws RPLException {
+		Objects.requireNonNull(type);
 		Object o = getDefiniteValue();
 		if (o == null) {
 			throw new RPLUndefinedException(this);

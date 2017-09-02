@@ -1,10 +1,5 @@
 package com.tr.rp.iterators.ranked;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
-import com.tr.rp.ast.AbstractExpression;
-import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.ranks.Rank;
 import com.tr.rp.ranks.RankedItem;
@@ -37,7 +32,7 @@ public class MergingIteratorFixed implements RankedIterator<VarStore> {
 	 */
 	public MergingIteratorFixed(RankedIterator<VarStore> in1, 
 			RankedIterator<VarStore> in2, int rankIncrease) throws RPLException {
-		this.in1 = in1 ;
+		this.in1 = in1;
 		this.in2 = in2;
 		this.rankIncrease = rankIncrease;
 	}
@@ -58,7 +53,7 @@ public class MergingIteratorFixed implements RankedIterator<VarStore> {
 
 	@Override
 	public int getRank() {
-		return next != null? next.rank - normalizationOffset: -1;
+		return next != null? Rank.sub(next.rank, normalizationOffset): -1;
 	}
 
 	// Current items still need to be returned
@@ -66,13 +61,13 @@ public class MergingIteratorFixed implements RankedIterator<VarStore> {
 	public RankedItem<VarStore> getNextItem() throws RPLException {
 		if (in1done && !in2done) {
 			if (in2init) {
-				RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), in2.getRank() + rankIncrease);
+				RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), Rank.add(in2.getRank(), rankIncrease));
 				in2done = !in2.next();
 				return ret;
 			} else {
 				in2init = true;				
 				if (in2.next()) {
-					RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), in2.getRank() + rankIncrease);
+					RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), Rank.add(in2.getRank(), rankIncrease));
 					in2done = !in2.next();
 					return ret;
 				} else {
@@ -121,8 +116,8 @@ public class MergingIteratorFixed implements RankedIterator<VarStore> {
 		}
 		
 		// Return A unless B is lower ranked
-		if (in2init && in2.getRank() + rankIncrease < in1.getRank()) {
-			RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), in2.getRank() + rankIncrease);
+		if (in2init && Rank.add(in2.getRank(), rankIncrease) < in1.getRank()) {
+			RankedItem<VarStore> ret = new RankedItem<VarStore>(in2.getItem(), Rank.add(in2.getRank(), rankIncrease));
 			in2done = !in2.next();
 			return ret;
 		} else {
@@ -130,5 +125,16 @@ public class MergingIteratorFixed implements RankedIterator<VarStore> {
 			in1done = !in1.next();
 			return ret;
 		}
+	}
+	
+	protected void setRankIncrease(int rankIncrease) {
+		System.out.println("Set rank incrase " + rankIncrease);
+		if (in2init) {
+			throw new IllegalStateException("Can only reset rank increase if second iterator is not yet initialized");
+		}
+		if (in1init && !in1done && in1.getRank() < rankIncrease) {
+			throw new IllegalStateException("Rank value too high (rank has already been produced)");
+		}
+		this.rankIncrease = rankIncrease;
 	}
 }

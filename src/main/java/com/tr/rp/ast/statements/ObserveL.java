@@ -52,17 +52,23 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 		
 		// Optimized
 		if (rank.hasDefiniteValue() && !c.isDestructiveLConditioning()) {
-			int rankValue = rank.getDefiniteValue(Type.INT);
+			int shift = rank.getDefiniteValue(Type.INT);
+			if (shift < 0) {
+				throw new RPLIllegalRankException(shift, rank, this);
+			}
+
+			// Get rank of first item satisfying b, use it to determine shifting numbers
 			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-			int decreaseB = rankValue;
+			int decreaseB = shift;
 			int increaseNotB = 0;
-			while (bi.next() && bi.getRank() < rankValue) {
+			while (bi.next() && bi.getRank() < shift) {
 				if (b.getValue(bi.getItem(), Type.BOOL)) {
 					decreaseB = bi.getRank();
-					increaseNotB = rankValue - decreaseB;
+					increaseNotB = shift - decreaseB;
 				}
 			}
-			
+
+			// Apply shifting
 			bi.reset();
 			bi.stopBuffering();
 			RankedIterator<VarStore> ret = bi;
@@ -78,6 +84,9 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 
 		if (rank.hasDefiniteValue() && c.isDestructiveLConditioning()) {
 			int rankValue = rank.getDefiniteValue(Type.INT);
+			if (rankValue < 0) {
+				throw new RPLIllegalRankException(rankValue, rank, this);
+			}
 			RankTransformIterator rt = new RankTransformIterator(in, this, new RankExpr(b));
 			int rankB = rt.getExpression(0).getDefiniteValue(Type.INT);
 			

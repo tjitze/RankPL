@@ -12,6 +12,8 @@ import com.tr.rp.ast.expressions.AbstractFunctionCall;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.varstore.FreeVarNameProvider;
+import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;
 
 public class FunctionCallForm extends AbstractStatement {
@@ -77,7 +79,7 @@ public class FunctionCallForm extends AbstractStatement {
 		ExtractedExpression ee = new ExtractedExpression(exp);
 		AbstractFunctionCall fc = exp.getEmbeddedFunctionCall();
 		while (fc != null) {
-			String var = VarStore.getFreeVariable("subst");
+			String var = FreeVarNameProvider.getFreeVariable("subst");
 			ee.rewrite(var, fc);
 			fc = ee.getExpression().getEmbeddedFunctionCall();
 		}

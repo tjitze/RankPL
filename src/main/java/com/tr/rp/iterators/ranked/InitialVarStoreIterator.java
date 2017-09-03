@@ -1,6 +1,7 @@
 package com.tr.rp.iterators.ranked;
 
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;
 
 /**
@@ -19,7 +20,7 @@ public class InitialVarStoreIterator implements RankedIterator<VarStore> {
 	}
 	
 	public InitialVarStoreIterator() {
-		this(new VarStore());
+		this(new PMapVarStore());
 	}
 	
 	@Override

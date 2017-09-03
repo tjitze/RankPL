@@ -6,6 +6,7 @@ import com.tr.rp.iterators.ranked.MergingIteratorFixed;
 import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.statement.RPLBaseTest;
+import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
@@ -151,7 +152,7 @@ public class MergingIteratorFixedTest extends RPLBaseTest {
 				if (i >= b) {
 					throw new IllegalStateException();
 				}
-				VarStore v = new VarStore();
+				VarStore v = new PMapVarStore();
 				v = v.create(var, i);
 				return v;
 			}

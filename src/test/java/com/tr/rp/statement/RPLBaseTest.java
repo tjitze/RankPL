@@ -16,6 +16,7 @@ import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.parser.RankPLParser.ExpContext;
+import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.PersistentArray;
 
@@ -23,9 +24,9 @@ import junit.framework.TestCase;
 
 public abstract class RPLBaseTest extends TestCase {
 
-	protected static VarStore v1 = new VarStore();
-	protected static VarStore v2 = new VarStore();
-	protected static VarStore v3 = new VarStore();
+	protected static VarStore v1 = new PMapVarStore();
+	protected static VarStore v2 = new PMapVarStore();
+	protected static VarStore v3 = new PMapVarStore();
 
 	static {
 		v1 = v1.create("a", 1);

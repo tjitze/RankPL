@@ -15,6 +15,7 @@ import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
 import com.tr.rp.iterators.ranked.MultiMergeIterator;
 import com.tr.rp.iterators.ranked.RankedIterator;
 import com.tr.rp.ranks.FunctionScope;
+import com.tr.rp.varstore.FreeVarNameProvider;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.PersistentArray;
 
@@ -73,7 +74,7 @@ public class InferringFunctionCall extends FunctionCall {
 
 			@Override
 			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
-				String var = VarStore.getFreeVariable("acc");
+				String var = FreeVarNameProvider.getFreeVariable("acc");
 				RankedIterator<VarStore> it = getIteratorForFunctionCall(var, in, c);
 				List<Object> values = new ArrayList<Object>();
 				while (it.next() && it.getRank() == 0) {

@@ -90,11 +90,11 @@ public class Composition extends AbstractStatement {
 					new IfElseErrorHandler() {
 						@Override
 						public void ifElseConditionError(RPLException e) throws RPLException {
-							throw new RPLMiscException("Internall error", Composition.this);
+							throw new RPLMiscException("Internal error", Composition.this);
 						}
 						@Override
 						public void ifElseThenError(RPLException e) throws RPLException {
-							throw new RPLMiscException("Internall error", Composition.this);
+							throw new RPLMiscException("Internal error", Composition.this);
 						}
 						@Override
 						public void ifElseElseError(RPLException e) throws RPLException {

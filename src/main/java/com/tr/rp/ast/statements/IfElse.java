@@ -10,7 +10,10 @@ import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.iterators.ranked.AbsurdIterator;
+import com.tr.rp.iterators.ranked.BranchingIterator;
+import com.tr.rp.iterators.ranked.BranchingIteratorErrorHandler;
 import com.tr.rp.iterators.ranked.BufferingIterator;
+import com.tr.rp.iterators.ranked.MergingIteratorFixed;
 import com.tr.rp.iterators.ranked.MergingIteratorFixed;
 import com.tr.rp.iterators.ranked.ExecutionContext;
 import com.tr.rp.iterators.ranked.IteratorSplitter;
@@ -66,41 +69,50 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		try {
 			if (exp2.hasDefiniteValue()) {
 				if (exp2.getDefiniteValue(Type.BOOL)) {
-					return a.getIterator(parent, c);
+					return a.getIterator(i, c);
 				} else {
-					return b.getIterator(parent, c);
+					return b.getIterator(i, c);
 				}
 			}
 		} catch (RPLException e) {
 			errorHandler.ifElseConditionError(e);
 		}
 		
-		// Split input
-		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
-
-		// Apply condition 
-		IteratorWithOffSet<VarStore> ia1 = getConditioningIterator(exp2, split.getA(), c);
-		IteratorWithOffSet<VarStore> ia2 = getConditioningIterator(new Not(exp2), split.getB(), c);
+		return new BranchingIterator(parent, exp, a, b, c, new BranchingIteratorErrorHandler() {
+			@Override
+			public void handlExpError(RPLException exception) throws RPLException {
+				exception.setStatement(IfElse.this);
+				exception.setExpression(exp);
+				throw exception;
+			}
+		});
 		
-		// Remember offsets (prior ranks of the conditions)
-		int offset1 = ia1.getConditioningOffset();
-		int offset2 = ia2.getConditioningOffset();
-		
-		// Following happens if input iterator is empty
-		if (offset1 == Rank.MAX && offset2 == Rank.MAX) {
-			return new AbsurdIterator<VarStore>();
-		}
-		
-		// Execute statements
-		RankedIterator<VarStore> ib1 = a.getIterator(ia1, c);
-		RankedIterator<VarStore> ib2 = b.getIterator(ia2, c);
-
-		// Merge result
-		if (offset1 > 0) {
-			return new MergingIteratorFixed(ib2, ib1, offset1);
-		} else {
-			return new MergingIteratorFixed(ib1, ib2, offset2);
-		}
+//		// Split input
+//		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
+//
+//		// Apply condition 
+//		IteratorWithOffSet<VarStore> ia1 = getConditioningIterator(exp2, split.getA(), c);
+//		IteratorWithOffSet<VarStore> ia2 = getConditioningIterator(new Not(exp2), split.getB(), c);
+//		
+//		// Remember offsets (prior ranks of the conditions)
+//		int offset1 = ia1.getConditioningOffset();
+//		int offset2 = ia2.getConditioningOffset();
+//		
+//		// Following happens if input iterator is empty
+//		if (offset1 == Rank.MAX && offset2 == Rank.MAX) {
+//			return new AbsurdIterator<VarStore>();
+//		}
+//		
+//		// Execute statements
+//		RankedIterator<VarStore> ib1 = a.getIterator(ia1, c);
+//		RankedIterator<VarStore> ib2 = b.getIterator(ia2, c);
+//
+//		// Merge result
+//		if (offset1 > 0) {
+//			return new MergingIteratorFixed2(ib2, ib1, offset1);
+//		} else {
+//			return new MergingIteratorFixed2(ib1, ib2, offset2);
+//		}
 
 	}
 

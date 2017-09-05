@@ -132,7 +132,7 @@ public class IfElseTest extends RPLBaseTest {
 				assign("b", plus(var("a"), lit(20))));
 		result = ie.getIterator(new AbsurdIterator<VarStore>(), ExecutionContext.createDefault());
 		assertEquals(false, result.next());
-}
+	}
 	
 	public void testIfElseBlockedElse() throws RPLException {
 		// if (a == 1) then b = a + 10 else observe false;

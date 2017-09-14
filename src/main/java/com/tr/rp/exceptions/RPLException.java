@@ -2,7 +2,6 @@ package com.tr.rp.exceptions;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
-import com.tr.rp.ast.statements.Composition;
 
 public abstract class RPLException extends Exception {
 
@@ -45,6 +44,22 @@ public abstract class RPLException extends Exception {
 		
 	public String toString() {
 		return getDescription();
+	}
+	
+	public void printDescription() {
+		System.out.println("Exception: " + getDescription());
+		String info = "";
+		if (getExpression() != null) {
+			info += "In expression " + getExpression();
+		}
+		if (getStatement() != null) {
+			info += (info.equals("") ? "In" : ", in") + " statement " + getStatement();
+			if (getStatement().getLineNumber() != -1) {
+				info += ", on line " + getStatement().getLineNumber();
+			}
+		}
+		if (info.length() > 0) info += ".";
+		System.out.println(info);
 	}
 
 }

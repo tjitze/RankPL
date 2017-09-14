@@ -1,20 +1,17 @@
 package com.tr.rp.ast.statements;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AbstractFunctionCall;
-import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
 import com.tr.rp.varstore.FreeVarNameProvider;
-import com.tr.rp.varstore.PMapVarStore;
-import com.tr.rp.varstore.VarStore;
 
 public class FunctionCallForm extends AbstractStatement {
 
@@ -40,17 +37,15 @@ public class FunctionCallForm extends AbstractStatement {
 			throw new RuntimeException("Directly nested function call form should not happen");
 		}
 	}
-	
+
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
-		RankedIterator<VarStore> chainedIterator = parent;
-		// For each function assignment ...
-		for (Assignment assignment: assignments) {
-			chainedIterator = assignment.functionCall.getIterator(c, assignment.var, chainedIterator);
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		out = statement.getExecutor(out, c);
+		for (int i = assignments.size() - 1; i >= 0; i--) {
+			Assignment assignment = assignments.get(i);
+			out = assignment.functionCall.getExecutor(c, assignment.var, out);
 		}
-		// Execute statement
-		chainedIterator = statement.getIterator(chainedIterator, c);
-		return chainedIterator;
+		return out;
 	}
 
 	@Override

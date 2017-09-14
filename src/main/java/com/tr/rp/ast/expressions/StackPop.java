@@ -1,7 +1,5 @@
 package com.tr.rp.ast.expressions;
 
-import static com.tr.rp.ast.expressions.Expressions.*;
-
 import java.util.Objects;
 import java.util.Set;
 

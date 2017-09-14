@@ -8,11 +8,11 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.Type;
 
 /**
  * Assign current rank to target
@@ -26,27 +26,29 @@ public class CurrentRank extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		return new RankedIterator<VarStore>() {
-
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
+		Executor exec = new Executor() {
 			@Override
-			public boolean next() throws RPLException {
-				return in.next();
+			public void close() throws RPLException {
+				out.close();
 			}
 
 			@Override
-			public VarStore getItem() throws RPLException {
-				return target.assign(in.getItem(), in.getRank());
+			public void push(State s) throws RPLException {
+				VarStore newVarStore = null;
+				try {
+					newVarStore = transformTarget.get().assign(s.getVarStore(), s.getRank());
+				} catch (RPLException e) {
+					e.setStatement(CurrentRank.this);
+					throw e;
+				}
+				out.push(newVarStore, s.getRank());
 			}
-
-			@Override
-			public int getRank() {
-				return in.getRank();
-			}
-			
 		};
-	}
-	
+		transformTarget.setOutput(exec, this);
+		return transformTarget;
+	}	
 	
 	public String toString() {
 		return "CurrentRank(" + target + ")";

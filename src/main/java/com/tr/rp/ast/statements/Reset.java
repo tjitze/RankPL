@@ -5,10 +5,10 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.State;
+import com.tr.rp.varstore.PMapVarStore;
 
 /**
  * The reset statement resets the complete program state. Used for testing.
@@ -17,12 +17,26 @@ public class Reset extends AbstractStatement {
 	
 	public Reset() {
 	}
-	
+
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		return new InitialVarStoreIterator();
-	}
-	
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		return new Executor() {
+			private boolean done = false;
+			@Override
+			public void close() throws RPLException {
+				if (!done) {
+					done = true;
+					out.push(new State(new PMapVarStore(), 0));
+					out.close();
+				} 
+			}
+			@Override
+			public void push(State s) throws RPLException {
+				close();
+			}
+		};
+	}	
+
 	public String toString() {
 		return "reset";
 	}
@@ -52,6 +66,6 @@ public class Reset extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
-	}	
+	}
 
 }

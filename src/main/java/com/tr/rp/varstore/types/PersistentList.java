@@ -3,7 +3,6 @@ package com.tr.rp.varstore.types;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import org.organicdesign.fp.collections.PersistentHashSet;
 import org.organicdesign.fp.collections.PersistentVector;
 
 /**

@@ -1,17 +1,37 @@
-define test() {
-	normally(1) {
-		return 1;
-	} exceptionally {
-		normally (1) {
-			return 2;
-		} exceptionally {
-			return 3;
-		};
-	};
-};
+# Cumulativity and reversibility
+x := << 0 ... 10 >>;
+observe-l (1) x < 5;
+assert-ranked(x, 
+	[0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
+	[1, 5], [1, 6], [1, 7], [1, 8], [1, 9]);
+observe-l (1) x < 5;
+assert-ranked(x, 
+	[0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
+	[2, 5], [2, 6], [2, 7], [2, 8], [2, 9]);
+observe-l (1) x >= 5;
+assert-ranked(x, 
+	[0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
+	[1, 5], [1, 6], [1, 7], [1, 8], [1, 9]);
+observe-l (1) x >= 5;
+assert-ranked(x, 
+	[0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
+	[0, 5], [0, 6], [0, 7], [0, 8], [0, 9]);
+observe-l (1) x >= 5;
+assert-ranked(x, 
+	[1, 0], [1, 1], [1, 2], [1, 3], [1, 4],
+	[0, 5], [0, 6], [0, 7], [0, 8], [0, 9]);
+reset;
 
 # shift down
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a > 1;
 assert-ranked(a,
 	[0, 1],
@@ -20,7 +40,15 @@ assert-ranked(a,
 reset;
 
 # shift down and up
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (2) a > 1;
 assert-ranked(a,
 	[0, 2],
@@ -29,7 +57,15 @@ assert-ranked(a,
 reset;
 
 # shift down and up twice
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a > 1;
 observe-l (1) a > 1;
 assert-ranked(a,
@@ -39,7 +75,15 @@ assert-ranked(a,
 reset;
 
 # reverse 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a > 1;
 observe-l (1) a <= 1;
 assert-ranked(a,
@@ -49,7 +93,15 @@ assert-ranked(a,
 reset;
 
 # shift up 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a == 1;
 assert-ranked(a,
 	[0, 1],
@@ -58,7 +110,15 @@ assert-ranked(a,
 reset;
 
 # shift up twice
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a == 1;
 observe-l (1) a == 1;
 assert-ranked(a,
@@ -68,7 +128,15 @@ assert-ranked(a,
 reset;
 
 # reverse 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a == 1;
 observe-l (1) a != 1;
 assert-ranked(a,
@@ -78,7 +146,15 @@ assert-ranked(a,
 reset;
 
 # false 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) false;
 assert-ranked(a,
 	[0, 1],
@@ -87,7 +163,15 @@ assert-ranked(a,
 reset;
 
 # true 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) false;
 assert-ranked(a,
 	[0, 1],
@@ -96,7 +180,15 @@ assert-ranked(a,
 reset;
 
 # increase 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a == 1;
 assert-ranked(a,
 	[0, 1],
@@ -105,7 +197,15 @@ assert-ranked(a,
 reset;
 
 # decrease 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (1) a == 3;
 assert-ranked(a,
 	[0, 1],
@@ -114,7 +214,15 @@ assert-ranked(a,
 reset;
 
 # decrease 
-a := test();
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
 observe-l (2) a == 3;
 assert-ranked(a,
 	[0, 1],

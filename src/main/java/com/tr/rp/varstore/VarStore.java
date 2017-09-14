@@ -1,14 +1,8 @@
 package com.tr.rp.varstore;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.organicdesign.fp.collections.PersistentTreeMap;
 
 import com.tr.rp.ast.AbstractExpression;
-import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;

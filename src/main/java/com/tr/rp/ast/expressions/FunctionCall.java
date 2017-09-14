@@ -1,22 +1,21 @@
 package com.tr.rp.ast.expressions;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.Function;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLFunctionUndefinedException;
 import com.tr.rp.exceptions.RPLMissingReturnValueException;
 import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
-import com.tr.rp.iterators.ranked.MultiMergeIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.State;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.VarStore;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Function call expression. Represents a function call constructed with
@@ -96,43 +95,39 @@ public class FunctionCall extends AbstractFunctionCall {
 		return false;
 	}
 
-	protected RankedIterator<VarStore> getIteratorForFunctionCall(String assignToVar, VarStore in, ExecutionContext c) throws RPLException {
+	protected void getExecutorForFunctionCall(String assignToVar, VarStore in, ExecutionContext c, Executor out) throws RPLException {
 		String[] parameters = getFunction().getParameters();
 		if (parameters.length != getArguments().length) {
 			throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, getArguments().length);
 		}
-		RankedIterator<VarStore> it = new InitialVarStoreIterator(in.createClosure(parameters, getArguments()));
-		final RankedIterator<VarStore> pre = getFunction().getBody().getIterator(it, c);
-		return new RankedIterator<VarStore>() {
-
+		Executor post = new Executor() {
 			@Override
-			public boolean next() throws RPLException {
-				return pre.next();
+			public void close() throws RPLException {
+				out.close();
 			}
 
 			@Override
-			public VarStore getItem() throws RPLException {
-				VarStore v = pre.getItem();
+			public void push(State s) throws RPLException {
+				VarStore v = s.getVarStore();
 				if (!v.containsVar("$return")) {
 					throw new RPLMissingReturnValueException(getFunction());
 				}
-				return v.getParentOfClosure(assignToVar, new Variable("$return"));
+				out.push(v.getParentOfClosure(assignToVar, new Variable("$return")), s.getRank());
 			}
-
-			@Override
-			public int getRank() {
-				return pre.getRank();
-			}
+			
 		};
+		Executor pre = getFunction().getBody().getExecutor(post, c);
+		pre.push(in.createClosure(parameters, getArguments()), 0);
 	}
 	
-	public RankedIterator<VarStore> getIterator(ExecutionContext c, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
-		return new MultiMergeIterator<VarStore>(parent) {
-			@Override
-			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
-				return getIteratorForFunctionCall(assignToVar, in, c);
-			}
-		};
+	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
+		throw new NotImplementedException();
+//		return new MultiMergeIterator<VarStore>(parent) {
+//			@Override
+//			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
+//				return getIteratorForFunctionCall(assignToVar, in, c);
+//			}
+//		};
 	}
 
 }

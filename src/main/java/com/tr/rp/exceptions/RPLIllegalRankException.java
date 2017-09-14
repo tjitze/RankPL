@@ -13,6 +13,11 @@ public class RPLIllegalRankException extends RPLException {
 		this.setStatement(statement);
 	}
 	
+	public RPLIllegalRankException(AbstractStatement statement) {
+		this.rank = 0;
+		this.setStatement(statement);
+	}
+
 	public String getDescription() {
 		return "Illegal rank (" + rank + ")";
 	}

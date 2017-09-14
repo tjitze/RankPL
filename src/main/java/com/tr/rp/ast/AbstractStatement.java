@@ -2,15 +2,14 @@ package com.tr.rp.ast;
 
 import java.util.Set;
 
-import com.tr.rp.iterators.ranked.IteratorProvider;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutorProvider;
 
 /**
  * Super class for RPL statements. This interface extends
  * the IteratorProvider interface: every statement must
  * provide an iterator that implements its semantics.
  */
-public abstract class AbstractStatement implements IteratorProvider<VarStore>, LanguageElement {
+public abstract class AbstractStatement implements ExecutorProvider, LanguageElement {
 	
 	private int lineNumber = -1;
 	

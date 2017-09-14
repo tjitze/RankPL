@@ -11,10 +11,11 @@ import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exceptions.RPLMiscException;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -55,73 +56,34 @@ public class RangeChoice extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			RankTransformIterator rt = new RankTransformIterator(in, this, target, beginExp, endExp);
-			final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
-			final AbstractExpression begin = rt.getExpression(1);
-			final AbstractExpression end = rt.getExpression(2);
-			return new RankedIterator<VarStore>() {
-				private boolean initialized = false;
-				private boolean finalized = false;
-				private int a = 0;
-				private int b = 0;
-				private int i = 0;
-				
-				@Override
-				public boolean next() throws RPLException {
-					if (finalized) {
-						return false;
-					}
-					if (!initialized) {
-						initialized = true;
-						if (in.next()) {
-							a = begin.getValue(in.getItem(), Type.INT);
-							b = end.getValue(in.getItem(), Type.INT);
-							i = a;
-							return true;
-						} else {
-							finalized = true;
-							return false;
-						}
-					} else {
-						i++;
-						if (i >= b) {
-							if (in.next()) {
-								a = begin.getValue(in.getItem(), Type.INT);
-								b = end.getValue(in.getItem(), Type.INT);
-								i = a;
-								return true;
-							} else {
-								finalized = true;
-								return false;
-							}
-						}
-						return true;
-					}
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
+		RankTransformer<AbstractExpression> transformBegin = RankTransformer.create(beginExp);
+		RankTransformer<AbstractExpression> transformEnd = RankTransformer.create(endExp);
+		Executor exec = new Executor() {
+			@Override
+			public void close() throws RPLException {
+				out.close();
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				int begin = transformBegin.get().getValue(s.getVarStore(), Type.INT);
+				int end = transformEnd.get().getValue(s.getVarStore(), Type.INT);
+				if (begin > end) {
+					throw new RPLMiscException("Begin larger than end", RangeChoice.this);
 				}
-	
-				@Override
-				public VarStore getItem() throws RPLException {
-					VarStore vs = in.getItem();
-					if (vs == null) {
-						return null;
-					} else {
-						return target.assign(vs, i);
-					}
+				for (int i = begin; i < end; i++) {
+					out.push(transformTarget.get().assign(s.getVarStore(), i), s.getRank());
 				}
-	
-				@Override
-				public int getRank() {
-					return in.getRank();
-				}
-			};
-		} catch (RPLException e) {
-			e.setStatement(this);
-			throw e;
-		}
-	}
-	
+			}
+		};
+		transformTarget.setOutput(transformBegin, this);
+		transformBegin.setOutput(transformEnd, this);
+		transformEnd.setOutput(exec, this);
+		return transformTarget;
+	}	
+
 	public String toString() {
 		return target + " := <" + beginExp + " ... " + endExp + ">";
 	}
@@ -174,6 +136,7 @@ public class RangeChoice extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		target.getAssignedVariables(variables);
-	}	
+	}
+
 
 }

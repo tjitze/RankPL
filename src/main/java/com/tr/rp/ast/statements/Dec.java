@@ -8,9 +8,10 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
@@ -26,43 +27,31 @@ public class Dec extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		try {
-			RankTransformIterator rt = 
-				new RankTransformIterator(in, this, target);
-			final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
-			RankedIterator<VarStore> ai = new RankedIterator<VarStore>() {
-	
-				@Override
-				public boolean next() throws RPLException {
-					return rt.next();
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
+		Executor exec = new Executor() {
+			@Override
+			public void close() throws RPLException {
+				out.close();
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				VarStore newVarStore = null;
+				try {
+					newVarStore = transformTarget.get().assign(s.getVarStore(), 
+							transformTarget.get().convertToRHSExpression().getValue(s.getVarStore(), Type.INT) - 1);
+				} catch (RPLException e) {
+					e.setStatement(Dec.this);
+					throw e;
 				}
-	
-				@Override
-				public VarStore getItem() throws RPLException {
-					VarStore item = rt.getItem();
-					if (item == null) return null;
-					try {
-						return target.assign(item, target.convertToRHSExpression().getValue(item, Type.INT) - 1);
-					} catch (RPLException e) {
-						e.setStatement(Dec.this);
-						throw e;
-					}
-				}
-	
-				@Override
-				public int getRank() {
-					return rt.getRank();
-				}
-			};
-			return ai;
-		} catch (RPLException e) {
-			e.setStatement(this);
-			throw e;
-		}
-	}
-	
-	
+				out.push(newVarStore, s.getRank());
+			}
+		};
+		transformTarget.setOutput(exec, this);
+		return transformTarget;
+	}	
+
 	public String toString() {
 		return target.toString() + "++";
 	}
@@ -101,5 +90,6 @@ public class Dec extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		target.getAssignedVariables(variables);
-	}	
+	}
+
 }

@@ -16,16 +16,13 @@ import com.tr.rp.ast.expressions.RankExpr;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIllegalRankException;
-import com.tr.rp.iterators.ranked.AbsurdIterator;
-import com.tr.rp.iterators.ranked.BufferingIterator;
-import com.tr.rp.iterators.ranked.DecreasingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.IncreasingIterator;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.iterators.ranked.SingleBufferingIterator;
-import com.tr.rp.ranks.Rank;
-import com.tr.rp.ranks.RankedItem;
+import com.tr.rp.exec.EvaluationErrorHandler;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.JShifter;
+import com.tr.rp.exec.LShifter;
+import com.tr.rp.exec.Rank;
+import com.tr.rp.exec.RankTransformer;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
@@ -37,7 +34,7 @@ import com.tr.rp.varstore.types.Type;
  *	else
  *		observe -b [rank(b)-x] observe b
  */
-public class ObserveL extends AbstractStatement implements ObserveErrorHandler, RankedChoiceErrorHandler, IfElseErrorHandler {
+public class ObserveL extends AbstractStatement implements EvaluationErrorHandler {
 
 	private AbstractExpression b;
 	private AbstractExpression rank;
@@ -48,106 +45,24 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		
-		// Optimized
-		if (rank.hasDefiniteValue() && !c.isDestructiveLConditioning()) {
-			int shift = rank.getDefiniteValue(Type.INT);
-			if (shift < 0) {
-				throw new RPLIllegalRankException(shift, rank, this);
-			}
-
-			// Get rank of first item satisfying b, use it to determine shifting numbers
-			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-			int decreaseB = shift;
-			int increaseNotB = 0;
-			while (bi.next() && bi.getRank() < shift) {
-				if (b.getValue(bi.getItem(), Type.BOOL)) {
-					decreaseB = bi.getRank();
-					increaseNotB = shift - decreaseB;
-				}
-			}
-
-			// Apply shifting
-			bi.reset();
-			bi.stopBuffering();
-			RankedIterator<VarStore> ret = bi;
-			if (decreaseB > 0) {
-				ret = new DecreasingIterator(ret, b, decreaseB);
-			}
-			if (increaseNotB > 0) {
-				ret = new IncreasingIterator(ret, new Not(b), increaseNotB);
-			}
-
-			return ret;
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		// TODO: properly handle this
+		if (!rank.hasDefiniteValue()) {
+			throw new RuntimeException("Rank must be definite");
+		}
+		int shift;
+		try {
+			shift = rank.getDefiniteValue(Type.INT);
+		} catch (RPLException e) {
+			throw new RuntimeException(e);
 		}
 
-		if (rank.hasDefiniteValue() && c.isDestructiveLConditioning()) {
-			int rankValue = rank.getDefiniteValue(Type.INT);
-			if (rankValue < 0) {
-				throw new RPLIllegalRankException(rankValue, rank, this);
-			}
-			RankTransformIterator rt = new RankTransformIterator(in, this, new RankExpr(b));
-			int rankB = rt.getExpression(0).getDefiniteValue(Type.INT);
-			
-			// Normal behavior if rank(b) is infinity, is to leave the prior ranking
-			// unchanged. If iterative deepening is enabled we need to block execution.
-			if (rankB == Rank.MAX) {
-				return rt;
-			}
-			
-			int decreaseB = Math.min(rankValue, rankB);
-			int increaseNotB = rankValue - decreaseB;
-					
-			RankedIterator<VarStore> ret = rt;
-			if (decreaseB > 0) {
-				ret = new DecreasingIterator(ret, b, decreaseB);
-			}
-			if (increaseNotB > 0) {
-				ret = new IncreasingIterator(ret, new Not(b), increaseNotB);
-			}
-
-			return ret;
-		}
-
-		RankTransformIterator rt = new RankTransformIterator(in, this, new RankExpr(b));
-		int rankB = rt.getExpression(0).getDefiniteValue(Type.INT);
-		int rankNotB = 0;
-		if (rankB == 0) {
-			rt = new RankTransformIterator(rt, this, new RankExpr(new Not(b)));
-			rankNotB = rt.getExpression(0).getDefiniteValue(Type.INT);
-		}
-		
-		// Normal behavior if rank(b) is infinity, is to leave the prior ranking
-		// unchanged. If iterative deepening is enabled we need to block execution.
-		if (rankB == Rank.MAX) {
-			if (c.isDestructiveLConditioning()) {
-				return new AbsurdIterator<VarStore>();
-			} else {
-				return rt;
-			}
-		}
-		
-		// Construct observe-L statement
-		AbstractExpression cond = Expressions.leq(new Literal<Integer>(rankB), rank);
-		AbstractExpression r1 = Expressions.rankMinus(
-				Expressions.rankPlus(rank, new Literal<Integer>(rankNotB)), new Literal<Integer>(rankB));
-		AbstractExpression r2 = Expressions.rankMinus(new Literal<Integer>(rankB), rank);
-		AbstractStatement c1 = new RankedChoice(
-				new Observe(b, this),
-				new Observe(new Not(b), this),
-				r1, this);
-		AbstractStatement c2 = new RankedChoice(
-				new Observe(new Not(b), this),
-				new Observe(b, this),
-				r2, this);
-		AbstractStatement statement = new ProgramBuilder()
-				.add(new IfElse(cond, c1, c2, this))
-				.build();
-		
-		// Execute
-		return statement.getIterator(rt, c);
-	}
+		RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(b);
+		LShifter exec = new LShifter(out, transformCondition::get, shift);
+		exec.setErrorHandler(this);
+		transformCondition.setOutput(exec, this);
+		return transformCondition;
+	}	
 
 	public String toString() {
 		String bString = b.toString();
@@ -203,37 +118,10 @@ public class ObserveL extends AbstractStatement implements ObserveErrorHandler, 
 	}
 
 	@Override
-	public void observeConditionError(RPLException e) throws RPLException {
-		e.setExpression(b);
+	public void handleEvaluationError(RPLException e) throws RPLException {
 		e.setStatement(this);
 		throw e;
 	}
 
-	@Override
-	public void handleRankExpressionError(RPLException e) throws RPLException {
-		e.setExpression(rank);
-		e.setStatement(this);
-		throw e;
-	}
-
-	@Override
-	public void ifElseConditionError(RPLException e) throws RPLException {
-		handleRankExpressionError(e);
-	}
-
-	@Override
-	public void ifElseThenError(RPLException e) throws RPLException {
-		throw e;
-	}
-
-	@Override
-	public void ifElseElseError(RPLException e) throws RPLException {
-		throw e;
-	}
-
-	@Override
-	public void illegalRank(int ri) throws RPLException {
-		throw new RPLIllegalRankException(ri, rank, this);
-	}	
 
 }

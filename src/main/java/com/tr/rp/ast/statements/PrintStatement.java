@@ -6,14 +6,12 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 
 public class PrintStatement extends AbstractStatement {
 	
@@ -23,34 +21,23 @@ public class PrintStatement extends AbstractStatement {
 		this.exp = exp;
 	}
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		RankTransformIterator rt = new RankTransformIterator(in, this, exp);
-		final AbstractExpression exp = rt.getExpression(0);
-		final RankedIterator<VarStore> in2 = new DuplicateRemovingIterator<VarStore>(rt);
-		return new RankedIterator<VarStore>() {
-
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AbstractExpression> transformExp = RankTransformer.create(exp);
+		Executor exec = new Executor() {
 			@Override
-			public boolean next() throws RPLException {
-				boolean next = in2.next();
-				// Print here so that it's only done once, and in the right order
-				if (next) {
-					System.out.println(exp.getValue(in2.getItem()));
-				}
-				return next;
+			public void close() throws RPLException {
+				out.close();
 			}
 
 			@Override
-			public VarStore getItem() throws RPLException {
-				return in2.getItem();
+			public void push(State s) throws RPLException {
+				System.out.println(transformExp.get().getValue(s.getVarStore()));
+				out.push(s);
 			}
-
-			@Override
-			public int getRank() {
-				return in2.getRank();
-			}
-			
 		};
-	}
+		transformExp.setOutput(exec, this);
+		return transformExp;
+	}		
 	
 	
 	public String toString() {

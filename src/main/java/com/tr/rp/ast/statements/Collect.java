@@ -1,9 +1,5 @@
 package com.tr.rp.ast.statements;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,12 +9,10 @@ import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
-import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 		
 public class Collect extends AbstractStatement {
 	
@@ -39,71 +33,10 @@ public class Collect extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		// Get all zero ranked variable stores
-		List<VarStore> zeroRankVarStores = new ArrayList<VarStore>();
-		boolean hasNext = in.next();
-		while (hasNext && in.getRank() == 0) {
-			zeroRankVarStores.add(in.getItem());
-			hasNext = in.next();
-		}
-		// Construct list of values
-		LinkedHashSet<Object> values = new LinkedHashSet<Object>();
-		for (VarStore vs: zeroRankVarStores) {
-			Object v = variable.getValue(vs);
-			if (v != null) {
-				values.add(v);
-			}
-		}
-		PersistentArray rankZeroValues = new PersistentArray(values);
-		// Update rank zero var stores
-		for (int i = 0; i < zeroRankVarStores.size(); i++) {
-			zeroRankVarStores.set(i, target.assign(zeroRankVarStores.get(i), rankZeroValues));
-		}
-		final Iterator<VarStore> zi = zeroRankVarStores.iterator();
-		// First return rank zero var stores, then return rest
-		final boolean hasNextFinal = hasNext;
-		RankedIterator<VarStore> it = new RankedIterator<VarStore>() {
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		throw new NotImplementedException();
+	}	
 
-			private VarStore v;
-			private boolean f = false;
-			
-			@Override
-			public boolean next() throws RPLException {
-				if (f) {
-					return hasNextFinal && in.next();
-				} else {
-					if (zi.hasNext()) {
-						v = zi.next();
-						return true;
-					} else {
-						f = true;
-						return hasNextFinal;
-					}
-				}
-			}
-
-			@Override
-			public VarStore getItem() throws RPLException {
-				if (f) {
-					return in.getItem();
-				} else {
-					return v;
-				}
-			}
-			
-			@Override
-			public int getRank() {
-				if (f) {
-					return in.getRank();
-				} else {
-					return 0;
-				}
-			}
-		};
-		return new DuplicateRemovingIterator<VarStore>(it);
-	}
-	
 	
 	public String toString() {
 		return "collect("+variable+")";
@@ -144,5 +77,5 @@ public class Collect extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		target.getAssignedVariables(variables);
-	}	
+	}
 }

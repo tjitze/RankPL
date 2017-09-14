@@ -1,41 +1,57 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLIllegalRankException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.EvaluationErrorHandler;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.JShifter;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.varstore.types.Type;
 
 /**
  * Implements J-conditioning.
  * This is equivalent to 
  *   observe b [x] observe -b
  */
-public class ObserveJ extends AbstractStatement implements ObserveErrorHandler, RankedChoiceErrorHandler {
+public class ObserveJ extends AbstractStatement implements EvaluationErrorHandler {
 
-	private AbstractExpression b;
+	private AbstractExpression condition;
 	private AbstractExpression rank;
 	
-	public ObserveJ(AbstractExpression b, AbstractExpression rank) {
-		this.b = b;
+	public ObserveJ(AbstractExpression condition, AbstractExpression rank) {
+		this.condition = condition;
 		this.rank = rank;
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		return new RankedChoice(new Observe(b, this), new Observe(new Not(b), this), rank, this).getIterator(in, c);
-	}
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		// TODO: properly handle this
+		if (!rank.hasDefiniteValue()) {
+			throw new RuntimeException("Rank must be definite");
+		}
+		int shift;
+		try {
+			shift = rank.getDefiniteValue(Type.INT);
+		} catch (RPLException e) {
+			throw new RuntimeException(e);
+		}
+
+		RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(condition);
+		JShifter exec = new JShifter(out, transformCondition::get, shift);
+		exec.setErrorHandler(this);
+		transformCondition.setOutput(exec, this);
+		return transformCondition;
+	}	
 
 	public String toString() {
-		String bString = b.toString();
+		String bString = condition.toString();
 		if (bString.startsWith("(") && bString.endsWith(")")) {
 			bString = bString.substring(1, bString.length()-1);
 		}
@@ -48,33 +64,33 @@ public class ObserveJ extends AbstractStatement implements ObserveErrorHandler, 
 	
 	public boolean equals(Object o) {
 		return o instanceof ObserveJ &&
-				((ObserveJ)o).b.equals(b);
+				((ObserveJ)o).condition.equals(condition);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(b, rank);
+		return Objects.hash(condition, rank, this.getClass());
 	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new ObserveJ((AbstractExpression)this.b.replaceVariable(a, b), (AbstractExpression)rank.replaceVariable(a, b));
+		return new ObserveJ((AbstractExpression)condition.replaceVariable(a, b), (AbstractExpression)rank.replaceVariable(a, b));
 	}
 
 	@Override
 	public void getVariables(Set<String> list) {
-		b.getVariables(list);
+		condition.getVariables(list);
 		rank.getVariables(list);
 	}
 	
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
-		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(b);
+		ExtractedExpression rewrittenCondition = FunctionCallForm.extractFunctionCalls(condition);
 		ExtractedExpression rewrittenRank = FunctionCallForm.extractFunctionCalls(rank);
-		if (rewrittenExp.isRewritten() || rewrittenRank.isRewritten()) {
+		if (rewrittenCondition.isRewritten() || rewrittenRank.isRewritten()) {
 			return new FunctionCallForm(
-					new ObserveJ(rewrittenExp.getExpression(), rewrittenRank.getExpression()), 
-					rewrittenExp.getAssignments(), 
+					new ObserveJ(rewrittenCondition.getExpression(), rewrittenRank.getExpression()), 
+					rewrittenCondition.getAssignments(), 
 					rewrittenRank.getAssignments());
 		} else {
 			return this;
@@ -87,22 +103,10 @@ public class ObserveJ extends AbstractStatement implements ObserveErrorHandler, 
 	}
 	
 	@Override
-	public void observeConditionError(RPLException e) throws RPLException {
-		e.setExpression(b);
+	public void handleEvaluationError(RPLException e) throws RPLException {
 		e.setStatement(this);
 		throw e;
 	}
 
-	@Override
-	public void handleRankExpressionError(RPLException e) throws RPLException {
-		e.setExpression(rank);
-		e.setStatement(this);
-		throw e;
-	}	
-
-	@Override
-	public void illegalRank(int ri) throws RPLException {
-		throw new RPLIllegalRankException(ri, rank, this);
-	}	
 
 }

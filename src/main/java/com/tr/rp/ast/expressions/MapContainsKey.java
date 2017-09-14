@@ -6,10 +6,7 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentMap;
-import com.tr.rp.varstore.types.PersistentSet;
 import com.tr.rp.varstore.types.Type;
 
 /**

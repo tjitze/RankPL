@@ -1,19 +1,17 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.AbsurdIterator;
-import com.tr.rp.iterators.ranked.BufferingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.ranks.Rank;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
@@ -32,68 +30,36 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 		this.errorHandler = errorHandler;
 	}
 
+
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		
-		// If exp is contradiction/tautology we
-		// can immediately return result.
-		if (exp.hasDefiniteValue()) {
-			if (exp.getDefiniteValue(Type.BOOL)) {
-				return in;
-			} else {
-				return new AbsurdIterator<VarStore>();
-			}
-		}
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AbstractExpression> transformExp = RankTransformer.create(exp);
+		Executor exec = new Executor() {
 
-		// Replace rank expressions in exp
-		RankTransformIterator rt = 
-				new RankTransformIterator(in, this, this.exp);
-		final AbstractExpression exp2 = rt.getExpression(0);
-		
-		// Check contradiction/tautology again.
-		if (exp2.hasDefiniteValue()) {
-			if (exp2.getDefiniteValue(Type.BOOL)) {
-				return rt;
-			} else {
-				return new AbsurdIterator<VarStore>();
-			}
-		}
-		
-		return new RankedIterator<VarStore>() {
-			
-			private int conditioningOffset = Rank.MAX;
+			private int offset = -1;
 			
 			@Override
-			public boolean next() throws RPLException {
-				// Find next varstore satisfying condition
-				boolean hasNext = rt.next();
-				while (hasNext && !getCheckedValue(exp2, rt)) { 
-					hasNext = rt.next();
+			public void close() throws RPLException {
+				out.close();
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				if (getCheckedValue(transformExp.get(), s.getVarStore())) {
+					if (offset == -1) {
+						offset = s.getRank();
+					}
+					out.push(s.shiftDown(offset));
 				}
-				// Store conditioning offset
-				if (hasNext && conditioningOffset == Rank.MAX) {
-					conditioningOffset = rt.getRank();
-				}
-				return hasNext;
 			}
-
-			@Override
-			public VarStore getItem() throws RPLException {
-				return rt.getItem();
-			}
-
-			@Override
-			public int getRank() {
-				// Subtract offset so that ranks start with zero
-				return Rank.sub(rt.getRank(), conditioningOffset);
-			}
-			
 		};
-	}
+		transformExp.setOutput(exec, this);
+		return transformExp;
+	}		
 
-	private boolean getCheckedValue(AbstractExpression exp2, BufferingIterator<VarStore> bi) throws RPLException {
+	private boolean getCheckedValue(AbstractExpression exp2, VarStore v) throws RPLException {
 		try {
-			return exp2.getValue(bi.getItem(), Type.BOOL);
+			return exp2.getValue(v, Type.BOOL);
 		} catch (RPLException e) {
 			errorHandler.observeConditionError(e);
 			throw e;
@@ -147,6 +113,6 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 		e.setStatement(this);
 		e.setExpression(exp);
 		throw e;
-	}	
+	}
 
 }

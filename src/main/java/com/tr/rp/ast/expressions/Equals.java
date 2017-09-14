@@ -2,12 +2,10 @@ package com.tr.rp.ast.expressions;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiFunction;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.exceptions.RPLTypeMismatchException;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;

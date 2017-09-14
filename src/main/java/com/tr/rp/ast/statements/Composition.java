@@ -5,22 +5,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Consumer;
 
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.IsSet;
-import com.tr.rp.ast.expressions.Variable;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.InterruptableIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.iterators.ranked.RestrictIterator;
-import com.tr.rp.ranks.Rank;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.InterruptableExecutor;
+import com.tr.rp.exec.Rank;
+import com.tr.rp.exec.RestrictExecutor;
 
 /**
  * The Composition statement represents the composition of two other 
@@ -67,24 +63,17 @@ public class Composition extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		// Execute first
-		in = first.getIterator(in, c);
-		
-		// Handle termination
-		in = new InterruptableIterator<VarStore>(in, c::isInterruptRequested);
-		
-		// Apply rank cut-off if applicable
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+
+		// Handle interrupt
+		Executor e = new InterruptableExecutor(out, c::isInterruptRequested);
+
+		// Apply rank cutoff
 		if (c.getRankCutOff() < Rank.MAX) {
-			in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
-				@Override
-				public void accept(Integer t) {
-					c.registerCutOffEvent(t);
-				}
-			});
+			e = new RestrictExecutor(c.getRankCutOff(), e, c::registerCutOffEvent);
 		}
 
-		// Execute second (but skip if return value is set)
+		// Second statement
 		if (firstContainsReturn) {
 			IfElse ifElse = new IfElse(new IsSet(new AssignmentTargetTerminal("$return")), new Skip(), second,
 					new IfElseErrorHandler() {
@@ -102,26 +91,24 @@ public class Composition extends AbstractStatement {
 							throw e;
 						}
 			});
-			in = ifElse.getIterator(in, c);
+			e = ifElse.getExecutor(e, c);
 		} else {
-			in = second.getIterator(in, c);
+			e = second.getExecutor(e, c);
 		}
 
-		// Apply rank cut-off if applicable
+		// Handle interrupt
+		e = new InterruptableExecutor(e, c::isInterruptRequested);
+
+		// Apply rank cutoff
 		if (c.getRankCutOff() < Rank.MAX) {
-			in = new RestrictIterator<VarStore>(in, c.getRankCutOff(), new Consumer<Integer>() {
-				@Override
-				public void accept(Integer t) {
-					c.registerCutOffEvent(t);
-				}
-			});
+			e = new RestrictExecutor(c.getRankCutOff(), e, c::registerCutOffEvent);
 		}
-
-		// Handle termination
-		in = new InterruptableIterator<VarStore>(in, c::isInterruptRequested);
-
-		return in;
-	}
+		
+		// First
+		e = first.getExecutor(e, c);
+		
+		return e;
+	}	
 
 	private boolean containsReturnStatement(AbstractStatement s) {
 		Set<String> assignedVariables = new TreeSet<String>();
@@ -181,6 +168,6 @@ public class Composition extends AbstractStatement {
 	public void getAssignedVariables(Set<String> variables) {
 		first.getAssignedVariables(variables);
 		second.getAssignedVariables(variables);
-	}	
+	}
 
 }

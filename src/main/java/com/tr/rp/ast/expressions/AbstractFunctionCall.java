@@ -1,15 +1,12 @@
 package com.tr.rp.ast.expressions;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
-import com.tr.rp.ast.Function;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.ranks.FunctionScope;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
 import com.tr.rp.varstore.VarStore;
 
 /**
@@ -81,6 +78,6 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 		return null;
 	}
 	
-	public abstract RankedIterator<VarStore> getIterator(ExecutionContext c, String assignToVar, RankedIterator<VarStore> parent) throws RPLException;
+	public abstract Executor getExecutor(ExecutionContext c, String assignToVar, Executor out);
 
 }

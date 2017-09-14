@@ -1,7 +1,7 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -9,9 +9,10 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.VarStore;
 
 /**
@@ -35,37 +36,32 @@ public class Assign extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		RankTransformIterator rt = new RankTransformIterator(in, this, target, value);
-		final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
-		final AbstractExpression exp = rt.getExpression(1);
-		RankedIterator<VarStore> ai = new RankedIterator<VarStore>() {
-
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
+		RankTransformer<AbstractExpression> transformValue = RankTransformer.create(value);
+		Executor exec = new Executor() {
 			@Override
-			public boolean next() throws RPLException {
-				return rt.next();
+			public void close() throws RPLException {
+				out.close();
 			}
 
 			@Override
-			public VarStore getItem() throws RPLException {
-				VarStore item = rt.getItem();
-				if (item == null) return null;
+			public void push(State s) throws RPLException {
+				VarStore newVarStore = null;
 				try {
-					return target.assign(item, exp.getValue(item));
+					newVarStore = transformTarget.get().assign(s.getVarStore(), 
+							transformValue.get().getValue(s.getVarStore()));				
 				} catch (RPLException e) {
 					e.setStatement(Assign.this);
 					throw e;
 				}
-			}
-
-			@Override
-			public int getRank() {
-				return rt.getRank();
+				out.push(newVarStore, s.getRank());
 			}
 		};
-		return ai;
-	}
-	
+		transformTarget.setOutput(transformValue, this);
+		transformValue.setOutput(exec, this);
+		return transformTarget;
+	}		
 	
 	public String toString() {
 		String varString = target.toString();
@@ -116,5 +112,6 @@ public class Assign extends AbstractStatement {
 	@Override
 	public void getAssignedVariables(Set<String> variables) {
 		target.getAssignedVariables(variables);
-	}	
+	}
+
 }

@@ -1,17 +1,14 @@
-package com.tr.rp.ranks;
+package com.tr.rp.exec;
 
 import java.util.Objects;
 
-/**
- * A pair consisting of some object and a rank.
- */
 public class RankedItem<T> {
 
-	public final T item;
 	public final int rank;
+	public final T item;
 	
-	public RankedItem(T v, int rank) {
-		this.item = v;
+	public RankedItem(T item, int rank) {
+		this.item = item;
 		this.rank = rank;
 	}
 	

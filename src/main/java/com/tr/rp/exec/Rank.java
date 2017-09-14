@@ -1,4 +1,4 @@
-package com.tr.rp.ranks;
+package com.tr.rp.exec;
 
 /**
  * Some convenience methods to do calculations with ranks. In particular,

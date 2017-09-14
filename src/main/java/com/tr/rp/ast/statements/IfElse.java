@@ -1,29 +1,21 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.AbsurdIterator;
-import com.tr.rp.iterators.ranked.BranchingIterator;
-import com.tr.rp.iterators.ranked.BranchingIteratorErrorHandler;
-import com.tr.rp.iterators.ranked.BufferingIterator;
-import com.tr.rp.iterators.ranked.MergingIteratorFixed;
-import com.tr.rp.iterators.ranked.MergingIteratorFixed;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.IteratorSplitter;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.ranks.Rank;
-import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.Type;
+import com.tr.rp.exec.BranchingExecutor;
+import com.tr.rp.exec.Deduplicator;
+import com.tr.rp.exec.EvaluationErrorHandler;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
 
-public class IfElse extends AbstractStatement implements IfElseErrorHandler, ObserveErrorHandler {
+public class IfElse extends AbstractStatement implements IfElseErrorHandler, ObserveErrorHandler, EvaluationErrorHandler {
 
 	private AbstractExpression exp;
 	private AbstractStatement a, b;
@@ -42,78 +34,13 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		this.b = b;
 		this.errorHandler = errorHandler;
 	}
-
+	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
-
-		// If exp is contradiction/tautology we
-		// can immediately pass the a/b iterator.
-		try {
-			if (exp.hasDefiniteValue()) {
-				if (exp.getDefiniteValue(Type.BOOL)) {
-					return a.getIterator(parent, c);
-				} else {
-					return b.getIterator(parent, c);
-				}
-			}
-		} catch (RPLException e) {
-			errorHandler.ifElseConditionError(e);
-		}
-
-		// Replace rank expressions in exp
-		RankTransformIterator i = 
-				new RankTransformIterator(parent, this, this.exp);
-		AbstractExpression exp2 = i.getExpression(0);
-		
-		// Check contradiction/tautology again.
-		try {
-			if (exp2.hasDefiniteValue()) {
-				if (exp2.getDefiniteValue(Type.BOOL)) {
-					return a.getIterator(i, c);
-				} else {
-					return b.getIterator(i, c);
-				}
-			}
-		} catch (RPLException e) {
-			errorHandler.ifElseConditionError(e);
-		}
-		
-		return new BranchingIterator(parent, exp, a, b, c, new BranchingIteratorErrorHandler() {
-			@Override
-			public void handlExpError(RPLException exception) throws RPLException {
-				exception.setStatement(IfElse.this);
-				exception.setExpression(exp);
-				throw exception;
-			}
-		});
-		
-//		// Split input
-//		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(i);
-//
-//		// Apply condition 
-//		IteratorWithOffSet<VarStore> ia1 = getConditioningIterator(exp2, split.getA(), c);
-//		IteratorWithOffSet<VarStore> ia2 = getConditioningIterator(new Not(exp2), split.getB(), c);
-//		
-//		// Remember offsets (prior ranks of the conditions)
-//		int offset1 = ia1.getConditioningOffset();
-//		int offset2 = ia2.getConditioningOffset();
-//		
-//		// Following happens if input iterator is empty
-//		if (offset1 == Rank.MAX && offset2 == Rank.MAX) {
-//			return new AbsurdIterator<VarStore>();
-//		}
-//		
-//		// Execute statements
-//		RankedIterator<VarStore> ib1 = a.getIterator(ia1, c);
-//		RankedIterator<VarStore> ib2 = b.getIterator(ia2, c);
-//
-//		// Merge result
-//		if (offset1 > 0) {
-//			return new MergingIteratorFixed2(ib2, ib1, offset1);
-//		} else {
-//			return new MergingIteratorFixed2(ib1, ib2, offset2);
-//		}
-
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AbstractExpression> transformExp = RankTransformer.create(exp);
+		Executor e = new BranchingExecutor(transformExp, a, b, new Deduplicator(out), c);
+		transformExp.setOutput(e, this);
+		return transformExp;
 	}
 
 	public void ifElseConditionError(RPLException e) throws RPLException {
@@ -187,55 +114,11 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		b.getAssignedVariables(variables);
 	}
 
-	private IteratorWithOffSet<VarStore> getConditioningIterator(final AbstractExpression exp2f, final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		final BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-		boolean hasNext = bi.next();
-		while (hasNext && !getCheckedValue(exp2f, bi)) { 
-			hasNext = bi.next();
-		}
-		final int conditioningOffset = hasNext? bi.getRank(): Rank.MAX;
-		if (hasNext) bi.reset(bi.getIndex() - 1);
-		bi.stopBuffering();
-		return new IteratorWithOffSet<VarStore>() {
-			
-			@Override
-			public boolean next() throws RPLException {
-				// Find next varstore satisfying condition
-				boolean hasNext = bi.next();
-				while (hasNext && !getCheckedValue(exp2f, bi)) { 
-					hasNext = bi.next();
-				}
-				return hasNext;
-			}
-
-			@Override
-			public VarStore getItem() throws RPLException {
-				return bi.getItem();
-			}
-
-			@Override
-			public int getRank() {
-				return Rank.sub(bi.getRank(),  conditioningOffset);
-			}
-			
-			@Override
-			public int getConditioningOffset() {
-				return conditioningOffset;
-			}
-		};
+	@Override
+	public void handleEvaluationError(RPLException e) throws RPLException {
+		e.setStatement(this);
+		throw e;
 	}
 
-	private boolean getCheckedValue(AbstractExpression exp2, BufferingIterator<VarStore> bi) throws RPLException {
-		try {
-			return exp2.getValue(bi.getItem(), Type.BOOL);
-		} catch (RPLException e) {
-			observeConditionError(e);
-			throw e;
-		}
-	}
-
-	private static interface IteratorWithOffSet<T> extends RankedIterator<T> {
-		public int getConditioningOffset();
-	}
 
 }

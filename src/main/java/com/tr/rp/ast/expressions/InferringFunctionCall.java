@@ -1,23 +1,17 @@
 package com.tr.rp.ast.expressions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLMissingReturnValueException;
-import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.InitialVarStoreIterator;
-import com.tr.rp.iterators.ranked.MultiMergeIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
 import com.tr.rp.ranks.FunctionScope;
-import com.tr.rp.varstore.FreeVarNameProvider;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class InferringFunctionCall extends FunctionCall {
 	
@@ -69,20 +63,21 @@ public class InferringFunctionCall extends FunctionCall {
 		return false;
 	}
 
-	public RankedIterator<VarStore> getIterator(ExecutionContext c, String assignToVar, RankedIterator<VarStore> parent) throws RPLException {
-		return new MultiMergeIterator<VarStore>(parent) {
-
-			@Override
-			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
-				String var = FreeVarNameProvider.getFreeVariable("acc");
-				RankedIterator<VarStore> it = getIteratorForFunctionCall(var, in, c);
-				List<Object> values = new ArrayList<Object>();
-				while (it.next() && it.getRank() == 0) {
-					values.add(it.getItem().getValue(var));
-				}
-				return new InitialVarStoreIterator(in.create(assignToVar, new PersistentArray(values)));
-			}
-		};
+	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
+		throw new NotImplementedException();
+//		return new MultiMergeIterator<VarStore>(parent) {
+//
+//			@Override
+//			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
+//				String var = FreeVarNameProvider.getFreeVariable("acc");
+//				RankedIterator<VarStore> it = getIteratorForFunctionCall(var, in, c);
+//				List<Object> values = new ArrayList<Object>();
+//				while (it.next() && it.getRank() == 0) {
+//					values.add(it.getItem().getValue(var));
+//				}
+//				return new InitialVarStoreIterator(in.create(assignToVar, new PersistentArray(values)));
+//			}
+//		};
+//	}
 	}
-
 }

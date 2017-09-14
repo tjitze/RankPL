@@ -1,11 +1,7 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -13,15 +9,10 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLAssertionException;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLMiscException;
-import com.tr.rp.exceptions.RPLTypeError;
-import com.tr.rp.iterators.ranked.BufferingIterator;
-import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -36,37 +27,33 @@ public class Assert extends AbstractStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
-
-		// Do rank expression transformation
-		RankTransformIterator rt = 
-				new RankTransformIterator(parent, this, expression);
-		final AbstractExpression exp = rt.getExpression(0);
-
-		return new RankedIterator<VarStore>() {
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AbstractExpression> transformExp = RankTransformer.create(expression);
+		Executor exec = new Executor() {
 
 			@Override
-			public boolean next() throws RPLException {
-				boolean next = parent.next();
-				if (next) {
-					if (!exp.getValue(getItem(), Type.BOOL)) {
-						throw new RPLAssertionException("Failed assertion: " + exp, Assert.this);
-					}
+			public void close() throws RPLException {
+				out.close();
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				boolean b;
+				try {
+					b = transformExp.get().getValue(s.getVarStore(), Type.BOOL);
+				} catch (RPLException e) {
+					e.setStatement(Assert.this);
+					throw e;
 				}
-				return next;
-			}
-
-			@Override
-			public VarStore getItem() throws RPLException {
-				return parent.getItem();
-			}
-
-			@Override
-			public int getRank() {
-				return parent.getRank();
+				if (!b) {
+					throw new RPLAssertionException("Failed assertion: " + transformExp.get(), Assert.this);
+				}
+				out.push(s);
 			}
 			
 		};
+		transformExp.setOutput(exec, this);
+		return transformExp;
 	}
 
 	@Override

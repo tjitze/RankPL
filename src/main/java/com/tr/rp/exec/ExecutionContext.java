@@ -1,6 +1,4 @@
-package com.tr.rp.iterators.ranked;
-
-import com.tr.rp.ranks.Rank;
+package com.tr.rp.exec;
 
 /**
  * An execution context holds settings that specify how a program 

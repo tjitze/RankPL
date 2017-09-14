@@ -1,21 +1,18 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
 
 public class Skip extends AbstractStatement {
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+	public Executor getExecutor(Executor in, ExecutionContext c) {
 		return in;
-	}
+	}	
 
 	public String toString() {
 		return "skip";
@@ -48,7 +45,7 @@ public class Skip extends AbstractStatement {
 	@Override
 	public int hashCode() {
 		return 1;
-	}	
+	}
 
 
 }

@@ -1,12 +1,12 @@
 package com.tr.rp.ast.statements;
 
+import static com.tr.rp.ast.expressions.Expressions.lit;
+
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Variable;
-
-import static com.tr.rp.ast.expressions.Expressions.*;
 
 public class Statements {
 

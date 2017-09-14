@@ -1,20 +1,15 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
-import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
-import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
 
 /**
  * The return statement makes a function or program exit and return
@@ -33,27 +28,10 @@ public class Return extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+	public Executor getExecutor(Executor out, ExecutionContext c) {
 		Assign assign = new Assign(new AssignmentTargetTerminal("$return"), exp);
-		RankedIterator<VarStore> it = assign.getIterator(in, c);
-		return new RankedIterator<VarStore>() {
-			@Override
-			public boolean next() throws RPLException {
-				return it.next();
-			}
-
-			@Override
-			public VarStore getItem() throws RPLException {
-				return it.getItem();
-			}
-
-			@Override
-			public int getRank() {
-				return it.getRank();
-			}
-			
-		};
-	}
+		return assign.getExecutor(out, c);
+	}	
 		
 	public String toString() {
 		return "return " + exp;

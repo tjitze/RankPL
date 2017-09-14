@@ -7,9 +7,9 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -29,28 +29,27 @@ public class Cut extends AbstractStatement {
 	}
 
 	@Override
-	public RankedIterator<VarStore> getIterator(final RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		
-		return new RankedIterator<VarStore>() {
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		return new Executor() {
 
+			private boolean closed = false;
+			
 			@Override
-			public boolean next() throws RPLException {
-				boolean next = in.next();
-				return next && in.getRank() < rank.getValue(in.getItem(), Type.INT);
+			public void close() throws RPLException {
+				out.close();
 			}
 
 			@Override
-			public VarStore getItem() throws RPLException {
-				return in.getItem();
-			}
-
-			@Override
-			public int getRank() {
-				return in.getRank();
+			public void push(State s) throws RPLException {
+				if (!closed && s.getRank() < rank.getValue(s.getVarStore(), Type.INT)) {
+					out.push(s);
+				} else {
+					out.close();
+					closed = true;
+				}
 			}
 			
 		};
-
 	}
 
 	public String toString() {
@@ -83,5 +82,4 @@ public class Cut extends AbstractStatement {
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
 	}
-
 }

@@ -1,22 +1,18 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.AbsurdIterator;
-import com.tr.rp.iterators.ranked.BufferingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.ranks.RankedItem;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.Type;
 
 public class While extends AbstractStatement implements IfElseErrorHandler {
@@ -41,89 +37,131 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 		this.body = body;
 		this.preStatement = preStatement;
 	}
+
+	private int itCount = 0;
 	
-	private BufferingIterator<VarStore> iterate(BufferingIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		in.reset();
-		in.stopBuffering();
-		return new BufferingIterator<VarStore>(generateIteration(in, c));
-	}
+	public Executor getIteration(Supplier<AbstractExpression> exp, Executor out, int shift, ExecutionContext c) {
+		final int thisCount = itCount;
+		itCount++;
+		Executor iterate = new Executor() {
 
-	private boolean isDone(VarStore item) throws RPLException {
-		Objects.requireNonNull(item);
-		return !whileCondition.getValue(item, Type.BOOL);
-	}
-
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		HashSet<RankedItem<VarStore>> seen = new HashSet<RankedItem<VarStore>>();
-
-		return new RankedIterator<VarStore>() {
-
-			private BufferingIterator<VarStore> current = null;
-
-			private RankedItem<VarStore> currentItem = null;
-			
-			private RankedIterator<VarStore> init() throws RPLException {
-				current = new BufferingIterator<VarStore>(in);
-				if (!current.next()) current = null;
-				return this;
-			}
+			private Executor next;
+			private int offset = -1;
 			
 			@Override
-			public boolean next() throws RPLException {
-				currentItem = getNextUniqueItem();
-				return currentItem != null;
+			public void close() throws RPLException {
+				if (next != null) {
+					next.close();
+				} else {
+					out.close();
+				}
 			}
 
 			@Override
-			public VarStore getItem() throws RPLException {
-				return currentItem != null? currentItem.item: null;
-			}
-
-			@Override
-			public int getRank() {
-				return currentItem != null? currentItem.rank: -1;
-			}
-
-			private RankedItem<VarStore> getNextItem() throws RPLException {
-				while (true) {
-					if (current == null) {
-						return null;
+			public void push(State s) throws RPLException {
+				if (!exp.get().getValue(s.getVarStore(), Type.BOOL)) {
+					//System.out.println("push out " + s.shiftUp(shift));
+					out.push(s.shiftUp(shift));
+				} else {
+					if (next == null) {
+						offset = s.getRank();
+						next = body.getExecutor(getIteration(exp, out, shift + offset, c), c);
 					}
-			 		VarStore item = current.getItem();
-					if (isDone(item)) {
-						int rank = current.getRank();
-						if (!current.next()) current = null;
-						return new RankedItem<VarStore>(item, rank);
-					} else {
-						current = iterate(current, c);
-						if (!current.next()) current = null;
-					}
+					next.push(s.shiftDown(offset));
 				}
 			}
-			
-			private RankedItem<VarStore> getNextUniqueItem() throws RPLException {
-				RankedItem<VarStore> item = getNextItem();
-				while (item != null && seen.contains(item)) {
-					item = getNextItem();
-				}
-				if (item != null) {
-					seen.add(item);
-				}
-				return item;
-			}
-
-		}.init();
-
+		};
+		return iterate;
 	}
-	
-	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		IfElse ifElse = new IfElse(whileCondition, body, new Skip(), this);
-		if (preStatement == null) {
-			return ifElse.getIterator(in, c);
-		} else {
-			return new Composition(preStatement, ifElse).getIterator(in, c);
-		}
-	}
+
+	@Override
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AbstractExpression> transformWhileCond = RankTransformer.create(whileCondition);
+		transformWhileCond.setOutput(getIteration(transformWhileCond, out, 0, c), this);
+		return transformWhileCond;
+	}	
+//	private BufferingIterator<VarStore> iterate(BufferingIterator<VarStore> in, ExecutionContext c) throws RPLException {
+//		in.reset();
+//		in.stopBuffering();
+//		return new BufferingIterator<VarStore>(generateIteration(in, c));
+//	}
+//
+//	private boolean isDone(VarStore item) throws RPLException {
+//		Objects.requireNonNull(item);
+//		return !whileCondition.getValue(item, Type.BOOL);
+//	}
+//
+//	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+//		HashSet<RankedItem<VarStore>> seen = new HashSet<RankedItem<VarStore>>();
+//
+//		return new RankedIterator<VarStore>() {
+//
+//			private BufferingIterator<VarStore> current = null;
+//
+//			private RankedItem<VarStore> currentItem = null;
+//			
+//			private RankedIterator<VarStore> init() throws RPLException {
+//				current = new BufferingIterator<VarStore>(in);
+//				if (!current.next()) current = null;
+//				return this;
+//			}
+//			
+//			@Override
+//			public boolean next() throws RPLException {
+//				currentItem = getNextUniqueItem();
+//				return currentItem != null;
+//			}
+//
+//			@Override
+//			public VarStore getItem() throws RPLException {
+//				return currentItem != null? currentItem.item: null;
+//			}
+//
+//			@Override
+//			public int getRank() {
+//				return currentItem != null? currentItem.rank: -1;
+//			}
+//
+//			private RankedItem<VarStore> getNextItem() throws RPLException {
+//				while (true) {
+//					if (current == null) {
+//						return null;
+//					}
+//			 		VarStore item = current.getItem();
+//					if (isDone(item)) {
+//						int rank = current.getRank();
+//						if (!current.next()) current = null;
+//						return new RankedItem<VarStore>(item, rank);
+//					} else {
+//						current = iterate(current, c);
+//						if (!current.next()) current = null;
+//					}
+//				}
+//			}
+//			
+//			private RankedItem<VarStore> getNextUniqueItem() throws RPLException {
+//				RankedItem<VarStore> item = getNextItem();
+//				while (item != null && seen.contains(item)) {
+//					item = getNextItem();
+//				}
+//				if (item != null) {
+//					seen.add(item);
+//				}
+//				return item;
+//			}
+//
+//		}.init();
+//
+//	}
+//	
+//	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+//		IfElse ifElse = new IfElse(whileCondition, body, new Skip(), this);
+//		if (preStatement == null) {
+//			return ifElse.getIterator(in, c);
+//		} else {
+//			return new Composition(preStatement, ifElse).getIterator(in, c);
+//		}
+//	}
 	
 	public boolean equals(Object o) {
 		return o instanceof While &&
@@ -198,6 +236,7 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 	@Override
 	public void ifElseElseError(RPLException e) throws RPLException {
 		throw e;
-	}	
+	}
+
 
 }

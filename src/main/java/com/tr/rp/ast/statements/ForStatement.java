@@ -1,21 +1,18 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
-import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.iterators.ranked.AbsurdIterator;
-import com.tr.rp.iterators.ranked.BufferingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.Type;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ForStatement extends AbstractStatement {
 
@@ -63,60 +60,65 @@ public class ForStatement extends AbstractStatement {
 		this.preConditionStatement = null;
 		isOptimal = checkOptimal();
 	}
-					
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		// Init
-		in = init.getIterator(in, c);
+			
+	@Override
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		throw new NotImplementedException();
+	}	
 
-		while (true) {
-			
-			// Do one iteration
-			in = generateIteration(in, c);
-			
-			// Check if condition is still satisfied
-			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-			boolean conditionSatisfied = false;
-			boolean hasNext = bi.next();
-			if (!hasNext) { // Undefined
-				return new AbsurdIterator<VarStore>(); 
-			}
-			
-			// If optimal, the for condition is the same in all variable stores,
-			// and therefore we only have to check the first.
-			if (isOptimal) {
-				if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
-					conditionSatisfied = true;
-				}
-			} else {
-				while (hasNext) {
-					if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
-						conditionSatisfied = true;
-						break;
-					}
-					hasNext = bi.next();
-				}
-			}
-			
-			bi.reset();
-			bi.stopBuffering();
-
-			// If exp is not satisfied, we are done
-			if (!conditionSatisfied) {
-				return bi;
-			}
-			
-			// Try another iteration
-			in = bi;
-		}
-	}
-
-	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		if (preConditionStatement == null) {
-			return (new IfElse(forCondition, new Composition(body, next), new Skip())).getIterator(in, c);
-		} else {
-			return new Composition(preConditionStatement, (new IfElse(forCondition, new Composition(body, next), new Skip()))).getIterator(in, c);
-		}
-	}
+//	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+//		// Init
+//		in = init.getIterator(in, c);
+//
+//		while (true) {
+//			
+//			// Do one iteration
+//			in = generateIteration(in, c);
+//			
+//			// Check if condition is still satisfied
+//			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
+//			boolean conditionSatisfied = false;
+//			boolean hasNext = bi.next();
+//			if (!hasNext) { // Undefined
+//				return new AbsurdIterator<VarStore>(); 
+//			}
+//			
+//			// If optimal, the for condition is the same in all variable stores,
+//			// and therefore we only have to check the first.
+//			if (isOptimal) {
+//				if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
+//					conditionSatisfied = true;
+//				}
+//			} else {
+//				while (hasNext) {
+//					if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
+//						conditionSatisfied = true;
+//						break;
+//					}
+//					hasNext = bi.next();
+//				}
+//			}
+//			
+//			bi.reset();
+//			bi.stopBuffering();
+//
+//			// If exp is not satisfied, we are done
+//			if (!conditionSatisfied) {
+//				return bi;
+//			}
+//			
+//			// Try another iteration
+//			in = bi;
+//		}
+//	}
+//
+//	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
+//		if (preConditionStatement == null) {
+//			return (new IfElse(forCondition, new Composition(body, next), new Skip())).getIterator(in, c);
+//		} else {
+//			return new Composition(preConditionStatement, (new IfElse(forCondition, new Composition(body, next), new Skip()))).getIterator(in, c);
+//		}
+//	}
 	
 	public boolean equals(Object o) {
 		return o instanceof ForStatement &&
@@ -179,7 +181,6 @@ public class ForStatement extends AbstractStatement {
 		init.getAssignedVariables(variables);
 		next.getAssignedVariables(variables);
 		body.getAssignedVariables(variables);
-	}	
-
+	}
 
 }

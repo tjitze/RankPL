@@ -2,6 +2,7 @@ package com.tr.rp.ast.statements;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -11,15 +12,12 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
-import com.tr.rp.exceptions.RPLAssertionException;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.exceptions.RPLTypeError;
-import com.tr.rp.iterators.ranked.BufferingIterator;
-import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
@@ -38,96 +36,86 @@ public class AssertRanked extends AbstractStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> parent, ExecutionContext c) throws RPLException {
+	public Executor getExecutor(Executor out, ExecutionContext c) {
 		// Build map expected value -> expected rank
-		final Map<Object, Integer> expectedValues = new LinkedHashMap<Object, Integer>();
+		final Map<Integer, Set<Object>> expectedValues = new LinkedHashMap<Integer, Set<Object>>();
 		for (AbstractExpression e: expected) {
 			if (!e.hasDefiniteValue()) {
-				throw new RPLMiscException("Expected expression must be a definite expression", this);
+				throw new RuntimeException(
+						new RPLMiscException("Expected expression must be a definite expression", this));
 			}
-			PersistentArray pl = e.getDefiniteValue(Type.ARRAY);
+			PersistentArray pl;
+			try {
+				pl = e.getDefiniteValue(Type.ARRAY);
+			} catch (RPLException e1) {
+				throw new RuntimeException(e1);
+			}
 			if (pl.size() != 2) {
-				throw new RPLMiscException("Expected list [rank, value]", e);
+				throw new RuntimeException(
+					new RPLMiscException("Expected list [rank, value]", e));
 			}
 			Object ro = pl.get(0);
 			if (!(ro instanceof Integer)) {
-				throw new RPLTypeError("integer", ro, e);
+				throw new RuntimeException(new RPLTypeError("integer", ro, e));
 			}
 			int rank = (Integer)ro;
 			Object value = pl.get(1);
-			expectedValues.put(value, rank);
+			// Store values per rank
+			Set<Object> rankValues = expectedValues.get(rank);
+			if (rankValues == null) {
+				rankValues = new LinkedHashSet<Object>();
+				expectedValues.put(rank, rankValues);
+			}
+			rankValues.add(value);
 		}
-		
-		// Buffer for re-use
-		BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(parent);
-		
-		// Create iterator that generates the value to check
-		RankedIterator<Object> vi = new RankedIterator<Object>() {
 
+		return new Executor() {
+			private Set<Object> seen = new LinkedHashSet<Object>();
+			private Set<Object> found = new LinkedHashSet<Object>();
+			private int currentRank = 0;
+			
 			@Override
-			public boolean next() throws RPLException {
-				return bi.next();
+			public void close() throws RPLException {
+				checkCurrentRank();
+				checkRemainder();
+				found.clear();
+				out.close();
 			}
 
 			@Override
-			public Object getItem() throws RPLException {
-				return expression.getValue(bi.getItem());
-			}
-
-			@Override
-			public int getRank() {
-				return bi.getRank();
-			}
-		};
-
-		// Remove duplicates
-		DuplicateRemovingIterator<Object> dri = new DuplicateRemovingIterator<Object>(vi);
-		
-		// Check values
-		RankedIterator<Object> ci = new RankedIterator<Object>() {
-
-			@Override
-			public boolean next() throws RPLException {
-				boolean next = dri.next();
-				if (next) {
-					Object checkValue = dri.getItem();
-					if (expectedValues.containsKey(checkValue)) {
-						if (!expectedValues.get(checkValue).equals(getRank())) {
-							throw new RPLAssertionException("Outcome " + checkValue + " has wrong rank (is " + getRank() + " but should be " + expectedValues.get(checkValue) + ")", AssertRanked.this);
-						}
-						expectedValues.remove(checkValue);
-					} else {
-						throw new RPLAssertionException("Unexpected value " + checkValue + " (ranked " + getRank() + ")", AssertRanked.this);
-					}
+			public void push(State s) throws RPLException {
+				Object value = expression.getValue(s.getVarStore());
+				if (s.getRank() < currentRank) {
+					throw new RPLMiscException("Illegal rank order", AssertRanked.this);
 				} else {
-					if (!expectedValues.isEmpty()) {
-						String missingValuesString = 
-								expectedValues.entrySet().stream().map(e -> "[" + e.getKey() + ", rank " + e.getValue() + "]").collect(Collectors.joining(", "));
-						throw new RPLAssertionException("Missing values: " + missingValuesString, AssertRanked.this);
+					if (s.getRank() > currentRank) {
+						checkCurrentRank();
+						found.clear();
+						currentRank = s.getRank();
+					}
+					if (!seen.contains(value)) {
+						found.add(value);
+						seen.add(value);
 					}
 				}
-				return next;
-			}
-
-			@Override
-			public Object getItem() throws RPLException {
-				return dri.getItem();
-			}
-
-			@Override
-			public int getRank() {
-				return dri.getRank();
+				out.push(s);
 			}
 			
+			private void checkCurrentRank() throws RPLMiscException {
+				Set<Object> expected = expectedValues.get(currentRank);
+				if (expected == null) expected = new LinkedHashSet<Object>();
+				if (!found.equals(expected)) {
+					throw new RPLMiscException("Assertion failed at rank " + currentRank + ": expected " + expected + ", found " + found, AssertRanked.this);
+				}
+				expectedValues.remove(currentRank);
+			}
+			
+			private void checkRemainder() throws RPLMiscException {
+				if (!expectedValues.isEmpty()) {
+					throw new RPLMiscException("Missing values: " + expectedValues, AssertRanked.this);
+				}
+			}
 		};
-		
-		// Consume all and buffer
-		while (ci.next()) {}
-		
-		// Reset buffer and return original iterator
-		bi.reset();
-		bi.stopBuffering();
-		return bi;
 	}
 
 	@Override

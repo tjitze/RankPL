@@ -16,10 +16,10 @@ import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.RankTransformer;
+import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
@@ -42,45 +42,37 @@ public class ReadFile extends AbstractStatement {
 	}
 	
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		RankTransformIterator rt = new RankTransformIterator(in, this, target, path);
-		final AssignmentTarget target = (AssignmentTarget)rt.getExpression(0);
-		final AbstractExpression path = (AbstractExpression)rt.getExpression(1);
-		return new RankedIterator<VarStore>() {
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
+		RankTransformer<AbstractExpression> transformPath = RankTransformer.create(path);
+		Executor exec = new Executor() {
 
 			private String lastPath;
 			private PersistentArray lines;
-			
+
 			@Override
-			public boolean next() throws RPLException {
-				return rt.next();
+			public void close() throws RPLException {
+				out.close();
 			}
 
 			@Override
-			public VarStore getItem() throws RPLException {
-				VarStore v = rt.getItem();
-				if (v == null) {
-					return null;
-				}
-				String currentPath = path.getValue(rt.getItem(), Type.STRING);
+			public void push(State s) throws RPLException {
+				String currentPath = path.getValue(s.getVarStore(), Type.STRING);
 				if (lines == null || !lastPath.equals(currentPath)) {
 					try {
 						lastPath = currentPath;
-						lines = new PersistentArray(readFile(path.getValue(rt.getItem(), Type.STRING)).toArray());
+						lines = new PersistentArray(readFile(path.getValue(s.getVarStore(), Type.STRING)).toArray());
 					} catch (IOException e) {
-						throw new RPLMiscException(e.toString());
+						throw new RPLMiscException(e.toString(), ReadFile.this);
 					}
 				}
-				return target.assign(rt.getItem(), lines);
+				out.push(target.assign(s.getVarStore(), lines), s.getRank());
 			}
-
-			@Override
-			public int getRank() {
-				return rt.getRank();
-			}
-			
 		};
-	}
+		transformTarget.setOutput(transformPath, this);
+		transformPath.setOutput(exec, this);
+		return transformTarget;
+	}		
 
 	@Override
 	public void getVariables(Set<String> list) {
@@ -137,5 +129,5 @@ public class ReadFile extends AbstractStatement {
 	@Override
 	public int hashCode() {
 		return Objects.hash(target, path, mode);
-	}	
+	}
 }

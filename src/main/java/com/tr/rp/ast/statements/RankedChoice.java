@@ -7,18 +7,13 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
-import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLIllegalRankException;
-import com.tr.rp.iterators.ranked.MergingIteratorFixed;
-import com.tr.rp.iterators.ranked.MergingIteratorVariable;
-import com.tr.rp.iterators.ranked.DuplicateRemovingIterator;
-import com.tr.rp.iterators.ranked.ExecutionContext;
-import com.tr.rp.iterators.ranked.IteratorSplitter;
-import com.tr.rp.iterators.ranked.RankTransformIterator;
-import com.tr.rp.iterators.ranked.RankedIterator;
-import com.tr.rp.varstore.VarStore;
+import com.tr.rp.exec.Deduplicator;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.Merger;
+import com.tr.rp.exec.Splitter;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -27,34 +22,16 @@ import com.tr.rp.varstore.types.Type;
  * executed, and "exceptionally" (with rank r) s2 is executed. Different constructors 
  * are provided for ease of use.
  */
-public class RankedChoice extends AbstractStatement implements RankedChoiceErrorHandler {
+public class RankedChoice extends AbstractStatement {
 
 	private final AbstractStatement s1;
 	private final AbstractStatement s2;
 	private final AbstractExpression rank;
-	private final RankedChoiceErrorHandler errorHandler;
-	
-	public RankedChoice(AbstractStatement s1, AbstractStatement s2, AbstractExpression rank, 
-			RankedChoiceErrorHandler errorHandler) {
-		this.s1 = s1;
-		this.s2 = s2;
-		this.rank = rank;
-		this.errorHandler = errorHandler;
-	}
-
-	public RankedChoice(AssignmentTarget target, AbstractExpression v1, AbstractExpression v2, 
-			AbstractExpression rank, RankedChoiceErrorHandler errorHandler) {
-		this.s1 = new Assign(target, v1);
-		this.s2 = new Assign(target, v2);
-		this.rank = rank;
-		this.errorHandler = errorHandler;
-	}
 
 	public RankedChoice(AbstractStatement s1, AbstractStatement s2, AbstractExpression rank) {
 		this.s1 = s1;
 		this.s2 = s2;
 		this.rank = rank;
-		this.errorHandler = this;
 	}
 
 	public RankedChoice(AssignmentTarget target, AbstractExpression v1, AbstractExpression v2, 
@@ -62,34 +39,27 @@ public class RankedChoice extends AbstractStatement implements RankedChoiceError
 		this.s1 = new Assign(target, v1);
 		this.s2 = new Assign(target, v2);
 		this.rank = rank;
-		this.errorHandler = this;
 	}
-
 
 	@Override
-	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-		RankTransformIterator rt = new RankTransformIterator(in, this, rank);
-		AbstractExpression rank2 = rt.getExpression(0);
-		IteratorSplitter<VarStore> split = new IteratorSplitter<VarStore>(rt);
-		RankedIterator<VarStore> merge;
-		if (rank2.hasDefiniteValue()) {
-			int rankValue = rank2.getDefiniteValue(Type.INT);
-			if (rankValue < 0) {
-				throw new RPLIllegalRankException(rankValue, rank, this);
-			}
-			merge = new MergingIteratorFixed(
-					s1.getIterator(split.getA(), c), 
-					s2.getIterator(split.getB(), c), 
-					rankValue);
-		} else {
-			merge = new MergingIteratorVariable(
-					s1.getIterator(split.getA(), c), 
-					s2.getIterator(split.getB(), c), 
-					rank2,
-					errorHandler);
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		// TODO: properly handle this
+		if (!rank.hasDefiniteValue()) {
+			throw new RuntimeException("Rank must be definite");
 		}
-		return new DuplicateRemovingIterator<VarStore>(merge);
-	}
+		int shift;
+		try {
+			shift = rank.getDefiniteValue(Type.INT);
+		} catch (RPLException e) {
+			throw new RuntimeException(e);
+		}
+		
+		Deduplicator d = new Deduplicator(out);
+		Merger m = new Merger(d, shift);
+		Executor exec1 = s1.getExecutor(m.getIn1(), c);
+		Executor exec2 = s2.getExecutor(m.getIn2(), c);
+		return new Splitter(exec1, exec2);
+	}	
 	
 	public String toString() {
 		String rankString = rank.toString();
@@ -143,17 +113,5 @@ public class RankedChoice extends AbstractStatement implements RankedChoiceError
 		s1.getAssignedVariables(variables);
 		s2.getAssignedVariables(variables);
 	}
-
-	@Override
-	public void handleRankExpressionError(RPLException e) throws RPLException {
-		e.setStatement(this);
-		e.setExpression(rank);
-		throw e;
-	}
-
-	@Override
-	public void illegalRank(int ri) throws RPLException {
-		throw new RPLIllegalRankException(ri, rank, this);
-	}	
 	
 }

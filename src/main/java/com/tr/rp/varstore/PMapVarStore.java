@@ -235,9 +235,9 @@ public class PMapVarStore implements VarStore {
 		}
 		// Create new var store with parameters
 		PMapVarStore v = new PMapVarStore(this);
-		for (int i = 0; i < parameters.length; i++) {
-			String var = parameters[i];
-			AbstractExpression expr = arguments[i];
+		for (int x = 0; x < parameters.length; x++) {
+			String var = parameters[x];
+			AbstractExpression expr = arguments[x];
 			v = new PMapVarStore(v, var, expr.getValue(this), i, j, k);
 		}
 		return v;

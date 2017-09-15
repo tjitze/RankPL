@@ -1,6 +1,10 @@
 package com.tr.rp.rpl;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.tr.rp.RankPL;
@@ -16,33 +20,19 @@ import junit.framework.TestCase;
 public class RunRPLTest extends TestCase {
 
 	public void testRPLTests() throws RPLException {
-//        try {
-//        	List<String> rplFiles = new ArrayList<String>();
-//        	Files.walk(Paths.get("./src/test/rpl"))
-//				.filter(p -> !Files.isDirectory(p))
-//				.filter(p -> p.toString().endsWith(".rpl"))
-//			    .forEach(e -> rplFiles.add(e.toString()));
-//        	for (String file: rplFiles) {
-//        		runTest(file);
-//        	}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			assert(false);
-//		}
-//		runTest("./src/test/rpl/debug_rankedchoice.rpl");
-		runTest("./src/test/rpl/test_ifelse.rpl");				//OK
-		runTest("./src/test/rpl/test_expressions.rpl");			//OK
-		runTest("./src/test/rpl/test_list_operations.rpl");		//OK
-		runTest("./src/test/rpl/test_map_operations.rpl");		//OK
-		runTest("./src/test/rpl/test_multi_assignment.rpl");	//OK
-		runTest("./src/test/rpl/test_observe-j.rpl");			//OK
-		runTest("./src/test/rpl/test_observe-l.rpl");			//OK
-		runTest("./src/test/rpl/test_observe.rpl");				//OK
-		runTest("./src/test/rpl/test_rankedchoice.rpl");		//OK
-		runTest("./src/test/rpl/test_rankexpression.rpl");		//OK
-		runTest("./src/test/rpl/test_set_operations.rpl");		//OK
-		runTest("./src/test/rpl/test_stack_operations.rpl");	//OK
-		runTest("./src/test/rpl/test_while.rpl");				//to implement
+        try {
+        	List<String> rplFiles = new ArrayList<String>();
+        	Files.walk(Paths.get("./src/test/rpl"))
+				.filter(p -> !Files.isDirectory(p))
+				.filter(p -> p.toString().endsWith(".rpl"))
+			    .forEach(e -> rplFiles.add(e.toString()));
+        	for (String file: rplFiles) {
+        		runTest(file);
+        	}
+		} catch (IOException e) {
+			e.printStackTrace();
+			assert(false);
+		}
 	}
 
 	private void runTest(String file) {

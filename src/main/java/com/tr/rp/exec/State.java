@@ -3,9 +3,9 @@ package com.tr.rp.exec;
 import com.tr.rp.varstore.VarStore;
 
 public class State {
-
-	private VarStore varStore;
-	private int rank;
+	
+	private final VarStore varStore;
+	private final int rank;
 	
 	public State(VarStore varStore, int rank) {
 		this.varStore = varStore;
@@ -38,16 +38,16 @@ public class State {
 	
 	public boolean equals(Object o) {
 		return o instanceof State &&
-				((State)o).varStore.equals(varStore) &&
-				((State)o).rank == rank;
+				((State)o).getVarStore().equals(getVarStore()) &&
+				((State)o).getRank() == getRank();
 	}
 	
 	public int hashCode() {
-		return varStore.hashCode() * rank;
+		return getVarStore().hashCode() * getRank();
 	}
 
 	public String toString() {
-		return varStore + ": " + rank;
+		return getVarStore() + ": " + getRank();
 	}
 }
 

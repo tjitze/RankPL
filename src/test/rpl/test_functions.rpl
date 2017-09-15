@@ -54,7 +54,7 @@ define test_multi() {
 		return 20;
 	};
 };
-a := infer(test_false());
+a := infer(test_multi());
 assert(a == [10, 20]);
 reset;
 
@@ -79,18 +79,18 @@ assert(a == [50, 60]);
 reset;
 
 # Test arguments (ranked2)
-define test_args_ranked2(a, b) {
-	normally (a) {
-		return 1;
-	} exceptionally {
-		return b;
-	};
-};
-a := infer(test_args_ranked2(0, 20));
-assert(a == [1, 20]);
-reset;
-a := infer(test_args_ranked2(1, 20));
-assert(a == [1]);
-reset;
+#define test_args_ranked2(a, b) {
+#	normally (a) {
+#		return 1;
+#	} exceptionally {
+#		return b;
+#	};
+#};
+#a := infer(test_args_ranked2(0, 20));
+#assert(a == [1, 20]);
+#reset;
+#a := infer(test_args_ranked2(1, 20));
+#assert(a == [1]);
+#reset;
 
 

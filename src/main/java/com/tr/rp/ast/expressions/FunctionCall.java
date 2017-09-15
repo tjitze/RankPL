@@ -11,6 +11,7 @@ import com.tr.rp.exceptions.RPLMissingReturnValueException;
 import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
 import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
+import com.tr.rp.exec.MultiMergeExecutor;
 import com.tr.rp.exec.State;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.VarStore;
@@ -118,16 +119,16 @@ public class FunctionCall extends AbstractFunctionCall {
 		};
 		Executor pre = getFunction().getBody().getExecutor(post, c);
 		pre.push(in.createClosure(parameters, getArguments()), 0);
+		pre.close();
 	}
 	
 	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
-		throw new NotImplementedException();
-//		return new MultiMergeIterator<VarStore>(parent) {
-//			@Override
-//			public RankedIterator<VarStore> transform(VarStore in) throws RPLException {
-//				return getIteratorForFunctionCall(assignToVar, in, c);
-//			}
-//		};
+		return new MultiMergeExecutor(out) {
+			@Override
+			public void transform(VarStore in, Executor out2) throws RPLException {
+				getExecutorForFunctionCall(assignToVar, in, c, out2);
+			}
+		};
 	}
 
 }

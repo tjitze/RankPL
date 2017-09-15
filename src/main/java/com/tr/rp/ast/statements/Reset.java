@@ -9,6 +9,7 @@ import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
 import com.tr.rp.exec.State;
 import com.tr.rp.varstore.PMapVarStore;
+import com.tr.rp.varstore.VarStoreFactory;
 
 /**
  * The reset statement resets the complete program state. Used for testing.
@@ -26,7 +27,7 @@ public class Reset extends AbstractStatement {
 			public void close() throws RPLException {
 				if (!done) {
 					done = true;
-					out.push(new State(new PMapVarStore(), 0));
+					out.push(new State(VarStoreFactory.getInitialvarStore(), 0));
 					out.close();
 				} 
 			}

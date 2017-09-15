@@ -17,6 +17,7 @@ import com.tr.rp.exec.RankedItem;
 import com.tr.rp.exec.State;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.PMapVarStore;
+import com.tr.rp.varstore.VarStoreFactory;
 
 public class Program extends AbstractStatement {
 
@@ -99,7 +100,7 @@ public class Program extends AbstractStatement {
 			}
 			
 		}, c);
-		e.push(new PMapVarStore(), 0);
+		e.push(VarStoreFactory.getInitialvarStore(), 0);
 		e.close();
 	}
 	

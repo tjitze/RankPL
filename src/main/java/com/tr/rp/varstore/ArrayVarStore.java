@@ -21,8 +21,14 @@ public class ArrayVarStore implements VarStore {
 	public Object[] values;
 	
 	private ArrayVarStore parent;
-		
-	public ArrayVarStore(Object[] values, ArrayVarStore parent, HashMap<String, Integer> index) {
+	
+	protected ArrayVarStore() {
+		values = new Object[0];
+		parent = null;
+		index = new HashMap<String, Integer>();
+	}
+	
+	protected ArrayVarStore(Object[] values, ArrayVarStore parent, HashMap<String, Integer> index) {
 		this.values = values;
 		this.parent = parent;
 		this.index = index;

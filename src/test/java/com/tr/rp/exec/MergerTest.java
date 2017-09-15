@@ -6,15 +6,19 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.statement.RPLBaseTest;
 import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;
+import com.tr.rp.varstore.VarStoreFactory;
 
 public class MergerTest extends RPLBaseTest {
 
-	public static VarStore s1 = new PMapVarStore().create("x", 1);
-	public static VarStore s2 = new PMapVarStore().create("x", 2);
-	public static VarStore s3 = new PMapVarStore().create("x", 3);
-	public static VarStore s4 = new PMapVarStore().create("x", 4);
-	public static VarStore s5 = new PMapVarStore().create("x", 5);
-	public static VarStore s6 = new PMapVarStore().create("x", 6);
+	public static VarStore s1 = VarStoreFactory.getInitialvarStore().create("x", 1);
+	public static VarStore s2 = VarStoreFactory.getInitialvarStore().create("x", 2);
+	public static VarStore s3 = VarStoreFactory.getInitialvarStore().create("x", 3);
+	public static VarStore s4 = VarStoreFactory.getInitialvarStore().create("x", 4);
+	public static VarStore s5 = VarStoreFactory.getInitialvarStore().create("x", 5);
+	public static VarStore s6 = VarStoreFactory.getInitialvarStore().create("x", 6);
+	public static VarStore s7 = VarStoreFactory.getInitialvarStore().create("x", 7);
+	public static VarStore s8 = VarStoreFactory.getInitialvarStore().create("x", 8);
+	public static VarStore s9 = VarStoreFactory.getInitialvarStore().create("x", 9);
 	
 	private boolean closed;
 

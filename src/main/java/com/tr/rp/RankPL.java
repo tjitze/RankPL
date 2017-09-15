@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -55,13 +56,12 @@ public class RankPL {
 	private static boolean noExecStats = false;
 	private static boolean noRanks = false;
 	private static boolean terminateAfterFirst = false;
-	private static String fileName;
+	private static String fileName = null;
 
 	public static void main(String[] args) {
 
 		// Handle options
 		if (!parseOptions(args)) {
-			printUsage();
 			return;
 		}
 
@@ -233,7 +233,7 @@ public class RankPL {
 	 */
 	private static Options createOptions() {
 		Options options = new Options();
-		options.addOption(Option.builder("source").hasArg().required().argName("source_file")
+		options.addOption(Option.builder("source").hasArg().argName("source_file")
 				.desc("source file to execute").build());
 		options.addOption(Option.builder("rank").hasArg().type(Number.class).argName("max_rank")
 				.desc("generate outcomes with ranks up to max_rank (defaults to 0)").build());
@@ -250,6 +250,7 @@ public class RankPL {
 		options.addOption(Option.builder("ns").desc("don't print execution stats").build());
 		options.addOption(Option.builder("nr").desc("don't print ranks").build());
 		options.addOption(Option.builder("help").desc("show help message").build());
+		options.addOption(Option.builder("version").desc("show version").build());
 		return options;
 	}
 
@@ -257,14 +258,26 @@ public class RankPL {
 	 * Parse options and set static fields. Returns true if successful.
      *
 	 * @param args Options to parse
-	 * @return True if successful
+	 * @return True if execution can proceed
 	 */
 	private static boolean parseOptions(String[] args) {
 		try {
 			CommandLineParser parser = new DefaultParser();
 			CommandLine cmd = parser.parse(createOptions(), args);
+			if (cmd.hasOption("version")) {
+				printVersion();
+				return false;
+			}
+			if (cmd.hasOption("help")) {
+				printUsage();
+				return false;
+			}
 			if (cmd.hasOption("source")) {
 				fileName = cmd.getOptionValue("source");
+			} else {
+				System.err.println("Missing -source argument");
+				printUsage();
+				return false;
 			}
 			if (cmd.hasOption("rank")) {
 				try {
@@ -306,10 +319,6 @@ public class RankPL {
 			if (cmd.hasOption("nr")) {
 				noRanks = true;
 			}
-			if (cmd.hasOption("help")) {
-				printUsage();
-				return false;
-			}
 		} catch (ParseException pe) {
 			System.out.println(pe.getMessage());
 			return false;
@@ -330,6 +339,17 @@ public class RankPL {
 			}
 		});
 		formatter.printHelp("java -jar RankPL.jar", createOptions(), true);
+	}
+
+	private static void printVersion() {
+		final Properties properties = new Properties();
+		try {
+			properties.load(new RankPL().getClass().getClassLoader().getResourceAsStream(".properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		System.out.println(properties.getProperty("version"));
 	}
 
 	public static String getFileContent(String sourceFile) throws IOException {

@@ -33,10 +33,12 @@ public class PrintRankingStatement extends AbstractStatement {
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		return new Executor() {
 			
+			private boolean closed = false;
 			private LinkedList<State> queue = new LinkedList<State>();
 			
 			@Override
 			public void close() throws RPLException {
+				closed = true;
 				Map<Integer, List<String>> items = new HashMap<Integer,List<String>>();
 				int maxRank = 0;
 				System.out.println("Ranking over " + exp + ":");
@@ -73,6 +75,9 @@ public class PrintRankingStatement extends AbstractStatement {
 
 			@Override
 			public void push(State s) throws RPLException {
+				if (closed) {
+					throw new IllegalStateException();
+				}
 				queue.addLast(s);
 			}
 			

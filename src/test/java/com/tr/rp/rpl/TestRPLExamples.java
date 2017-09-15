@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.junit.Ignore;
+
 import com.tr.rp.RankPL;
 import com.tr.rp.ast.statements.Program;
 import com.tr.rp.exec.Rank;
@@ -173,7 +175,7 @@ public class TestRPLExamples extends TestCase {
 		}
 	}
 	
-	public void testLocalizerExample() {
+	public void ignore_testLocalizerExample() {
 		
 		Map<Integer, Set<String>> expectedResultMapK1 = new HashMap<Integer, Set<String>>();
 		expectedResultMapK1.put(0, new HashSet<String>(Arrays.asList(
@@ -221,7 +223,7 @@ public class TestRPLExamples extends TestCase {
 			if (program == null) {
 				fail("Parse error");
 			}
-			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, 0, false, false);
+			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
 			assertEquals(resultMap, expectedResultMapK1);
 			// K2
 			source = RankPL.getFileContent(file);
@@ -230,7 +232,7 @@ public class TestRPLExamples extends TestCase {
 			if (program == null) {
 				fail("Parse error");
 			}
-			resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, 0, false, false);
+			resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
 			assertEquals(resultMap, expectedResultMapK2);
 			// K3
 			source = RankPL.getFileContent(file);
@@ -239,7 +241,7 @@ public class TestRPLExamples extends TestCase {
 			if (program == null) {
 				fail("Parse error");
 			}
-			resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, 0, false, false);
+			resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
 			assertEquals(resultMap, expectedResultMapK3);
 			// K4
 			source = RankPL.getFileContent(file);
@@ -248,7 +250,7 @@ public class TestRPLExamples extends TestCase {
 			if (program == null) {
 				fail("Parse error");
 			}
-			resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, 0, false, false);
+			resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
 			assertEquals(resultMap, expectedResultMapK4);
 
 		} catch (Exception e) {

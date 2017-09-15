@@ -1,0 +1,704 @@
+
+# simple if
+a := 10;
+if (a == 10) {
+	b := 1;
+} else {
+	b := 2;
+};
+assert(b == 1);
+reset;
+
+# simple then
+a := 11;
+if (a == 10) {
+	b := 1;
+} else {
+	b := 2;
+};
+assert(b == 2);
+reset;
+
+# Ranked
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	b := 10;
+} else {
+	b := a;
+};
+assert-ranked(b, 
+	[0, 10], 
+	[1, 2], 
+	[2, 3]);
+reset;
+
+# Ranked
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	b := 10;
+} else {
+	b := a;
+};
+assert-ranked(b, 
+	[0, 1], 
+	[1, 10], 
+	[2, 3]);
+reset;
+
+# Ranked
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 3) {
+	b := 10;
+} else {
+	b := a;
+};
+assert-ranked(b, 
+	[0, 1], 
+	[1, 2], 
+	[2, 10]);
+reset;
+
+# Ranked
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a != 1) {
+	b := 10;
+} else {
+	b := a;
+};
+assert-ranked([a, b], 
+	[0, [1,1]], 
+	[1, [2,10]], 
+	[2, [3,10]]);
+reset;
+
+# Ranked
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a != 2) {
+	b := 10;
+} else {
+	b := a;
+};
+assert-ranked([a, b], 
+	[0, [1,10]], 
+	[1, [2,2]], 
+	[2, [3,10]]);
+reset;
+
+# Ranked
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a != 3) {
+	b := 10;
+} else {
+	b := a;
+};
+assert-ranked([a, b], 
+	[0, [1,10]], 
+	[1, [2,10]], 
+	[2, [3,3]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	normally (0) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 5], [0, 10], [1, 2], [2, 3]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	normally (1) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 5], [1, 10], [1, 2], [2, 3]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	normally (2) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 5], [1, 2], [2, 10], [2, 3]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	normally (3) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 5], [1, 2], [2, 3], [3, 10]);
+reset;
+
+# With nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	normally (10) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 5], [1, 2], [2, 3], [10, 10]);
+reset;
+
+####
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	normally (0) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 5], [1, 10], [2, 3]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	normally (1) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 5], [2, 10], [2, 3]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	normally (2) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 5], [2, 3], [3, 10]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	normally (3) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 5], [2, 3], [4, 10]);
+reset;
+
+# With nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	normally (10) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 5], [2, 3], [11, 10]);
+
+####
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 3) {
+	normally (0) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 2], [2, 5], [2, 10]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 3) {
+	normally (1) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 2], [2, 5], [3, 10]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 3) {
+	normally (2) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 2], [2, 5], [4, 10]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 3) {
+	normally (3) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 2], [2, 5], [5, 10]);
+reset;
+
+# With nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 3) {
+	normally (10) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+} else {
+	b := a;
+};
+assert-ranked(b, [0, 1], [1, 2], [2, 5], [12, 10]);
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	b := a;
+} else {
+	normally (0) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,1]], [1, [2,5]], [2, [3,5]], [1,[2,10]], [2,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	b := a;
+} else {
+	normally (1) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,1]], [1, [2,5]], [2, [3,5]], [2,[2,10]], [3,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	b := a;
+} else {
+	normally (2) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,1]], [1, [2,5]], [2, [3,5]], [3,[2,10]], [4,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	b := a;
+} else {
+	normally (3) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,1]], [1, [2,5]], [2, [3,5]], [4,[2,10]], [5,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 1) {
+	b := a;
+} else {
+	normally (10) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,1]], [1, [2,5]], [2, [3,5]], [11,[2,10]], [12,[3,10]]);
+reset;
+
+
+#############
+
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	b := a;
+} else {
+	normally (0) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,5]], [1, [2,2]], [2, [3,5]], [0,[1,10]], [2,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	b := a;
+} else {
+	normally (1) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,5]], [1, [2,2]], [2, [3,5]], [1,[1,10]], [3,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	b := a;
+} else {
+	normally (2) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,5]], [1, [2,2]], [2, [3,5]], [2,[1,10]], [4,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	b := a;
+} else {
+	normally (3) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,5]], [1, [2,2]], [2, [3,5]], [3,[1,10]], [5,[3,10]]);
+reset;
+
+# Nested ranked choice
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	};
+};
+if (a == 2) {
+	b := a;
+} else {
+	normally (10) {
+		b := 5;
+	} exceptionally {
+		b := 10;
+	}
+};
+assert-ranked([a, b], [0, [1,5]], [1, [2,2]], [2, [3,5]], [10,[1,10]], [12,[3, 10]]);
+reset;
+
+

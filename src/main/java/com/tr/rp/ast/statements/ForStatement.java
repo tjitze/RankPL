@@ -15,7 +15,7 @@ import com.tr.rp.exec.Executor;
 public class ForStatement extends AbstractStatement {
 
 	/** Optional statement to execute before evaluating condition */
-	private AbstractStatement preConditionStatement;
+	private AbstractStatement preStatement;
 
 	/** Condition */
 	private final AbstractExpression forCondition;
@@ -29,26 +29,35 @@ public class ForStatement extends AbstractStatement {
 		this.forCondition = forCondition;
 		this.next = next;
 		this.body = body;
-		this.preConditionStatement = null;
+		this.preStatement = null;
 	}
 				
-	private ForStatement(AbstractStatement init, AbstractStatement preConditionStatement, AbstractExpression forCondition, AbstractStatement next, AbstractStatement body) {
+	private ForStatement(AbstractStatement init, AbstractStatement preStatement, AbstractExpression forCondition, AbstractStatement next, AbstractStatement body) {
 		this.init = init;
 		this.forCondition = forCondition;
 		this.next = next;
 		this.body = body;
-		this.preConditionStatement = null;
+		this.preStatement = preStatement;
 	}
 			
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		AbstractStatement s = new Composition(init, new While(forCondition, new Composition(body, next)));
+		While w = new While(forCondition, new Composition(body, next));
+		w.setExceptionSource(this);
+
+		AbstractStatement s;
+		if (preStatement != null) {
+			s = new Composition(preStatement, init, w);
+		} else {
+			s = new Composition(init, w);
+		}
+		
 		return s.getExecutor(out, c);
 	}	
 	
 	public boolean equals(Object o) {
 		return o instanceof ForStatement &&
-				Objects.equals(((ForStatement)o).preConditionStatement, preConditionStatement) &&
+				Objects.equals(((ForStatement)o).preStatement, preStatement) &&
 				((ForStatement)o).forCondition.equals(forCondition) &&
 				((ForStatement)o).init.equals(init) &&
 				((ForStatement)o).body.equals(body) &&
@@ -58,13 +67,14 @@ public class ForStatement extends AbstractStatement {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(preConditionStatement, forCondition, init, body, next);
+		return Objects.hash(getClass(), preStatement, forCondition, init, body, next);
 	}	
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
 		return new ForStatement(
 				(AbstractStatement)init.replaceVariable(a, b), 
+				(AbstractStatement)preStatement.replaceVariable(a, b),
 				(AbstractExpression)forCondition.replaceVariable(a, b), 
 				(AbstractStatement)next.replaceVariable(a, b), 
 				(AbstractStatement)body.replaceVariable(a, b));
@@ -84,7 +94,7 @@ public class ForStatement extends AbstractStatement {
 
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
-		if (preConditionStatement != null) {
+		if (preStatement != null) {
 			throw new UnsupportedOperationException();
 		}
 		AbstractStatement rewrittenInit = init.rewriteEmbeddedFunctionCalls();

@@ -26,16 +26,21 @@ public class While extends AbstractStatement {
 	/** While statement body */
 	private AbstractStatement body;
 	
+	/** Exception source */
+	private AbstractStatement exceptionSource;
+	
 	public While(AbstractExpression whileCondition, AbstractStatement body) {
 		this.whileCondition = whileCondition;
 		this.body = body;
-		this.preStatement = null;
+		preStatement = null;
+		exceptionSource = this;
 	}
 	
 	private While(AbstractExpression whileCondition, AbstractStatement body, AbstractStatement preStatement) {
 		this.whileCondition = whileCondition;
 		this.body = body;
 		this.preStatement = preStatement;
+		exceptionSource = this;
 	}
 
 	public Executor getIteration(Supplier<AbstractExpression> exp, Executor out, int shift, ExecutionContext c) {
@@ -55,7 +60,8 @@ public class While extends AbstractStatement {
 
 			@Override
 			public void push(State s) throws RPLException {
-				if (!exp.get().getValue(s.getVarStore(), Type.BOOL)) {
+				// TODO: properly handle exception here
+				if (!getCheckedValue(exp.get(), s)) {
 					out.push(s.shiftUp(shift));
 				} else {
 					if (next == null) {
@@ -69,10 +75,23 @@ public class While extends AbstractStatement {
 		return iterate;
 	}
 
+	private boolean getCheckedValue(AbstractExpression exp, State s) throws RPLException {
+		try {
+			return exp.getValue(s.getVarStore(), Type.BOOL);
+		} catch (RPLException e) {
+			e.setStatement(exceptionSource);
+			throw e;
+		}
+	}
+
+	public void setExceptionSource(AbstractStatement exceptionSource) {
+		this.exceptionSource = exceptionSource;
+	}
+
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		RankTransformer<AbstractExpression> transformWhileCond = RankTransformer.create(whileCondition);
-		transformWhileCond.setOutput(getIteration(transformWhileCond, out, 0, c), this);
+		transformWhileCond.setOutput(getIteration(transformWhileCond, out, 0, c), exceptionSource);
 		return transformWhileCond;
 	}	
 	

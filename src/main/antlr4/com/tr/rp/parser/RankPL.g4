@@ -25,6 +25,7 @@ stat
  | assignment_target (op=('++'|'--'))					# IncDecStatement
  | If exp Then? stat (Else stat)? 						# IfStatement
  | While exp Do? stat									# WhileStatement
+ | For '(' assignment_target In exp ')' stat			# ForInStatement
  | For '(' stat ';' exp ';' stat ')' stat				# ForStatement
  | Observe exp											# ObserveStatement
  | ObserveL ('(' exp ')')? exp							# ObserveLStatement
@@ -94,6 +95,7 @@ Else: 			'else' | 'ELSE';
 While: 			'while' | 'WHILE';
 Do: 			'do' | 'DO';
 For: 			'for' | 'FOR';
+In: 			'in' | 'IN';
 Observe: 		'observe' | 'OBSERVE' | 'obs' | 'OBS';
 ObserveL: 		'observe-l' | 'observe-L' | 'OBSERVE-L' | 'obs-l' | 'obs-L' | 'OBS-L';
 ObserveJ: 		'observe-j' | 'observe-J' | 'OBSERVE-J' | 'obs-j' | 'obs-J' | 'OBS-J';

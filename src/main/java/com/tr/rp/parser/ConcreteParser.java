@@ -62,6 +62,7 @@ import com.tr.rp.ast.statements.Composition;
 import com.tr.rp.ast.statements.CurrentRank;
 import com.tr.rp.ast.statements.Cut;
 import com.tr.rp.ast.statements.Dec;
+import com.tr.rp.ast.statements.ForInStatement;
 import com.tr.rp.ast.statements.ForStatement;
 import com.tr.rp.ast.statements.IfElse;
 import com.tr.rp.ast.statements.Inc;
@@ -92,6 +93,7 @@ import com.tr.rp.parser.RankPLParser.ConditionalExpressionContext;
 import com.tr.rp.parser.RankPLParser.CurrentRankStatementContext;
 import com.tr.rp.parser.RankPLParser.CutStatementContext;
 import com.tr.rp.parser.RankPLParser.ExceptionallyStatementContext;
+import com.tr.rp.parser.RankPLParser.ForInStatementContext;
 import com.tr.rp.parser.RankPLParser.ForStatementContext;
 import com.tr.rp.parser.RankPLParser.FunctionCallContext;
 import com.tr.rp.parser.RankPLParser.FunctiondefContext;
@@ -404,6 +406,16 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractStatement next = (AbstractStatement)visit(ctx.stat(1));
 		AbstractStatement body = (AbstractStatement)visit(ctx.stat(2));
 		AbstractStatement s = new ForStatement(init, forCondition, next, body);
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+	
+	@Override
+	public LanguageElement visitForInStatement(ForInStatementContext ctx) {
+		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		AbstractExpression exp = (AbstractExpression)visit(ctx.exp());
+		AbstractStatement body = (AbstractStatement)visit(ctx.stat());
+		AbstractStatement s = new ForInStatement(target, exp, body);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

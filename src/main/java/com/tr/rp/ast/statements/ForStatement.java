@@ -12,8 +12,6 @@ import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class ForStatement extends AbstractStatement {
 
 	/** Optional statement to execute before evaluating condition */
@@ -25,100 +23,28 @@ public class ForStatement extends AbstractStatement {
 	private final AbstractStatement init;
 	private final AbstractStatement next;
 	private final AbstractStatement body;
-	
-	private final boolean isOptimal;
-	
+		
 	public ForStatement(AbstractStatement init, AbstractExpression forCondition, AbstractStatement next, AbstractStatement body) {
 		this.init = init;
 		this.forCondition = forCondition;
 		this.next = next;
 		this.body = body;
 		this.preConditionStatement = null;
-		isOptimal = checkOptimal();
 	}
 				
-	/**
-	 * A for loop is optimal if the variables assigned by the init/next are not
-	 * assigned a value by the body.
-	 * 
-	 * @return True if for loop is optimal
-	 */
-	private boolean checkOptimal() {
-		Set<String> assignedByInitNext = new TreeSet<String>();
-		Set<String> assignedByBody = new TreeSet<String>();
-		init.getAssignedVariables(assignedByInitNext);
-		next.getAssignedVariables(assignedByInitNext);
-		body.getAssignedVariables(assignedByBody);
-		return Collections.disjoint(assignedByInitNext, assignedByBody);
-	}
-
 	private ForStatement(AbstractStatement init, AbstractStatement preConditionStatement, AbstractExpression forCondition, AbstractStatement next, AbstractStatement body) {
 		this.init = init;
 		this.forCondition = forCondition;
 		this.next = next;
 		this.body = body;
 		this.preConditionStatement = null;
-		isOptimal = checkOptimal();
 	}
 			
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		throw new NotImplementedException();
+		AbstractStatement s = new Composition(init, new While(forCondition, new Composition(body, next)));
+		return s.getExecutor(out, c);
 	}	
-
-//	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-//		// Init
-//		in = init.getIterator(in, c);
-//
-//		while (true) {
-//			
-//			// Do one iteration
-//			in = generateIteration(in, c);
-//			
-//			// Check if condition is still satisfied
-//			BufferingIterator<VarStore> bi = new BufferingIterator<VarStore>(in);
-//			boolean conditionSatisfied = false;
-//			boolean hasNext = bi.next();
-//			if (!hasNext) { // Undefined
-//				return new AbsurdIterator<VarStore>(); 
-//			}
-//			
-//			// If optimal, the for condition is the same in all variable stores,
-//			// and therefore we only have to check the first.
-//			if (isOptimal) {
-//				if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
-//					conditionSatisfied = true;
-//				}
-//			} else {
-//				while (hasNext) {
-//					if (forCondition.getValue(bi.getItem(), Type.BOOL)) {
-//						conditionSatisfied = true;
-//						break;
-//					}
-//					hasNext = bi.next();
-//				}
-//			}
-//			
-//			bi.reset();
-//			bi.stopBuffering();
-//
-//			// If exp is not satisfied, we are done
-//			if (!conditionSatisfied) {
-//				return bi;
-//			}
-//			
-//			// Try another iteration
-//			in = bi;
-//		}
-//	}
-//
-//	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-//		if (preConditionStatement == null) {
-//			return (new IfElse(forCondition, new Composition(body, next), new Skip())).getIterator(in, c);
-//		} else {
-//			return new Composition(preConditionStatement, (new IfElse(forCondition, new Composition(body, next), new Skip()))).getIterator(in, c);
-//		}
-//	}
 	
 	public boolean equals(Object o) {
 		return o instanceof ForStatement &&

@@ -15,7 +15,7 @@ import com.tr.rp.exec.RankTransformer;
 import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.Type;
 
-public class While extends AbstractStatement implements IfElseErrorHandler {
+public class While extends AbstractStatement {
 
 	/** Optional statement to execute before evaluating while condition */
 	private AbstractStatement preStatement;
@@ -38,11 +38,7 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 		this.preStatement = preStatement;
 	}
 
-	private int itCount = 0;
-	
 	public Executor getIteration(Supplier<AbstractExpression> exp, Executor out, int shift, ExecutionContext c) {
-		final int thisCount = itCount;
-		itCount++;
 		Executor iterate = new Executor() {
 
 			private Executor next;
@@ -60,7 +56,6 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 			@Override
 			public void push(State s) throws RPLException {
 				if (!exp.get().getValue(s.getVarStore(), Type.BOOL)) {
-					//System.out.println("push out " + s.shiftUp(shift));
 					out.push(s.shiftUp(shift));
 				} else {
 					if (next == null) {
@@ -80,88 +75,6 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 		transformWhileCond.setOutput(getIteration(transformWhileCond, out, 0, c), this);
 		return transformWhileCond;
 	}	
-//	private BufferingIterator<VarStore> iterate(BufferingIterator<VarStore> in, ExecutionContext c) throws RPLException {
-//		in.reset();
-//		in.stopBuffering();
-//		return new BufferingIterator<VarStore>(generateIteration(in, c));
-//	}
-//
-//	private boolean isDone(VarStore item) throws RPLException {
-//		Objects.requireNonNull(item);
-//		return !whileCondition.getValue(item, Type.BOOL);
-//	}
-//
-//	public RankedIterator<VarStore> getIterator(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-//		HashSet<RankedItem<VarStore>> seen = new HashSet<RankedItem<VarStore>>();
-//
-//		return new RankedIterator<VarStore>() {
-//
-//			private BufferingIterator<VarStore> current = null;
-//
-//			private RankedItem<VarStore> currentItem = null;
-//			
-//			private RankedIterator<VarStore> init() throws RPLException {
-//				current = new BufferingIterator<VarStore>(in);
-//				if (!current.next()) current = null;
-//				return this;
-//			}
-//			
-//			@Override
-//			public boolean next() throws RPLException {
-//				currentItem = getNextUniqueItem();
-//				return currentItem != null;
-//			}
-//
-//			@Override
-//			public VarStore getItem() throws RPLException {
-//				return currentItem != null? currentItem.item: null;
-//			}
-//
-//			@Override
-//			public int getRank() {
-//				return currentItem != null? currentItem.rank: -1;
-//			}
-//
-//			private RankedItem<VarStore> getNextItem() throws RPLException {
-//				while (true) {
-//					if (current == null) {
-//						return null;
-//					}
-//			 		VarStore item = current.getItem();
-//					if (isDone(item)) {
-//						int rank = current.getRank();
-//						if (!current.next()) current = null;
-//						return new RankedItem<VarStore>(item, rank);
-//					} else {
-//						current = iterate(current, c);
-//						if (!current.next()) current = null;
-//					}
-//				}
-//			}
-//			
-//			private RankedItem<VarStore> getNextUniqueItem() throws RPLException {
-//				RankedItem<VarStore> item = getNextItem();
-//				while (item != null && seen.contains(item)) {
-//					item = getNextItem();
-//				}
-//				if (item != null) {
-//					seen.add(item);
-//				}
-//				return item;
-//			}
-//
-//		}.init();
-//
-//	}
-//	
-//	private RankedIterator<VarStore> generateIteration(RankedIterator<VarStore> in, ExecutionContext c) throws RPLException {
-//		IfElse ifElse = new IfElse(whileCondition, body, new Skip(), this);
-//		if (preStatement == null) {
-//			return ifElse.getIterator(in, c);
-//		} else {
-//			return new Composition(preStatement, ifElse).getIterator(in, c);
-//		}
-//	}
 	
 	public boolean equals(Object o) {
 		return o instanceof While &&
@@ -220,23 +133,5 @@ public class While extends AbstractStatement implements IfElseErrorHandler {
 	public int hashCode() {
 		return Objects.hash(preStatement, whileCondition, body);
 	}
-
-	@Override
-	public void ifElseConditionError(RPLException e) throws RPLException {
-		e.setStatement(this);
-		e.setExpression(whileCondition);
-		throw e;
-	}
-
-	@Override
-	public void ifElseThenError(RPLException e) throws RPLException {
-		throw e;
-	}
-
-	@Override
-	public void ifElseElseError(RPLException e) throws RPLException {
-		throw e;
-	}
-
 
 }

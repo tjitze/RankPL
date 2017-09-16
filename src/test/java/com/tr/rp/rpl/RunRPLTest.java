@@ -72,16 +72,4 @@ public class RunRPLTest extends TestCase {
 		}
 	}
 	
-	
-//	private void getRPLTestFileNames(Path path) {
-//	    try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-//	        for (Path entry : stream) {
-//	            if (Files.isDirectory(entry)) {
-//	            	getRPLTestFileNames(entry);
-//	            }
-//	            files.add(entry);
-//	        }
-//	    }
-//
-//	}
 }

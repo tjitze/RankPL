@@ -1,29 +1,18 @@
 package com.tr.rp.ast.statements;
 
-import java.util.Set;
-import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Set;
 
-import com.google.common.collect.MinMaxPriorityQueue;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.ProgramBuilder;
-import com.tr.rp.ast.expressions.Expressions;
-import com.tr.rp.ast.expressions.Literal;
-import com.tr.rp.ast.expressions.Not;
-import com.tr.rp.ast.expressions.RankExpr;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.exec.EvaluationErrorHandler;
 import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
-import com.tr.rp.exec.JShifter;
 import com.tr.rp.exec.LShifter;
-import com.tr.rp.exec.Rank;
 import com.tr.rp.exec.RankTransformer;
-import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 /**

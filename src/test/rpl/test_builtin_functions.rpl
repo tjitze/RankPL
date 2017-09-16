@@ -1,0 +1,7 @@
+# CharToInt
+assert(charToInt("a") == 97);
+
+# IntToChar
+assert(intToChar(97) == "a");
+
+

@@ -22,12 +22,14 @@ import com.tr.rp.ast.expressions.ArrayInitExpression;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.AssignmentTargetList;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
+import com.tr.rp.ast.expressions.CharToInt;
 import com.tr.rp.ast.expressions.Conditional;
 import com.tr.rp.ast.expressions.ConstructorExpression;
 import com.tr.rp.ast.expressions.Expressions;
 import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.expressions.IndexElementExpression;
 import com.tr.rp.ast.expressions.InferringFunctionCall;
+import com.tr.rp.ast.expressions.IntToChar;
 import com.tr.rp.ast.expressions.IsSet;
 import com.tr.rp.ast.expressions.ListAppend;
 import com.tr.rp.ast.expressions.ListReplace;
@@ -766,6 +768,12 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		case "toarray":
 			ensureArgSize(name, args, 1);
 			return new ToArray(args[0]);
+		case "inttochar":
+			ensureArgSize(name, args, 1);
+			return new IntToChar(args[0]);
+		case "chartoint":
+			ensureArgSize(name, args, 1);
+			return new CharToInt(args[0]);
 		}
 		return null; 
 	}

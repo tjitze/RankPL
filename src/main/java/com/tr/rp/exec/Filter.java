@@ -8,6 +8,11 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
+/**
+ * The Filter executor implements the regular conditioning operator. It passes on
+ * only states satisfying a given condition, shifting down ranks uniformly so that
+ * the lowest ranked state that is passed on is ranked zero.
+ */
 public class Filter implements Executor {
 
 	private final Executor out;

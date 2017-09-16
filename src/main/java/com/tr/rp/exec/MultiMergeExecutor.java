@@ -29,6 +29,9 @@ public abstract class MultiMergeExecutor implements Executor {
 
 	@Override
 	public void push(State s) throws RPLException {
+		if (closed) {
+			throw new IllegalStateException();
+		}
 		inRank = s.getRank();
 		AtomicReference<Boolean> closed = new AtomicReference<Boolean>(false);
 		transform(s.getVarStore(), new Executor() {

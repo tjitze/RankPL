@@ -2,6 +2,7 @@ package com.tr.rp.ast.expressions;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
@@ -89,8 +90,25 @@ public class ArrayInitExpression extends AbstractExpression {
 		Object dimensionValue = dimension.getValue(e);
 		if (dimensionValue instanceof Integer) {
 			if (initValue != null) {
-				Object iv = initValue.getValue(e);
-				list = new PersistentArray((Integer)dimensionValue, () -> iv);
+				Supplier<Object> evaluator = new Supplier<Object>() {
+					@Override
+					public Object get() {
+						try {
+							return initValue.getValue(e);
+						} catch (RPLException ex) {
+							throw new RuntimeException(ex);
+						}
+					}
+				};
+				try {
+					list = new PersistentArray((Integer)dimensionValue, evaluator);
+				} catch (RuntimeException ex) {
+					if (ex.getCause() instanceof RPLException) {
+						throw (RPLException)ex.getCause();
+					} else {
+						throw ex;
+					}
+				}
 			} else {
 				list = new PersistentArray((Integer)dimensionValue);
 			}

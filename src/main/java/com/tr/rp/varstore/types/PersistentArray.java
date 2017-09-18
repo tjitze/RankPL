@@ -101,7 +101,7 @@ public class PersistentArray {
 		}
 		int segment = getSegment(index);
 		int segmentIndex = getSegmentIndex(index);
-		PersistentArray copy = new PersistentArray(size, segments);
+		PersistentArray copy = new PersistentArray(size, Arrays.copyOf(segments, segments.length));
 		for (int i = 0; i < square; i++) {
 			if (i == segment) {
 				copy.segments[i] = Arrays.copyOf(segments[i], segments[i].length);

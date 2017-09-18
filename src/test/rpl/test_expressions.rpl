@@ -160,12 +160,5 @@ assert(array(2, true) == [true, true]);
 assert(array(2, "a") == ["a", "a"]);
 assert(array(2, array(2, "a")) == [["a", "a"], ["a", "a"]]);
 
-# test that array init arg is evaluated independelty
-x := array(2, array(2, "a"));
-x[0][0] := "b";
-assert(x[0][0] == "b");
-assert(x[1][0] == "a");
-assert(x[0][1] == "a");
-assert(x[1][1] == "a");
 
 

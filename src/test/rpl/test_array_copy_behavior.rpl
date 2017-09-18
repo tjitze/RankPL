@@ -1,0 +1,31 @@
+# Test that arrays are distinct across ranked choice
+c := 1 << 1 >> 2;
+x := [0, 1, 2, 3];
+for (i := 0; i < size(x); i++) {
+	x[i] := x[i] + c;
+};
+assert-ranked(x,
+	[0, [1,2,3,4]],
+	[1, [2,3,4,5]]
+);
+reset;
+
+# Test that arrays are copied across ranked choice
+x := [0, 1, 2, 3];
+c := 1 << 1 >> 2;
+for (i := 0; i < size(x); i++) {
+	x[i] := x[i] + c;
+};
+assert-ranked(x,
+	[0, [1,2,3,4]],
+	[1, [2,3,4,5]]
+);
+reset;
+
+# test that array init arg is evaluated independently
+x := array(2, array(2, "a"));
+x[0][0] := "b";
+assert(x[0][0] == "b");
+assert(x[1][0] == "a");
+assert(x[0][1] == "a");
+assert(x[1][1] == "a");

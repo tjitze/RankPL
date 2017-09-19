@@ -1,5 +1,7 @@
 package com.tr.rp.varstore.types;
 
+import com.tr.rp.varstore.datastructures.PersistentSet;
+
 public class SetType extends Type<PersistentSet<Object>> {
 
 	SetType() {

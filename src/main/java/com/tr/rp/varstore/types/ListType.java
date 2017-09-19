@@ -1,5 +1,7 @@
 package com.tr.rp.varstore.types;
 
+import com.tr.rp.varstore.datastructures.PersistentList;
+
 public class ListType extends Type<PersistentList<Object>> {
 
 	ListType() {

@@ -16,7 +16,7 @@ import com.tr.rp.exec.State;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.FreeVarNameProvider;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentArray;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

@@ -1,6 +1,8 @@
 package com.tr.rp.varstore.types;
 
-public class ArrayType extends Type<PersistentArray> {
+import com.tr.rp.varstore.arrays.Array;
+
+public class ArrayType extends Type<Array> {
 
 	ArrayType() {
 		super("array");
@@ -8,6 +10,6 @@ public class ArrayType extends Type<PersistentArray> {
 	
 	@Override
 	public boolean test(Object o) {
-		return o instanceof PersistentArray;
+		return o instanceof Array;
 	}
 }

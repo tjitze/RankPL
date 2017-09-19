@@ -8,7 +8,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentArray;
 
 /**
  * Array construction expression. Evaluates to an array with a given
@@ -81,6 +81,7 @@ public class ArrayConstructExpression extends AbstractExpression {
 	public Object getValue(VarStore e) throws RPLException {
 		Object[] evaluatedValues = new Object[values.length];
 		for (int i = 0; i < values.length; i++) {
+			Object value = values[i].getValue(e);;
 			evaluatedValues[i] = values[i].getValue(e);
 		}
 		return new PersistentArray(evaluatedValues);

@@ -1,4 +1,4 @@
-package com.tr.rp.varstore.types;
+package com.tr.rp.varstore.arrays;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * 
  * TODO: consider replacing with PersistentVector
  */
-public class PersistentArray {
+public class PersistentArray implements Array {
 
 	private final Object[][] segments;
 	private final int size;

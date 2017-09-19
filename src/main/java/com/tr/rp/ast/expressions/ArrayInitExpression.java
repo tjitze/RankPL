@@ -2,14 +2,13 @@ package com.tr.rp.ast.expressions;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentArray;
 
 /**
  * Array initialization expression. 
@@ -86,36 +85,21 @@ public class ArrayInitExpression extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		PersistentArray list;
 		Object dimensionValue = dimension.getValue(e);
-		if (dimensionValue instanceof Integer) {
-			if (initValue != null) {
-				Supplier<Object> evaluator = new Supplier<Object>() {
-					@Override
-					public Object get() {
-						try {
-							return initValue.getValue(e);
-						} catch (RPLException ex) {
-							throw new RuntimeException(ex);
-						}
-					}
-				};
-				try {
-					list = new PersistentArray((Integer)dimensionValue, evaluator);
-				} catch (RuntimeException ex) {
-					if (ex.getCause() instanceof RPLException) {
-						throw (RPLException)ex.getCause();
-					} else {
-						throw ex;
-					}
-				}
-			} else {
-				list = new PersistentArray((Integer)dimensionValue);
-			}
-		} else {
+		if (!(dimensionValue instanceof Integer)) {
 			throw new RPLTypeError("Integer", dimensionValue, dimension);
 		}
-		return list;
+		int dimension = (int)dimensionValue;
+		Object[] values = new Object[dimension];
+		for (int i = 0; i < dimension; i++) {
+			if (initValue != null) {
+				Object value = initValue.getValue(e);
+				values[i] = value;
+			} else {
+				values[i] = null;
+			}
+		}
+		return new PersistentArray(values);
 	}
 
 	@Override

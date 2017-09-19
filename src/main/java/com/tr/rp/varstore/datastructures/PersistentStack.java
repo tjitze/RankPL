@@ -1,4 +1,4 @@
-package com.tr.rp.varstore.types;
+package com.tr.rp.varstore.datastructures;
 
 import java.util.Objects;
 import java.util.function.Consumer;

@@ -18,7 +18,8 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
 import com.tr.rp.exec.State;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.varstore.arrays.Array;
+import com.tr.rp.varstore.arrays.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -44,7 +45,7 @@ public class AssertRanked extends AbstractStatement {
 				throw new RuntimeException(
 						new RPLMiscException("Expected expression must be a definite expression", this));
 			}
-			PersistentArray pl;
+			Array pl;
 			try {
 				pl = e.getDefiniteValue(Type.ARRAY);
 			} catch (RPLException e1) {

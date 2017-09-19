@@ -11,7 +11,8 @@ import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.varstore.arrays.Array;
+import com.tr.rp.varstore.arrays.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -139,8 +140,8 @@ public class AssignmentTargetTerminal extends AssignmentTarget {
 		}
 	}
 	
-	private PersistentArray mutateList(int i, PersistentArray in, Object value, VarStore vs) throws RPLException {
-		PersistentArray list = (PersistentArray)in;
+	private Array mutateList(int i, Array in, Object value, VarStore vs) throws RPLException {
+		Array list = (Array)in;
 		int position = indices[i].getValue(vs, Type.INT);
 		if (position < 0 || position >= list.size()) {
 			throw new RPLIndexOutOfBoundsException(position, list.size(), this);
@@ -149,8 +150,8 @@ public class AssignmentTargetTerminal extends AssignmentTarget {
 			return list.getMutatedCopy(position, value);
 		} else {
 			Object o = list.get(position);
-			if (o != null && o instanceof PersistentArray) {
-				return list.getMutatedCopy(position, mutateList(i + 1, (PersistentArray)o, value, vs));
+			if (o != null && o instanceof Array) {
+				return list.getMutatedCopy(position, mutateList(i + 1, (Array)o, value, vs));
 			} else if (o == null) {
 				throw new RPLUndefinedException(this);
 			} else {

@@ -8,8 +8,8 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLEmptyStackException;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
-import com.tr.rp.varstore.types.PersistentStack;
+import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.datastructures.PersistentStack;
 import com.tr.rp.varstore.types.Type;
 
 /**

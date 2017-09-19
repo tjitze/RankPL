@@ -20,7 +20,7 @@ import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
 import com.tr.rp.exec.RankTransformer;
 import com.tr.rp.exec.State;
-import com.tr.rp.varstore.types.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentArray;
 import com.tr.rp.varstore.types.Type;
 
 public class ReadFile extends AbstractStatement {

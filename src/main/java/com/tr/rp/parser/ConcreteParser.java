@@ -130,10 +130,10 @@ import com.tr.rp.parser.RankPLParser.VariableContext;
 import com.tr.rp.parser.RankPLParser.VariableExpressionContext;
 import com.tr.rp.parser.RankPLParser.WhileStatementContext;
 import com.tr.rp.ranks.FunctionScope;
-import com.tr.rp.varstore.types.PersistentList;
-import com.tr.rp.varstore.types.PersistentMap;
-import com.tr.rp.varstore.types.PersistentSet;
-import com.tr.rp.varstore.types.PersistentStack;
+import com.tr.rp.varstore.datastructures.PersistentList;
+import com.tr.rp.varstore.datastructures.PersistentMap;
+import com.tr.rp.varstore.datastructures.PersistentSet;
+import com.tr.rp.varstore.datastructures.PersistentStack;
 
 public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 

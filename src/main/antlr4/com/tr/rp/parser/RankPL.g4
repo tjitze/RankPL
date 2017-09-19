@@ -68,6 +68,7 @@ expr4
  : expr5 (aop=('*'|'/'|'%') expr4)?						# Arithmetic2Expression
  ;
 
+// TODO: should be parsed before expr6
 expr5
  : expr6 index*											# IndexedExpression
  ;

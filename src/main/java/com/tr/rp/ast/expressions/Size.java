@@ -8,11 +8,12 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.types.PersistentArray;
-import com.tr.rp.varstore.types.PersistentList;
-import com.tr.rp.varstore.types.PersistentMap;
-import com.tr.rp.varstore.types.PersistentSet;
-import com.tr.rp.varstore.types.PersistentStack;
+import com.tr.rp.varstore.arrays.Array;
+import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.datastructures.PersistentList;
+import com.tr.rp.varstore.datastructures.PersistentMap;
+import com.tr.rp.varstore.datastructures.PersistentSet;
+import com.tr.rp.varstore.datastructures.PersistentStack;
 
 /**
  * The size expression. Returns the length of the given array, string, set or stack
@@ -61,8 +62,8 @@ public class Size extends AbstractExpression {
 		if (o != null) {
 			if (o instanceof String) {
 				return ((String)o).length();
-			} else if (o instanceof PersistentArray) {
-				return ((PersistentArray)o).size();
+			} else if (o instanceof Array) {
+				return ((Array)o).size();
 			} else if (o instanceof PersistentStack) {
 				return ((PersistentStack<?>)o).size();
 			} else if (o instanceof PersistentSet) {
@@ -90,8 +91,8 @@ public class Size extends AbstractExpression {
 		if (o != null) {
 			if (o instanceof String) {
 				return ((String)o).length();
-			} else if (o instanceof PersistentArray) {
-				return ((PersistentArray)o).size();
+			} else if (o instanceof Array) {
+				return ((Array)o).size();
 			} else if (o instanceof PersistentStack) {
 				return ((PersistentStack<?>)o).size();
 			} else if (o instanceof PersistentSet) {

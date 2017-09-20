@@ -10,6 +10,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.arrays.PersistentArray;
 import com.tr.rp.varstore.datastructures.PersistentStack;
+import com.tr.rp.varstore.datastructures.PersistentStack.PopResult;
 import com.tr.rp.varstore.types.Type;
 
 /**
@@ -54,27 +55,10 @@ public class StackPop extends AbstractExpression {
 
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
-		PoppedValueContainer container = new PoppedValueContainer();
-		PersistentStack<?> newStack = this.e.getValue(e, Type.STACK).pop(container::set);
-		if (container.get() == null) {
-			throw new RPLEmptyStackException();
-		}
-		return new PersistentArray(newStack, container.get());
+		PopResult<?> popResult = this.e.getValue(e, Type.STACK).pop();
+		return new PersistentArray(popResult.mutatedStack, popResult.poppedElement);
 	}
 
-	private static class PoppedValueContainer {
-		
-		private Object value = null;
-		
-		public void set(Object value) {
-			this.value = value;
-		}
-		
-		public Object get() {
-			return value;
-		}
-	}
-	
 	@Override
 	public boolean hasDefiniteValue() {
 		return e.hasDefiniteValue();

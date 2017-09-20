@@ -50,17 +50,15 @@ public class PersistentStack<T> {
 	}
 	
 	/**
-	 * Pop value from stack. Throws exception if stack is empty.
+	 * Pop value from stack. Throws RPLEmptyStackException exception if stack is empty.
 	 * 
-	 * @param value Consumer for popped value
-	 * @return New stack, same as current one, with top value popped
+	 * @return PopResult containing mutated stack and popped element
 	 */
-	public PersistentStack<T> pop(Consumer<T> value) throws RPLEmptyStackException {
+	public PopResult<T> pop() throws RPLEmptyStackException {
 		if (element == null) {
 			throw new RPLEmptyStackException();
 		}
-		value.accept(element);
-		return parent;
+		return new PopResult<T>(parent, element);
 	}
 
 	/**
@@ -103,4 +101,12 @@ public class PersistentStack<T> {
 		return "Stack(" + v + ")";
 	}
 
+	public static class PopResult<T> {
+		public final PersistentStack<T> mutatedStack;
+		public final T poppedElement;
+		public PopResult(PersistentStack<T> mutatedStack, T poppedElement) {
+			this.mutatedStack = mutatedStack;
+			this.poppedElement = poppedElement;
+		}
+	}
 }

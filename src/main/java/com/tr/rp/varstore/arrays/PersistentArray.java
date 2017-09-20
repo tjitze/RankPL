@@ -96,17 +96,11 @@ public class PersistentArray implements Array {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-		int segment = getSegmentIndex(index);
-		int segmentIndex = getElementIndex(index);
+		int segmentIndex = getSegmentIndex(index);
+		int elementIndex = getElementIndex(index);
 		PersistentArray copy = new PersistentArray(size, Arrays.copyOf(segments, segments.length));
-		for (int i = 0; i < square; i++) {
-			if (i == segment) {
-				copy.segments[i] = Arrays.copyOf(segments[i], segments[i].length);
-				copy.segments[i][segmentIndex] = value;
-			} else {
-				copy.segments[i] = segments[i];
-			}
-		}
+		copy.segments[segmentIndex] = Arrays.copyOf(segments[segmentIndex], segments[segmentIndex].length);
+		copy.segments[segmentIndex][elementIndex] = value;
 		return copy;
 	}
 	

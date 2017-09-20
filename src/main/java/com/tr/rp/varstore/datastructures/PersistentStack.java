@@ -90,15 +90,19 @@ public class PersistentStack<T> {
 	private boolean internalEquals(PersistentStack<?> other) {
 		return Objects.equals(other.element, element) && Objects.equals(other.parent, parent);
 	}
+
+	private String toStringInternal() {
+		if (element == null) {
+			return "";
+		} else if (parent != null && parent.element == null) {
+			return element.toString();
+		} else {
+			return parent.toStringInternal() + ", " + element.toString();
+		}
+	}
 	
 	public String toString() {
-		PersistentStack<T> s = this;
-		String v = element.toString();
-		while (s.parent != null) {
-			s = s.parent;
-			v = element.toString() + ", " + v;
-		}
-		return "Stack(" + v + ")";
+		return "Stack(" + toStringInternal() + ")";
 	}
 
 	public static class PopResult<T> {

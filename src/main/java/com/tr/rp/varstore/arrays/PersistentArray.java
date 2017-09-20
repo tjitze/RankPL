@@ -50,20 +50,17 @@ public class PersistentArray implements Array {
 		this.segments = segments;
 	}
 
-	public PersistentArray(int length, Supplier<Object> initValue) {
-		this.size = length;
-		this.square = (int)Math.ceil(Math.sqrt(length));
-		this.segments = new Object[square][square];
-		for (int i = 0; i < length; i++) {
-			set(i, initValue.get());
-		}
-	}
-
-	private int getSegment(int index) {
+	/**
+	 * Returns index of segment that stores the given index
+	 */
+	private int getSegmentIndex(int index) {
 		return index / square;
 	}
 	
-	private int getSegmentIndex(int index) {
+	/**
+	 * Returns index of element corresponding the given index
+	 */
+	private int getElementIndex(int index) {
 		return index % square;
 	}
 
@@ -75,23 +72,23 @@ public class PersistentArray implements Array {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-		Object[] segment = segments[getSegment(index)];
+		Object[] segment = segments[getSegmentIndex(index)];
 		if (segment == null) {
 			return null;
 		}
-		return segment[getSegmentIndex(index)];
+		return segment[getElementIndex(index)];
 	}
 	
 	private synchronized void set(int index, Object value) {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-		Object[] segment = segments[getSegment(index)];
+		Object[] segment = segments[getSegmentIndex(index)];
 		if (segment == null) {
 			segment = new Object[square];
-			segments[getSegment(index)] = segment;
+			segments[getSegmentIndex(index)] = segment;
 		}
-		segment[getSegmentIndex(index)] = value;
+		segment[getElementIndex(index)] = value;
 	}
 
 	
@@ -99,8 +96,8 @@ public class PersistentArray implements Array {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
-		int segment = getSegment(index);
-		int segmentIndex = getSegmentIndex(index);
+		int segment = getSegmentIndex(index);
+		int segmentIndex = getElementIndex(index);
 		PersistentArray copy = new PersistentArray(size, Arrays.copyOf(segments, segments.length));
 		for (int i = 0; i < square; i++) {
 			if (i == segment) {

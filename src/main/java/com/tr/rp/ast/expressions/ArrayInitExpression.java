@@ -109,19 +109,20 @@ public class ArrayInitExpression extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		PersistentArray list;
 		Object dimensionValue = dimension.getDefiniteValue();
-		if (dimensionValue instanceof Integer) {
-			if (initValue != null) {
-				Object iv = initValue.getDefiniteValue();
-				list = new PersistentArray((Integer)dimensionValue, () -> iv);
-			} else {
-				list = new PersistentArray((Integer)dimensionValue);
-			}
-		} else {
+		if (!(dimensionValue instanceof Integer)) {
 			throw new RPLTypeError("Integer", dimensionValue, dimension);
 		}
-		return list;
+		int dimension = (int)dimensionValue;
+		Object[] values = new Object[dimension];
+		for (int i = 0; i < dimension; i++) {
+			if (initValue != null) {
+				values[i] = initValue.getDefiniteValue();
+			} else {
+				values[i] = null;
+			}
+		}
+		return new PersistentArray(values);
 	}
 	
 	public String toString() {

@@ -1,5 +1,6 @@
 package com.tr.rp.ast.statements;
 
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -16,7 +17,7 @@ import com.tr.rp.exec.State;
 import com.tr.rp.varstore.types.Type;
 
 public class While extends AbstractStatement {
-
+	
 	/** Optional statement to execute before evaluating while condition */
 	private AbstractStatement preStatement;
 
@@ -26,9 +27,9 @@ public class While extends AbstractStatement {
 	/** While statement body */
 	private AbstractStatement body;
 	
-	/** Exception source */
+	/** Statement that is attached to exception thrown when evaluating whileCondition */
 	private AbstractStatement exceptionSource;
-	
+		
 	public While(AbstractExpression whileCondition, AbstractStatement body) {
 		this.whileCondition = whileCondition;
 		this.body = body;
@@ -43,7 +44,18 @@ public class While extends AbstractStatement {
 		exceptionSource = this;
 	}
 
-	public Executor getIteration(Supplier<AbstractExpression> exp, Executor out, int shift, ExecutionContext c) {
+	public AbstractExpression getWhileCondition() {
+		return whileCondition;
+	}
+		
+	public AbstractStatement getPreStatement() {
+		return preStatement;
+	}
+		
+	public AbstractStatement getBody() {
+		return body;
+	}
+	public Executor getIteration(Supplier<AbstractExpression> exp, Executor out, int shift, ExecutionContext c, int depth, int unrollDepth, LinkedList<Callable> queue) {
 		Executor iterate = new Executor() {
 
 			private Executor next;
@@ -52,7 +64,16 @@ public class While extends AbstractStatement {
 			@Override
 			public void close() throws RPLException {
 				if (next != null) {
-					next.close();
+					if (depth % unrollDepth == 0) { 
+						queue.add(new Callable() {
+							@Override
+							public void call() throws RPLException {
+								next.close();
+							}
+						});
+					} else {
+						next.close();
+					}
 				} else {
 					out.close();
 				}
@@ -60,15 +81,23 @@ public class While extends AbstractStatement {
 
 			@Override
 			public void push(State s) throws RPLException {
-				// TODO: properly handle exception here
 				if (!getCheckedValue(exp.get(), s)) {
 					out.push(s.shiftUp(shift));
 				} else {
 					if (next == null) {
 						offset = s.getRank();
-						next = body.getExecutor(getIteration(exp, out, shift + offset, c), c);
+						next = body.getExecutor(getIteration(exp, out, shift + offset, c, depth + 1, unrollDepth, queue), c);
 					}
-					next.push(s.shiftDown(offset));
+					if (depth % unrollDepth == 0) {
+						queue.add(new Callable() {
+							@Override
+							public void call() throws RPLException {
+								next.push(s.shiftDown(offset));							
+							}
+						});
+					} else {
+						next.push(s.shiftDown(offset));
+					}
 				}
 			}
 		};
@@ -90,11 +119,30 @@ public class While extends AbstractStatement {
 
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		RankTransformer<AbstractExpression> transformWhileCond = RankTransformer.create(whileCondition);
-		transformWhileCond.setOutput(getIteration(transformWhileCond, out, 0, c), exceptionSource);
-		return transformWhileCond;
+		return WhileWorker.createExecutor(out, c, this);
 	}	
 	
+	public Executor getWhileExecutor(Executor out, ExecutionContext c, int unrollDepth) {
+		LinkedList<Callable> queue = new LinkedList<Callable>();
+		RankTransformer<AbstractExpression> transformWhileCond = RankTransformer.create(whileCondition);
+		Executor iteration = getIteration(transformWhileCond, out, 0, c, 0, unrollDepth, queue);
+		Executor trampoline = new Executor() {
+			@Override
+			public void close() throws RPLException {
+				iteration.close();
+				while (!queue.isEmpty()) queue.remove().call();
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				iteration.push(s);
+				while (!queue.isEmpty()) queue.remove().call();
+			}
+		};
+		transformWhileCond.setOutput(trampoline, exceptionSource);
+		return transformWhileCond;
+	}
+		
 	public boolean equals(Object o) {
 		return o instanceof While &&
 				((While)o).whileCondition.equals(whileCondition) &&
@@ -152,5 +200,8 @@ public class While extends AbstractStatement {
 	public int hashCode() {
 		return Objects.hash(preStatement, whileCondition, body);
 	}
-
+		
+	private static abstract class Callable {
+		public abstract void call() throws RPLException;
+	}
 }

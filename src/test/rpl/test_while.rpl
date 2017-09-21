@@ -1,37 +1,83 @@
-# Two alternatives used inside body
+# Simple while loop 
 x := 0;
-y := 1 <<1>> 2;
-z := 0;
-while (x < 3) do {
+while (x < 5000) do {
 	x++;
-	z := z + y;
 };
-assert-ranked(z,
-	[0, 3],
-	[1, 6]);
+assert(x == 5000);
 reset;
 
-# Two alternatives used in expression
+# Simple while loop
 x := 0;
-y := 10 <<1>> 20;
+y := 3000 << 1 >> 5000;
 while (x < y) do {
 	x++;
 };
 assert-ranked(x,
-	[0, 10],
-	[1, 20]);
+	[0, 3000],
+	[1, 5000]);
+reset;
+
+# Nested while loop 
+x := 0;
+z := 0;
+while (x < 1000) do {
+	y := 0;
+	while (y < 1000) do {
+		y++;
+		z++;
+	};
+	x++;
+};
+assert(z == 1000 * 1000);
+reset;
+
+# Nested while loop 
+x := 1;
+z := 0;
+while (x < 10) do {
+	y := 1;
+	while (y <= x) do {
+		z := z + y;
+		y++;
+	};
+	x++;
+};
+assert(z == 165);
+
+# Two alternatives used inside body
+x := 0;
+y := 1 <<1>> 2;
+z := 0;
+while (x < 50000) do {
+	x++;
+	z := z + y;
+};
+assert-ranked(z,
+	[0, 50000],
+	[1, 100000]);
+reset;
+
+# Two alternatives used in expression
+x := 0;
+y := 50000 <<1>> 100000;
+while (x < y) do {
+	x++;
+};
+assert-ranked(x,
+	[0, 50000],
+	[1, 100000]);
 reset;
 
 # observe inside while
 x := 0;
 y := 1 <<0>> 2;
-while (x < 10) do {
+while (x < 5000) do {
 	x++;
 	observe-l (1) y == 2;
 };
-assert-ranked(y,
-	[0, 2],
-	[10, 1]);
+assert-ranked([x,y],
+	[0, [5000, 2]],
+	[5000, [5000, 1]]);
 reset;
 
 # ranked choice inside while

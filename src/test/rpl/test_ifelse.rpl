@@ -1,4 +1,3 @@
-
 # simple if
 a := 10;
 if (a == 10) {
@@ -18,6 +17,79 @@ if (a == 10) {
 };
 assert(b == 2);
 reset;
+
+# Blocked then
+a := 10 << 1 >> 20;
+b := 0;
+if (a == 10) {
+	observe false;
+} else {
+	b := 1;
+};
+assert-ranked([a,b],
+	[0, [20, 1]]
+);
+reset;
+
+# Blocked else
+a := 10 << 1 >> 20;
+b := 0;
+if (a == 10) {
+	b := 1;
+} else {
+	observe false;
+};
+assert-ranked([a,b],
+	[0, [10, 1]]
+);
+reset;
+
+# Blocked then
+a := 10 << 1 >> 20;
+b := 0;
+if (a == 10) {
+	observe false;
+} else {
+	normally (1) {
+		b := 1;
+	} exceptionally {
+		b := 2;
+	};
+};
+assert-ranked([a,b],
+	[0, [20, 1]],
+	[1, [20, 2]]
+);
+reset;
+
+# Blocked else
+a := 20 << 1 >> 10;
+b := 0;
+if (a == 10) {
+	normally (1) {
+		b := 1;
+	} exceptionally {
+		b := 2;
+	};
+} else {
+	observe false;
+};
+assert-ranked([a,b],
+	[0, [10, 1]],
+	[1, [10, 2]]
+);
+reset;
+
+# Blocked both
+a := 10 << 1 >> 20;
+if (a == 10) {
+	observe false;
+} else {
+	observe false;
+};
+assert-ranked([a,b]);
+reset;
+
 
 # Ranked
 normally(1) {

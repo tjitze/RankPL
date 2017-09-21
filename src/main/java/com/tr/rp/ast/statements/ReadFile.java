@@ -20,7 +20,9 @@ import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
 import com.tr.rp.exec.RankTransformer;
 import com.tr.rp.exec.State;
+import com.tr.rp.varstore.arrays.ArrayFactory;
 import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentObjectArray;
 import com.tr.rp.varstore.types.Type;
 
 public class ReadFile extends AbstractStatement {
@@ -61,7 +63,7 @@ public class ReadFile extends AbstractStatement {
 				if (lines == null || !lastPath.equals(currentPath)) {
 					try {
 						lastPath = currentPath;
-						lines = new PersistentArray(readFile(path.getValue(s.getVarStore(), Type.STRING)).toArray());
+						lines = ArrayFactory.newArray(readFile(path.getValue(s.getVarStore(), Type.STRING)).toArray());
 					} catch (IOException e) {
 						throw new RPLMiscException(e.toString(), ReadFile.this);
 					}

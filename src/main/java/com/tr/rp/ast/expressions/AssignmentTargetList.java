@@ -11,8 +11,8 @@ import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLWrongAssignmentTargetSize;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.arrays.Array;
 import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentObjectArray;
 import com.tr.rp.varstore.types.Type;
 
 public class AssignmentTargetList extends AssignmentTarget {
@@ -114,7 +114,7 @@ public class AssignmentTargetList extends AssignmentTarget {
 	 * @return Mutated variable store
 	 */
 	public VarStore assign(VarStore vs, Object value) throws RPLException {
-		Array values = null;
+		PersistentArray values = null;
 		try {
 			values = Type.ARRAY.cast(value);
 		} catch (ClassCastException e) {

@@ -8,8 +8,8 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.arrays.Array;
 import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentObjectArray;
 import com.tr.rp.varstore.datastructures.PersistentList;
 import com.tr.rp.varstore.datastructures.PersistentMap;
 import com.tr.rp.varstore.datastructures.PersistentSet;
@@ -62,8 +62,8 @@ public class Size extends AbstractExpression {
 		if (o != null) {
 			if (o instanceof String) {
 				return ((String)o).length();
-			} else if (o instanceof Array) {
-				return ((Array)o).size();
+			} else if (o instanceof PersistentArray) {
+				return ((PersistentArray)o).size();
 			} else if (o instanceof PersistentStack) {
 				return ((PersistentStack<?>)o).size();
 			} else if (o instanceof PersistentSet) {
@@ -91,8 +91,8 @@ public class Size extends AbstractExpression {
 		if (o != null) {
 			if (o instanceof String) {
 				return ((String)o).length();
-			} else if (o instanceof Array) {
-				return ((Array)o).size();
+			} else if (o instanceof PersistentArray) {
+				return ((PersistentArray)o).size();
 			} else if (o instanceof PersistentStack) {
 				return ((PersistentStack<?>)o).size();
 			} else if (o instanceof PersistentSet) {

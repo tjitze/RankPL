@@ -66,9 +66,9 @@ public class NotEquals extends AbstractExpression {
 		if (v2 == null) {
 			throw new RPLUndefinedException(e2);
 		}
-		if (!Objects.equals(v1.getClass(), v2.getClass())) {
-			throw new RPLTypeMismatchException(v1, v2, this);
-		}
+//		if (!Objects.equals(v1.getClass(), v2.getClass())) {
+//			throw new RPLTypeMismatchException(v1, v2, this);
+//		}
 		return !Objects.equals(v1, v2);
 	}
 	

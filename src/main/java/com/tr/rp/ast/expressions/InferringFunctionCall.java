@@ -16,7 +16,8 @@ import com.tr.rp.exec.State;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.FreeVarNameProvider;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.arrays.ArrayFactory;
+import com.tr.rp.varstore.arrays.PersistentObjectArray;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -97,7 +98,7 @@ public class InferringFunctionCall extends FunctionCall {
 				} catch (RPLException ex) {
 					if (ex != stop) throw ex;
 				}
-				out.push(new State(in.create(assignToVar, new PersistentArray(values)), 0));
+				out.push(new State(in.create(assignToVar, ArrayFactory.newArray(values)), 0));
 				out.close();
 			}
 			

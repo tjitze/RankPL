@@ -8,7 +8,8 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.arrays.ArrayFactory;
+import com.tr.rp.varstore.arrays.PersistentObjectArray;
 
 /**
  * Array initialization expression. 
@@ -90,16 +91,11 @@ public class ArrayInitExpression extends AbstractExpression {
 			throw new RPLTypeError("Integer", dimensionValue, dimension);
 		}
 		int dimension = (int)dimensionValue;
-		Object[] values = new Object[dimension];
+		Object[] evaluatedValues = new Object[dimension];
 		for (int i = 0; i < dimension; i++) {
-			if (initValue != null) {
-				Object value = initValue.getValue(e);
-				values[i] = value;
-			} else {
-				values[i] = null;
-			}
+			evaluatedValues[i] = initValue != null? initValue.getValue(e): null;
 		}
-		return new PersistentArray(values);
+		return ArrayFactory.newArray(evaluatedValues);
 	}
 
 	@Override
@@ -114,15 +110,11 @@ public class ArrayInitExpression extends AbstractExpression {
 			throw new RPLTypeError("Integer", dimensionValue, dimension);
 		}
 		int dimension = (int)dimensionValue;
-		Object[] values = new Object[dimension];
+		Object[] evaluatedValues = new Object[dimension];
 		for (int i = 0; i < dimension; i++) {
-			if (initValue != null) {
-				values[i] = initValue.getDefiniteValue();
-			} else {
-				values[i] = null;
-			}
+			evaluatedValues[i] = initValue != null? initValue.getDefiniteValue(): null;
 		}
-		return new PersistentArray(values);
+		return ArrayFactory.newArray(evaluatedValues);
 	}
 	
 	public String toString() {

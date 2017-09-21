@@ -1,5 +1,6 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -8,8 +9,9 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.arrays.Array;
+import com.tr.rp.varstore.arrays.ArrayFactory;
 import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.arrays.PersistentObjectArray;
 import com.tr.rp.varstore.datastructures.PersistentList;
 import com.tr.rp.varstore.datastructures.PersistentMap;
 import com.tr.rp.varstore.datastructures.PersistentSet;
@@ -62,9 +64,9 @@ public class ToArray extends AbstractExpression {
 		Object o = e.getValue(v);
 		if (o != null) {
 			if (o instanceof PersistentSet) {
-				return new PersistentArray(e.getValue(v, Type.SET).asCollection());
+				return ArrayFactory.newArray(new ArrayList<Object>(e.getValue(v, Type.SET).asCollection()));
 			} else if (o instanceof PersistentList) {
-				return new PersistentArray(e.getValue(v, Type.LIST).asCollection());
+				return ArrayFactory.newArray(new ArrayList<Object>(e.getValue(v, Type.LIST).asCollection()));
 			} else {
 				throw new RPLTypeError("set or list", o, e);
 			}
@@ -84,8 +86,8 @@ public class ToArray extends AbstractExpression {
 		if (o != null) {
 			if (o instanceof String) {
 				return ((String)o).length();
-			} else if (o instanceof Array) {
-				return ((Array)o).size();
+			} else if (o instanceof PersistentArray) {
+				return ((PersistentArray)o).size();
 			} else if (o instanceof PersistentStack) {
 				return ((PersistentStack<?>)o).size();
 			} else if (o instanceof PersistentSet) {

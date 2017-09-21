@@ -8,7 +8,8 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLEmptyStackException;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
-import com.tr.rp.varstore.arrays.PersistentArray;
+import com.tr.rp.varstore.arrays.ArrayFactory;
+import com.tr.rp.varstore.arrays.PersistentObjectArray;
 import com.tr.rp.varstore.datastructures.PersistentStack;
 import com.tr.rp.varstore.datastructures.PersistentStack.PopResult;
 import com.tr.rp.varstore.types.Type;
@@ -56,7 +57,7 @@ public class StackPop extends AbstractExpression {
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
 		PopResult<?> popResult = this.e.getValue(e, Type.STACK).pop();
-		return new PersistentArray(popResult.mutatedStack, popResult.poppedElement);
+		return ArrayFactory.newArrayOf(popResult.mutatedStack, popResult.poppedElement);
 	}
 
 	@Override

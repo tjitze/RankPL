@@ -2,7 +2,7 @@ package com.tr.rp.exec;
 
 import java.util.Objects;
 
-public class RankedItem<T> {
+public final class RankedItem<T> {
 
 	public final int rank;
 	public final T item;

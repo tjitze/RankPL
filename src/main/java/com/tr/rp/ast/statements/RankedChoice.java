@@ -78,7 +78,7 @@ public class RankedChoice extends AbstractStatement {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(s1, s2, rank);
+		return Objects.hash(getClass(), s1, s2, rank);
 	}	
 
 

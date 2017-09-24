@@ -198,7 +198,7 @@ public class While extends AbstractStatement {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(preStatement, whileCondition, body);
+		return Objects.hash(getClass(), preStatement, whileCondition, body);
 	}
 		
 	private static abstract class Callable {

@@ -97,7 +97,7 @@ public class RangeChoice extends AbstractStatement {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(beginExp, endExp, target);
+		return Objects.hash(getClass(), beginExp, endExp, target);
 	}	
 
 	@Override

@@ -225,7 +225,7 @@ public class Program extends AbstractStatement {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(body, functionScope);
+		return Objects.hash(getClass(), body, functionScope);
 	}	
 
 

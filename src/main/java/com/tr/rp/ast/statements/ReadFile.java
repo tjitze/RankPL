@@ -130,6 +130,6 @@ public class ReadFile extends AbstractStatement {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(target, path, mode);
+		return Objects.hash(getClass(), target, path, mode);
 	}
 }

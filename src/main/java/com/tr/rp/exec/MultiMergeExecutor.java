@@ -1,62 +1,66 @@
 package com.tr.rp.exec;
 
 import java.util.PriorityQueue;
-import java.util.concurrent.atomic.AtomicReference;
-
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 
 public abstract class MultiMergeExecutor implements Executor {
 
 	private final Executor out;
-	
-	private int inRank = 0;
-	
-	private PriorityQueue<State> queue = new PriorityQueue<State>((x, y) -> x.getRank() - y.getRank());
-	private boolean closed = false;
-	
+	private final PriorityQueue<State> outQueue = new PriorityQueue<State>((x, y) -> x.getRank() - y.getRank());
+
+	private State ps;
+
 	public MultiMergeExecutor(Executor out) {
 		this.out = out;
 	}
 
 	@Override
 	public void close() throws RPLException {
-		closed = true;
-		inRank = Rank.MAX;
-		flush();
+		if (ps != null) {
+			execute(ps, Rank.MAX);
+		} else {
+			flush(Rank.MAX);
+		}
 		out.close();
 	}
 
 	@Override
 	public void push(State s) throws RPLException {
-		if (closed) {
-			throw new IllegalStateException();
+		if (ps != null) {
+			execute(ps, s.getRank());
 		}
-		inRank = s.getRank();
-		AtomicReference<Boolean> closed = new AtomicReference<Boolean>(false);
-		transform(s.getVarStore(), new Executor() {
-
-			@Override
-			public void close() throws RPLException {
-				closed.set(true);
-				flush();
-			}
-
-			@Override
-			public void push(State t) throws RPLException {
-				queue.add(t.shiftUp(s.getRank()));
-				flush();
-			}
-			
-		});
-		if (!closed.get()) {
-			throw new IllegalStateException();
-		}
+		ps = s;
 	}
 
-	private void flush() throws RPLException {
-		while (!queue.isEmpty() && queue.peek().getRank() <= inRank) {
-			out.push(queue.remove());
+	private void execute(State ps, int safeOutRank) throws RPLException {
+		int thisRank = ps.getRank();
+		Executor exec = new Executor() {
+			@Override
+			public void close() throws RPLException {
+				flush(safeOutRank);
+			}
+
+			@Override
+			public void push(State ss) throws RPLException {
+				State ks = ss.shiftUp(thisRank);
+				outQueue.add(ks);
+				flush(Math.min(ks.getRank(), safeOutRank));
+			}
+		};
+		transform(ps.getVarStore(), exec);
+	}
+	
+	int outRank = 0;
+	
+	private void flush(int until) throws RPLException {
+		while (!outQueue.isEmpty() && outQueue.peek().getRank() <= until) {
+			State s = outQueue.remove();
+			if (s.getRank() < outRank) {
+				throw new IllegalStateException();
+			}
+			outRank = s.getRank();
+			out.push(s);
 		}
 	}
 	

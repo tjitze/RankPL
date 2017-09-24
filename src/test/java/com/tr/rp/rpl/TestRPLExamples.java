@@ -64,7 +64,7 @@ public class TestRPLExamples extends TestCase {
 				fail("Parse error");
 			}
 			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, 0, false, false);
-			assertEquals(resultMap, expectedResultMap);
+			assertEquals(expectedResultMap, resultMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Failure: " + e.toString());
@@ -94,7 +94,7 @@ public class TestRPLExamples extends TestCase {
 				fail("Parse error");
 			}
 			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, 0, false, false);
-			assertEquals(resultMap, expectedResultMap);
+			assertEquals(expectedResultMap, resultMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Failure: " + e.toString());
@@ -131,7 +131,7 @@ public class TestRPLExamples extends TestCase {
 				fail("Parse error");
 			}
 			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, 0, false, false);
-			assertEquals(resultMap, expectedResultMap);
+			assertEquals(expectedResultMap, resultMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Failure: " + e.toString());
@@ -167,7 +167,7 @@ public class TestRPLExamples extends TestCase {
 				Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, Rank.MAX, RankPL.DEFAULT_MIN_CUTOFF, false, true);
 				assertTrue(resultMap.size() == 1);
 				assertTrue(resultMap.get(0).size() == 1);
-				assertEquals(resultMap.get(0).iterator().next(), entry.getValue());
+				assertEquals(entry.getValue(), resultMap.get(0).iterator().next());
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail("Failure: " + e.toString());
@@ -224,7 +224,7 @@ public class TestRPLExamples extends TestCase {
 				fail("Parse error");
 			}
 			Map<Integer, Set<String>> resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
-			assertEquals(resultMap, expectedResultMapK1);
+			assertEquals(expectedResultMapK1, resultMap);
 			// K2
 			source = RankPL.getFileContent(file);
 			source = source.replaceFirst("k := 1", "k := 2");
@@ -233,7 +233,7 @@ public class TestRPLExamples extends TestCase {
 				fail("Parse error");
 			}
 			resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
-			assertEquals(resultMap, expectedResultMapK2);
+			assertEquals(expectedResultMapK2, resultMap);
 			// K3
 			source = RankPL.getFileContent(file);
 			source = source.replaceFirst("k := 1", "k := 3");
@@ -242,7 +242,7 @@ public class TestRPLExamples extends TestCase {
 				fail("Parse error");
 			}
 			resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
-			assertEquals(resultMap, expectedResultMapK3);
+			assertEquals(expectedResultMapK3, resultMap);
 			// K4
 			source = RankPL.getFileContent(file);
 			source = source.replaceFirst("k := 1", "k := 4");
@@ -251,7 +251,7 @@ public class TestRPLExamples extends TestCase {
 				fail("Parse error");
 			}
 			resultMap = RankPL.execute(program, Rank.MAX, 1, 0, false, false);
-			assertEquals(resultMap, expectedResultMapK4);
+			assertEquals(expectedResultMapK4, resultMap);
 
 		} catch (Exception e) {
 			e.printStackTrace();

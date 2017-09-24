@@ -1,6 +1,10 @@
 package com.tr.rp.ast.expressions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -8,10 +12,12 @@ import com.tr.rp.ast.Function;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMissingReturnValueException;
+import com.tr.rp.exceptions.RPLStopExecutionException;
 import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
 import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
 import com.tr.rp.exec.MultiMergeExecutor;
+import com.tr.rp.exec.RankedItem;
 import com.tr.rp.exec.State;
 import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.VarStore;
@@ -28,7 +34,8 @@ public class FunctionCall extends AbstractFunctionCall {
 
 	private final FunctionScope functionScope;
 	private final String functionName;
-
+	private String[] parameters;
+	
 	public FunctionCall(String functionName, FunctionScope functionScope, AbstractExpression ... arguments) {
 		super(arguments);
 		this.functionScope = functionScope;
@@ -97,29 +104,57 @@ public class FunctionCall extends AbstractFunctionCall {
 	}
 
 	protected void getExecutorForFunctionCall(String assignToVar, VarStore in, ExecutionContext c, Executor out) throws RPLException {
-		String[] parameters = getFunction().getParameters();
-		if (parameters.length != getArguments().length) {
-			throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, getArguments().length);
+		if (parameters == null) {
+			parameters = getFunction().getParameters();
+			if (parameters.length != getArguments().length) {
+				throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, getArguments().length);
+			}
 		}
-		Executor post = new Executor() {
-			@Override
-			public void close() throws RPLException {
-				out.close();
+		Function function = getFunction();
+		List<Object> values = getArgumentValues(in);
+		if (function.containsCachedValue(values)) {
+			for (RankedItem<Object> ci: getFunction().getCachedValue(values)) {
+				out.push(in.create(assignToVar, ci.item), ci.rank);
 			}
-
-			@Override
-			public void push(State s) throws RPLException {
-				VarStore v = s.getVarStore();
-				if (!v.containsVar("$return")) {
-					throw new RPLMissingReturnValueException(getFunction());
+			out.close();
+		} else {
+			List<RankedItem<Object>> returnValues = new LinkedList<RankedItem<Object>>();
+			RPLStopExecutionException stop = new RPLStopExecutionException();
+			Executor post = new Executor() {
+				@Override
+				public void close() throws RPLException {
+					out.close();
+					function.addCached(values, returnValues);
 				}
-				out.push(v.getParentOfClosure(assignToVar, new Variable("$return")), s.getRank());
+
+				@Override
+				public void push(State s) throws RPLException {
+					VarStore v = s.getVarStore();
+					if (!v.containsVar("$return")) {
+						throw new RPLMissingReturnValueException(function);
+					}
+					returnValues.add(new RankedItem<Object>(v.getValue("$return"), s.getRank()));
+					out.push(v.getParentOfClosure(assignToVar, new Variable("$return")), s.getRank());
+				}
+				
+			};
+			try {
+				Executor pre = function.getBody().getExecutor(post, c);
+				pre.push(in.createClosureWith(parameters, values), 0);
+				pre.close();
+			} catch (RPLException e) {
+				if (e != stop) throw e;
 			}
+		}
 			
-		};
-		Executor pre = getFunction().getBody().getExecutor(post, c);
-		pre.push(in.createClosure(parameters, getArguments()), 0);
-		pre.close();
+	}
+		
+	private final List<Object> getArgumentValues(VarStore vs) throws RPLException {
+		List<Object> values = new ArrayList<Object>();
+		for (int i = 0; i < getArguments().length; i++) {
+			values.add(getArguments()[i].getValue(vs));
+		}
+		return values;
 	}
 	
 	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {

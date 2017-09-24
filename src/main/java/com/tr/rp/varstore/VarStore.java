@@ -57,7 +57,7 @@ public interface VarStore {
 
 	public VarStore getParent();
 	
-	public VarStore createClosure(String[] parameters, AbstractExpression[] arguments) throws RPLException;
+	public VarStore createClosureWith(String[] vars, List<Object> values) throws RPLException;
 
 	public VarStore getParentOfClosure(String target, AbstractExpression returnValueExp) throws RPLException;
 

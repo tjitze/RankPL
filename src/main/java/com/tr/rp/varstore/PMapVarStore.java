@@ -229,16 +229,14 @@ public class PMapVarStore implements VarStore {
 		return parent;
 	}
 	
-	public VarStore createClosure(String[] parameters, AbstractExpression[] arguments) throws RPLException {
-		if (parameters.length != arguments.length) {
-			throw new InternalError("Wrong number of arguments");
+	public VarStore createClosureWith(String[] vars, List<Object> values) throws RPLException {
+		if (vars.length != values.size()) {
+			throw new IllegalArgumentException();
 		}
 		// Create new var store with parameters
 		PMapVarStore v = new PMapVarStore(this);
-		for (int x = 0; x < parameters.length; x++) {
-			String var = parameters[x];
-			AbstractExpression expr = arguments[x];
-			v = new PMapVarStore(v, var, expr.getValue(this), i, j, k);
+		for (int x = 0; x < vars.length; x++) {
+			v = new PMapVarStore(v, vars[x], values.get(x), i, j, k);
 		}
 		return v;
 	}

@@ -1,8 +1,13 @@
 package com.tr.rp.ast;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.tr.rp.exec.RankedItem;
 
 public class Function implements LanguageElement {
 
@@ -10,7 +15,8 @@ public class Function implements LanguageElement {
 	private AbstractStatement body;
 	private final String[] parameters;
 	private int lineNumber = -1;
-	
+	private Map<List, List<RankedItem<Object>>> cache = new HashMap<List, List<RankedItem<Object>>>();
+
 	public Function(String name, AbstractStatement body, String ... parameters) {
 		this.name = name;
 		this.body = body;
@@ -70,4 +76,17 @@ public class Function implements LanguageElement {
 	public int getLineNumber() {
 		return lineNumber;
 	}
+	
+	public final boolean containsCachedValue(List<Object> args) {
+		return cache.containsKey(args);
+	}
+	
+	public final List<RankedItem<Object>> getCachedValue(List<Object> args) {
+		return cache.get(args);
+	}
+	
+	public final void addCached(List<Object> args, List<RankedItem<Object>> returnValue) {
+		cache.put(args, returnValue);
+	}
+
 }

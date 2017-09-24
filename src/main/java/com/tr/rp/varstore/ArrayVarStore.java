@@ -14,6 +14,8 @@ import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.exceptions.RPLUndefinedException;
 import com.tr.rp.varstore.types.Type;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 public class ArrayVarStore implements VarStore {
 
 	private final HashMap<String, Integer> index;
@@ -130,9 +132,8 @@ public class ArrayVarStore implements VarStore {
 	}
 
 	@Override
-	public VarStore createClosure(String[] parameters, AbstractExpression[] arguments) throws RPLException {
-		// TODO Auto-generated method stub
-		return null;
+	public VarStore createClosureWith(String[] vars, List<Object> values) throws RPLException {
+		throw new NotImplementedException();
 	}
 
 	@Override

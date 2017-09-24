@@ -153,7 +153,7 @@ public class BranchingExecutor implements Executor {
 				int in1rank = in1Queue.getFirst().getRank();
 				
 				// still waiting for shift2, and rank higher than input? then wait
-				if (shift2 == Rank.MAX && in1rank > inRank) {
+				if (!in2Closed && shift2 == Rank.MAX && in1rank > inRank) {
 					return null;
 				}
 				
@@ -177,7 +177,7 @@ public class BranchingExecutor implements Executor {
 				int in2rank = in2Queue.getFirst().getRank();
 				
 				// still waiting for shift1, and rank higher than input? then wait
-				if (shift1 == Rank.MAX && in2rank > inRank) {
+				if (!in1Closed && shift1 == Rank.MAX && in2rank > inRank) {
 					return null;
 				}
 				

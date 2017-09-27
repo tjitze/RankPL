@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.Function;
+import com.tr.rp.ast.FunctionScope;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMissingReturnValueException;
@@ -19,7 +20,6 @@ import com.tr.rp.exec.Executor;
 import com.tr.rp.exec.MultiMergeExecutor;
 import com.tr.rp.exec.RankedItem;
 import com.tr.rp.exec.State;
-import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.VarStore;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

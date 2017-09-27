@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.Function;
+import com.tr.rp.ast.FunctionScope;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLFunctionUndefinedException;
@@ -15,7 +16,6 @@ import com.tr.rp.exec.ExecutionContext;
 import com.tr.rp.exec.Executor;
 import com.tr.rp.exec.RankedItem;
 import com.tr.rp.exec.State;
-import com.tr.rp.ranks.FunctionScope;
 import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStoreFactory;
 

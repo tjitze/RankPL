@@ -1,9 +1,8 @@
-package com.tr.rp.ranks;
+package com.tr.rp.ast;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tr.rp.ast.Function;
 import com.tr.rp.exceptions.RPLFunctionUndefinedException;
 
 /**

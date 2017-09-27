@@ -2,14 +2,15 @@ package com.tr.rp.ast;
 
 import java.util.Set;
 
-import com.tr.rp.exec.ExecutorProvider;
+import com.tr.rp.exec.ExecutionContext;
+import com.tr.rp.exec.Executor;
 
 /**
  * Super class for RPL statements. This interface extends
  * the IteratorProvider interface: every statement must
  * provide an iterator that implements its semantics.
  */
-public abstract class AbstractStatement implements ExecutorProvider, LanguageElement {
+public abstract class AbstractStatement implements LanguageElement {
 	
 	private int lineNumber = -1;
 	
@@ -42,6 +43,11 @@ public abstract class AbstractStatement implements ExecutorProvider, LanguageEle
 	 * Collect variables that are assigned by this statement
 	 */
 	public abstract void getAssignedVariables(Set<String> variables);
+
+	/**
+	 * Return executor for this statement
+	 */
+	public abstract Executor getExecutor(Executor out, ExecutionContext c);
 
 	public abstract boolean equals(Object o);
 	

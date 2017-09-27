@@ -67,9 +67,13 @@ public class PersistentIntArray implements PersistentArray {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
+		return getElement(index);
+	}
+	
+	private final int getElement(int index) {
 		int[] segment = segments[getSegmentIndex(index)];
 		if (segment == null) {
-			return null;
+			return 0;
 		}
 		return segment[getElementIndex(index)];
 	}
@@ -126,7 +130,7 @@ public class PersistentIntArray implements PersistentArray {
 				return false;
 			}
 			for (int i = 0; i < size; i++) {
-				if (get(i) != other.get(i)) {
+				if (getElement(i) != other.getElement(i)) {
 					return false;
 				}
 			}

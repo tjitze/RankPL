@@ -39,11 +39,16 @@ public final class PersistentSmallBoolArray implements PersistentArray {
 
 	@Override
 	public Object get(int index) {
+		return getElement(index);
+	}
+
+	public final boolean getElement(int index) {
 		if (index >= size()) {
 			throw new IndexOutOfBoundsException();
 		}
 		return ((value >> (index + V_SHIFT)) & 1) != 0;
 	}
+	
 
 	@Override
 	public PersistentArray getMutatedCopy(int index, Object flag) {

@@ -74,13 +74,15 @@ public final class PersistentBoolArray implements PersistentArray {
 		if (index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
+		return getElement(index);
+	}
+	
+	public final boolean getElement(int index) {
 		int[] segment = segments[getSegmentIndex(index)];
 		if (segment == null) {
 			return false;
 		}
-		int word = segment[getElementIndex(index)];
-		int bit = getBitIndex(index);
-		return (word & (1 << bit)) != 0;
+		return (segment[getElementIndex(index)] & (1 << getBitIndex(index))) != 0;
 	}
 	
 	private synchronized void set(int index, Object value) {
@@ -143,7 +145,7 @@ public final class PersistentBoolArray implements PersistentArray {
 				return false;
 			}
 			for (int i = 0; i < size; i++) {
-				if (!Objects.equals(get(i), other.get(i))) {
+				if (getElement(i) != other.getElement(i)) {
 					return false;
 				}
 			}

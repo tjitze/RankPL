@@ -4,10 +4,10 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exec.ExecutionContext;
-import com.tr.rp.exec.Executor;
-import com.tr.rp.exec.State;
+import com.tr.rp.executors.Executor;
 
 /**
  * Push item using push method. Use closeState to indicate closure

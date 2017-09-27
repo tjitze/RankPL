@@ -8,12 +8,12 @@ import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
+import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exec.Deduplicator;
-import com.tr.rp.exec.ExecutionContext;
-import com.tr.rp.exec.Executor;
-import com.tr.rp.exec.Merger;
-import com.tr.rp.exec.Splitter;
+import com.tr.rp.executors.Deduplicator;
+import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.Merger;
+import com.tr.rp.executors.Splitter;
 import com.tr.rp.varstore.types.Type;
 
 /**

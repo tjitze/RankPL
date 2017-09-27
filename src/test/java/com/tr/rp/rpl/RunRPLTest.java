@@ -11,9 +11,9 @@ import com.tr.rp.RankPL;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.statements.Program;
+import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.RankedItem;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exec.ExecutionContext;
-import com.tr.rp.exec.RankedItem;
 
 import junit.framework.TestCase;
 

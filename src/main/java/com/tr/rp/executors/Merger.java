@@ -1,7 +1,9 @@
-package com.tr.rp.exec;
+package com.tr.rp.executors;
 
 import java.util.LinkedList;
 
+import com.tr.rp.base.Rank;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
 public class Merger {

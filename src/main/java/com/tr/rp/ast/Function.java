@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.tr.rp.exec.RankedItem;
+import com.tr.rp.base.RankedItem;
 
 public class Function implements LanguageElement {
 

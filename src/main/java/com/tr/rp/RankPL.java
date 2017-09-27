@@ -35,12 +35,12 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.tr.rp.ast.statements.Program;
+import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.Rank;
+import com.tr.rp.base.RankedItem;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLInterruptedException;
 import com.tr.rp.exceptions.RPLMiscException;
-import com.tr.rp.exec.ExecutionContext;
-import com.tr.rp.exec.Rank;
-import com.tr.rp.exec.RankedItem;
 import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;

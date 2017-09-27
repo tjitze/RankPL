@@ -1,4 +1,4 @@
-package com.tr.rp.exec;
+package com.tr.rp.executors;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.base.Rank;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
 public class RankTransformer<T extends AbstractExpression> implements Executor, Supplier<T> {

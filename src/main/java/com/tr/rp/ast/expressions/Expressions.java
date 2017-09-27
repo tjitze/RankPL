@@ -3,7 +3,7 @@ package com.tr.rp.ast.expressions;
 import java.util.function.BiFunction;
 
 import com.tr.rp.ast.AbstractExpression;
-import com.tr.rp.exec.Rank;
+import com.tr.rp.base.Rank;
 
 public class Expressions {
 

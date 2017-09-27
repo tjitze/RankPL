@@ -1,5 +1,6 @@
-package com.tr.rp.exec;
+package com.tr.rp.executors;
 
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
 public class Splitter implements Executor {

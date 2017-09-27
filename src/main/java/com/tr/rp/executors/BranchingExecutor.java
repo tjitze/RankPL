@@ -1,4 +1,4 @@
-package com.tr.rp.exec;
+package com.tr.rp.executors;
 
 import java.util.LinkedList;
 import java.util.function.Supplier;
@@ -6,6 +6,9 @@ import java.util.function.Supplier;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.expressions.Not;
+import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.Rank;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.types.Type;
 

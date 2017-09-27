@@ -2,8 +2,8 @@ package com.tr.rp.ast;
 
 import java.util.Set;
 
-import com.tr.rp.exec.ExecutionContext;
-import com.tr.rp.exec.Executor;
+import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.executors.Executor;
 
 /**
  * Super class for RPL statements. This interface extends

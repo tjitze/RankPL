@@ -8,7 +8,10 @@ import static com.tr.rp.ast.expressions.Expressions.var;
 import java.util.LinkedList;
 
 import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.LShifter;
 import com.tr.rp.statement.RPLBaseTest;
 import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;

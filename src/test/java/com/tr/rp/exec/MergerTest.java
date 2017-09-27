@@ -2,7 +2,10 @@ package com.tr.rp.exec;
 
 import java.util.LinkedList;
 
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.Merger;
 import com.tr.rp.statement.RPLBaseTest;
 import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;

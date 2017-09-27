@@ -10,12 +10,12 @@ import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.Literal;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
+import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
-import com.tr.rp.exec.ExecutionContext;
-import com.tr.rp.exec.Executor;
-import com.tr.rp.exec.RankTransformer;
-import com.tr.rp.exec.State;
+import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.RankTransformer;
 import com.tr.rp.varstore.types.Type;
 
 /**

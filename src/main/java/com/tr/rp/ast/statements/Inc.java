@@ -53,7 +53,7 @@ public class Inc extends AbstractStatement {
 	}	
 	
 	public String toString() {
-		return target.toString() + "--";
+		return target.toString() + "++";
 	}
 	
 	public boolean equals(Object o) {

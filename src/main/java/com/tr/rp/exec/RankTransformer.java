@@ -13,7 +13,7 @@ public class RankTransformer<T extends AbstractExpression> implements Executor, 
 	private Executor out;
 	private final T exp;
 	private final LinkedList<State> queue = new LinkedList<State>();
-	private T transformedExp = null;;
+	private T transformedExp = null;
 	private AbstractStatement st;
 	private boolean closed = false;
 	

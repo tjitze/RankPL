@@ -9,7 +9,6 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.arrays.ArrayFactory;
-import com.tr.rp.varstore.arrays.PersistentObjectArray;
 
 /**
  * Array initialization expression. 

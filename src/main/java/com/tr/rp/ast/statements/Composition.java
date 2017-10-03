@@ -12,7 +12,9 @@ import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
 import com.tr.rp.ast.expressions.IsSet;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.Rank;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLInterruptedException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.InterruptableExecutor;
@@ -74,26 +76,29 @@ public class Composition extends AbstractStatement {
 		}
 
 		// Second statement
+		e = second.getExecutor(e, c);
+		
 		if (firstContainsReturn) {
-			IfElse ifElse = new IfElse(new IsSet(new AssignmentTargetTerminal("$return")), new Skip(), second,
-					new IfElseErrorHandler() {
-						@Override
-						public void ifElseConditionError(RPLException e) throws RPLException {
-							throw new RPLMiscException("Internal error", Composition.this);
+			final Executor ex = e;
+			e = new Executor() {
+
+				private int shift = -1;
+				
+				@Override
+				public void close() throws RPLException {
+					ex.close();
+				}
+
+				@Override
+				public void push(State s) throws RPLException {
+					if (!s.getVarStore().containsVar("$return")) {
+						if (shift == -1) {
+							shift = s.getRank();
 						}
-						@Override
-						public void ifElseThenError(RPLException e) throws RPLException {
-							throw new RPLMiscException("Internal error", Composition.this);
-						}
-						@Override
-						public void ifElseElseError(RPLException e) throws RPLException {
-							e.setStatement(second);
-							throw e;
-						}
-			});
-			e = ifElse.getExecutor(e, c);
-		} else {
-			e = second.getExecutor(e, c);
+						ex.push(s.shiftDown(shift));
+					}
+				}
+			};
 		}
 
 		// Handle interrupt

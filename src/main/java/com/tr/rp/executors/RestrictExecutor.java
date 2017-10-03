@@ -5,11 +5,11 @@ import java.util.function.Consumer;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
-public class RestrictExecutor implements Executor {
+public final class RestrictExecutor implements Executor {
 
-	public final int maxRank;
+	private final int maxRank;
 	private final Executor out;
-	private Consumer<Integer> cutOffListener;
+	private final Consumer<Integer> cutOffListener;
 	private boolean closed = false;
 	
 	public RestrictExecutor(int maxRank, Executor out, Consumer<Integer> cutOffListener) {

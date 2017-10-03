@@ -10,7 +10,7 @@ import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
-public class RankTransformer<T extends AbstractExpression> implements Executor, Supplier<T> {
+public final class RankTransformer<T extends AbstractExpression> implements Executor, Supplier<T> {
 
 	private Executor out;
 	private final T exp;

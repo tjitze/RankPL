@@ -6,7 +6,7 @@ import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 
-public class Deduplicator implements Executor {
+public final class Deduplicator implements Executor {
 
 	private final Executor out;
 	private final HashSet<VarStore> seen = new HashSet<VarStore>();

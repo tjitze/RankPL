@@ -3,7 +3,7 @@ package com.tr.rp.executors;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
-public class Splitter implements Executor {
+public final class Splitter implements Executor {
 
 	private final Executor out1;
 	private final Executor out2;

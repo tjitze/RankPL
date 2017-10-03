@@ -10,15 +10,15 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
-public class LShifter implements Executor {
+public final class LShifter implements Executor {
 
 	private final Supplier<AbstractExpression> condition;
 
 	private final Executor out;
 	private boolean closed = false;
 	
-	private LinkedList<State> in1Queue = new LinkedList<State>();
-	private LinkedList<State> in2Queue = new LinkedList<State>();
+	private final LinkedList<State> in1Queue = new LinkedList<State>();
+	private final LinkedList<State> in2Queue = new LinkedList<State>();
 	
 	private int shift;
 	

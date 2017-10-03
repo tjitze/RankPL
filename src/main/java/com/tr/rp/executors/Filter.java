@@ -14,7 +14,7 @@ import com.tr.rp.varstore.types.Type;
  * only states satisfying a given condition, shifting down ranks uniformly so that
  * the lowest ranked state that is passed on is ranked zero.
  */
-public class Filter implements Executor {
+public final class Filter implements Executor {
 
 	private final Executor out;
 	private final Supplier<AbstractExpression> expSupplier;

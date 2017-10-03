@@ -6,7 +6,7 @@ import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
-public class Merger {
+public final class Merger {
 
 	private final Executor out;
 	private final Executor in1;
@@ -14,8 +14,8 @@ public class Merger {
 	private boolean in1Closed = false;
 	private boolean in2Closed = false;
 	
-	private LinkedList<State> in1Queue = new LinkedList<State>();
-	private LinkedList<State> in2Queue = new LinkedList<State>();
+	private final LinkedList<State> in1Queue = new LinkedList<State>();
+	private final LinkedList<State> in2Queue = new LinkedList<State>();
 	
 	private int minPotentialNextRank1 = 0;
 	private int minPotentialNextRank2 = 0;

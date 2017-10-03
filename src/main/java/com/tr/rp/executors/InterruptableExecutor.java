@@ -6,7 +6,7 @@ import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLInterruptedException;
 
-public class InterruptableExecutor implements Executor {
+public final class InterruptableExecutor implements Executor {
 
 	private final Executor out;
 	private final BooleanSupplier interruptCondition;

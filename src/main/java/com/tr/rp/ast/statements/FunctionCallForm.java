@@ -11,6 +11,7 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AbstractFunctionCall;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.Guard;
 import com.tr.rp.varstore.FreeVarNameProvider;
 
 public class FunctionCallForm extends AbstractStatement {
@@ -40,6 +41,7 @@ public class FunctionCallForm extends AbstractStatement {
 
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
+		out = Guard.checkIfEnabled(out);
 		out = statement.getExecutor(out, c);
 		for (int i = assignments.size() - 1; i >= 0; i--) {
 			Assignment assignment = assignments.get(i);

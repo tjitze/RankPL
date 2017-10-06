@@ -14,11 +14,16 @@ import com.tr.rp.ast.statements.Program;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.RankedItem;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.executors.Guard;
 
 import junit.framework.TestCase;
 
 public class RunRPLTest extends TestCase {
 
+	public RunRPLTest() {
+		Guard.setEnabled(true);
+	}
+	
 	public void testRPLTests() throws RPLException {
         try {
         	List<String> rplFiles = new ArrayList<String>();

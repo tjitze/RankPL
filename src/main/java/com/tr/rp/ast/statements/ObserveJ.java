@@ -11,6 +11,7 @@ import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.EvaluationErrorHandler;
 import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.Guard;
 import com.tr.rp.executors.JShifter;
 import com.tr.rp.executors.RankTransformer;
 import com.tr.rp.varstore.types.Type;
@@ -44,7 +45,7 @@ public class ObserveJ extends AbstractStatement implements EvaluationErrorHandle
 		}
 
 		RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(condition);
-		JShifter exec = new JShifter(out, transformCondition::get, shift);
+		JShifter exec = new JShifter(Guard.checkIfEnabled(out), transformCondition::get, shift);
 		exec.setErrorHandler(this);
 		transformCondition.setOutput(exec, this);
 		return transformCondition;

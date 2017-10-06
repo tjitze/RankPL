@@ -15,7 +15,7 @@ public abstract class MultiMergeExecutor implements Executor {
 	private State ps;
 
 	public MultiMergeExecutor(Executor out) {
-		this.out = out;
+		this.out = Guard.checkIfEnabled(out);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.EvaluationErrorHandler;
 import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.Guard;
 import com.tr.rp.executors.LShifter;
 import com.tr.rp.executors.RankTransformer;
 import com.tr.rp.varstore.types.Type;
@@ -47,7 +48,7 @@ public class ObserveL extends AbstractStatement implements EvaluationErrorHandle
 		}
 
 		RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(b);
-		LShifter exec = new LShifter(out, transformCondition::get, shift);
+		LShifter exec = new LShifter(Guard.checkIfEnabled(out), transformCondition::get, shift);
 		exec.setErrorHandler(this);
 		transformCondition.setOutput(exec, this);
 		return transformCondition;

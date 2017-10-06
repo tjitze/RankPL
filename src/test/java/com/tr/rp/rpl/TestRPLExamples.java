@@ -8,15 +8,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.Ignore;
-
 import com.tr.rp.RankPL;
 import com.tr.rp.ast.statements.Program;
 import com.tr.rp.base.Rank;
+import com.tr.rp.executors.Guard;
 
 import junit.framework.TestCase;
 
 public class TestRPLExamples extends TestCase {
+
+	public TestRPLExamples() {
+		Guard.setEnabled(true);
+	}
 
 	public void testBoolCircuitExample() {
 		

@@ -32,7 +32,7 @@ public final class LShifter implements Executor {
 	private int outRank = 0;
 	
 	public LShifter(Executor out, Supplier<AbstractExpression> condition, int shift) {
-		this.out = out;
+		this.out = Guard.checkIfEnabled(out);
 		this.shift = shift;
 		if (shift < 0) {
 			throw new IllegalArgumentException();

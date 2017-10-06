@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.TokenStream;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.base.State;
+import com.tr.rp.executors.Guard;
 import com.tr.rp.parser.ConcreteParser;
 import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
@@ -19,6 +20,10 @@ import junit.framework.TestCase;
 
 public abstract class RPLBaseTest extends TestCase {
 	
+	public RPLBaseTest() {
+		Guard.setEnabled(true);
+	}
+
 	protected static Object evalProgram(String program) {
         CharStream charStream = new ANTLRInputStream(program);
         RankPLLexer lexer = new RankPLLexer(charStream);

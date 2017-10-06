@@ -24,10 +24,8 @@ public final class Merger {
 	
 	private int outputOffset = -1;
 	
-	private int outRank = 0;
-	
 	public Merger(Executor out) {
-		this(out, 0);
+		this(Guard.checkIfEnabled(out), 0);
 	}
 	
 	public Merger(Executor out, int shift) {
@@ -93,10 +91,6 @@ public final class Merger {
 		State s = getNextItem();
 		while (s != null) {
 			out.push(s);
-			if (s.getRank() < outRank) {
-				throw new IllegalStateException("Illegal rank order");
-			}
-			outRank = s.getRank();
 			s = getNextItem();
 		}
 		if (in1Closed && in2Closed) {

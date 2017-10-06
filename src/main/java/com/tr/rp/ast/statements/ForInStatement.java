@@ -3,10 +3,8 @@ package com.tr.rp.ast.statements;
 import static com.tr.rp.ast.statements.Statements.*;
 import static com.tr.rp.ast.expressions.Expressions.*;
 
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;

@@ -1,8 +1,12 @@
 package com.tr.rp.ast.statements;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
+import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -10,9 +14,13 @@ import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.executors.BranchingExecutor;
+import com.tr.rp.executors.Deduplicator;
 import com.tr.rp.executors.Executor;
+import com.tr.rp.executors.Guard;
 import com.tr.rp.executors.RankTransformer;
 import com.tr.rp.varstore.types.Type;
 
@@ -29,7 +37,9 @@ public class While extends AbstractStatement {
 	
 	/** Statement that is attached to exception thrown when evaluating whileCondition */
 	private AbstractStatement exceptionSource;
-		
+	
+	private static final int ITERATION_UNROLL_DEPTH = 25;
+	
 	public While(AbstractExpression whileCondition, AbstractStatement body) {
 		this.whileCondition = whileCondition;
 		this.body = body;
@@ -55,53 +65,57 @@ public class While extends AbstractStatement {
 	public AbstractStatement getBody() {
 		return body;
 	}
-	public Executor getIteration(Supplier<AbstractExpression> exp, Executor out, int shift, ExecutionContext c, int depth, int unrollDepth, LinkedList<Callable> queue) {
-		Executor iterate = new Executor() {
+	public Executor getIteration(Supplier<AbstractExpression> exp, Executor out, int shift, ExecutionContext c, int depth, LinkedList<Callable> def) {
+		Executor out2 = new Executor() {
 
-			private Executor next;
-			private int offset = -1;
+			private Executor next = null;
+			private int normalize = -1;
 			
 			@Override
 			public void close() throws RPLException {
-				if (next != null) {
-					if (depth % unrollDepth == 0) { 
-						queue.add(new Callable() {
-							@Override
-							public void call() throws RPLException {
+				if (depth >= ITERATION_UNROLL_DEPTH) {
+					def.add(new Callable() {
+						@Override
+						public void call() throws RPLException {
+							if (next == null) {
+								out.close();
+							} else {
 								next.close();
 							}
-						});
+						}
+					});
+				} else {
+					if (next == null) {
+						out.close();
 					} else {
 						next.close();
 					}
-				} else {
-					out.close();
 				}
 			}
 
 			@Override
 			public void push(State s) throws RPLException {
-				if (!getCheckedValue(exp.get(), s)) {
+				if (next == null && !getCheckedValue(exp.get(), s)) {
 					out.push(s.shiftUp(shift));
 				} else {
 					if (next == null) {
-						offset = s.getRank();
-						next = body.getExecutor(getIteration(exp, out, shift + offset, c, depth + 1, unrollDepth, queue), c);
+						normalize = s.getRank();
+						next = getIteration(exp, out, shift + normalize, c, depth + 1, def);
 					}
-					if (depth % unrollDepth == 0) {
-						queue.add(new Callable() {
+					if (depth >= ITERATION_UNROLL_DEPTH) {
+						def.add(new Callable() {
 							@Override
 							public void call() throws RPLException {
-								next.push(s.shiftDown(offset));							
+								next.push(s.shiftDown(normalize));
 							}
 						});
 					} else {
-						next.push(s.shiftDown(offset));
+						next.push(s.shiftDown(normalize));
 					}
 				}
 			}
 		};
-		return iterate;
+		return new BranchingExecutor(exp, body, new Skip(), out2, c);
 	}
 
 	private boolean getCheckedValue(AbstractExpression exp, State s) throws RPLException {
@@ -119,29 +133,22 @@ public class While extends AbstractStatement {
 
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		return WhileWorker.createExecutor(out, c, this);
-	}	
-	
-	public Executor getWhileExecutor(Executor out, ExecutionContext c, int unrollDepth) {
-		LinkedList<Callable> queue = new LinkedList<Callable>();
-		RankTransformer<AbstractExpression> transformWhileCond = RankTransformer.create(whileCondition);
-		Executor iteration = getIteration(transformWhileCond, out, 0, c, 0, unrollDepth, queue);
-		Executor trampoline = new Executor() {
+		LinkedList<Callable> def = new LinkedList<Callable>();
+		Executor e = getIteration(() -> whileCondition, new Deduplicator(Guard.checkIfEnabled(out)), 0, c, 0, def);
+		return new Executor() {
 			@Override
 			public void close() throws RPLException {
-				iteration.close();
-				while (!queue.isEmpty()) queue.remove().call();
+				while (!def.isEmpty()) def.removeFirst().call();
+				e.close();
 			}
 
 			@Override
 			public void push(State s) throws RPLException {
-				iteration.push(s);
-				while (!queue.isEmpty()) queue.remove().call();
+				while (!def.isEmpty()) def.removeFirst().call();
+				e.push(s);
 			}
 		};
-		transformWhileCond.setOutput(trampoline, exceptionSource);
-		return transformWhileCond;
-	}
+	}	
 		
 	public boolean equals(Object o) {
 		return o instanceof While &&
@@ -204,4 +211,5 @@ public class While extends AbstractStatement {
 	private static abstract class Callable {
 		public abstract void call() throws RPLException;
 	}
+	
 }

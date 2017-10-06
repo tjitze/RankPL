@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
-import com.tr.rp.ast.expressions.IsSet;
+import com.tr.rp.ast.expressions.IsDefined;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;

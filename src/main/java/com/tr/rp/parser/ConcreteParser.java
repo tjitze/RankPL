@@ -31,7 +31,8 @@ import com.tr.rp.ast.expressions.FunctionCall;
 import com.tr.rp.ast.expressions.IndexElementExpression;
 import com.tr.rp.ast.expressions.InferringFunctionCall;
 import com.tr.rp.ast.expressions.IntToChar;
-import com.tr.rp.ast.expressions.IsSet;
+import com.tr.rp.ast.expressions.IsOfType;
+import com.tr.rp.ast.expressions.IsDefined;
 import com.tr.rp.ast.expressions.ListAppend;
 import com.tr.rp.ast.expressions.ListReplace;
 import com.tr.rp.ast.expressions.ListValueAt;
@@ -134,6 +135,7 @@ import com.tr.rp.varstore.datastructures.PersistentList;
 import com.tr.rp.varstore.datastructures.PersistentMap;
 import com.tr.rp.varstore.datastructures.PersistentSet;
 import com.tr.rp.varstore.datastructures.PersistentStack;
+import com.tr.rp.varstore.types.Type;
 
 public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
@@ -696,6 +698,16 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
 	public AbstractExpression getBuiltInFunction(String name, AbstractExpression[] args) {
 		name = name.toLowerCase();
+		
+		// Type check functions
+		for (Type<?> type: Type.ALL_TYPES) {
+			if (name.equals("is" + type.getName())) {
+				ensureArgSize(name, args, 1);
+				return new IsOfType(args[0], type);
+			}
+		}
+		
+		// Other functions
 		switch (name) {
 		case "pop":
 			ensureArgSize(name, args, 1);
@@ -740,9 +752,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			ensureArgSize(name, args, 2);
 			return new ListValueAt(args[0], args[1]);
 		
-		case "isset":
+		case "isdefined":
 			ensureArgSize(name, args, 1);
-			return new IsSet(args[0]);
+			return new IsDefined(args[0]);
 		case "abs":
 			ensureArgSize(name, args, 1);
 			return new Abs(args[0]);

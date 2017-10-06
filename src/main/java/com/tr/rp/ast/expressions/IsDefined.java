@@ -10,11 +10,11 @@ import com.tr.rp.varstore.VarStore;
 /**
  * Returns true iff given variable is set.
  */
-public class IsSet extends AbstractExpression {
+public class IsDefined extends AbstractExpression {
 
 	private final AbstractExpression exp;
 
-	public IsSet(AbstractExpression exp) {
+	public IsDefined(AbstractExpression exp) {
 		this.exp = exp;
 	}
 
@@ -25,7 +25,7 @@ public class IsSet extends AbstractExpression {
 
 	@Override
 	public LanguageElement replaceVariable(String a, String b) {
-		return new IsSet((AbstractExpression)exp.replaceVariable(a, b));
+		return new IsDefined((AbstractExpression)exp.replaceVariable(a, b));
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class IsSet extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new IsSet((AbstractExpression)exp.transformRankExpressions(v, rank));
+		return new IsDefined((AbstractExpression)exp.transformRankExpressions(v, rank));
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class IsSet extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new IsSet((AbstractExpression)exp.replaceEmbeddedFunctionCall(fc, var));
+		return new IsDefined((AbstractExpression)exp.replaceEmbeddedFunctionCall(fc, var));
 	}
 
 	@Override
@@ -70,11 +70,11 @@ public class IsSet extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "isset(" + exp + ")";
+		return "isdefined(" + exp + ")";
 	}
 
 	public boolean equals(Object o) {
-		return (o instanceof IsSet) && ((IsSet)o).exp.equals(exp);
+		return (o instanceof IsDefined) && ((IsDefined)o).exp.equals(exp);
 	}
 	
 	@Override

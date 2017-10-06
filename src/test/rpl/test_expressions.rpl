@@ -126,9 +126,9 @@ assert(1 == [4,3,2,1,0][3]);
 assert(0 == [4,3,2,1,0][4]);
 
 # IsSet
-assert(!isset(not_set));
+assert(!isdefined(not_set));
 is_set := 1;
-assert(isset(is_set));
+assert(isdefined(is_set));
 
 # Size
 assert(size("") == 0);
@@ -151,8 +151,8 @@ assert((false? "a": "b") == "b");
 
 # Array constructors
 assert(size(array(2)) == 2);
-assert(!isset(array(2)[0]));
-assert(!isset(array(2)[1]));
+assert(!isdefined(array(2)[0]));
+assert(!isdefined(array(2)[1]));
 
 assert(array(0, 0) == []);
 assert(array(2, 0) == [0, 0]);
@@ -160,5 +160,77 @@ assert(array(2, true) == [true, true]);
 assert(array(2, "a") == ["a", "a"]);
 assert(array(2, array(2, "a")) == [["a", "a"], ["a", "a"]]);
 
+# Type checking
+assert(isstring(""));
+assert(!isstring(1));
+assert(!isstring(false));
+assert(!isstring([]));
+assert(!isstring(newstack()));
+assert(!isstring(newset()));
+assert(!isstring(newmap()));
+assert(!isstring(newlist()));
+
+assert(!isint(""));
+assert(isint(1));
+assert(!isint(false));
+assert(!isint([]));
+assert(!isint(newstack()));
+assert(!isint(newset()));
+assert(!isint(newmap()));
+assert(!isint(newlist()));
+
+assert(!isboolean(""));
+assert(!isboolean(1));
+assert(isboolean(false));
+assert(!isboolean([]));
+assert(!isboolean(newstack()));
+assert(!isboolean(newset()));
+assert(!isboolean(newmap()));
+assert(!isboolean(newlist()));
+
+assert(!isarray(""));
+assert(!isarray(1));
+assert(!isarray(false));
+assert(isarray([]));
+assert(!isarray(newstack()));
+assert(!isarray(newset()));
+assert(!isarray(newmap()));
+assert(!isarray(newlist()));
+
+assert(!isstack(""));
+assert(!isstack(1));
+assert(!isstack(false));
+assert(!isstack([]));
+assert(isstack(newstack()));
+assert(!isstack(newset()));
+assert(!isstack(newmap()));
+assert(!isstack(newlist()));
+
+assert(!isset(""));
+assert(!isset(1));
+assert(!isset(false));
+assert(!isset([]));
+assert(!isset(newstack()));
+assert(isset(newset()));
+assert(!isset(newmap()));
+assert(!isset(newlist()));
+
+assert(!ismap(""));
+assert(!ismap(1));
+assert(!ismap(false));
+assert(!ismap([]));
+assert(!ismap(newstack()));
+assert(!ismap(newset()));
+assert(ismap(newmap()));
+assert(!ismap(newlist()));
+
+assert(!islist(""));
+assert(!islist(1));
+assert(!islist(false));
+assert(!islist([]));
+assert(!islist(newstack()));
+assert(!islist(newset()));
+assert(!islist(newmap()));
+assert(islist(newlist()));
 
 

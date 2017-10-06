@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
-import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.ExecutorProvider;
 import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
@@ -20,9 +20,9 @@ public class BranchingExecutor implements Executor {
 	private int shift2 = Rank.MAX;
 	private Supplier<AbstractExpression> exp;
 
-	public BranchingExecutor(Supplier<AbstractExpression> exp, AbstractStatement s1, AbstractStatement s2, Executor out,
+	public BranchingExecutor(Supplier<AbstractExpression> exp, ExecutorProvider s1, ExecutorProvider s2, Executor out,
 			ExecutionContext c) {
-		InternalMerger m = new InternalMerger(out);
+		InternalMerger m = new InternalMerger(new Deduplicator(out));
 		Executor exec1 = new Filter(s1.getExecutor(m.getIn1(), c), exp);
 		Executor exec2 = new Filter(s2.getExecutor(m.getIn2(), c), () -> new Not(exp.get()));
 		splitter = new Splitter(exec1, exec2);

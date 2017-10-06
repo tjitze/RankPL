@@ -3,6 +3,7 @@ package com.tr.rp.ast;
 import java.util.Set;
 
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.ExecutorProvider;
 import com.tr.rp.executors.Executor;
 
 /**
@@ -10,7 +11,7 @@ import com.tr.rp.executors.Executor;
  * the IteratorProvider interface: every statement must
  * provide an iterator that implements its semantics.
  */
-public abstract class AbstractStatement implements LanguageElement {
+public abstract class AbstractStatement implements LanguageElement, ExecutorProvider {
 	
 	private int lineNumber = -1;
 	

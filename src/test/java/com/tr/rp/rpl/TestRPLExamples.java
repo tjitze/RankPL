@@ -178,7 +178,7 @@ public class TestRPLExamples extends TestCase {
 		}
 	}
 	
-	public void ignore_testLocalizerExample() {
+	public void testLocalizerExample() {
 		
 		Map<Integer, Set<String>> expectedResultMapK1 = new HashMap<Integer, Set<String>>();
 		expectedResultMapK1.put(0, new HashSet<String>(Arrays.asList(
@@ -191,9 +191,15 @@ public class TestRPLExamples extends TestCase {
 				"Inferred location (10, 4)",
 				"Inferred location (9, 4)",
 				"Inferred location (8, 4)",
-				"Inferred location (4, 5)",
+				"Inferred location (7, 4)",
 				"Inferred location (6, 4)",
-				"Inferred location (7, 4)"
+				"Inferred location (4, 4)",
+				"Inferred location (10, 5)",
+				"Inferred location (9, 5)",
+				"Inferred location (8, 5)",
+				"Inferred location (7, 5)",
+				"Inferred location (6, 5)",
+				"Inferred location (4, 5)"
 		)));
 		
 		Map<Integer, Set<String>> expectedResultMapK2 = new HashMap<Integer, Set<String>>();
@@ -203,16 +209,30 @@ public class TestRPLExamples extends TestCase {
 		expectedResultMapK2.put(1, new HashSet<String>(Arrays.asList(
 				"Inferred location (2, 5)",
 				"Inferred location (4, 5)",
-				"Inferred location (3, 5)"
+				"Inferred location (3, 5)",
+				"Inferred location (7, 4)",
+				"Inferred location (8, 4)",
+				"Inferred location (9, 4)",
+				"Inferred location (10, 4)"
 		)));
 
 		Map<Integer, Set<String>> expectedResultMapK3 = new HashMap<Integer, Set<String>>();
 		expectedResultMapK3.put(0, new HashSet<String>(Arrays.asList(
-				"Inferred location (7, 4)"
+				"Inferred location (7, 4)",
+				"Inferred location (3, 5)"
+		)));
+		expectedResultMapK3.put(1, new HashSet<String>(Arrays.asList(
+				"Inferred location (8, 4)",
+				"Inferred location (9, 4)",
+				"Inferred location (10, 4)",
+				"Inferred location (4, 5)"
 		)));
 
 		Map<Integer, Set<String>> expectedResultMapK4 = new HashMap<Integer, Set<String>>();
 		expectedResultMapK4.put(0, new HashSet<String>(Arrays.asList(
+				"Inferred location (4, 5)"
+		)));
+		expectedResultMapK4.put(1, new HashSet<String>(Arrays.asList(
 				"Inferred location (8, 4)"
 		)));
 

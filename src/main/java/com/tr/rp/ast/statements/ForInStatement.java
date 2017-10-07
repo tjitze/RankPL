@@ -89,7 +89,7 @@ public class ForInStatement extends AbstractStatement {
 	}
 	
 	public String toString() {
-		return "for (" + target + " in " + exp + ")" + body;
+		return "for (" + target + " in " + exp + ") " + body;
 	}
 	
 	@Override

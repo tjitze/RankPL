@@ -79,7 +79,7 @@ public class ForStatement extends AbstractStatement {
 	}
 	
 	public String toString() {
-		return "for (" + init + "; " + forCondition + "; " + next + ")" + body;
+		return "for (" + init + "; " + forCondition + "; " + next + ") " + body;
 	}
 	
 	@Override

@@ -8,7 +8,9 @@ public abstract class RPLException extends Exception {
 	private AbstractExpression expression;
 
 	private AbstractStatement statement;
-
+	
+	private static final int MAX_STATEMENT_STRING_LENGTH = 50;
+	
 	/**
 	 * Set statement from which this exception originates.
 	 */
@@ -53,6 +55,10 @@ public abstract class RPLException extends Exception {
 			info += "In expression " + getExpression();
 		}
 		if (getStatement() != null) {
+			String statementString = getStatement().toString();
+			if (statementString.length() > MAX_STATEMENT_STRING_LENGTH) {
+				statementString = statementString.substring(0, MAX_STATEMENT_STRING_LENGTH) + "...";
+			}
 			info += (info.equals("") ? "In" : ", in") + " statement " + getStatement();
 			if (getStatement().getLineNumber() != -1) {
 				info += ", on line " + getStatement().getLineNumber();

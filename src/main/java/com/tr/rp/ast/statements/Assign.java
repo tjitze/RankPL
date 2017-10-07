@@ -29,12 +29,24 @@ public class Assign extends AbstractStatement {
 	
 	private final AssignmentTarget target;
 	private final AbstractExpression value;
+	private AbstractStatement exceptionSource;
 	
 	public Assign(AssignmentTarget target, AbstractExpression exp) {
 		this.target = target;
 		this.value = exp;
+		this.exceptionSource = this;
 	}
 
+	public Assign(AssignmentTarget target, AbstractExpression exp, AbstractStatement exceptionSource) {
+		this.target = target;
+		this.value = exp;
+		this.exceptionSource = exceptionSource;
+	}
+	
+	public void setExceptionSource(AbstractStatement exceptionSource) {
+		this.exceptionSource = exceptionSource;
+	}
+	
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
@@ -59,7 +71,7 @@ public class Assign extends AbstractStatement {
 					newVarStore = transformTarget.get().assign(s.getVarStore(), 
 							transformValue.get().getValue(s.getVarStore()));				
 				} catch (RPLException e) {
-					e.setStatement(Assign.this);
+					e.setStatement(exceptionSource);
 					throw e;
 				}
 				out.push(newVarStore, s.getRank());
@@ -108,7 +120,7 @@ public class Assign extends AbstractStatement {
 		if (rewrittenTarget.isRewritten() || rewrittenValue.isRewritten()) {
 			return new FunctionCallForm(
 					new Assign((AssignmentTarget)rewrittenTarget.getExpression(), 
-							rewrittenValue.getExpression()), 
+							rewrittenValue.getExpression(), exceptionSource), 
 						rewrittenTarget.getAssignments(),
 						rewrittenValue.getAssignments());
 		} else {

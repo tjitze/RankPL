@@ -30,6 +30,7 @@ public class Return extends AbstractStatement {
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		Assign assign = new Assign(new AssignmentTargetTerminal("$return"), exp);
+		assign.setExceptionSource(this);
 		return assign.getExecutor(out, c);
 	}	
 		

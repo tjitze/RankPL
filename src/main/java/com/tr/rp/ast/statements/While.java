@@ -95,7 +95,7 @@ public class While extends AbstractStatement {
 
 			@Override
 			public void push(State s) throws RPLException {
-				if (next == null && !getCheckedValue(exp.get(), s)) {
+				if (next == null && !getCheckedExpValue(exp.get(), s)) {
 					out.push(s.shiftUp(shift));
 				} else {
 					if (next == null) {
@@ -115,10 +115,10 @@ public class While extends AbstractStatement {
 				}
 			}
 		};
-		return new BranchingExecutor(exp, body, new Skip(), out2, c);
+		return new BranchingExecutor(exp, body, new Skip(), out2, c, exceptionSource);
 	}
 
-	private boolean getCheckedValue(AbstractExpression exp, State s) throws RPLException {
+	private boolean getCheckedExpValue(AbstractExpression exp, State s) throws RPLException {
 		try {
 			return exp.getValue(s.getVarStore(), Type.BOOL);
 		} catch (RPLException e) {

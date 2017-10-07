@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.ExecutorProvider;
@@ -14,19 +15,22 @@ import com.tr.rp.varstore.types.Type;
 
 public class BranchingExecutor implements Executor {
 
-	private Splitter splitter;
+	private final Splitter splitter;
+	private final AbstractStatement exceptionSource;
 	private int inRank = 0;
 	private int shift1 = Rank.MAX;
 	private int shift2 = Rank.MAX;
 	private Supplier<AbstractExpression> exp;
 
+	
 	public BranchingExecutor(Supplier<AbstractExpression> exp, ExecutorProvider s1, ExecutorProvider s2, Executor out,
-			ExecutionContext c) {
+			ExecutionContext c, AbstractStatement exceptionSource) {
 		InternalMerger m = new InternalMerger(new Deduplicator(out));
 		Executor exec1 = new Filter(s1.getExecutor(m.getIn1(), c), exp);
 		Executor exec2 = new Filter(s2.getExecutor(m.getIn2(), c), () -> new Not(exp.get()));
 		splitter = new Splitter(exec1, exec2);
 		this.exp = exp;
+		this.exceptionSource = exceptionSource;
 	}
 
 	@Override
@@ -37,7 +41,7 @@ public class BranchingExecutor implements Executor {
 	@Override
 	public void push(State s) throws RPLException {
 		inRank = s.getRank();
-		if (exp.get().getValue(s.getVarStore(), Type.BOOL)) {
+		if (getCheckedExpValue(s)) {
 			if (shift1 == Rank.MAX) {
 				shift1 = s.getRank();
 			}
@@ -49,6 +53,15 @@ public class BranchingExecutor implements Executor {
 		splitter.push(s);
 	}
 
+	private boolean getCheckedExpValue(State s) throws RPLException {
+		try {
+			return exp.get().getValue(s.getVarStore(), Type.BOOL);
+		} catch (RPLException e) {
+			e.setStatement(exceptionSource);
+			throw e;
+		}
+	}
+	
 	private class InternalMerger {
 
 		private final Executor out;

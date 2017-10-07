@@ -11,34 +11,24 @@ import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.BranchingExecutor;
 import com.tr.rp.executors.Deduplicator;
-import com.tr.rp.executors.EvaluationErrorHandler;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.RankTransformer;
 
-public class IfElse extends AbstractStatement implements IfElseErrorHandler, ObserveErrorHandler, EvaluationErrorHandler {
+public class IfElse extends AbstractStatement {
 
 	private AbstractExpression exp;
 	private AbstractStatement a, b;
-	private IfElseErrorHandler errorHandler;
 	
 	public IfElse(AbstractExpression exp, AbstractStatement a, AbstractStatement b) {
 		this.exp = exp;
 		this.a = a;
 		this.b = b;
-		this.errorHandler = this;
 	}
 
-	public IfElse(AbstractExpression exp, AbstractStatement a, AbstractStatement b, IfElseErrorHandler errorHandler) {
-		this.exp = exp;
-		this.a = a;
-		this.b = b;
-		this.errorHandler = errorHandler;
-	}
-	
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		RankTransformer<AbstractExpression> transformExp = RankTransformer.create(exp);
-		Executor e = new BranchingExecutor(transformExp, a, b, new Deduplicator(out), c);
+		Executor e = new BranchingExecutor(transformExp, a, b, new Deduplicator(out), c, this);
 		transformExp.setOutput(e, this);
 		return transformExp;
 	}
@@ -56,11 +46,6 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 	public void ifElseElseError(RPLException e) throws RPLException {
 		throw e;
 	};
-	
-	@Override
-	public void observeConditionError(RPLException e) throws RPLException {
-		errorHandler.ifElseConditionError(e);
-	}	
 
 	public String toString() {
 		String expString = exp.toString();
@@ -113,12 +98,5 @@ public class IfElse extends AbstractStatement implements IfElseErrorHandler, Obs
 		a.getAssignedVariables(variables);
 		b.getAssignedVariables(variables);
 	}
-
-	@Override
-	public void handleEvaluationError(RPLException e) throws RPLException {
-		e.setStatement(this);
-		throw e;
-	}
-
 
 }

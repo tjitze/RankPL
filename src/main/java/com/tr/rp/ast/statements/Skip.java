@@ -7,11 +7,15 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.executors.Executor;
 
+/**
+ * The skip statement does nothing. Semantically it is equivalent 
+ * to the identity function.
+ */
 public class Skip extends AbstractStatement {
 
 	@Override
-	public Executor getExecutor(Executor in, ExecutionContext c) {
-		return in;
+	public Executor getExecutor(Executor out, ExecutionContext c) {
+		return out;
 	}	
 
 	public String toString() {
@@ -44,7 +48,7 @@ public class Skip extends AbstractStatement {
 
 	@Override
 	public int hashCode() {
-		return 1;
+		return getClass().hashCode();
 	}
 
 

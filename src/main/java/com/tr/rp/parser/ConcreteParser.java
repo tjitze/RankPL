@@ -81,6 +81,7 @@ import com.tr.rp.ast.statements.ReadFile;
 import com.tr.rp.ast.statements.Reset;
 import com.tr.rp.ast.statements.Return;
 import com.tr.rp.ast.statements.Skip;
+import com.tr.rp.ast.statements.Block;
 import com.tr.rp.ast.statements.While;
 import com.tr.rp.parser.RankPLParser.Arithmetic1ExpressionContext;
 import com.tr.rp.parser.RankPLParser.Arithmetic2ExpressionContext;
@@ -118,6 +119,7 @@ import com.tr.rp.parser.RankPLParser.ObserveLStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveStatementContext;
 import com.tr.rp.parser.RankPLParser.OpenStatContext;
 import com.tr.rp.parser.RankPLParser.SkipStatContext;
+import com.tr.rp.parser.RankPLParser.BlockStatementContext;
 import com.tr.rp.parser.RankPLParser.ParExpressionContext;
 import com.tr.rp.parser.RankPLParser.PopFunctionCallContext;
 import com.tr.rp.parser.RankPLParser.PrintRankingStatementContext;
@@ -177,7 +179,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitSkipStat(SkipStatContext ctx) {
 		return new Skip();
 	}
-
 
 	@Override
 	public LanguageElement visitAssignmentStatement(AssignmentStatementContext ctx) {
@@ -429,7 +430,14 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}
-	
+
+	@Override
+	public LanguageElement visitBlockStatement(BlockStatementContext ctx) {
+		AbstractStatement s = new Block();
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
 	@Override
 	public LanguageElement visitWhileStatement(WhileStatementContext ctx) {
 		AbstractExpression boolExpr = (AbstractExpression)visit(ctx.exp());

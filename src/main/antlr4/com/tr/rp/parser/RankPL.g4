@@ -44,6 +44,7 @@ term_stat
  | ObserveL ('(' exp ')')? exp							# ObserveLStatement
  | ObserveJ ('(' exp ')')? exp							# ObserveJStatement
  | Skip													# SkipStatement
+ | Block												# BlockStatement
  | Return exp											# ReturnStatement
  | Print exp											# PrintStatement
  | PrintRanking exp										# PrintRankingStatement
@@ -110,6 +111,7 @@ Observe: 		'observe' | 'OBSERVE' | 'obs' | 'OBS';
 ObserveL: 		'observe-l' | 'observe-L' | 'OBSERVE-L' | 'obs-l' | 'obs-L' | 'OBS-L';
 ObserveJ: 		'observe-j' | 'observe-J' | 'OBSERVE-J' | 'obs-j' | 'obs-J' | 'OBS-J';
 Skip: 			'skip' | 'SKIP';
+Block: 			'block' | 'BLOCK';
 Nrm: 			'normally' | 'NORMALLY' | 'nrm' | 'NRM';
 Exc: 			'exceptionally' | 'EXCEPTIONALLY' | 'exc' | 'EXC';
 Either: 		'either' | 'EITHER';

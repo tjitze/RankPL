@@ -6,8 +6,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-j (5) a == 1;
 assert-ranked(a,
 	[0, 1],
@@ -23,8 +23,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-j (5) a > 1;
 assert-ranked(a,
 	[0, 2],
@@ -40,8 +40,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-j (0) a == 1;
 assert-ranked(a,
 	[0, 1],
@@ -58,8 +58,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-j (1) false;
 assert-ranked(a,
 	[0, 1],
@@ -75,8 +75,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-j (1) false;
 assert-ranked(a,
 	[0, 1],

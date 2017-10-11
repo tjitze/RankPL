@@ -6,8 +6,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(false) == 2147483647);
 assert(rank(a == 1) == 0);
 assert(rank(a == 2) == 1);
@@ -29,8 +29,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe a == 1;
 assert-ranked(a, [0, 1]);
 reset;
@@ -42,8 +42,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe a == 2;
 assert-ranked(a, [0, 2]);
 reset;
@@ -55,8 +55,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe a == 1 || a == 2;
 assert-ranked(a, [0, 1], [1, 2]);
 reset;
@@ -68,8 +68,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe a == 3;
 assert-ranked(a, [0, 3]);
 reset;
@@ -81,8 +81,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe a == 1 || a == 3;
 assert-ranked(a, [0, 1], [2, 3]);
 reset;
@@ -94,8 +94,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe a == 2 || a == 3;
 assert-ranked(a, [0, 2], [1, 3]);
 reset;
@@ -107,8 +107,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe true;
 assert-ranked(a, [0, 1], [1, 2], [2, 3]);
 reset;

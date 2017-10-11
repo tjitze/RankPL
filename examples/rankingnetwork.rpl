@@ -3,14 +3,14 @@ if (!rain) {
 	sprinkler := true << 1 >> false;
 } else {
 	sprinkler := false << 3 >> true;
-};
+}
 if (!rain & !sprinkler) { 	
 	grass_wet := false; 
 } else if (rain & sprinkler) {
 	grass_wet := true << 5 >> false;
 } else {
 	grass_wet := true << 2 >> false;
-};
+}
 observe sprinkler;
 return "rain: " + rain + "\tsprinkler: " + sprinkler + "\tgrass_wet: " + grass_wet;
 

@@ -6,8 +6,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(false) == 2147483647);
 assert(rank(a == 1) == 0);
 assert(rank(a == 2) == 1);
@@ -26,8 +26,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(false) == 2147483647);
 reset;
 
@@ -38,8 +38,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(a == 1) == 0);
 reset;
 normally(1) {
@@ -49,8 +49,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(a == 2) == 1);
 reset;
 normally(1) {
@@ -60,8 +60,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(a == 1 || a == 2) == 0);
 reset;
 normally(1) {
@@ -71,8 +71,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(a == 3) == 2);
 reset;
 normally(1) {
@@ -82,8 +82,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(a == 1 || a == 3) == 0);
 reset;
 normally(1) {
@@ -93,8 +93,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(a == 2 || a == 3) == 1);
 reset;
 normally(1) {
@@ -104,6 +104,6 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 assert(rank(true) == 0);

@@ -17,11 +17,11 @@ a2_broken := FALSE <<1>> TRUE;
 o1_broken := FALSE <<1>> TRUE;
 
 # Circuit logic
-if (x1_broken) then l1 := FALSE <<0>> TRUE else l1 := (in1 ^ in2);
-if (a1_broken) then l2 := FALSE <<0>> TRUE else l2 := (in1 & in2);
-if (a2_broken) then l3 := FALSE <<0>> TRUE else l3 := (l1 & in3);
-if (x2_broken) then out2 := FALSE <<0>> TRUE else out2 := (l1 ^ in3);
-if (o1_broken) then out1 := FALSE <<0>> TRUE else out1 := (l3 | l2);
+if (x1_broken) then l1 := FALSE <<0>> TRUE; else l1 := (in1 ^ in2);
+if (a1_broken) then l2 := FALSE <<0>> TRUE; else l2 := (in1 & in2);
+if (a2_broken) then l3 := FALSE <<0>> TRUE; else l3 := (l1 & in3);
+if (x2_broken) then out2 := FALSE <<0>> TRUE; else out2 := (l1 ^ in3);
+if (o1_broken) then out1 := FALSE <<0>> TRUE; else out1 := (l3 | l2);
  
 # Observe output
 observe out1 & !out2;

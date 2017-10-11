@@ -93,51 +93,51 @@ public class ParseTest extends RPLBaseTest {
 	}
 	
 	public void testParseComposition() {
-		String program = "{x := 20; x := 30; x := 40}";
-		assertEquals(parseStatement(program), (new Composition(
+		String program = "{x := 20; x := 30; x := 40; }";
+		assertEquals(parseOpenStatement(program), (new Composition(
 				assign("x",20),
 				assign("x",30),
 				assign("x",40))));
-		program = "{{x := 20; x := 30 }; x := 40}";
-		assertEquals(parseStatement(program), (new Composition(
+		program = "{{x := 20; x := 30; } x := 40; }";
+		assertEquals(parseOpenStatement(program), (new Composition(
 				new Composition(
 						assign("x",20),
 						assign("x",30)),
 				assign("x",40))));
-		program = "{x := 20; {x := 30; x := 40}}";
-		assertEquals(parseStatement(program), (new Composition(
+		program = "{x := 20; {x := 30; x := 40; }}";
+		assertEquals(parseOpenStatement(program), (new Composition(
 				assign("x",20),
 				new Composition(
 						assign("x",30),
 						assign("x",40)))));
-		program = "{{x := 20}; {x := 30}; {x := 40}}";
-		assertEquals(parseStatement(program), (new Composition(
+		program = "{{x := 20;} {x := 30;} {x := 40;}}";
+		assertEquals(parseOpenStatement(program), (new Composition(
 				assign("x",20),
 				assign("x",30),
 				assign("x",40))));
 	}
 
 	public void testParseIfElse() {
-		String program = "if (x == 10) THEN x := 20 else x := 30;";
-		assertEquals(parseStatement(program), (new IfElse(
+		String program = "if (x == 10) THEN x := 20; else x := 30;";
+		assertEquals(parseOpenStatement(program), (new IfElse(
 				eq(var("x"), lit(10)),
 				assign("x",20),
 				assign("x",30))));
-		program = "if (x == 10) THEN { x := 20 } ELSE { x := 30 };";
-		assertEquals(parseStatement(program), (new IfElse(
+		program = "if (x == 10) THEN { x := 20; } ELSE { x := 30; }";
+		assertEquals(parseOpenStatement(program), (new IfElse(
 				eq(var("x"),lit(10)),
 				assign("x",20),
 				assign("x",30))));
-		program = "{ if (x == 10) THEN { x := 20 } ELSE x := 30; x := 40; }";
-		assertEquals(parseStatement(program), (
+		program = "{ if (x == 10) THEN { x := 20; } ELSE x := 30; x := 40; }";
+		assertEquals(parseOpenStatement(program), (
 				new Composition(
 					new IfElse(
 							eq(var("x"),lit(10)),
 							assign("x",20),
 							assign("x",30)),
 					assign("x", 40))));
-		program = "{ if (x == 10) THEN { x := 20 } ELSE NORMALLY (1) x := 30 EXCEPTIONALLY x := 40; x := 50; }";
-		assertEquals(parseStatement(program), (
+		program = "{ if (x == 10) THEN { x := 20; } ELSE NORMALLY (1) x := 30; EXCEPTIONALLY x := 40; x := 50; }";
+		assertEquals(parseOpenStatement(program), (
 				new Composition(
 					new IfElse(
 							eq(var("x"),lit(10)),
@@ -148,7 +148,7 @@ public class ParseTest extends RPLBaseTest {
 
 	public void testParseWhile() {
 		String program = "while (x == 0) DO x := 0;";
-		assertEquals(parseStatement(program), (new While(
+		assertEquals(parseOpenStatement(program), (new While(
 				eq(var("x"), lit(0)),
 				assign("x",0))));
 	}
@@ -160,7 +160,7 @@ public class ParseTest extends RPLBaseTest {
 	}
 
 	public void testParseChoose() {
-		assertEquals(parseStatement("normally(5) x := 0 exceptionally x := 20;"), (new RankedChoice(
+		assertEquals(parseOpenStatement("normally(5) x := 0; exceptionally x := 20;"), (new RankedChoice(
 				assign("x",0), assign("x",20), lit(5))));
 		assertEquals(parseStatement("x := 0 << 5 >> 20;"), (new RankedChoice(
 				assign("x",0), assign("x",20), lit(5))));
@@ -240,10 +240,11 @@ public class ParseTest extends RPLBaseTest {
 	}
 
 	public void testParseFunctionDefinition() {
+		assertEquals(parseFunctionDef("define fun() return 0;"), (new Function("fun", returnStatement(lit(0)), new String[]{})));
 		assertEquals(parseFunctionDef("define fun() { return 0; }"), (new Function("fun", returnStatement(lit(0)), new String[]{})));
 		assertEquals(parseFunctionDef("define fun(a) { return a; }"), (new Function("fun", returnStatement("a"), new String[]{"a"})));
-		assertEquals(parseFunctionDef("define fun(a) { skip; skip; return a; }"), (new Function("fun", new Composition(new Skip(), new Skip(), returnStatement("a")), new String[]{"a"})));
-		assertEquals(parseFunctionDef("define fun(a) { skip; {skip;}; return a; }"), (new Function("fun", new Composition(new Skip(), new Skip(), returnStatement("a")), new String[]{"a"})));
+		assertEquals(parseFunctionDef("define fun(a) { a := 0; a := 0; return a; }"), (new Function("fun", new Composition(assign("a", 0), assign("a", 0), returnStatement("a")), new String[]{"a"})));
+		assertEquals(parseFunctionDef("define fun(a) { a := 0; {a := 0;} return a; }"), (new Function("fun", new Composition(assign("a", 0), assign("a", 0), returnStatement("a")), new String[]{"a"})));
 		assertEquals(parseFunctionDef("define fun(a, b) { return a + b; }"), (new Function("fun", returnStatement(plus(new Variable("a"), new Variable("b"))), new String[]{"a", "b"})));
 	}
 	
@@ -251,10 +252,10 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseStatement("x := fun()").toString(), ("x := fun()"));
 		assertEquals(parseStatement("x := fun(a, b)").toString(), ("x := fun(a, b)"));
 		assertEquals(parseStatement("x := fun(fun(a, b), c)").toString(), ("x := fun(fun(a, b), c)"));
-		assertEquals(parseStatement("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)").toString(), ("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)"));
-		assertEquals(parseStatement("while (x == fun1(y)) do y := fun2(z)").toString(), ("while (x == fun1(y)) do y := fun2(z)"));
+		assertEquals(parseStatement("if (fun1(fun2(a, b), c)) then x := fun3(d); else x := fun4(e)").toString(), ("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)"));
+		assertEquals(parseStatement("while (x == fun1(y)) do y := fun2(z);").toString(), ("while (x == fun1(y)) do y := fun2(z)"));
 		assertEquals(parseStatement("x := fun1() <<fun2()>> fun3()").toString(), ("normally (fun2()) x := fun1() exceptionally x := fun3()"));
-		assertEquals(parseStatement("normally (fun2()) x := fun1() exceptionally x := fun3()").toString(), ("normally (fun2()) x := fun1() exceptionally x := fun3()"));
+		assertEquals(parseOpenStatement("normally (fun2()) x := fun1(); exceptionally x := fun3();").toString(), ("normally (fun2()) x := fun1() exceptionally x := fun3()"));
 		assertEquals(parseStatement("observe fun()").toString(), ("observe fun()"));
 		assertEquals(parseStatement("observe fun1() == fun2()").toString(), ("observe fun1() == fun2()"));
 		assertEquals(parseStatement("observe-j (fun1()) fun2()").toString(), ("observe-j (fun1()) fun2()"));
@@ -281,10 +282,17 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseStatement("x := \" x\""), assign("x", lit(" x")));
 	}
 	
-	private LanguageElement parseStatement(String code) {
-		if (!code.endsWith(";")) {
-			code += ";";
-		}
+	public void testParseEmpty() {
+		assertEquals(parseStatement(""), new Skip());
+		assertEquals(parseStatement(";"), new Skip());
+		assertEquals(parseStatement(";;"), new Skip());
+		assertEquals(parseStatement("; ;"), new Skip());
+		assertEquals(parseStatement("{}"), new Skip());
+		assertEquals(parseStatement("{;}"), new Skip());
+		assertEquals(parseStatement("{;};"), new Skip());
+	}
+	
+	private LanguageElement parseOpenStatement(String code) {
         CharStream charStream = new ANTLRInputStream(code);
         RankPLLexer lexer = new RankPLLexer(charStream);
         TokenStream tokens = new CommonTokenStream(lexer);
@@ -292,6 +300,13 @@ public class ParseTest extends RPLBaseTest {
 
         ConcreteParser classVisitor = new ConcreteParser();
         return ((Program)classVisitor.visit(parser.program())).getBody();
+	}
+
+	private LanguageElement parseStatement(String code) {
+		if (!code.endsWith(";")) {
+			code += ";";
+		}
+		return parseOpenStatement(code);
 	}
 	
 	private AbstractExpression parseExpr(String code) {

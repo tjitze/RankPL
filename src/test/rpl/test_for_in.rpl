@@ -2,7 +2,7 @@ x := [0, 1, 2, 3, 4];
 y := 0;
 for (v in x) {
 	y := y + v;
-};
+}
 assert(y == 10);
 reset;
 
@@ -10,5 +10,5 @@ x := "abcde";
 y := "";
 for (v in x) {
 	y := v + y;
-};
+}
 assert(y == "edcba");

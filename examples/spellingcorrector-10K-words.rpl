@@ -1,6 +1,7 @@
 input := "inkorrect";
 
 dictionary := readfile("examples/google-10000-english-no-swears.txt");
+
 choice := << 0 ... size(dictionary) >>;
 potential_match := dictionary[choice];
 
@@ -13,9 +14,9 @@ while (i < size(input) & k < size(potential_match)) do {
 	if (input[i] == potential_match[k]) {
 		i := i + 1; k := k + 1;
 	} else {
-		either { i := i + 1; k := k + 1; } or i := i + 1 or k := k + 1;
-	};
-};
+		either { i := i + 1; k := k + 1; } or { i := i + 1; } or { k := k + 1; }
+	}
+}
 
 observe i == size(input) & k == size(potential_match);
 return substring(potential_match, 0, size(potential_match) - 1);

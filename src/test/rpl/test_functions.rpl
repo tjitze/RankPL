@@ -6,9 +6,9 @@ define test() {
 			return 2;
 		} exceptionally {
 			return 3;
-		};
-	};
-};
+		}
+	}
+}
 
 # Simple function call
 a := test();
@@ -41,7 +41,7 @@ reset;
 # Infer function call (empty result)
 define test_false() {
 	observe false;
-};
+}
 a := infer(test_false());
 assert(a == []);
 reset;
@@ -52,8 +52,8 @@ define test_multi() {
 		return 10;
 	} or {
 		return 20;
-	};
-};
+	}
+}
 a := infer(test_multi());
 assert(a == [10, 20]);
 reset;
@@ -61,7 +61,7 @@ reset;
 # Test arguments
 define test_args(a, b) {
 	return a + b;
-};
+}
 a := test_args(10, 20);
 assert(a == 30);
 reset;
@@ -72,8 +72,8 @@ define test_args_ranked1(a, b) {
 		return a;
 	} or {
 		return b;
-	};
-};
+	}
+}
 a := infer(test_args_ranked1(50, 60));
 assert(a == [50, 60]);
 reset;
@@ -84,8 +84,8 @@ reset;
 #		return 1;
 #	} exceptionally {
 #		return b;
-#	};
-#};
+#	}
+#}
 #a := infer(test_args_ranked2(0, 20));
 #assert(a == [1, 20]);
 #reset;

@@ -50,10 +50,10 @@ define main() {
 	WHILE (t < k) DO { 
 	
 		# Update x/y according to movement at time point t
-		IF (mv[t] == north) THEN y := y - 1
-		ELSE IF (mv[t] == south) THEN y := y + 1
-		ELSE IF (mv[t] == west) THEN x := x - 1
-		ELSE IF (mv[t] == east) THEN x := x + 1
+		IF (mv[t] == north) THEN y := y - 1;
+		ELSE IF (mv[t] == south) THEN y := y + 1;
+		ELSE IF (mv[t] == west) THEN x := x - 1;
+		ELSE IF (mv[t] == east) THEN x := x + 1;
 		ELSE SKIP;
 		
 		# Make sure we're still inside the map
@@ -67,10 +67,10 @@ define main() {
 	
 		# Update time point
                 t := t + 1;
-	};
+	}
 	
 	return "Inferred location (" + x + ", " + y + ")";
-};
+}
 
 # Returns number of empty cells between (x,y) and the nearest wall 
 # on the north side, according to the m*n sized map.
@@ -78,7 +78,7 @@ define northdistance(x, y, map, m, n) {
     nd := 0;
     WHILE ((y+nd+1) < m-1 & map[y+nd+1][x] == 0) DO nd := nd + 1; 
     return nd;
-};
+}
 
 # Returns number of empty cells between (x,y) and the nearest wall 
 # on the south side, according to the m*n sized map.
@@ -86,5 +86,5 @@ define southdistance(x, y, map, m, n) {
     sd := 0;
     WHILE ((y-sd+1) > 0 & map[y-sd+1][x] == 0) DO sd := sd + 1;
     return sd;
-};
+}
 

@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -115,6 +116,8 @@ import com.tr.rp.parser.RankPLParser.NegateExprContext;
 import com.tr.rp.parser.RankPLParser.ObserveJStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveLStatementContext;
 import com.tr.rp.parser.RankPLParser.ObserveStatementContext;
+import com.tr.rp.parser.RankPLParser.OpenStatContext;
+import com.tr.rp.parser.RankPLParser.SkipStatContext;
 import com.tr.rp.parser.RankPLParser.ParExpressionContext;
 import com.tr.rp.parser.RankPLParser.PopFunctionCallContext;
 import com.tr.rp.parser.RankPLParser.PrintRankingStatementContext;
@@ -125,9 +128,10 @@ import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
 import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
+import com.tr.rp.parser.RankPLParser.SequenceStatContext;
 import com.tr.rp.parser.RankPLParser.SkipStatementContext;
 import com.tr.rp.parser.RankPLParser.StatContext;
-import com.tr.rp.parser.RankPLParser.StatementSequenceContext;
+import com.tr.rp.parser.RankPLParser.TermStatContext;
 import com.tr.rp.parser.RankPLParser.VariableContext;
 import com.tr.rp.parser.RankPLParser.VariableExpressionContext;
 import com.tr.rp.parser.RankPLParser.WhileStatementContext;
@@ -141,6 +145,40 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
 	private FunctionScope functionScope = new FunctionScope();
 	
+	@Override
+	public LanguageElement visitTermStat(TermStatContext ctx) {
+		return visit(ctx.term_stat());
+	}
+
+	@Override
+	public LanguageElement visitOpenStat(OpenStatContext ctx) {
+		return visit(ctx.open_stat());
+	}
+
+	@Override
+	public LanguageElement visitSequenceStat(SequenceStatContext ctx) {
+		List<AbstractStatement> statements = new ArrayList<AbstractStatement>();
+		for (StatContext sc: ctx.stat()) {
+			AbstractStatement s = (AbstractStatement)visit(sc);
+			if (!Objects.equals(s, new Skip())) {
+				statements.add(s);
+			}
+		}
+		if (statements.isEmpty()) {
+			return new Skip();
+		} else if (statements.size() == 1) {
+			return statements.get(0);
+		} else {
+			return new Composition(statements);
+		}
+	}
+
+	@Override
+	public LanguageElement visitSkipStat(SkipStatContext ctx) {
+		return new Skip();
+	}
+
+
 	@Override
 	public LanguageElement visitAssignmentStatement(AssignmentStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
@@ -404,9 +442,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitForStatement(ForStatementContext ctx) {
 		AbstractExpression forCondition = (AbstractExpression)visit(ctx.exp());
-		AbstractStatement init = (AbstractStatement)visit(ctx.stat(0));
-		AbstractStatement next = (AbstractStatement)visit(ctx.stat(1));
-		AbstractStatement body = (AbstractStatement)visit(ctx.stat(2));
+		AbstractStatement init = (AbstractStatement)visit(ctx.term_stat(0));
+		AbstractStatement next = (AbstractStatement)visit(ctx.term_stat(1));
+		AbstractStatement body = (AbstractStatement)visit(ctx.stat());
 		AbstractStatement s = new ForStatement(init, forCondition, next, body);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -631,9 +669,11 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 				if (s == null) {
 					return null; 
 				}
-				s = s.rewriteEmbeddedFunctionCalls();
-				s.setLineNumber(fsc.stat().getStart().getLine());
-				statements.add(s);
+				if (!Objects.equals(s, new Skip())) {
+					s = s.rewriteEmbeddedFunctionCalls();
+					s.setLineNumber(fsc.stat().getStart().getLine());
+					statements.add(s);
+				}
 			}
 			if (fsc.functiondef() != null) {
 				Function f = (Function)visit(fsc.functiondef());
@@ -646,21 +686,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			return new Program(statements.get(0), functionScope);
 		} else {
 			return new Program(new Composition(statements), functionScope);
-		}
-	}
-
-	public LanguageElement visitStatementSequence(StatementSequenceContext ctx) {
-		List<AbstractStatement> statements = new ArrayList<AbstractStatement>();
-		for (StatContext sc: ctx.stat()) {
-			AbstractStatement s = (AbstractStatement)visit(sc);
-			statements.add(s);
-		}
-		if (statements.isEmpty()) {
-			return new Skip();
-		} else if (statements.size() == 1) {
-			return statements.get(0);
-		} else {
-			return new Composition(statements);
 		}
 	}
 	
@@ -679,20 +704,10 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		}
 		Function function = new Function(functionName, parameters);
 		function.setLineNumber(ctx.start.getLine());
-		List<AbstractStatement> statements = new ArrayList<AbstractStatement>();
-		for (StatContext sc: ctx.stat()) {
-			AbstractStatement s = (AbstractStatement)visit(sc);
-			s = s.rewriteEmbeddedFunctionCalls();
-			s.setLineNumber(sc.getStart().getLine());
-			statements.add(s);
-		}
-		if (statements.isEmpty()) {
-			function.setBody(new Skip());
-		} else if (statements.size() == 1) {
-			function.setBody(statements.get(0));
-		} else {
-			function.setBody(new Composition(statements));
-		}
+		AbstractStatement s = (AbstractStatement)visit(ctx.stat());
+		s = s.rewriteEmbeddedFunctionCalls();
+		s.setLineNumber(ctx.stat().getStart().getLine());
+		function.setBody(s);
 		return function;
 	}
 

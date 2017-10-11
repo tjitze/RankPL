@@ -5,7 +5,7 @@ parse
  ;
  
 program
- : functiondef_or_statement ';' (functiondef_or_statement ';')*  EOF
+ : functiondef_or_statement (functiondef_or_statement)*  EOF
  ;
 
 functiondef_or_statement
@@ -14,27 +14,36 @@ functiondef_or_statement
  ;
 
 functiondef
- : Define VAR ('()' | '(' VAR (',' VAR)* ')') '{' (stat ';')* '}'
+ : Define VAR ('()' | '(' VAR (',' VAR)* ')') stat
  ;
 
 stat
+ : term_stat ';'										# TermStat
+ | open_stat											# OpenStat
+ | '{' stat* '}'										# SequenceStat
+ | ';'													# SkipStat
+ ;
+
+open_stat
+ : If exp Then? stat (Else stat)? 						# IfStatement
+ | For '(' assignment_target In exp ')' stat			# ForInStatement
+ | For '(' term_stat ';' exp ';' term_stat ')' stat		# ForStatement
+ | While exp Do? stat									# WhileStatement
+ | Nrm ('(' exp ')')? stat (Exc stat)?					# RankedChoiceStatement
+ | Exc ('(' exp ')')? stat								# ExceptionallyStatement
+ | Either stat (Or stat)+								# IndifferentChoiceStatement
+ ;
+
+term_stat
  : assignment_target ':=' exp							# AssignmentStatement
  | assignment_target ':=' exp '<<' exp '>>' exp			# ChoiceAssignmentStatement
  | assignment_target ':=' '<<' exp '...' exp '>>'		# RangeChoiceStatement
  | assignment_target ':=' ReadFile '(' exp ')'			# ReadFileStatement
  | assignment_target (op=('++'|'--'))					# IncDecStatement
- | If exp Then? stat (Else stat)? 						# IfStatement
- | While exp Do? stat									# WhileStatement
- | For '(' assignment_target In exp ')' stat			# ForInStatement
- | For '(' stat ';' exp ';' stat ')' stat				# ForStatement
  | Observe exp											# ObserveStatement
  | ObserveL ('(' exp ')')? exp							# ObserveLStatement
  | ObserveJ ('(' exp ')')? exp							# ObserveJStatement
  | Skip													# SkipStatement
- | Nrm ('(' exp ')')? stat (Exc stat)? 					# RankedChoiceStatement
- | Exc ('(' exp ')')? stat								# ExceptionallyStatement
- | Either stat (Or stat)+								# IndifferentChoiceStatement
- | '{' stat (';' stat)* ';'? '}'						# StatementSequence
  | Return exp											# ReturnStatement
  | Print exp											# PrintStatement
  | PrintRanking exp										# PrintRankingStatement

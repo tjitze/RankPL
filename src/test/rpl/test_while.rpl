@@ -2,7 +2,7 @@
 x := 0;
 while (x < 5000) do {
 	x++;
-};
+}
 assert(x == 5000);
 reset;
 
@@ -11,7 +11,7 @@ x := 0;
 y := 3000 << 1 >> 5000;
 while (x < y) do {
 	x++;
-};
+}
 assert-ranked(x,
 	[0, 3000],
 	[1, 5000]);
@@ -25,9 +25,9 @@ while (x < 1000) do {
 	while (y < 1000) do {
 		y++;
 		z++;
-	};
+	}
 	x++;
-};
+}
 assert(z == 1000 * 1000);
 reset;
 
@@ -39,9 +39,9 @@ while (x < 10) do {
 	while (y <= x) do {
 		z := z + y;
 		y++;
-	};
+	}
 	x++;
-};
+}
 assert(z == 165);
 
 # Two alternatives used inside body
@@ -51,7 +51,7 @@ z := 0;
 while (x < 50000) do {
 	x++;
 	z := z + y;
-};
+}
 assert-ranked(z,
 	[0, 50000],
 	[1, 100000]);
@@ -62,7 +62,7 @@ x := 0;
 y := 50000 <<1>> 100000;
 while (x < y) do {
 	x++;
-};
+}
 assert-ranked(x,
 	[0, 50000],
 	[1, 100000]);
@@ -74,7 +74,7 @@ y := 1 <<0>> 2;
 while (x < 5000) do {
 	x++;
 	observe-l (1) y == 2;
-};
+}
 assert-ranked([x,y],
 	[0, [5000, 2]],
 	[5000, [5000, 1]]);
@@ -85,8 +85,8 @@ x := 0;
 y := 0;
 while (x < 3) do {
 	x++;
-	normally y := y + 1 exceptionally skip;
-};
+	normally y := y + 1; exceptionally skip;
+}
 assert-ranked(y,
 	[0, 3],
 	[1, 2],

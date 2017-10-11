@@ -30,8 +30,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a > 1;
 assert-ranked(a,
 	[0, 1],
@@ -47,8 +47,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (2) a > 1;
 assert-ranked(a,
 	[0, 2],
@@ -64,8 +64,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a > 1;
 observe-l (1) a > 1;
 assert-ranked(a,
@@ -82,8 +82,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a > 1;
 observe-l (1) a <= 1;
 assert-ranked(a,
@@ -100,8 +100,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a == 1;
 assert-ranked(a,
 	[0, 1],
@@ -117,8 +117,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a == 1;
 observe-l (1) a == 1;
 assert-ranked(a,
@@ -135,8 +135,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a == 1;
 observe-l (1) a != 1;
 assert-ranked(a,
@@ -153,8 +153,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) false;
 assert-ranked(a,
 	[0, 1],
@@ -170,8 +170,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) false;
 assert-ranked(a,
 	[0, 1],
@@ -187,8 +187,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a == 1;
 assert-ranked(a,
 	[0, 1],
@@ -204,8 +204,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (1) a == 3;
 assert-ranked(a,
 	[0, 1],
@@ -221,8 +221,8 @@ normally(1) {
 		a := 2;
 	} exceptionally {
 		a := 3;
-	};
-};
+	}
+}
 observe-l (2) a == 3;
 assert-ranked(a,
 	[0, 1],

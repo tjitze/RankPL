@@ -26,6 +26,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
+import com.tr.rp.RPLBaseTest;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.Function;
@@ -45,7 +46,6 @@ import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
 import com.tr.rp.parser.RankPLParser.ExpContext;
 import com.tr.rp.parser.RankPLParser.FunctiondefContext;
-import com.tr.rp.statement.RPLBaseTest;
 
 public class ParseTest extends RPLBaseTest {
 

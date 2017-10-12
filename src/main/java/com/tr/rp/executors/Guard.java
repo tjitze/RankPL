@@ -4,10 +4,12 @@ import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
 /**
- * An executor that passes through its input to another executor
- * unchanged, and checks the input for correctness (i.e., correct
- * rank order, and no push or close events after the first close
- * event).
+ * An executor that passes on its input to another executor unchanged, and 
+ * checks the input for correctness (i.e., correct rank order, and no push 
+ * or close events after the first close event). 
+ * 
+ * A static method (checkIfEnabled) is provided which applies this executor
+ * on the basis of a static flag.
  */
 public final class Guard implements Executor {
 

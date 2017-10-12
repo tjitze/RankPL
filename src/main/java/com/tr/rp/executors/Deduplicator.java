@@ -6,6 +6,20 @@ import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 
+/**
+ * The deduplicator executor passes through its input to a given output 
+ * executor unchanged, except that variable stores that have been seen before
+ * are skipped.
+ * 
+ * Because lower-ranked variable stores are pushed before higher ranked ones,
+ * this means that the lowest-ranked variable store is passed through, while
+ * higher ranked occurrences of the same variable store are skipped. This is 
+ * semantically valid.
+ * 
+ * Using the deduplicator increases performance since it avoids redundant
+ * computation, at the price of increased memory use, as variable stores that
+ * have been seen have to be stored.
+ */
 public final class Deduplicator implements Executor {
 
 	private final Executor out;

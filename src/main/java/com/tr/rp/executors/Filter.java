@@ -10,9 +10,10 @@ import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * The Filter executor implements the regular conditioning operator. It passes on
- * only states satisfying a given condition, shifting down ranks uniformly so that
- * the lowest ranked state that is passed on is ranked zero.
+ * The Filter executor implements the regular conditioning operator. It takes as 
+ * input another executor, to which it passes on only states satisfying a given 
+ * condition. Ranks of states that are passed on are shifted down uniformly so 
+ * that the lowest ranked state that is passed on is ranked zero.
  */
 public final class Filter implements Executor {
 

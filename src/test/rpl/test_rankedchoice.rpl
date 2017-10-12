@@ -185,26 +185,25 @@ assert-ranked (b,
 reset;
 
 # Rank depends on value of variable
-# TODO: fix
-#normally(1) {
-#	a := 1;
-#} exceptionally {
-#	normally (1) {
-#		a := 2;
-#	} exceptionally {
-#		a := 3;
-#	}
-#}
-#normally (a*2) {
-#	observe false;
-#} exceptionally {
-#	observe true;
-#}
-#assert-ranked (a, 
-#	[0, 1],
-#	[3, 2], 
-#	[6, 3]);
-#reset;
+normally(1) {
+	a := 1;
+} exceptionally {
+	normally (1) {
+		a := 2;
+	} exceptionally {
+		a := 3;
+	}
+}
+normally (a*2) {
+	observe false;
+} exceptionally {
+	observe true;
+}
+assert-ranked (a, 
+	[0, 1],
+	[3, 2], 
+	[6, 3]);
+reset;
 
 # Syntactic shortcut: only normally, no rank
 x := 10;

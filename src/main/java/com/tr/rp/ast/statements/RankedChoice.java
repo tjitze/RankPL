@@ -7,10 +7,15 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.Expressions;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.executors.Deduplicator;
+import com.tr.rp.executors.DynamicMerger;
+import com.tr.rp.executors.ExceptionExecutor;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.Merger;
 import com.tr.rp.executors.Splitter;
@@ -43,22 +48,27 @@ public class RankedChoice extends AbstractStatement {
 
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		// TODO: properly handle this
-		if (!rank.hasDefiniteValue()) {
-			throw new RuntimeException("Rank must be definite");
-		}
-		int shift;
-		try {
-			shift = rank.getDefiniteValue(Type.INT);
-		} catch (RPLException e) {
-			throw new RuntimeException(e);
-		}
-		
 		Deduplicator d = new Deduplicator(out);
-		Merger m = new Merger(d, shift);
-		Executor exec1 = s1.getExecutor(m.getIn1(), c);
-		Executor exec2 = s2.getExecutor(m.getIn2(), c);
-		return new Splitter(exec1, exec2);
+		if (rank.hasDefiniteValue()) {
+			int shift = 0;
+			try {
+				shift = rank.getDefiniteValue(Type.INT);
+			} catch (RPLException ex) {
+				return new ExceptionExecutor(ex);
+			}
+			if (shift < 0) {
+				return new ExceptionExecutor(new RPLIllegalRankException(shift, rank, this));
+			}
+			Merger m = new Merger(d, shift);
+			Executor exec1 = s1.getExecutor(m.getIn1(), c);
+			Executor exec2 = s2.getExecutor(m.getIn2(), c);
+			return new Splitter(exec1, exec2);
+		} else {
+			DynamicMerger m = new DynamicMerger(d, rank, this);
+			Executor exec1 = s1.getExecutor(m.getIn1(), c);
+			Executor exec2 = s2.getExecutor(m.getIn2(), c);
+			return new Splitter(exec1, exec2);
+		}
 	}	
 	
 	public String toString() {

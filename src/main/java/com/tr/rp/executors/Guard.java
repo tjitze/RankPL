@@ -16,6 +16,7 @@ public final class Guard implements Executor {
 	private final Executor out;
 	private boolean closed = false;
 	private int rank = 0;
+	private boolean first = true;
 	
 	public static boolean enabled = false;
 	
@@ -51,6 +52,10 @@ public final class Guard implements Executor {
 		if (closed) {
 			throw new IllegalStateException("Push called on closed executor");
 		}
+		if (first && s.getRank() != 0) {
+			throw new IllegalStateException("First pushed state should be ranked 0 (got " + s.getRank() + ")");
+		}
+		first = false;
 		if (s.getRank() < rank) {
 			throw new IllegalStateException("Illegal rank order (got " + s.getRank() + " but should be at least " + rank + ")");
 		}

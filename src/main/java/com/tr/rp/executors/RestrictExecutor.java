@@ -5,6 +5,12 @@ import java.util.function.Consumer;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
+/**
+ * An executor that is constructed with an output executor, and passes on only 
+ * states with a rank equal to or less than a given maxRank value. Any "cutoff 
+ * event" (i.e., a state not being passed on because its rank exceeds maxRank) is
+ * registered with a given cutOffListener.
+ */
 public final class RestrictExecutor implements Executor {
 
 	private final int maxRank;

@@ -3,6 +3,11 @@ package com.tr.rp.executors;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
+/**
+ * An executor that is constructed with two output executors. All
+ * push/close calls called on this executor or reproduced on the
+ * two input executors.
+ */
 public final class Splitter implements Executor {
 
 	private final Executor out1;

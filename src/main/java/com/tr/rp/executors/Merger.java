@@ -6,6 +6,22 @@ import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
+/**
+ * Merger is constructed with a given output executor and produces two 
+ * input executors. States pushed into the two input executors are merged
+ * (in such a way that rank order is respected) and pushed into the output 
+ * executor. 
+ * 
+ * In addition, Merger allows the ranks of the states pushed into the second
+ * iterator the be shifted up by a constant number of ranks. This number is
+ * specified by the shift parameter. This is the basic functionality required 
+ * by the ranked choice statement.
+ * 
+ * See also DynamicMerger, which does the same, except that the shift parameter
+ * is an expression whose value depends on the state that is pushed. This 
+ * constant-value merger is, however, more efficient, and should be used
+ * whenever the shift parameter is known to be a constant.
+ */
 public final class Merger {
 
 	private final Executor out;

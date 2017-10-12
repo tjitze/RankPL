@@ -1,6 +1,5 @@
 package com.tr.rp.executors;
 
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -10,6 +9,21 @@ import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.varstore.types.Type;
+
+/**
+ * DynamicMerger is constructed with a given output executor and produces two 
+ * input executors. States pushed into the two input executors are merged
+ * (in such a way that rank order is respected) and pushed into the output 
+ * executor. 
+ * 
+ * In addition, DynamicMerger allows the ranks of the states pushed into
+ * the second iterator the be shifted up by a value determined by a given
+ * expression. This is the basic functionality required by the ranked 
+ * choice statement.
+ * 
+ * If the shift parameter is known to be a constant value, the Merger class
+ * should be used instead of DynamicMerger, as it is more efficient.
+ */
 
 public final class DynamicMerger {
 
@@ -24,11 +38,8 @@ public final class DynamicMerger {
 	private int outputOffset = -1;
 	
 	private int safeOutRank = 0;
-	
-	private final AbstractStatement exceptionSource;
-	
+		
 	public DynamicMerger(Executor out, AbstractExpression shift, AbstractStatement exceptionSource) {
-		this.exceptionSource = exceptionSource;
 		this.out = new Executor() {
 
 			@Override

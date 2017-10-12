@@ -20,7 +20,7 @@ public final class Merger {
 	private int minPotentialNextRank1 = 0;
 	private int minPotentialNextRank2 = 0;
 	
-	private int shift = 0;
+	private final int shift;
 	
 	private int outputOffset = -1;
 	

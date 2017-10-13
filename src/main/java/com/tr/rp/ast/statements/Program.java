@@ -16,7 +16,6 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLFunctionUndefinedException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.executors.Executor;
-import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStoreFactory;
 
 public class Program extends AbstractStatement {

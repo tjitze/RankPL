@@ -13,7 +13,6 @@ import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.LShifter;
-import com.tr.rp.varstore.PMapVarStore;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.VarStoreFactory;
 

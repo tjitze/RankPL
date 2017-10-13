@@ -16,67 +16,39 @@ import com.tr.rp.varstore.types.Type;
 /**
  * Represents a variable store: an assignment of values to variables.
  */
-public class PMapVarStore implements VarStore {
+public class PTMVarStore implements VarStore {
 
 	private PersistentTreeMap<String, Object> varStore;
-	private final PMapVarStore parent;
-	private int i;
-	private int j;
-	private int k;
+	private final PTMVarStore parent;
+
 
 	// Hash code caching
 	private int hashCode = 0;
 	private boolean hashCodeComputed = false;
 	
-	public PMapVarStore() {
+	public PTMVarStore() {
 		varStore = PersistentTreeMap.empty();
 		parent = null;
-		i = 0;
-		j = 0;
-		k = 0;
 	}
 	
-	public PMapVarStore(PMapVarStore parent) {
+	public PTMVarStore(PTMVarStore parent) {
 		varStore  = PersistentTreeMap.empty();
 		this.parent = parent;
-		i = 0;
-		j = 0;
-		k = 0;
 	}
 	
-	private PMapVarStore(PMapVarStore previous, String var, Object value, int i, int j, int k) {
+	private PTMVarStore(PTMVarStore previous, String var, Object value) {
 		if (value != null) {
 			this.varStore = previous.varStore.assoc(var, value);
 		} else {
 			this.varStore = previous.varStore.without(var);
 		}
 		this.parent = previous.parent;
-		this.i = i;
-		this.j = j;
-		this.k = k;
-	}
-
-	private PMapVarStore(PMapVarStore previous, int i, int j, int k) {
-		this.varStore = previous.varStore;
-		this.parent = previous.parent;
-		this.i = i;
-		this.j = j;
-		this.k = k;
 	}
 
 	/**
 	 * @return Value of given variable (0 if not initialized).
 	 */
 	public <T> T getValue(String var, Type<T> asType) throws RPLUndefinedException, RPLTypeError {
-		if (asType == Type.INT && var.equals("i")) {
-			return (T) new Integer(i);
-		}
-		if (asType == Type.INT && var.equals("j")) {
-			return (T) new Integer(j);
-		}
-		if (asType == Type.INT && var.equals("k")) {
-			return (T) new Integer(k);
-		}
 		Object o = getValue(var);
 		if (o == null) {
 			throw new RPLUndefinedException(var);
@@ -91,15 +63,6 @@ public class PMapVarStore implements VarStore {
 	 * @return Value of given variable (0 if not initialized).
 	 */
 	public Object getValue(String var) {
-		if (var.equals("i")) {
-			return new Integer(i);
-		}
-		if (var.equals("j")) {
-			return new Integer(j);
-		}
-		if (var.equals("k")) {
-			return new Integer(k);
-		}
 		return varStore.get(var);
 	}
 	
@@ -111,19 +74,10 @@ public class PMapVarStore implements VarStore {
 	 * @return A new variable store where var is set to value.
 	 */
 	public VarStore create(String var, Object value) {
-		if (var.equals("i")) {
-			return new PMapVarStore(this, (int)value, j, k);
-		}
-		if (var.equals("j")) {
-			return new PMapVarStore(this, i, (int)value, k);
-		}
-		if (var.equals("k")) {
-			return new PMapVarStore(this, i, j, (int)value);
-		}		
 		if (Objects.equals(varStore.get(var), value)) {
 			return this;
 		}
-		return new PMapVarStore(this, var, value, i, j, k);
+		return new PTMVarStore(this, var, value);
 	}
 	
 	/**
@@ -133,15 +87,6 @@ public class PMapVarStore implements VarStore {
 	 * @param value the value
 	 */
 	protected void setValue(String var, Object value) {
-		if (var.equals("i")) {
-			this.i = (Integer)value;
-		}
-		if (var.equals("j")) {
-			this.j = (Integer)value;
-		}
-		if (var.equals("k")) {
-			this.k = (Integer)value;
-		}		
 		if (value == null) {
 			varStore = varStore.without(var);
 		} else {
@@ -154,40 +99,28 @@ public class PMapVarStore implements VarStore {
 	 */
 	public VarStore unset(String var) {
 		if (getValue(var) == null) return this;
-		return new PMapVarStore(this, var, null, i, j, k);
+		return new PTMVarStore(this, var, null);
 	}
 	
 	/**
 	 * @return A marginalization of this variable store to a given set of variables.
 	 */
 	public VarStore marginalize(List<String> vars) {
-		PMapVarStore v = new PMapVarStore(parent);
+		PTMVarStore v = new PTMVarStore(parent);
 		for (String var: vars) {
-			Object value;
-			if (var.equals("i")) {
-				value = i;
-			} if (var.equals("j")) {
-				value = j;
-			} else if (var.equals("k")) {
-				value = k;
-			} else {
-				value = varStore.get(var);
-			}
+			Object value = varStore.get(var);
 			if (value != null) {
-				v = (PMapVarStore)v.create(var, value);
+				v = (PTMVarStore)v.create(var, value);
 			}
 		}
 		return v;
 	}
 
 	public boolean equals(Object o) {
-		if (o instanceof PMapVarStore) {
-			PMapVarStore other = (PMapVarStore)o;
+		if (o instanceof PTMVarStore) {
+			PTMVarStore other = (PTMVarStore)o;
 			return Objects.equals(parent, other.parent)
-					&& Objects.equals(varStore, other.varStore)
-					&& i == other.i 
-					&& j == other.j 
-					&& k == other.k;
+					&& Objects.equals(varStore, other.varStore);
 		}
 		return false;
 	}
@@ -195,8 +128,7 @@ public class PMapVarStore implements VarStore {
 	public int hashCode() {
 		synchronized (this) {
 			if (!hashCodeComputed) {
-				hashCode = varStore.hashCode() + (parent != null? parent.hashCode(): 0)
-						+ i + j * 2 + k * 5;
+				hashCode = varStore.hashCode() + (parent != null? parent.hashCode(): 0);
 				hashCodeComputed = true;
 			}
 		}
@@ -234,9 +166,9 @@ public class PMapVarStore implements VarStore {
 			throw new IllegalArgumentException();
 		}
 		// Create new var store with parameters
-		PMapVarStore v = new PMapVarStore(this);
+		PTMVarStore v = new PTMVarStore(this);
 		for (int x = 0; x < vars.length; x++) {
-			v = new PMapVarStore(v, vars[x], values.get(x), i, j, k);
+			v = new PTMVarStore(v, vars[x], values.get(x));
 		}
 		return v;
 	}

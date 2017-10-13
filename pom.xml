@@ -4,6 +4,12 @@
   <artifactId>RankPL</artifactId>
   <version>0.7-SNAPSHOT</version>
   <name>RankPL</name>
+  <repositories>
+    <repository>
+      <id>usethesource</id>
+      <url>http://nexus.usethesource.io/content/repositories/public/</url>
+    </repository>
+  </repositories>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -63,6 +69,11 @@
     </resources>   
   </build>
   <dependencies>
+    <dependency>
+      <groupId>io.usethesource</groupId>
+      <artifactId>capsule</artifactId>
+      <version>0.6.1</version>
+    </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr4</artifactId>

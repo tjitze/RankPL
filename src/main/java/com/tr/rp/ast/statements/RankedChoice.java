@@ -48,7 +48,6 @@ public class RankedChoice extends AbstractStatement {
 
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		Deduplicator d = new Deduplicator(out);
 		if (rank.hasDefiniteValue()) {
 			int shift = 0;
 			try {
@@ -59,12 +58,12 @@ public class RankedChoice extends AbstractStatement {
 			if (shift < 0) {
 				return new ExceptionExecutor(new RPLIllegalRankException(shift, rank, this));
 			}
-			Merger m = new Merger(d, shift);
+			Merger m = new Merger(out, shift);
 			Executor exec1 = s1.getExecutor(m.getIn1(), c);
 			Executor exec2 = s2.getExecutor(m.getIn2(), c);
 			return new Splitter(exec1, exec2);
 		} else {
-			DynamicMerger m = new DynamicMerger(d, rank, this);
+			DynamicMerger m = new DynamicMerger(out, rank, this);
 			Executor exec1 = s1.getExecutor(m.getIn1(), c);
 			Executor exec2 = s2.getExecutor(m.getIn2(), c);
 			return new Splitter(exec1, exec2);

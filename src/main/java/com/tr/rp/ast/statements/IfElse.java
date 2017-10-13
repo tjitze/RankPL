@@ -28,7 +28,7 @@ public class IfElse extends AbstractStatement {
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		RankTransformer<AbstractExpression> transformExp = RankTransformer.create(exp);
-		Executor e = new BranchingExecutor(transformExp, a, b, new Deduplicator(out), c, this);
+		Executor e = new BranchingExecutor(transformExp, a, b, out, c, this);
 		transformExp.setOutput(e, this);
 		return transformExp;
 	}

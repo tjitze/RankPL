@@ -104,7 +104,7 @@ public class IndexElementExpression extends AbstractExpression {
 				if (index < 0 || index >= s.length()) {
 					throw new RPLIndexOutOfBoundsException(index, s.length(), this);
 				}
-				o = s.substring(index, index + 1);
+				o = String.valueOf(s.charAt(index));
 			} else if (o instanceof PersistentArray) {
 				PersistentArray list = (PersistentArray)o;
 				int index = indices[i].getValue(e, Type.INT);

@@ -52,20 +52,13 @@ public class Assign extends AbstractStatement {
 		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
 		RankTransformer<AbstractExpression> transformValue = RankTransformer.create(value);
 		Executor exec = new Executor() {
-			
-			private boolean closed = false;
-			
 			@Override
 			public void close() throws RPLException {
-				closed = true;
 				out.close();
 			}
 
 			@Override
 			public void push(State s) throws RPLException {
-				if (closed) {
-					throw new IllegalStateException();
-				}
 				VarStore newVarStore = null;
 				try {
 					newVarStore = transformTarget.get().assign(s.getVarStore(), 

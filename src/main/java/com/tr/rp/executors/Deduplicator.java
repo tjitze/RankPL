@@ -30,16 +30,15 @@ public final class Deduplicator implements Executor {
 	}
 	
 	@Override
-	public void close() throws RPLException {
+	public final void close() throws RPLException {
 		seen.clear();
 		out.close();
 	}
 
 	@Override
-	public void push(State s) throws RPLException {
-		if (!seen.contains(s.getVarStore())) {
+	public final void push(State s) throws RPLException {
+		if (seen.add(s.getVarStore())) {
 			out.push(s);
-			seen.add(s.getVarStore());
 		}
 	}
 

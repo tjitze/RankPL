@@ -94,9 +94,6 @@ public class IndexElementExpression extends AbstractExpression {
 	@Override
 	public Object getValue(VarStore e) throws RPLException {
 		Object o = exp.getValue(e);
-		if (o == null) {
-			throw new RPLUndefinedException(this);
-		}
 		for (int i = 0; i < indices.length; i++) {
 			if (o == null) {
 				throw new RPLUndefinedException(this);

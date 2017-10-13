@@ -76,8 +76,6 @@ public abstract class AbstractExpression implements LanguageElement {
 	public abstract Object getDefiniteValue() throws RPLException;
 
 	public <T> T getValue(VarStore e, Type<T> type) throws RPLException {
-		Objects.requireNonNull(e);
-		Objects.requireNonNull(type);
 		Object o = getValue(e);
 		if (o == null) {
 			throw new RPLUndefinedException(this);

@@ -53,9 +53,6 @@ public final class LShifter implements Executor {
 	
 	@Override
 	public void close() throws RPLException {
-		if (closed == true) {
-			throw new IllegalStateException();
-		}
 		
 		// No matching item pushed (TODO: change this case to achieve destructive conditioning)
 		if (offset1 == -1 && offset2 == -1) {
@@ -70,9 +67,6 @@ public final class LShifter implements Executor {
 		
 	@Override
 	public void push(State s) throws RPLException {
-		if (closed) {
-			throw new IllegalStateException();
-		}
 		minPotentialNextRank = s.getRank();
 
 		// Set offset in case rank of true item exceeds shift

@@ -17,7 +17,6 @@ public final class RankTransformer<T extends AbstractExpression> implements Exec
 	private final LinkedList<State> queue = new LinkedList<State>();
 	private T transformedExp = null;
 	private AbstractStatement st;
-	private boolean closed = false;
 	
 	public RankTransformer(T exp) {
 		this.exp = exp;
@@ -41,8 +40,6 @@ public final class RankTransformer<T extends AbstractExpression> implements Exec
 	
 	@Override
 	public void close() throws RPLException {
-		closed = true;
-		Objects.nonNull(out);
 		if (transformedExp == null) {
 			try {
 				@SuppressWarnings("unchecked")
@@ -63,10 +60,6 @@ public final class RankTransformer<T extends AbstractExpression> implements Exec
 
 	@Override
 	public void push(State s) throws RPLException {
-		if (closed) {
-			throw new IllegalStateException();
-		}
-		Objects.nonNull(out);
 		if (transformedExp == null) {
 			try {
 				@SuppressWarnings("unchecked")

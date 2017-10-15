@@ -2,7 +2,7 @@ package com.tr.rp.base;
 
 import com.tr.rp.varstore.VarStore;
 
-public class State {
+public final class State {
 	
 	private final VarStore varStore;
 	private final int rank;
@@ -12,28 +12,20 @@ public class State {
 		this.rank = rank;
 	}
 	
-	public VarStore getVarStore() {
+	public final VarStore getVarStore() {
 		return varStore;
 	}
 	
-	public int getRank() {
+	public final int getRank() {
 		return rank;
 	}
 	
-	public State shiftDown(int shift) {
-		if (shift == 0) {
-			return this;
-		} else {
-			return new State(varStore, Rank.sub(rank, shift));
-		}
+	public final State shiftDown(int shift) {
+		return shift == 0? this: new State(varStore, Rank.sub(rank, shift));
 	}
 	
-	public State shiftUp(int shift) {
-		if (shift == 0) {
-			return this;
-		} else {
-			return new State(varStore, Rank.add(rank, shift));
-		}
+	public final State shiftUp(int shift) {
+		return shift == 0? this: new State(varStore, Rank.add(rank, shift));
 	}
 	
 	public boolean equals(Object o) {

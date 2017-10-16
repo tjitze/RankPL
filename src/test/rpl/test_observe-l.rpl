@@ -232,7 +232,7 @@ reset;
 
 # variable rank
 either a := 1; or a := 2; or a := 3;
-observe-l (a) false;
+observe-l (a-1) a == 1;
 print-ranking(a);
 assert-ranked(a,
 	[0, 1],

@@ -1,6 +1,7 @@
 package com.tr.rp.executors;
 
 import java.util.PriorityQueue;
+import java.util.function.Supplier;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
@@ -40,7 +41,7 @@ public class DynamicMerger {
 	
 	private int safeOutRank = 0;
 		
-	public DynamicMerger(Executor out, AbstractExpression shift) {
+	public DynamicMerger(Executor out, Supplier<AbstractExpression> shift) {
 		this.out = new Executor() {
 
 			@Override
@@ -92,13 +93,13 @@ public class DynamicMerger {
 				}
 				int shiftValue;
 				try {
-					shiftValue = shift.getValue(s.getVarStore(), Type.INT);
+					shiftValue = shift.get().getValue(s.getVarStore(), Type.INT);
 				} catch (RPLException e) {
 					handleRankExpressionException(e);
 					return;
 				}
 				if (shiftValue < 0) {
-					handleRankExpressionException(new RPLIllegalRankException(shiftValue, shift));
+					handleRankExpressionException(new RPLIllegalRankException(shiftValue, shift.get()));
 				}
 				inQueue.add(s.shiftUp(shiftValue));
 				flush();

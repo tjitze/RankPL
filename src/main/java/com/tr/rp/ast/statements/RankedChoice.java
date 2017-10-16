@@ -18,6 +18,7 @@ import com.tr.rp.executors.DynamicMerger;
 import com.tr.rp.executors.ExceptionExecutor;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.Merger;
+import com.tr.rp.executors.RankTransformer;
 import com.tr.rp.executors.Splitter;
 import com.tr.rp.varstore.types.Type;
 
@@ -63,14 +64,17 @@ public class RankedChoice extends AbstractStatement {
 			Executor exec2 = s2.getExecutor(m.getIn2(), c);
 			return new Splitter(exec1, exec2);
 		} else {
-			DynamicMerger m = new DynamicMerger(out, rank) {
+			RankTransformer<AbstractExpression> tr = RankTransformer.create(rank);
+			DynamicMerger m = new DynamicMerger(out, tr) {
 				public void handleRankExpressionException(RPLException e) throws RPLException {
 					RankedChoice.this.handleRankExpressionException(e);
 				}
 			};
 			Executor exec1 = s1.getExecutor(m.getIn1(), c);
 			Executor exec2 = s2.getExecutor(m.getIn2(), c);
-			return new Splitter(exec1, exec2);
+			Splitter sp = new Splitter(exec1, exec2);
+			tr.setOutput(sp, this);
+			return tr;
 		}
 	}	
 	

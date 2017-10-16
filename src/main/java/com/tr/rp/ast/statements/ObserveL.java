@@ -7,13 +7,9 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import static com.tr.rp.ast.expressions.Expressions.*;
-import static com.tr.rp.ast.statements.Statements.*;
-import com.tr.rp.ast.expressions.Literal;
-import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.executors.EvaluationErrorHandler;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.Guard;
 import com.tr.rp.executors.LShifter;
@@ -41,11 +37,23 @@ public class ObserveL extends AbstractStatement {
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		if (!rank.hasDefiniteValue()) {
-			int rankB = 0;
-			int rankNotB = 0;
-			ObserveJ obs1 = new ObserveJ(minus(var("x"), plus(lit(rankB), lit(rankNotB))), b);
-			ObserveJ obs2 = new ObserveJ(minus(lit(rankB), var("x")), not(b));
-			IfElse ie = new IfElse(leq(lit(rankB), rank), obs1, obs2) {
+			ObserveJ obs1 = new ObserveJ(b, plus(minus(rank, rank(b)), rank(not(b)))) {
+				public void handleConditionException(RPLException e) throws RPLException {
+					ObserveL.this.handleConditionException(e);
+				}
+				public void handleRankExpressionException(RPLException e) throws RPLException {
+					ObserveL.this.handleRankExpressionException(e);
+				}
+			};
+			ObserveJ obs2 = new ObserveJ(not(b), minus(rank(b), rank)) {
+				public void handleConditionException(RPLException e) throws RPLException {
+					ObserveL.this.handleConditionException(e);
+				}
+				public void handleRankExpressionException(RPLException e) throws RPLException {
+					ObserveL.this.handleRankExpressionException(e);
+				}
+			};
+			IfElse ie = new IfElse(leq(rank(b), rank), obs1, obs2) {
 				public void handleConditionException(RPLException e) throws RPLException {
 					ObserveL.this.handleConditionException(e);
 				}
@@ -58,7 +66,6 @@ public class ObserveL extends AbstractStatement {
 			} catch (RPLException e) {
 				throw new RuntimeException(e);
 			}
-
 			RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(b);
 			LShifter exec = new LShifter(Guard.checkIfEnabled(out), transformCondition::get, shift) {
 				public void handleConditionException(RPLException e) throws RPLException {

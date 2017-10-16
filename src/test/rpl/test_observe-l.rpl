@@ -229,3 +229,15 @@ assert-ranked(a,
 	[1, 2],
 	[0, 3]);
 reset;
+
+# variable rank
+either a := 1; or a := 2; or a := 3;
+observe-l (a) false;
+print-ranking(a);
+assert-ranked(a,
+	[0, 1],
+	[1, 2],
+	[2, 3]);
+reset;
+
+

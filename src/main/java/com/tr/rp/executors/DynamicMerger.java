@@ -4,6 +4,7 @@ import java.util.PriorityQueue;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
+import com.tr.rp.ast.statements.IfElse;
 import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
@@ -25,7 +26,7 @@ import com.tr.rp.varstore.types.Type;
  * should be used instead of DynamicMerger, as it is more efficient.
  */
 
-public final class DynamicMerger {
+public class DynamicMerger {
 
 	private final Executor out;
 	private final Executor in1;
@@ -39,7 +40,7 @@ public final class DynamicMerger {
 	
 	private int safeOutRank = 0;
 		
-	public DynamicMerger(Executor out, AbstractExpression shift, AbstractStatement exceptionSource) {
+	public DynamicMerger(Executor out, AbstractExpression shift) {
 		this.out = new Executor() {
 
 			@Override
@@ -89,9 +90,15 @@ public final class DynamicMerger {
 				if (in2Closed) {
 					throw new IllegalStateException();
 				}
-				int shiftValue = shift.getValue(s.getVarStore(), Type.INT);
+				int shiftValue;
+				try {
+					shiftValue = shift.getValue(s.getVarStore(), Type.INT);
+				} catch (RPLException e) {
+					handleRankExpressionException(e);
+					return;
+				}
 				if (shiftValue < 0) {
-					throw new RPLIllegalRankException(shiftValue, shift, exceptionSource);
+					handleRankExpressionException(new RPLIllegalRankException(shiftValue, shift));
 				}
 				inQueue.add(s.shiftUp(shiftValue));
 				flush();
@@ -116,5 +123,13 @@ public final class DynamicMerger {
 	public Executor getIn2() {
 		return in2;
 	}
+	
+	/**
+	 * Override to handle exception resulting from rank expression evaluation
+	 */
+	public void handleRankExpressionException(RPLException e) throws RPLException {
+		throw e;
+	}
+
 	
 }

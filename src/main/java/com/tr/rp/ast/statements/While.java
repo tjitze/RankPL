@@ -35,23 +35,18 @@ public class While extends AbstractStatement {
 	/** While statement body */
 	private AbstractStatement body;
 	
-	/** Statement that is attached to exception thrown when evaluating whileCondition */
-	private AbstractStatement exceptionSource;
-	
 	private static final int ITERATION_UNROLL_DEPTH = 25;
 	
 	public While(AbstractExpression whileCondition, AbstractStatement body) {
 		this.whileCondition = whileCondition;
 		this.body = body;
 		preStatement = null;
-		exceptionSource = this;
 	}
 	
 	private While(AbstractExpression whileCondition, AbstractStatement body, AbstractStatement preStatement) {
 		this.whileCondition = whileCondition;
 		this.body = body;
 		this.preStatement = preStatement;
-		exceptionSource = this;
 	}
 
 	public AbstractExpression getWhileCondition() {
@@ -115,20 +110,20 @@ public class While extends AbstractStatement {
 				}
 			}
 		};
-		return new BranchingExecutor(exp, body, new Skip(), out2, c, exceptionSource);
+		return new BranchingExecutor(exp, body, new Skip(), out2, c) {
+			public void handleConditionException(RPLException e) throws RPLException {
+				throw e;
+			}
+		};
 	}
 
 	private boolean getCheckedExpValue(AbstractExpression exp, State s) throws RPLException {
 		try {
 			return exp.getValue(s.getVarStore(), Type.BOOL);
 		} catch (RPLException e) {
-			e.setStatement(exceptionSource);
-			throw e;
+			handleConditionException(e);
+			return false;
 		}
-	}
-
-	public void setExceptionSource(AbstractStatement exceptionSource) {
-		this.exceptionSource = exceptionSource;
 	}
 
 	@Override
@@ -212,4 +207,12 @@ public class While extends AbstractStatement {
 		public abstract void call() throws RPLException;
 	}
 	
+	/**
+	 * Override to handle exceptions resulting from condition evaluation
+	 */
+	public void handleConditionException(RPLException e) throws RPLException {
+		e.setStatement(this);
+		throw e;
+	}
+
 }

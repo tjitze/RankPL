@@ -15,21 +15,13 @@ import com.tr.rp.executors.RankTransformer;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
-public class Observe extends AbstractStatement implements ObserveErrorHandler {
+public class Observe extends AbstractStatement {
 
 	private AbstractExpression exp;
-	private ObserveErrorHandler errorHandler;
 	
 	public Observe(AbstractExpression exp) {
 		this.exp = exp;
-		this.errorHandler = this;
 	}
-
-	public Observe(AbstractExpression exp, ObserveErrorHandler errorHandler) {
-		this.exp = exp;
-		this.errorHandler = errorHandler;
-	}
-
 
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
@@ -61,8 +53,8 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 		try {
 			return exp2.getValue(v, Type.BOOL);
 		} catch (RPLException e) {
-			errorHandler.observeConditionError(e);
-			throw e;
+			handleConditionException(e);
+			return false;
 		}
 	}
 
@@ -108,10 +100,11 @@ public class Observe extends AbstractStatement implements ObserveErrorHandler {
 		// nop
 	}
 
-	@Override
-	public void observeConditionError(RPLException e) throws RPLException {
+	/**
+     * Override to handle exceptions resulting from conditione valuation
+	 */
+	public void handleConditionException(RPLException e) throws RPLException {
 		e.setStatement(this);
-		e.setExpression(exp);
 		throw e;
 	}
 

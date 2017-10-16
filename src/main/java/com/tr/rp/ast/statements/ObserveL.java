@@ -6,6 +6,10 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
+import static com.tr.rp.ast.expressions.Expressions.*;
+import static com.tr.rp.ast.statements.Statements.*;
+import com.tr.rp.ast.expressions.Literal;
+import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
@@ -24,7 +28,7 @@ import com.tr.rp.varstore.types.Type;
  *	else
  *		observe -b [rank(b)-x] observe b
  */
-public class ObserveL extends AbstractStatement implements EvaluationErrorHandler {
+public class ObserveL extends AbstractStatement {
 
 	private AbstractExpression b;
 	private AbstractExpression rank;
@@ -36,23 +40,35 @@ public class ObserveL extends AbstractStatement implements EvaluationErrorHandle
 
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		// TODO: properly handle this
 		if (!rank.hasDefiniteValue()) {
-			throw new RuntimeException("Rank must be definite");
-		}
-		int shift;
-		try {
-			shift = rank.getDefiniteValue(Type.INT);
-		} catch (RPLException e) {
-			throw new RuntimeException(e);
-		}
+			int rankB = 0;
+			int rankNotB = 0;
+			ObserveJ obs1 = new ObserveJ(minus(var("x"), plus(lit(rankB), lit(rankNotB))), b);
+			ObserveJ obs2 = new ObserveJ(minus(lit(rankB), var("x")), not(b));
+			IfElse ie = new IfElse(leq(lit(rankB), rank), obs1, obs2) {
+				public void handleConditionException(RPLException e) throws RPLException {
+					ObserveL.this.handleConditionException(e);
+				}
+			};
+			return ie.getExecutor(out, c);
+		} else {
+			int shift;
+			try {
+				shift = rank.getDefiniteValue(Type.INT);
+			} catch (RPLException e) {
+				throw new RuntimeException(e);
+			}
 
-		RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(b);
-		LShifter exec = new LShifter(Guard.checkIfEnabled(out), transformCondition::get, shift);
-		exec.setErrorHandler(this);
-		transformCondition.setOutput(exec, this);
-		return transformCondition;
-	}	
+			RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(b);
+			LShifter exec = new LShifter(Guard.checkIfEnabled(out), transformCondition::get, shift) {
+				public void handleConditionException(RPLException e) throws RPLException {
+					ObserveL.this.handleConditionException(e);
+				}
+			};
+			transformCondition.setOutput(exec, this);
+			return transformCondition;
+		}
+	}
 
 	public String toString() {
 		String bString = b.toString();
@@ -106,9 +122,15 @@ public class ObserveL extends AbstractStatement implements EvaluationErrorHandle
 	public void getAssignedVariables(Set<String> variables) {
 		// nop
 	}
+	
+	public void handleConditionException(RPLException e) throws RPLException {
+		e.setExpression(b);
+		e.setStatement(this);
+		throw e;
+	}
 
-	@Override
-	public void handleEvaluationError(RPLException e) throws RPLException {
+	public void handleRankExpressionException(RPLException e) throws RPLException {
+		e.setExpression(rank);
 		e.setStatement(this);
 		throw e;
 	}

@@ -12,7 +12,12 @@ public class RPLIllegalRankException extends RPLException {
 		this.setExpression(expression);
 		this.setStatement(statement);
 	}
-	
+
+	public RPLIllegalRankException(int rank, AbstractExpression expression) {
+		this.rank = rank;
+		this.setExpression(expression);
+	}
+
 	public RPLIllegalRankException(AbstractStatement statement) {
 		this.rank = 0;
 		this.setStatement(statement);

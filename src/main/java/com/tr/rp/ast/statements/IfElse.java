@@ -28,24 +28,14 @@ public class IfElse extends AbstractStatement {
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		RankTransformer<AbstractExpression> transformExp = RankTransformer.create(exp);
-		Executor e = new BranchingExecutor(transformExp, a, b, out, c, this);
+		Executor e = new BranchingExecutor(transformExp, a, b, out, c) {
+			public void handleConditionException(RPLException e) throws RPLException {
+				IfElse.this.handleConditionException(e);
+			}
+		};
 		transformExp.setOutput(e, this);
 		return transformExp;
 	}
-
-	public void ifElseConditionError(RPLException e) throws RPLException {
-		e.setStatement(this);
-		e.setExpression(exp);
-		throw e;
-	}
-	
-	public void ifElseThenError(RPLException e) throws RPLException {
-		throw e;
-	};
-	
-	public void ifElseElseError(RPLException e) throws RPLException {
-		throw e;
-	};
 
 	public String toString() {
 		String expString = exp.toString();
@@ -97,6 +87,14 @@ public class IfElse extends AbstractStatement {
 	public void getAssignedVariables(Set<String> variables) {
 		a.getAssignedVariables(variables);
 		b.getAssignedVariables(variables);
+	}
+
+	/**
+	 * Override to handle exception resulting from condition evaluation
+	 */
+	public void handleConditionException(RPLException e) throws RPLException {
+		e.setStatement(IfElse.this);
+		throw e;
 	}
 
 }

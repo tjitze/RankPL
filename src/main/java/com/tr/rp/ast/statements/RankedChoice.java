@@ -63,7 +63,11 @@ public class RankedChoice extends AbstractStatement {
 			Executor exec2 = s2.getExecutor(m.getIn2(), c);
 			return new Splitter(exec1, exec2);
 		} else {
-			DynamicMerger m = new DynamicMerger(out, rank, this);
+			DynamicMerger m = new DynamicMerger(out, rank) {
+				public void handleRankExpressionException(RPLException e) throws RPLException {
+					RankedChoice.this.handleRankExpressionException(e);
+				}
+			};
 			Executor exec1 = s1.getExecutor(m.getIn1(), c);
 			Executor exec2 = s2.getExecutor(m.getIn2(), c);
 			return new Splitter(exec1, exec2);
@@ -122,5 +126,13 @@ public class RankedChoice extends AbstractStatement {
 		s1.getAssignedVariables(variables);
 		s2.getAssignedVariables(variables);
 	}
-	
+
+	/**
+	 * Override to handle exception resulting from rank expression evaluation
+	 */
+	public void handleRankExpressionException(RPLException e) throws RPLException {
+		e.setStatement(this);
+		throw e;
+	}
+
 }

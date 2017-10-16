@@ -16,7 +16,6 @@ import com.tr.rp.varstore.types.Type;
 public class BranchingExecutor implements Executor {
 
 	private final Splitter splitter;
-	private final AbstractStatement exceptionSource;
 	private int inRank = 0;
 	private int shift1 = Rank.MAX;
 	private int shift2 = Rank.MAX;
@@ -24,13 +23,20 @@ public class BranchingExecutor implements Executor {
 
 	
 	public BranchingExecutor(Supplier<AbstractExpression> exp, ExecutorProvider s1, ExecutorProvider s2, Executor out,
-			ExecutionContext c, AbstractStatement exceptionSource) {
+			ExecutionContext c) {
 		InternalMerger m = new InternalMerger(new Deduplicator(out));
-		Executor exec1 = new Filter(s1.getExecutor(m.getIn1(), c), exp);
-		Executor exec2 = new Filter(s2.getExecutor(m.getIn2(), c), () -> new Not(exp.get()));
+		Executor exec1 = new Filter(s1.getExecutor(m.getIn1(), c), exp) {
+			public void handleConditionException(RPLException e) throws RPLException {
+				BranchingExecutor.this.handleConditionException(e);
+			}
+		};
+		Executor exec2 = new Filter(s2.getExecutor(m.getIn2(), c), () -> new Not(exp.get())) {
+			public void handleConditionException(RPLException e) throws RPLException {
+				BranchingExecutor.this.handleConditionException(e);
+			}
+		};
 		splitter = new Splitter(exec1, exec2);
 		this.exp = exp;
-		this.exceptionSource = exceptionSource;
 	}
 
 	@Override
@@ -57,9 +63,16 @@ public class BranchingExecutor implements Executor {
 		try {
 			return exp.get().getValue(s.getVarStore(), Type.BOOL);
 		} catch (RPLException e) {
-			e.setStatement(exceptionSource);
-			throw e;
+			handleConditionException(e);
+			return false;
 		}
+	}
+
+	/**
+	 * Override to handle exceptions resulting from evaluation of condition
+	 */
+	public void handleConditionException(RPLException e) throws RPLException {
+		throw e;
 	}
 	
 	private class InternalMerger {

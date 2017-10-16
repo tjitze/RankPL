@@ -8,6 +8,7 @@ import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
 
 public class ForStatement extends AbstractStatement {
@@ -40,8 +41,13 @@ public class ForStatement extends AbstractStatement {
 			
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		While w = new While(forCondition, new Composition(body, next));
-		w.setExceptionSource(this);
+		While w = new While(forCondition, new Composition(body, next)) {
+			public void handleConditionException(RPLException e) throws RPLException {
+				e.setExpression(forCondition);
+				e.setStatement(ForStatement.this);
+				throw e;
+			}
+		};
 
 		AbstractStatement s;
 		if (preStatement != null) {

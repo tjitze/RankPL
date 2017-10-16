@@ -10,7 +10,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
-public final class JShifter implements Executor {
+public class JShifter implements Executor {
 
 	private final Supplier<AbstractExpression> condition;
 
@@ -24,9 +24,7 @@ public final class JShifter implements Executor {
 	
 	private int offset1 = -1;
 	private int offset2 = -1;
-	
-	private EvaluationErrorHandler errorHandler;
-	
+		
 	private int minPotentialNextRank = -1;
 	
 	public JShifter(Executor out, Supplier<AbstractExpression> condition, int shift) {
@@ -94,10 +92,8 @@ public final class JShifter implements Executor {
 		try {
 			return condition.get().getValue(varStore, Type.BOOL);
 		} catch (RPLException e) {
-			if (errorHandler != null) {
-				errorHandler.handleEvaluationError(e);
-			}
-			throw e;
+			handleConditionException(e);
+			return false;
 		}
 	}
 
@@ -170,8 +166,10 @@ public final class JShifter implements Executor {
 		return null;
 	}
 
-	public void setErrorHandler(EvaluationErrorHandler errorHandler) {
-		this.errorHandler = errorHandler;
+	/**
+	 * Override to handle exceptions resulting from evaluation of condition
+	 */
+	public void handleConditionException(RPLException e) throws RPLException {
+		throw e;
 	}
-
 }

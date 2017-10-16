@@ -12,6 +12,7 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.varstore.FreeVarNameProvider;
 
@@ -53,8 +54,12 @@ public class ForInStatement extends AbstractStatement {
 		// Body: target := exp[x]; body; x := x + 1;
 		AbstractStatement b = comp(assign(target, indexedExp(exp, var(x))), body, inc(x));
 
-		While w = new While(cond, b);
-		w.setExceptionSource(this);
+		While w = new While(cond, b) {
+			public void handleConditionException(RPLException e) throws RPLException {
+				// Should not happen 
+				throw new IllegalStateException();
+			}
+		};
 
 		AbstractStatement s;
 		if (preStatement != null) {

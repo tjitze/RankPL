@@ -15,13 +15,12 @@ import com.tr.rp.varstore.types.Type;
  * condition. Ranks of states that are passed on are shifted down uniformly so 
  * that the lowest ranked state that is passed on is ranked zero.
  */
-public final class Filter implements Executor {
+public class Filter implements Executor {
 
 	private final Executor out;
 	private final Supplier<AbstractExpression> expSupplier;
 	private int offset = -1;
 	private Consumer<Integer> offsetListener;
-	private EvaluationErrorHandler errorHandler;
 	
 	public Filter(Executor out, Supplier<AbstractExpression> expSupplier) {
 		this.out = out;
@@ -60,17 +59,17 @@ public final class Filter implements Executor {
 		try {
 			return expSupplier.get().getValue(varStore, Type.BOOL);
 		} catch (RPLException e) {
-			if (errorHandler != null) {
-				errorHandler.handleEvaluationError(e);
-			}
-			throw e;
+			handleConditionException(e);
+			return false;
 		}
 	}
 
-	public void setErrorHandler(EvaluationErrorHandler errorHandler) {
-		this.errorHandler = errorHandler;
+	/**
+	 * Override to handle exceptions resulting from evaluation of condition
+	 */
+	public void handleConditionException(RPLException e) throws RPLException {
+		throw e;
 	}
-
 
 	public void setOffsetListener(Consumer<Integer> offsetListener) {
 		this.offsetListener = offsetListener;

@@ -10,8 +10,10 @@ import com.tr.rp.ast.expressions.Expressions;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLIllegalRankException;
 import com.tr.rp.executors.EvaluationErrorHandler;
 import com.tr.rp.executors.ExceptionExecutor;
+import com.tr.rp.executors.ExecuteOnceExecutor;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.Guard;
 import com.tr.rp.executors.JShifter;
@@ -36,20 +38,38 @@ public class ObserveJ extends AbstractStatement implements EvaluationErrorHandle
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		if (!rank.hasDefiniteValue()) {
-			Observe o1 = new Observe(condition);
-			Observe o2 = new Observe(Expressions.not(condition));
-			RankedChoice rc = new RankedChoice(o1, o2, rank);
+			Observe o1 = new Observe(condition) {
+				public void handleConditionException(RPLException e) throws RPLException {
+					ObserveJ.this.handleConditionException(e);
+				}
+			};
+			Observe o2 = new Observe(Expressions.not(condition)) {
+				public void handleConditionException(RPLException e) throws RPLException {
+					ObserveJ.this.handleConditionException(e);
+				}
+			};
+			RankedChoice rc = new RankedChoice(o1, o2, rank) {
+				public void handleRankExpressionException(RPLException e) throws RPLException {
+					ObserveJ.this.handleRankExpressionException(e);
+				}
+			};
 			return rc.getExecutor(out, c);
 		} else {
 			int shift;
 			try {
 				shift = rank.getDefiniteValue(Type.INT);
 			} catch (RPLException e) {
-				return new ExceptionExecutor(e);
+				return new ExecuteOnceExecutor(() -> handleRankExpressionException(e));
+			}
+			if (shift < 0) {
+				return new ExecuteOnceExecutor(() -> handleRankExpressionException(new RPLIllegalRankException(shift, rank)));
 			}
 			RankTransformer<AbstractExpression> transformCondition = RankTransformer.create(condition);
-			JShifter exec = new JShifter(Guard.checkIfEnabled(out), transformCondition::get, shift);
-			exec.setErrorHandler(this);
+			JShifter exec = new JShifter(Guard.checkIfEnabled(out), transformCondition::get, shift) {
+				public void handleConditionException(RPLException e) throws RPLException {
+					ObserveJ.this.handleConditionException(e);
+				}
+			};
 			transformCondition.setOutput(exec, this);
 			return transformCondition;
 		}
@@ -113,5 +133,22 @@ public class ObserveJ extends AbstractStatement implements EvaluationErrorHandle
 		throw e;
 	}
 
+	/**
+	 * Override for custom handling of condition expression exceptions
+	 */
+	public void handleConditionException(RPLException e) throws RPLException {
+		e.setExpression(condition);
+		e.setStatement(this);
+		throw e;
+	}
+
+	/**
+	 * Override for custom handling of rank expression exceptions
+	 */
+	public void handleRankExpressionException(RPLException e) throws RPLException {
+		e.setExpression(rank);
+		e.setStatement(this);
+		throw e;
+	}
 
 }

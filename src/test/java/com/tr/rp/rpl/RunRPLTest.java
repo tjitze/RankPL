@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.tr.rp.RankPL;
 import com.tr.rp.ast.AbstractExpression;
@@ -48,14 +49,7 @@ public class RunRPLTest extends TestCase {
 			if (program == null) {
 				fail("Parse error");
 			}
-			program.run(ExecutionContext.createDefault(), new Consumer<RankedItem<String>>() {
-
-				@Override
-				public void accept(RankedItem<String> t) {
-					System.out.println(t);
-				}
-				
-			});
+			program.run(ExecutionContext.createDefault(), x -> true);
 			System.out.println("OK");
 		} catch (RPLException e) {
 			AbstractStatement st = e.getStatement();

@@ -8,16 +8,11 @@ import java.util.TreeSet;
 
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
-import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
-import com.tr.rp.ast.expressions.IsDefined;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
-import com.tr.rp.exceptions.RPLInterruptedException;
-import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.executors.Executor;
-import com.tr.rp.executors.InterruptableExecutor;
 import com.tr.rp.executors.RestrictExecutor;
 
 /**
@@ -67,8 +62,7 @@ public class Composition extends AbstractStatement {
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 
-		// Handle interrupt
-		Executor e = new InterruptableExecutor(out, c::isInterruptRequested);
+		Executor e = out;
 
 		// Apply rank cutoff
 		if (c.getRankCutOff() < Rank.MAX) {
@@ -100,9 +94,6 @@ public class Composition extends AbstractStatement {
 				}
 			};
 		}
-
-		// Handle interrupt
-		e = new InterruptableExecutor(e, c::isInterruptRequested);
 
 		// Apply rank cutoff
 		if (c.getRankCutOff() < Rank.MAX) {

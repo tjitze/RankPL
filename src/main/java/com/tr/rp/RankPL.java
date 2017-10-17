@@ -19,7 +19,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
@@ -135,89 +137,62 @@ public class RankPL {
 	public static Map<Integer, Set<String>> execute(Program program, int rankCutOff, int maxRank, int minCutOff, boolean noRanks, boolean terminateAfterFirst) throws RPLException {
 		
 		final Map<Integer, Set<String>> resultMap = new LinkedHashMap<Integer, Set<String>>();
-
 		ExecutionContext c = new ExecutionContext();
-
 		long startTime = System.currentTimeMillis();
+
+		if (!noRanks) {
+			System.out.println("Rank    Outcome");
+		}
 		
-		final Runnable executeTask = new Thread() {
-			@Override
-			public void run() {
-				try {
-					// Run
-					if (!noRanks) {
-						System.out.println("Rank    Outcome");
+		try {
+			program.run(c, new Function<RankedItem<String>, Boolean>() {
+				@Override
+				public Boolean apply(RankedItem<String> item) {
+					
+					// Normal termination
+					if (item == null) {
+						return false;
 					}
-					program.run(c, new Consumer<RankedItem<String>>() {
-
-						@Override
-						public void accept(RankedItem<String> item) {
-							
-							// Normal termination
-							if (item == null) {
-								return;
-							}
-							
-							// Terminate due to maxRank
-							if (item.rank > maxRank) {
-								c.setInterruptRequested();
-								return;
-							}
-
-							// Print outcome
-							if (noRanks) {
-								System.out.println(item.item);
-							} else {
-								System.out.println(String.format(" %3d    ", item.rank) + item.item);
-							}
-							
-							// Store outcome in map
-							Set<String> rankResults = resultMap.get(item.rank);
-							if (rankResults == null) {
-								rankResults = new LinkedHashSet<String>();
-								resultMap.put(item.rank, rankResults);
-							}
-							rankResults.add(item.item);
-
-							// Terminate after first
-							if (terminateAfterFirst) {
-								c.setInterruptRequested();
-								return;
-							}
-						}
-						
-					});
-				} catch (RPLException e) {
-					throw new RuntimeException(e);
+					
+					// Terminate due to maxRank
+					if (item.rank > maxRank) {
+						return false;
+					}
+	
+					// Print outcome
+					if (noRanks) {
+						System.out.println(item.item);
+					} else {
+						System.out.println(String.format(" %3d    ", item.rank) + item.item);
+					}
+					
+					// Store outcome in map
+					Set<String> rankResults = resultMap.get(item.rank);
+					if (rankResults == null) {
+						rankResults = new LinkedHashSet<String>();
+						resultMap.put(item.rank, rankResults);
+					}
+					rankResults.add(item.item);
+	
+					// Terminate after first
+					if (terminateAfterFirst) {
+						return false;
+					}
+					
+					// Terminate after time-out
+					if (System.currentTimeMillis() - startTime > timeOut) {
+						System.out.println("Remaining results omitted due to timeout.");
+						return false;
+					}
+					
+					// Continue
+					return true;
 				}
-			}
-		};
-		final ExecutorService executor = Executors.newSingleThreadExecutor();
-		final Future<?> future = executor.submit(executeTask);
-		executor.shutdown(); // This does not cancel the already-scheduled task.
-
-		try { 
-		  future.get(timeOut, TimeUnit.MILLISECONDS); 
-		} catch (InterruptedException ie) { 
-			ie.printStackTrace();
-		} catch (ExecutionException ee) { 
-			if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLInterruptedException) {
-				// nothing (termination due to f or maxRank options)
-			} else if (ee.getCause() instanceof RuntimeException && ee.getCause().getCause() instanceof RPLException) {
-				// re-throw any other RPL exception
-				throw (RPLException)ee.getCause().getCause();
-			} else {
-				// for other exceptions show stack trace
-				ee.printStackTrace();
-				throw new RPLMiscException("Abnormal exit");
-			} 
-		} catch (TimeoutException te) { 
-			c.setInterruptRequested();
-			System.out.println("Remaining results omitted due to timeout.");
-		} 
-		
-		if (!executor.isTerminated()) {
-		    executor.shutdownNow();
+			});
+		} catch (RPLInterruptedException ie) { 
+			// Thrown due to timeOut, terminateAfterFirst or maxRank
+		} catch (RPLException re) { 
+			throw re;
 		}
 		
 		// Print exec stats

@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.tr.rp.ast.AbstractStatement;
-import com.tr.rp.ast.Function;
 import com.tr.rp.ast.FunctionScope;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.base.ExecutionContext;
@@ -14,6 +14,7 @@ import com.tr.rp.base.RankedItem;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLFunctionUndefinedException;
+import com.tr.rp.exceptions.RPLInterruptedException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.varstore.VarStoreFactory;
@@ -37,7 +38,7 @@ public class Program extends AbstractStatement {
 				throw new RuntimeException(
 						new RPLMiscException("Found statements outside main() function scope."));
 			}
-			Function f;
+			com.tr.rp.ast.Function f;
 			try {
 				f = functionScope.getFunction("main");
 			} catch (RPLFunctionUndefinedException e) {
@@ -77,14 +78,14 @@ public class Program extends AbstractStatement {
 	 * by this program's return statement. If there is no return statement, no
 	 * values are returned.
 	 */
-	public void run(ExecutionContext c, Consumer<RankedItem<String>> out) throws RPLException {
+	public void run(ExecutionContext c, Function<RankedItem<String>, Boolean> out) throws RPLException {
 		HashSet<String> seen = new HashSet<String>();
 		Executor e = getExecutor(new Executor() {
 
 			@Override
 			public void close() throws RPLException {
 				seen.clear();
-				out.accept(null);
+				out.apply(null);
 			}
 
 			@Override
@@ -93,7 +94,9 @@ public class Program extends AbstractStatement {
 					String returnValue = s.getVarStore().getValue("$return").toString();
 					if (!seen.contains(returnValue)) {
 						seen.add(returnValue);
-						out.accept(new RankedItem<String>(returnValue, s.getRank()));
+						if (!out.apply(new RankedItem<String>(returnValue, s.getRank()))) {
+							throw new RPLInterruptedException();
+						}
 					}
 				}
 			}

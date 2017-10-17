@@ -24,8 +24,6 @@ public class ExecutionContext {
 
 	/** Rank of maximum cut off event */
 	private int maxCutOff = -1;
-	
-	private boolean interruptRequested = false;
 
 	/**
 	 * Rank cut-off is the rank above which alternatives are discarded. Can
@@ -104,18 +102,4 @@ public class ExecutionContext {
 		maxCutOff = -1;
 	}
 
-	/**
-	 * Request interrupt. Will gracefully terminate execution.
-	 */
-	public void setInterruptRequested() {
-		interruptRequested = true;
-	}
-
-	/**
-	 * @return True if interrupt was requested
-	 */
-	public boolean isInterruptRequested() {
-		return interruptRequested;
-	}
-	
 }

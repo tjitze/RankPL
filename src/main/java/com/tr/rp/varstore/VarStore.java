@@ -13,10 +13,17 @@ import com.tr.rp.varstore.types.Type;
  */
 public interface VarStore {
 
+	/**
+	 * Return value but throw RPLUndefinedException if the variable is
+	 * not defined, and return RPLTypeError if the value is not of the
+	 * provided type.
+	 * 
+	 * @return Value of given variable
+	 */
 	public <T> T getValue(String var, Type<T> asType) throws RPLUndefinedException, RPLTypeError;
 	
 	/**
-	 * @return Value of given variable (0 if not initialized).
+	 * @return Value of given variable (return null if not initialized).
 	 */
 	public Object getValue(String var);
 	

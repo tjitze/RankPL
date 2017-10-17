@@ -14,7 +14,7 @@ functiondef_or_statement
  ;
 
 functiondef
- : Define VAR ('()' | '(' VAR (',' VAR)* ')') stat
+ : Define MEMOIZE? VAR ('()' | '(' VAR (',' VAR)* ')') stat
  ;
 
 stat
@@ -180,6 +180,10 @@ SPACE
  : [ \t\r\n] -> skip
  ;
 
+MEMOIZE
+ : '$'
+ ;
+ 
 OTHER
  : . 
  ;

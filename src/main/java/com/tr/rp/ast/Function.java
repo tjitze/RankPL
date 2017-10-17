@@ -16,7 +16,8 @@ public class Function implements LanguageElement {
 	private final String[] parameters;
 	private int lineNumber = -1;
 	private Map<List, List<RankedItem<Object>>> cache = new HashMap<List, List<RankedItem<Object>>>();
-
+	private boolean memoize = false;
+	
 	public Function(String name, AbstractStatement body, String ... parameters) {
 		this.name = name;
 		this.body = body;
@@ -78,7 +79,7 @@ public class Function implements LanguageElement {
 	}
 	
 	public final boolean containsCachedValue(List<Object> args) {
-		return cache.containsKey(args);
+		return memoize && cache.containsKey(args);
 	}
 	
 	public final List<RankedItem<Object>> getCachedValue(List<Object> args) {
@@ -86,7 +87,16 @@ public class Function implements LanguageElement {
 	}
 	
 	public final void addCached(List<Object> args, List<RankedItem<Object>> returnValue) {
-		cache.put(args, returnValue);
+		if (memoize) {
+			cache.put(args, returnValue);
+		}
 	}
 
+	public void setMemoize(boolean f) {
+		this.memoize = f;
+	}
+
+	public boolean getMemoize() {
+		return memoize;
+	}
 }

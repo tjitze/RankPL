@@ -15,6 +15,7 @@ import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.RankedItem;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLInterruptedException;
 import com.tr.rp.exceptions.RPLMissingReturnValueException;
 import com.tr.rp.exceptions.RPLStopExecutionException;
 import com.tr.rp.exceptions.RPLWrongNumberOfArgumentsException;
@@ -123,18 +124,34 @@ public class FunctionCall extends AbstractFunctionCall {
 			Executor post = new Executor() {
 				@Override
 				public void close() throws RPLException {
-					out.close();
 					function.addCached(values, returnValues);
+					out.close();
 				}
 
 				@Override
 				public void push(State s) throws RPLException {
-					VarStore v = s.getVarStore();
-					if (!v.containsVar("$return")) {
-						throw new RPLMissingReturnValueException(function);
+					// Check if result has been cached in meantime
+					if (function.containsCachedValue(values)) {
+						// Push out rest
+						boolean start = false;
+						for (RankedItem<Object> ci: getFunction().getCachedValue(values)) {
+							State cs = new State(in.create(assignToVar, ci.item), ci.rank);
+							if (!start && s.equals(cs)) {
+								start = true;
+							}
+							if (start) {
+								out.push(cs);
+							}
+						}
+						throw stop;
+					} else {
+						VarStore v = s.getVarStore();
+						if (!v.containsVar("$return")) {
+							throw new RPLMissingReturnValueException(function);
+						}
+						returnValues.add(new RankedItem<Object>(v.getValue("$return"), s.getRank()));
+						out.push(v.getParentOfClosure(assignToVar, new Variable("$return")), s.getRank());
 					}
-					returnValues.add(new RankedItem<Object>(v.getValue("$return"), s.getRank()));
-					out.push(v.getParentOfClosure(assignToVar, new Variable("$return")), s.getRank());
 				}
 				
 			};

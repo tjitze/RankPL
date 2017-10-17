@@ -716,6 +716,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		s = s.rewriteEmbeddedFunctionCalls();
 		s.setLineNumber(ctx.stat().getStart().getLine());
 		function.setBody(s);
+		function.setMemoize(ctx.MEMOIZE() != null);
 		return function;
 	}
 

@@ -84,15 +84,6 @@ public class ForInStatement extends AbstractStatement {
 		return Objects.hash(getClass(), preStatement, target, exp, body);
 	}	
 
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ForInStatement(
-				(AssignmentTarget)target.replaceVariable(a, b), 
-				(AbstractExpression)exp.replaceVariable(a, b), 
-				(AbstractStatement)body.replaceVariable(a, b),
-				(AbstractStatement)preStatement.replaceVariable(a, b));
-	}
-	
 	public String toString() {
 		return "for (" + target + " in " + exp + ") " + body;
 	}

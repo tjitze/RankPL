@@ -50,11 +50,6 @@ public class PrintStatement extends AbstractStatement {
 	@Override
 	public int hashCode() {
 		return Objects.hash(exp);
-	}	
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new PrintStatement((AbstractExpression)exp.replaceVariable(a, b));
 	}
 
 	@Override

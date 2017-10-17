@@ -34,15 +34,6 @@ public class AssignmentTargetList extends AssignmentTarget {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AssignmentTarget[] newElements = new AssignmentTarget[elements.length];
-		for (int i = 0; i < elements.length; i++) {
-			newElements[i] = (AssignmentTarget)elements[i].replaceVariable(a, b);
-		}
-		return new AssignmentTargetList(newElements);
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return Arrays.stream(elements).anyMatch(e -> e.hasRankExpression());
 	}

@@ -41,16 +41,6 @@ public class IndexElementExpression extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression[] newIndices = new AbstractExpression[indices.length];
-		for (int i = 0; i < indices.length; i++) {
-			newIndices[i] = (AbstractExpression)indices[i].replaceVariable(a, b);
-		}
-		AbstractExpression newExp = (AbstractExpression)exp.replaceVariable(a, b);
-		return new IndexElementExpression(newExp, newIndices);
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return exp.hasRankExpression() ||
 				Arrays.stream(indices).anyMatch(e -> e.hasRankExpression());

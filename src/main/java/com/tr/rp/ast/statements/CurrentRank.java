@@ -63,11 +63,6 @@ public class CurrentRank extends AbstractStatement {
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new CurrentRank((AssignmentTarget)target.replaceVariable(a, b));
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		target.getVariables(list);
 	}

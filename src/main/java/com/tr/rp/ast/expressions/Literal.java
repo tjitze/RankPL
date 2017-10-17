@@ -31,11 +31,6 @@ public class Literal<T> extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return this;
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return false;
 	}

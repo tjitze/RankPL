@@ -72,16 +72,6 @@ public class ForStatement extends AbstractStatement {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass(), preStatement, forCondition, init, body, next);
-	}	
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ForStatement(
-				(AbstractStatement)init.replaceVariable(a, b), 
-				(AbstractStatement)preStatement.replaceVariable(a, b),
-				(AbstractExpression)forCondition.replaceVariable(a, b), 
-				(AbstractStatement)next.replaceVariable(a, b), 
-				(AbstractStatement)body.replaceVariable(a, b));
 	}
 	
 	public String toString() {

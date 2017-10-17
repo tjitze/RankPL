@@ -24,11 +24,6 @@ public class IsDefined extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new IsDefined((AbstractExpression)exp.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return exp.hasRankExpression();
 	}

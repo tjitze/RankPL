@@ -26,15 +26,6 @@ public class InferringFunctionCall extends FunctionCall {
 	public InferringFunctionCall(String functionName, FunctionScope functionScope, AbstractExpression ... arguments) {
 		super(functionName, functionScope, arguments);
 	}
-	
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression[] newArgs = new AbstractExpression[getArguments().length];
-		for (int i = 0; i < newArgs.length; i++) {
-			newArgs[i] = (AbstractExpression)getArguments()[i].replaceVariable(a, b);
-		}
-		return new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
-	}
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {

@@ -59,15 +59,6 @@ public class FunctionCall extends AbstractFunctionCall {
 			throw e;
 		}
 	}
-	
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression[] newArgs = new AbstractExpression[getArguments().length];
-		for (int i = 0; i < newArgs.length; i++) {
-			newArgs[i] = (AbstractExpression)getArguments()[i].replaceVariable(a, b);
-		}
-		return new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
-	}
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {

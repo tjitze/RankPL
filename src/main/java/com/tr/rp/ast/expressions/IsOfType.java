@@ -27,11 +27,6 @@ public class IsOfType extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new IsOfType((AbstractExpression)exp.replaceVariable(a, b), type);
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return exp.hasRankExpression();
 	}

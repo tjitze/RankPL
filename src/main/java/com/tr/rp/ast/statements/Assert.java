@@ -61,11 +61,6 @@ public class Assert extends AbstractStatement {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Assert((AbstractExpression)expression.replaceVariable(a, b));
-	}
-
-	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenExpression = FunctionCallForm.extractFunctionCalls(expression);
 		if (rewrittenExpression.isRewritten()) {

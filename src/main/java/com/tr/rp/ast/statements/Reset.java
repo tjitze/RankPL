@@ -48,11 +48,6 @@ public class Reset extends AbstractStatement {
 	@Override
 	public int hashCode() {
 		return 1;
-	}	
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return this;
 	}
 
 	@Override

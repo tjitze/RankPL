@@ -24,11 +24,6 @@ public class CharToInt extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new CharToInt((AbstractExpression)charExp.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return charExp.hasRankExpression();
 	}

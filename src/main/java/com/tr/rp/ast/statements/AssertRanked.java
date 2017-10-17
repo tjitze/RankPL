@@ -126,16 +126,6 @@ public class AssertRanked extends AbstractStatement {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression newValue = (AbstractExpression)expression.replaceVariable(a, b);
-		AbstractExpression[] newExpected = new AbstractExpression[expected.length];
-		for (int i = 0; i < expected.length; i++) {
-			newExpected[i] = (AbstractExpression)expected[i].replaceVariable(a, b);
-		}
-		return new AssertRanked(newValue, newExpected);
-	}
-
-	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		// We're not rewriting the expected value here because it should not 
 		// contain function calls (will throw exception in iterator)

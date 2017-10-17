@@ -35,15 +35,6 @@ public class ArrayConstructExpression extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression[] newValues = new AbstractExpression[values.length];
-		for (int i = 0; i < values.length; i++) {
-			newValues[i] = (AbstractExpression)values[i].replaceVariable(a, b);
-		}
-		return new ArrayConstructExpression(newValues);
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return Arrays.stream(values).anyMatch(e -> e.hasRankExpression());
 	}

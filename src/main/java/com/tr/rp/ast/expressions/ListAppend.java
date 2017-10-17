@@ -29,12 +29,6 @@ public class ListAppend extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ListAppend((AbstractExpression)list.replaceVariable(a, b), 
-				(AbstractExpression)value.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return list.hasRankExpression() || value.hasRankExpression();
 	}

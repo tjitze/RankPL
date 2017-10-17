@@ -10,14 +10,5 @@ public interface LanguageElement {
 	 * @param list Variables occurring in this language element
 	 */
 	public void getVariables(Set<String> list);
-
-	/**
-	 * Replace occurrences of variable a with b.
-	 * 
-	 * @param a Variable to replace
-	 * @param b Variable to replace with
-	 * @return Transformed language element.
-	 */
-	public LanguageElement replaceVariable(String a, String b);
 	
 }

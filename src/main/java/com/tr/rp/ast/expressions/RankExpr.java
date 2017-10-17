@@ -83,11 +83,6 @@ public class RankExpr extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new RankExpr((AbstractExpression)this.b.replaceVariable(a, b));
-	}
-
-	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		return b.getEmbeddedFunctionCall();
 	}

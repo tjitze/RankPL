@@ -31,11 +31,6 @@ public class Plus extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Plus((AbstractExpression)e1.replaceVariable(a, b), (AbstractExpression)e2.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return e1.hasRankExpression() || e2.hasRankExpression();
 	}

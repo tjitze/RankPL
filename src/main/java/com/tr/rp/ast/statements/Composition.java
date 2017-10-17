@@ -136,12 +136,6 @@ public class Composition extends AbstractStatement {
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Composition((AbstractStatement)this.first.replaceVariable(a, b),
-				(AbstractStatement)this.second.replaceVariable(a, b));
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		first.getVariables(list);
 		second.getVariables(list);

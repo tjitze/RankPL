@@ -27,15 +27,6 @@ public class Max extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression[] newEs = new AbstractExpression[es.length];
-		for (int i = 0; i < newEs.length; i++) {
-			newEs[i] = (AbstractExpression)es[i].replaceVariable(a, b);
-		}
-		return new Max(newEs);
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		for (int i = 0; i < es.length; i++) {
 			if (es[i].hasRankExpression()) return true;

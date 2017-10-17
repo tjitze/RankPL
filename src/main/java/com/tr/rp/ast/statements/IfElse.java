@@ -57,13 +57,6 @@ public class IfElse extends AbstractStatement {
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new IfElse((AbstractExpression)exp.replaceVariable(a, b),
-				(AbstractStatement)this.a.replaceVariable(a, b),
-				(AbstractStatement)this.b.replaceVariable(a, b));
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		a.getVariables(list);
 		b.getVariables(list);

@@ -52,15 +52,6 @@ public class FunctionCallForm extends AbstractStatement {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		List<Assignment> rewrittenAssingments = new ArrayList<Assignment>();
-		for (Assignment assignment: assignments) {
-			rewrittenAssingments.add(new Assignment(assignment.var, (AbstractFunctionCall)assignment.functionCall.replaceVariable(a, b)));
-		}
-		return new FunctionCallForm((AbstractStatement)statement.replaceVariable(a, b), rewrittenAssingments);
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		assignments.forEach(p -> p.functionCall.getVariables(list));
 		statement.getVariables(list);
@@ -143,29 +134,6 @@ public class FunctionCallForm extends AbstractStatement {
 	public int hashCode() {
 		return Objects.hash(assignments, statement);
 	}	
-
-	public boolean semanticEquals(FunctionCallForm fcf) {
-		fcf = (FunctionCallForm)fcf.replaceVariable("", "");
-		if (assignments.size() != fcf.assignments.size()) {
-			return false;
-		}
-		AbstractStatement s = fcf.statement;
-		outer: for (int i = 0; i < assignments.size(); i++) {
-			Assignment a = assignments.get(i);
-			for (Assignment b: fcf.assignments) {
-				if (a.functionCall.equals(b.functionCall)) {
-					s = (AbstractStatement)s.replaceVariable(b.var, a.var);
-					for (int j = i + 1; j < assignments.size(); j++) {
-						Assignment c = fcf.assignments.get(j);
-						fcf.assignments.set(j, new Assignment(c.var, (AbstractFunctionCall)c.functionCall.replaceVariable(b.var, a.var)));
-					}
-					continue outer;
-				}
-			}
-			return false;
-		}
-		return statement.equals(s);
-	}
 	
 	@Override
 	public void getAssignedVariables(Set<String> variables) {

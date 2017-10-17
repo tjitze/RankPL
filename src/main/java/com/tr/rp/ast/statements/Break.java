@@ -35,11 +35,6 @@ public class Break extends AbstractStatement {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Break();
-	}
-
-	@Override
 	public void getVariables(Set<String> list) { }
 
 	@Override

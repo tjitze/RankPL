@@ -28,11 +28,6 @@ public class BoolBoolBoolOp extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new BoolBoolBoolOp(f, (AbstractExpression)e1.replaceVariable(a, b), (AbstractExpression)e2.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return e1.hasRankExpression() || e2.hasRankExpression();
 	}

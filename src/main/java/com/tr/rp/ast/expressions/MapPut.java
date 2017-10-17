@@ -32,13 +32,6 @@ public class MapPut extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new MapPut((AbstractExpression)map.replaceVariable(a, b), 
-				(AbstractExpression)key.replaceVariable(a, b),
-				(AbstractExpression)value.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return map.hasRankExpression() || key.hasRankExpression() || value.hasRankExpression();
 	}

@@ -81,11 +81,6 @@ public class ReadFile extends AbstractStatement {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ReadFile((AssignmentTarget)target.replaceVariable(a, b), (AbstractExpression)path.replaceVariable(a, b), mode);
-	}
-
-	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		ExtractedExpression rewrittenPath = FunctionCallForm.extractFunctionCalls(path);

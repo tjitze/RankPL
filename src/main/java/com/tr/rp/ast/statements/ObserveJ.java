@@ -97,11 +97,6 @@ public class ObserveJ extends AbstractStatement implements EvaluationErrorHandle
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ObserveJ((AbstractExpression)condition.replaceVariable(a, b), (AbstractExpression)rank.replaceVariable(a, b));
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		condition.getVariables(list);
 		rank.getVariables(list);

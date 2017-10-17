@@ -29,14 +29,6 @@ public class Conditional extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Conditional((AbstractExpression)condition.replaceVariable(a, b),
-				(AbstractExpression)e1.replaceVariable(a, b),
-				(AbstractExpression)e2.replaceVariable(a, b));
-				
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return condition.hasRankExpression() ||
 				e1.hasRankExpression() ||

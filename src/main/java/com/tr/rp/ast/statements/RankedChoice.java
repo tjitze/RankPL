@@ -95,14 +95,6 @@ public class RankedChoice extends AbstractStatement {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass(), s1, s2, rank);
-	}	
-
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new RankedChoice((AbstractStatement)s1.replaceVariable(a, b),
-				(AbstractStatement)s2.replaceVariable(a, b),
-				(AbstractExpression)rank.replaceVariable(a, b));
 	}
 
 	@Override

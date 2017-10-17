@@ -29,12 +29,6 @@ public class MapRemoveKey extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new MapRemoveKey((AbstractExpression)map.replaceVariable(a, b), 
-				(AbstractExpression)key.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return map.hasRankExpression() || key.hasRankExpression();
 	}

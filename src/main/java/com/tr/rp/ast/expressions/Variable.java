@@ -25,11 +25,6 @@ public class Variable extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Variable(a.equals(name)? b: name);
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return false;
 	}

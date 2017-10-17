@@ -29,12 +29,6 @@ public class MapGet extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new MapGet((AbstractExpression)map.replaceVariable(a, b), 
-				(AbstractExpression)key.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return map.hasRankExpression() || key.hasRankExpression();
 	}

@@ -37,12 +37,6 @@ public class ArrayInitExpression extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ArrayInitExpression((AbstractExpression)dimension.replaceVariable(a, b), 
-				(AbstractExpression)(initValue == null? null: initValue.replaceVariable(a, b)));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return dimension.hasRankExpression() || (initValue != null && initValue.hasRankExpression());
 	}

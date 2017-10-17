@@ -25,11 +25,6 @@ public class Not extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Not((AbstractExpression)e.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return e.hasRankExpression();
 	}

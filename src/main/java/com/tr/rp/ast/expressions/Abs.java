@@ -23,12 +23,7 @@ public class Abs extends AbstractExpression {
 	public void getVariables(Set<String> list) {
 		e.getVariables(list);
 	}
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Abs((AbstractExpression)e.replaceVariable(a, b));
-	}
-
+	
 	@Override
 	public boolean hasRankExpression() {
 		return e.hasRankExpression();

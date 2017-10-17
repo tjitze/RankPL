@@ -42,12 +42,7 @@ public class Return extends AbstractStatement {
 		return o instanceof Return &&
 				((Return)o).exp.equals(exp);
 	}
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Return((AbstractExpression)exp.replaceVariable(a, b));
-	}
-
+	
 	@Override
 	public void getVariables(Set<String> list) {
 		exp.getVariables(list);

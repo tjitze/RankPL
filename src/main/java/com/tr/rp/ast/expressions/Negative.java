@@ -25,11 +25,6 @@ public class Negative extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Negative((AbstractExpression)e.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return e.hasRankExpression();
 	}

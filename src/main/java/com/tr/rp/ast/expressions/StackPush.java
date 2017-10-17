@@ -29,12 +29,6 @@ public class StackPush extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new StackPush((AbstractExpression)stack.replaceVariable(a, b), 
-				(AbstractExpression)value.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return stack.hasRankExpression() || value.hasRankExpression();
 	}

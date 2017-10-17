@@ -54,11 +54,6 @@ public class Collect extends AbstractStatement {
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new Collect((AssignmentTarget)target.replaceVariable(a, b), (Variable)variable.replaceVariable(a, b));
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		variable.getVariables(list);
 	}

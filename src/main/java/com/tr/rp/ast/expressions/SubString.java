@@ -31,14 +31,6 @@ public class SubString extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new SubString(
-				(AbstractExpression)input.replaceVariable(a, b),
-				(AbstractExpression)begin.replaceVariable(a, b),
-				(AbstractExpression)end.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return input.hasRankExpression() ||
 					begin.hasRankExpression() ||

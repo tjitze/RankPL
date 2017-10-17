@@ -66,11 +66,6 @@ public class Cut extends AbstractStatement {
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return this;
-	}
-
-	@Override
 	public void getVariables(Set<String> list) { }
 
 	@Override

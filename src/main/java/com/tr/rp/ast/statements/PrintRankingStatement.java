@@ -98,11 +98,6 @@ public class PrintRankingStatement extends AbstractStatement {
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new PrintRankingStatement((AbstractExpression)exp.replaceVariable(a, b));
-	}
-
-	@Override
 	public void getVariables(Set<String> list) {
 		exp.getVariables(list);
 	}

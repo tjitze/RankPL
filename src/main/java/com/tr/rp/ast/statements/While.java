@@ -150,12 +150,6 @@ public class While extends AbstractStatement {
 				((While)o).whileCondition.equals(whileCondition) &&
 				((While)o).body.equals(body);
 	}
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new While((AbstractExpression)whileCondition.replaceVariable(a, b),
-				(AbstractStatement)this.body.replaceVariable(a, b));
-	}
 	
 	public String toString() {
 		String expString = whileCondition.toString();

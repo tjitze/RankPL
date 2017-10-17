@@ -30,12 +30,6 @@ public class ListValueAt extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ListValueAt((AbstractExpression)list.replaceVariable(a, b), 
-				(AbstractExpression)index.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return list.hasRankExpression() || index.hasRankExpression();
 	}

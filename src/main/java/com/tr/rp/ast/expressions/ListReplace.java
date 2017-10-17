@@ -33,13 +33,6 @@ public class ListReplace extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ListReplace((AbstractExpression)list.replaceVariable(a, b), 
-				(AbstractExpression)index.replaceVariable(a, b),
-				(AbstractExpression)value.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return list.hasRankExpression() || index.hasRankExpression() || value.hasRankExpression();
 	}

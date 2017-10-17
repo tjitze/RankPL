@@ -100,11 +100,6 @@ public class ObserveL extends AbstractStatement {
 	}	
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new ObserveL((AbstractExpression)this.b.replaceVariable(a, b), (AbstractExpression)rank.replaceVariable(a, b));
-	}
-	
-	@Override
 	public void getVariables(Set<String> list) {
 		b.getVariables(list);
 		rank.getVariables(list);

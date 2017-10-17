@@ -23,11 +23,6 @@ public class IntToChar extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new IntToChar((AbstractExpression)intExp.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return intExp.hasRankExpression();
 	}

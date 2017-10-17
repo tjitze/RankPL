@@ -46,15 +46,6 @@ public class AssignmentTargetTerminal extends AssignmentTarget {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression[] newIndices = new AbstractExpression[indices.length];
-		for (int i = 0; i < indices.length; i++) {
-			newIndices[i] = (AbstractExpression)indices[i].replaceVariable(a, b);
-		}
-		return new AssignmentTargetTerminal(a.equals(name)? b: name);
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return Arrays.stream(indices).anyMatch(e -> e.hasRankExpression());
 	}

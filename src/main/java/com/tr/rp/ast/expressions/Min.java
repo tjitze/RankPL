@@ -26,14 +26,6 @@ public class Min extends AbstractExpression {
 		for (AbstractExpression e: es) e.getVariables(list);
 	}
 
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		AbstractExpression[] newEs = new AbstractExpression[es.length];
-		for (int i = 0; i < newEs.length; i++) {
-			newEs[i] = (AbstractExpression)es[i].replaceVariable(a, b);
-		}
-		return new Min(newEs);
-	}
 
 	@Override
 	public boolean hasRankExpression() {

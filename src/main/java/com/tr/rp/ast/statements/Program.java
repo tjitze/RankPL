@@ -58,12 +58,7 @@ public class Program extends AbstractStatement {
 	public void getVariables(Set<String> list) {
 		// nop
 	}
-
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return this;
-	}
-
+	
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		return this;

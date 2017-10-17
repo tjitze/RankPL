@@ -50,11 +50,6 @@ public class Function implements LanguageElement {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		throw new UnsupportedOperationException();
-	}
-
 	public boolean equals(Object o) {
 		if (o instanceof Function) {
 			Function f = (Function)o;

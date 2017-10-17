@@ -29,12 +29,6 @@ public class SetContains extends AbstractExpression {
 	}
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return new SetContains((AbstractExpression)set.replaceVariable(a, b), 
-				(AbstractExpression)value.replaceVariable(a, b));
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return set.hasRankExpression() || value.hasRankExpression();
 	}

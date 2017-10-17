@@ -25,11 +25,6 @@ public class ConstructorExpression extends AbstractExpression {
 	public void getVariables(Set<String> list) { }
 
 	@Override
-	public LanguageElement replaceVariable(String a, String b) {
-		return this;
-	}
-
-	@Override
 	public boolean hasRankExpression() {
 		return false;
 	}

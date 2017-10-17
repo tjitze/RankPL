@@ -78,9 +78,9 @@ public class Dec extends AbstractStatement {
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		if (rewrittenTarget.isRewritten()) {
-			return new FunctionCallForm(
-					new Dec((AssignmentTarget)rewrittenTarget.getExpression()), 
-						rewrittenTarget.getAssignments());
+			Dec dec = new Dec((AssignmentTarget)rewrittenTarget.getExpression());
+			dec.setLineNumber(getLineNumber());
+			return new FunctionCallForm(dec, rewrittenTarget.getAssignments());
 		} else {
 			return this;
 		}

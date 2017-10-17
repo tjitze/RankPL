@@ -68,7 +68,9 @@ public class Collect extends AbstractStatement {
 		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		ExtractedExpression rewrittenVar = FunctionCallForm.extractFunctionCalls(variable);
 		if (rewrittenVar.isRewritten() || rewrittenTarget.isRewritten()) {
-			return new FunctionCallForm(new Collect((AssignmentTarget)rewrittenTarget.getExpression(), (Variable)rewrittenVar.getExpression()), rewrittenTarget.getAssignments(), rewrittenVar.getAssignments());
+			Collect cl = new Collect((AssignmentTarget)rewrittenTarget.getExpression(), (Variable)rewrittenVar.getExpression());
+			cl.setLineNumber(getLineNumber());
+			return new FunctionCallForm(cl, rewrittenTarget.getAssignments(), rewrittenVar.getAssignments());
 		} else {
 			return this;
 		}

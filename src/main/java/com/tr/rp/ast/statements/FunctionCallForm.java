@@ -30,6 +30,7 @@ public class FunctionCallForm extends AbstractStatement {
 			}
 		}
 		this.statement = statement;
+		setLineNumber(statement.getLineNumber());
 		checkStatement();
 	}
 

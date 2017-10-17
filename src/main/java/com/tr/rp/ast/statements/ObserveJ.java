@@ -112,10 +112,9 @@ public class ObserveJ extends AbstractStatement implements EvaluationErrorHandle
 		ExtractedExpression rewrittenCondition = FunctionCallForm.extractFunctionCalls(condition);
 		ExtractedExpression rewrittenRank = FunctionCallForm.extractFunctionCalls(rank);
 		if (rewrittenCondition.isRewritten() || rewrittenRank.isRewritten()) {
-			return new FunctionCallForm(
-					new ObserveJ(rewrittenCondition.getExpression(), rewrittenRank.getExpression()), 
-					rewrittenCondition.getAssignments(), 
-					rewrittenRank.getAssignments());
+			ObserveJ oj = new ObserveJ(rewrittenCondition.getExpression(), rewrittenRank.getExpression());
+			oj.setLineNumber(getLineNumber());
+			return new FunctionCallForm(oj, rewrittenCondition.getAssignments(), rewrittenRank.getAssignments());
 		} else {
 			return this;
 		}

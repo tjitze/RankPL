@@ -76,9 +76,13 @@ public class IfElse extends AbstractStatement {
 		AbstractStatement br = b.rewriteEmbeddedFunctionCalls();
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
 		if (rewrittenExp.isRewritten()) {
-			return new FunctionCallForm(new IfElse(rewrittenExp.getExpression(), ar, br), rewrittenExp.getAssignments());
+			IfElse ifelse = new IfElse(rewrittenExp.getExpression(), ar, br);
+			ifelse.setLineNumber(getLineNumber());
+			return new FunctionCallForm(ifelse, rewrittenExp.getAssignments());
 		} else {
-			return new IfElse(exp, ar, br);
+			IfElse ifelse = new IfElse(exp, ar, br);
+			ifelse.setLineNumber(getLineNumber());
+			return ifelse;
 		}
 	}	
 	

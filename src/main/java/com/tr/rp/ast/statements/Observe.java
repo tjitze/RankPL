@@ -88,7 +88,9 @@ public class Observe extends AbstractStatement {
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
 		if (rewrittenExp.isRewritten()) {
-			return new FunctionCallForm(new Observe(rewrittenExp.getExpression()), rewrittenExp.getAssignments());
+			Observe obs = new Observe(rewrittenExp.getExpression());
+			obs.setLineNumber(getLineNumber());
+			return new FunctionCallForm(obs, rewrittenExp.getAssignments());
 		} else {
 			return this;
 		}

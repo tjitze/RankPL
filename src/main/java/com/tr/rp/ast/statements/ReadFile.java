@@ -90,13 +90,12 @@ public class ReadFile extends AbstractStatement {
 		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		ExtractedExpression rewrittenPath = FunctionCallForm.extractFunctionCalls(path);
 		if (rewrittenTarget.isRewritten() || rewrittenPath.isRewritten()) {
-			return new FunctionCallForm(
-					new ReadFile(
-							(AssignmentTarget)rewrittenTarget.getExpression(), 
-							rewrittenPath.getExpression(), 
-							mode), 
-					rewrittenTarget.getAssignments(),
-					rewrittenPath.getAssignments());
+			ReadFile rf = new ReadFile(
+					(AssignmentTarget)rewrittenTarget.getExpression(), 
+					rewrittenPath.getExpression(), 
+					mode);
+			rf.setLineNumber(getLineNumber());
+			return new FunctionCallForm(rf, rewrittenTarget.getAssignments(), rewrittenPath.getAssignments());
 		} else {
 			return this;
 		}

@@ -78,9 +78,9 @@ public class Inc extends AbstractStatement {
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		if (rewrittenTarget.isRewritten()) {
-			return new FunctionCallForm(
-					new Inc((AssignmentTarget)rewrittenTarget.getExpression()), 
-						rewrittenTarget.getAssignments());
+			Inc inc = new Inc((AssignmentTarget)rewrittenTarget.getExpression());
+			inc.setLineNumber(getLineNumber());
+			return new FunctionCallForm(inc, rewrittenTarget.getAssignments());
 		} else {
 			return this;
 		}

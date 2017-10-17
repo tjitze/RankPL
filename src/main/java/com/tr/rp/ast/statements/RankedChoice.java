@@ -118,9 +118,13 @@ public class RankedChoice extends AbstractStatement {
 		AbstractStatement s2r = s2.rewriteEmbeddedFunctionCalls();
 		ExtractedExpression rewrittenRank = FunctionCallForm.extractFunctionCalls(rank);
 		if (rewrittenRank.isRewritten()) {
-			return new FunctionCallForm(new RankedChoice(s1r, s2r, rewrittenRank.getExpression()), rewrittenRank.getAssignments());
+			RankedChoice rc = new RankedChoice(s1r, s2r, rewrittenRank.getExpression());
+			rc.setLineNumber(getLineNumber());
+			return new FunctionCallForm(rc, rewrittenRank.getAssignments());
 		} else {
-			return new RankedChoice(s1r, s2r, rank);
+			RankedChoice ret = new RankedChoice(s1r, s2r, rank);
+			ret.setLineNumber(getLineNumber());
+			return ret;
 		}
 	}
 	

@@ -113,11 +113,10 @@ public class Assign extends AbstractStatement {
 		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		ExtractedExpression rewrittenValue = FunctionCallForm.extractFunctionCalls(value);
 		if (rewrittenTarget.isRewritten() || rewrittenValue.isRewritten()) {
-			return new FunctionCallForm(
-					new Assign((AssignmentTarget)rewrittenTarget.getExpression(), 
-							rewrittenValue.getExpression(), exceptionSource), 
-						rewrittenTarget.getAssignments(),
-						rewrittenValue.getAssignments());
+			Assign ass = new Assign((AssignmentTarget)rewrittenTarget.getExpression(), 
+					rewrittenValue.getExpression(), exceptionSource);
+			ass.setLineNumber(getLineNumber());
+			return new FunctionCallForm(ass, rewrittenTarget.getAssignments(), rewrittenValue.getAssignments());
 		} else {
 			return this;
 		}

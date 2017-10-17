@@ -141,8 +141,9 @@ public class AssertRanked extends AbstractStatement {
 		// contain function calls (will throw exception in iterator)
 		ExtractedExpression rewrittenExpression = FunctionCallForm.extractFunctionCalls(expression);
 		if (rewrittenExpression.isRewritten()) {
-			return new FunctionCallForm(
-					new AssertRanked(rewrittenExpression.getExpression(), expected), rewrittenExpression.getAssignments());
+			AssertRanked ar = new AssertRanked(rewrittenExpression.getExpression(), expected);
+			ar.setLineNumber(getLineNumber());
+			return new FunctionCallForm(ar, rewrittenExpression.getAssignments());
 		} else {
 			return this;
 		}

@@ -187,9 +187,13 @@ public class While extends AbstractStatement {
 		AbstractStatement sr = body.rewriteEmbeddedFunctionCalls();
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(whileCondition);
 		if (rewrittenExp.isRewritten()) {
-			return new While(rewrittenExp.getExpression(), sr, new FunctionCallForm(new Skip(), rewrittenExp.getAssignments()));
+			While ret = new While(rewrittenExp.getExpression(), sr, new FunctionCallForm(new Skip(), rewrittenExp.getAssignments()));
+			ret.setLineNumber(getLineNumber());
+			return ret;
 		} else {
-			return new While(whileCondition, sr);
+			While ret = new While(whileCondition, sr);
+			ret.setLineNumber(getLineNumber());
+			return ret;
 		}
 	}	
 

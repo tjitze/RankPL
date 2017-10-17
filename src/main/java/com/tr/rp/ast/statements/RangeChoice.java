@@ -120,11 +120,12 @@ public class RangeChoice extends AbstractStatement {
 		ExtractedExpression rewrittenBegin = FunctionCallForm.extractFunctionCalls(beginExp);
 		ExtractedExpression rewrittenEnd = FunctionCallForm.extractFunctionCalls(endExp);
 		if (rewrittenTarget.isRewritten() || rewrittenBegin.isRewritten() || rewrittenEnd.isRewritten()) {
-			return new FunctionCallForm(
-					new RangeChoice(
-							(AssignmentTarget)rewrittenTarget.getExpression(), 
-							rewrittenBegin.getExpression(), 
-							rewrittenEnd.getExpression()), 
+			RangeChoice rc = new RangeChoice(
+					(AssignmentTarget)rewrittenTarget.getExpression(), 
+					rewrittenBegin.getExpression(), 
+					rewrittenEnd.getExpression());
+			rc.setLineNumber(getLineNumber());
+			return new FunctionCallForm(rc,
 					rewrittenTarget.getAssignments(),
 					rewrittenBegin.getAssignments(),
 					rewrittenEnd.getAssignments());

@@ -66,7 +66,9 @@ public class PrintStatement extends AbstractStatement {
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
 		if (rewrittenExp.isRewritten()) {
-			return new FunctionCallForm(new PrintStatement((AbstractExpression)rewrittenExp.getExpression()), rewrittenExp.getAssignments());
+			PrintStatement ps = new PrintStatement((AbstractExpression)rewrittenExp.getExpression());
+			ps.setLineNumber(getLineNumber());
+			return new FunctionCallForm(ps, rewrittenExp.getAssignments());
 		} else {
 			return this;
 		}

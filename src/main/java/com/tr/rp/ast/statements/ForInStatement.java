@@ -113,13 +113,17 @@ public class ForInStatement extends AbstractStatement {
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
 		AbstractStatement rewrittenBody = body.rewriteEmbeddedFunctionCalls();
 		if (rewrittenTarget.isRewritten() || rewrittenExp.isRewritten()) {
-			return new ForInStatement(
+			ForInStatement fis = new ForInStatement(
 					(AssignmentTarget)rewrittenTarget.getExpression(), 
 					rewrittenExp.getExpression(), 
 					rewrittenBody,
 					new FunctionCallForm(new Skip(), rewrittenExp.getAssignments(), rewrittenTarget.getAssignments()));
+			fis.setLineNumber(getLineNumber());
+			return fis;
 		} else {
-			return new ForInStatement(target, exp, rewrittenBody);
+			ForInStatement fis = new ForInStatement(target, exp, rewrittenBody);
+			fis.setLineNumber(getLineNumber());
+			return fis;
 		}
 	}	
 	

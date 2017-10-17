@@ -149,7 +149,9 @@ public class Composition extends AbstractStatement {
 	
 	@Override
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
-		return new Composition(first.rewriteEmbeddedFunctionCalls(), second.rewriteEmbeddedFunctionCalls());
+		Composition c = new Composition(first.rewriteEmbeddedFunctionCalls(), second.rewriteEmbeddedFunctionCalls());
+		c.setLineNumber(getLineNumber());
+		return c;
 	}
 	
 	public AbstractStatement getFirst() {

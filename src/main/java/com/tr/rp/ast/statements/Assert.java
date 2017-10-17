@@ -69,8 +69,9 @@ public class Assert extends AbstractStatement {
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenExpression = FunctionCallForm.extractFunctionCalls(expression);
 		if (rewrittenExpression.isRewritten()) {
-			return new FunctionCallForm(
-					new Assert(rewrittenExpression.getExpression()), rewrittenExpression.getAssignments());
+			Assert ass = new Assert(rewrittenExpression.getExpression());
+			ass.setLineNumber(getLineNumber());
+			return new FunctionCallForm(ass, rewrittenExpression.getAssignments());
 		} else {
 			return this;
 		}

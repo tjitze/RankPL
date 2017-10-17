@@ -111,7 +111,9 @@ public class PrintRankingStatement extends AbstractStatement {
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenExp = FunctionCallForm.extractFunctionCalls(exp);
 		if (rewrittenExp.isRewritten()) {
-			return new FunctionCallForm(new PrintRankingStatement((AbstractExpression)rewrittenExp.getExpression()), rewrittenExp.getAssignments());
+			PrintRankingStatement prs = new PrintRankingStatement((AbstractExpression)rewrittenExp.getExpression());
+			prs.setLineNumber(getLineNumber());
+			return new FunctionCallForm(prs, rewrittenExp.getAssignments());
 		} else {
 			return this;
 		}

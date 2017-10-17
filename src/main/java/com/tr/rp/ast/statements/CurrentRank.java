@@ -76,9 +76,9 @@ public class CurrentRank extends AbstractStatement {
 	public AbstractStatement rewriteEmbeddedFunctionCalls() {
 		ExtractedExpression rewrittenTarget = FunctionCallForm.extractFunctionCalls(target);
 		if (rewrittenTarget.isRewritten()) {
-			return new FunctionCallForm(
-					new CurrentRank((AssignmentTarget)rewrittenTarget.getExpression()), 
-						rewrittenTarget.getAssignments());
+			CurrentRank cr = new CurrentRank((AssignmentTarget)rewrittenTarget.getExpression());
+			cr.setLineNumber(getLineNumber());
+			return new FunctionCallForm(cr, rewrittenTarget.getAssignments());
 		} else {
 			return this;
 		}

@@ -106,13 +106,17 @@ public class ForStatement extends AbstractStatement {
 		AbstractStatement rewrittenNext = next.rewriteEmbeddedFunctionCalls();
 		ExtractedExpression rewrittenForCondition = FunctionCallForm.extractFunctionCalls(forCondition);
 		if (rewrittenForCondition.isRewritten()) {
-			return new ForStatement(rewrittenInit,
+			ForStatement fs = new ForStatement(rewrittenInit,
 					new FunctionCallForm(new Skip(), rewrittenForCondition.getAssignments()),
 					rewrittenForCondition.getExpression(),
 					rewrittenNext,
 					rewrittenBody);
+			fs.setLineNumber(getLineNumber());
+			return fs;
 		} else {
-			return new ForStatement(rewrittenInit, forCondition, rewrittenNext, rewrittenBody);
+			ForStatement fs = new ForStatement(rewrittenInit, forCondition, rewrittenNext, rewrittenBody);
+			fs.setLineNumber(getLineNumber());
+			return fs;
 		}
 	}	
 	

@@ -45,8 +45,7 @@ public class Observe extends AbstractStatement {
 				}
 			}
 		};
-		transformExp.setOutput(exec, this);
-		return transformExp;
+		return transformExp.getExecutor(exec, this);
 	}		
 
 	private boolean getCheckedValue(AbstractExpression exp2, VarStore v) throws RPLException {

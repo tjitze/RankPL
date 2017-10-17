@@ -78,10 +78,10 @@ public class RangeChoice extends AbstractStatement {
 				}
 			}
 		};
-		transformTarget.setOutput(transformBegin, this);
-		transformBegin.setOutput(transformEnd, this);
-		transformEnd.setOutput(exec, this);
-		return transformTarget;
+		return transformTarget
+			.getExecutor(transformBegin
+					.getExecutor(transformEnd
+							.getExecutor(exec, this), this), this);
 	}	
 
 	public String toString() {

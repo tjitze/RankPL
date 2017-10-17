@@ -52,8 +52,7 @@ public class Assert extends AbstractStatement {
 			}
 			
 		};
-		transformExp.setOutput(exec, this);
-		return transformExp;
+		return transformExp.getExecutor(exec, this);
 	}
 
 	@Override

@@ -25,10 +25,19 @@ public final class RankTransformer<T extends AbstractExpression> implements Exec
 		}
 	}
 	
-	public void setOutput(Executor out, AbstractStatement st) {
+	private void setOutput(Executor out, AbstractStatement st) {
 		Objects.nonNull(out);
 		this.out = out;
 		this.st = st;
+	}
+	
+	public Executor getExecutor(Executor out, AbstractStatement st) {
+		if (!exp.hasRankExpression()) {
+			return out;
+		} else {
+			setOutput(out, st);
+			return this;
+		}
 	}
 	
 	public T get() {

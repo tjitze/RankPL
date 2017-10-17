@@ -71,9 +71,7 @@ public class ReadFile extends AbstractStatement {
 				out.push(target.assign(s.getVarStore(), lines), s.getRank());
 			}
 		};
-		transformTarget.setOutput(transformPath, this);
-		transformPath.setOutput(exec, this);
-		return transformTarget;
+		return transformTarget.getExecutor(transformPath.getExecutor(exec, this), this);
 	}		
 
 	@Override

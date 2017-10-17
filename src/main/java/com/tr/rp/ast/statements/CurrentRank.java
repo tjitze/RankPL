@@ -46,8 +46,7 @@ public class CurrentRank extends AbstractStatement {
 				out.push(newVarStore, s.getRank());
 			}
 		};
-		transformTarget.setOutput(exec, this);
-		return transformTarget;
+		return transformTarget.getExecutor(exec, this);
 	}	
 	
 	public String toString() {

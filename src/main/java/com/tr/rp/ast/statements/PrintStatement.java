@@ -35,8 +35,7 @@ public class PrintStatement extends AbstractStatement {
 				out.push(s);
 			}
 		};
-		transformExp.setOutput(exec, this);
-		return transformExp;
+		return transformExp.getExecutor(exec, this);
 	}		
 	
 	

@@ -70,8 +70,7 @@ public class ObserveJ extends AbstractStatement implements EvaluationErrorHandle
 					ObserveJ.this.handleConditionException(e);
 				}
 			};
-			transformCondition.setOutput(exec, this);
-			return transformCondition;
+			return transformCondition.getExecutor(exec, this);
 		}
 	}	
 

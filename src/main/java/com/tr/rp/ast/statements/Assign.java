@@ -11,6 +11,8 @@ import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLRankNotAllowedException;
+import com.tr.rp.executors.ExceptionExecutor;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.RankTransformer;
 import com.tr.rp.varstore.VarStore;
@@ -49,7 +51,9 @@ public class Assign extends AbstractStatement {
 	
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
-		RankTransformer<AssignmentTarget> transformTarget = RankTransformer.create(target);
+		if (target.hasRankExpression()) {
+			return new ExceptionExecutor(new RPLRankNotAllowedException(target, this));
+		}
 		RankTransformer<AbstractExpression> transformValue = RankTransformer.create(value);
 		Executor exec = new Executor() {
 			@Override
@@ -61,7 +65,7 @@ public class Assign extends AbstractStatement {
 			public void push(State s) throws RPLException {
 				VarStore newVarStore = null;
 				try {
-					newVarStore = transformTarget.get().assign(s.getVarStore(), 
+					newVarStore = target.assign(s.getVarStore(), 
 							transformValue.get().getValue(s.getVarStore()));				
 				} catch (RPLException e) {
 					e.setStatement(exceptionSource);
@@ -70,9 +74,7 @@ public class Assign extends AbstractStatement {
 				out.push(newVarStore, s.getRank());
 			}
 		};
-		transformTarget.setOutput(transformValue, this);
-		transformValue.setOutput(exec, this);
-		return transformTarget;
+		return transformValue.getExecutor(exec, this);
 	}		
 	
 	public String toString() {

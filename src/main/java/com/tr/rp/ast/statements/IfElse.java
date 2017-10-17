@@ -33,8 +33,7 @@ public class IfElse extends AbstractStatement {
 				IfElse.this.handleConditionException(e);
 			}
 		};
-		transformExp.setOutput(e, this);
-		return transformExp;
+		return transformExp.getExecutor(e, this);
 	}
 
 	public String toString() {

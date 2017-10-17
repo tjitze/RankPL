@@ -73,8 +73,7 @@ public class RankedChoice extends AbstractStatement {
 			Executor exec1 = s1.getExecutor(m.getIn1(), c);
 			Executor exec2 = s2.getExecutor(m.getIn2(), c);
 			Splitter sp = new Splitter(exec1, exec2);
-			tr.setOutput(sp, this);
-			return tr;
+			return tr.getExecutor(sp, this);
 		}
 	}	
 	

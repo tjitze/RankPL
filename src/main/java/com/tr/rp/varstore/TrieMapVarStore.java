@@ -62,9 +62,6 @@ public final class TrieMapVarStore implements VarStore {
 	}
 	
 	public VarStore create(String var, Object value) {
-		if (Objects.equals(varStore.get(var), value)) {
-			return this;
-		}
 		return new TrieMapVarStore(this, var, value);
 	}
 	

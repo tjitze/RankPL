@@ -48,6 +48,7 @@ import com.tr.rp.ast.expressions.Negative;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.expressions.ParseInt;
 import com.tr.rp.ast.expressions.RankExpr;
+import com.tr.rp.ast.expressions.ReadFile;
 import com.tr.rp.ast.expressions.SetAdd;
 import com.tr.rp.ast.expressions.SetContains;
 import com.tr.rp.ast.expressions.SetRemove;
@@ -77,7 +78,6 @@ import com.tr.rp.ast.statements.PrintStatement;
 import com.tr.rp.ast.statements.Program;
 import com.tr.rp.ast.statements.RangeChoice;
 import com.tr.rp.ast.statements.RankedChoice;
-import com.tr.rp.ast.statements.ReadFile;
 import com.tr.rp.ast.statements.Reset;
 import com.tr.rp.ast.statements.Return;
 import com.tr.rp.ast.statements.Skip;
@@ -127,7 +127,6 @@ import com.tr.rp.parser.RankPLParser.PrintStatementContext;
 import com.tr.rp.parser.RankPLParser.ProgramContext;
 import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
 import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
-import com.tr.rp.parser.RankPLParser.ReadFileStatementContext;
 import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
 import com.tr.rp.parser.RankPLParser.SequenceStatContext;
@@ -388,15 +387,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractExpression a = (AbstractExpression)visit(ctx.exp().get(0));
 		AbstractExpression b = (AbstractExpression)visit(ctx.exp().get(1));
 		AbstractStatement s = new RangeChoice(target, a, b);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
-	public LanguageElement visitReadFileStatement(ReadFileStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression fileName = (AbstractExpression)visit(ctx.exp());
-		AbstractStatement s = new ReadFile(target, fileName, ReadFile.InputMethod.NEWLINE_SEPARATED);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}
@@ -722,7 +712,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
 	public AbstractExpression getBuiltInFunction(String name, AbstractExpression[] args) {
 		name = name.toLowerCase();
-		
+
 		// Type check functions
 		for (Type<?> type: Type.ALL_TYPES) {
 			if (name.equals("is" + type.getName())) {
@@ -822,6 +812,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		case "chartoint":
 			ensureArgSize(name, args, 1);
 			return new CharToInt(args[0]);
+		case "readfile":
+			ensureArgSize(name, args, 1);
+			return new ReadFile(args[0]);
 		}
 		return null; 
 	}

@@ -144,14 +144,6 @@ public class Statements {
 		return new RankedChoice(target, v1, v2, rank);
 	}
 	
-	public static ReadFile readFile(AssignmentTarget target, AbstractExpression fileName) {
-		return new ReadFile(target, fileName, ReadFile.InputMethod.NEWLINE_SEPARATED);
-	}
-
-	public static ReadFile readFile(String variable, AbstractExpression fileName) {
-		return new ReadFile(new AssignmentTargetTerminal(variable), fileName, ReadFile.InputMethod.NEWLINE_SEPARATED);
-	}
-	
 	public static Return returnStatement(AbstractExpression value) {
 		return new Return(value);
 	}

@@ -38,7 +38,6 @@ term_stat
  : assignment_target ':=' exp							# AssignmentStatement
  | assignment_target ':=' exp '<<' exp '>>' exp			# ChoiceAssignmentStatement
  | assignment_target ':=' '<<' exp '...' exp '>>'		# RangeChoiceStatement
- | assignment_target ':=' ReadFile '(' exp ')'			# ReadFileStatement
  | assignment_target (op=('++'|'--'))					# IncDecStatement
  | Observe exp											# ObserveStatement
  | ObserveL ('(' exp ')')? exp							# ObserveLStatement
@@ -99,7 +98,6 @@ expr6
  ;
 
 Define:			'define' | 'DEFINE';
-ReadFile:		'readfile' | 'READFILE';
 If: 			'if' | 'IF';
 Then: 			'then' | 'THEN';
 Else: 			'else' | 'ELSE';

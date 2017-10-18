@@ -138,8 +138,7 @@ public class ArrayVarStore implements VarStore {
 
 	@Override
 	public VarStore getParentOfClosure(String target, AbstractExpression returnValueExp) throws RPLException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 }

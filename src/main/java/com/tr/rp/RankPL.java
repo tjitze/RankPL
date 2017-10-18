@@ -51,14 +51,14 @@ public class RankPL {
 
 	public static final int DEFAULT_MIN_CUTOFF = 2;
 	
-	private static int maxRank = 0;
-	private static int rankCutOff = Rank.MAX;
-	private static int minCutOff = DEFAULT_MIN_CUTOFF;
-	private static int timeOut = Integer.MAX_VALUE;
-	private static boolean noExecStats = false;
-	private static boolean noRanks = false;
-	private static boolean terminateAfterFirst = false;
-	private static String fileName = null;
+	protected static int maxRank = 0;
+	protected static int rankCutOff = Rank.MAX;
+	protected static int minCutOff = DEFAULT_MIN_CUTOFF;
+	protected static int timeOut = Integer.MAX_VALUE;
+	protected static boolean noExecStats = false;
+	protected static boolean noRanks = false;
+	protected static boolean terminateAfterFirst = false;
+	protected static String fileName = null;
 
 	public static void main(String[] args) {
 

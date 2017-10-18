@@ -90,14 +90,14 @@ public class IndexElementExpression extends AbstractExpression {
 			} else if (o instanceof String) {
 				// Allow strings to be referenced as 1D array
 				String s = (String)o;
-				int index = indices[i].getValue(e, Type.INT);
+				int index = indices[i].getIntValue(e);
 				if (index < 0 || index >= s.length()) {
 					throw new RPLIndexOutOfBoundsException(index, s.length(), this);
 				}
 				o = String.valueOf(s.charAt(index));
 			} else if (o instanceof PersistentArray) {
 				PersistentArray list = (PersistentArray)o;
-				int index = indices[i].getValue(e, Type.INT);
+				int index = indices[i].getIntValue(e);
 				if (index < 0 || index >= list.size()) {
 					throw new RPLIndexOutOfBoundsException(index, list.size(), this);
 				}
@@ -107,7 +107,7 @@ public class IndexElementExpression extends AbstractExpression {
 				}
 			} else if (o instanceof PersistentList) {
 				PersistentList<?> list = (PersistentList<?>)o;
-				int index = indices[i].getValue(e, Type.INT);
+				int index = indices[i].getIntValue(e);
 				if (index < 0 || index >= list.size()) {
 					throw new RPLIndexOutOfBoundsException(index, list.size(), this);
 				}

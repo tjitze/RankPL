@@ -138,6 +138,7 @@ public class RankPL {
 		
 		final Map<Integer, Set<String>> resultMap = new LinkedHashMap<Integer, Set<String>>();
 		ExecutionContext c = new ExecutionContext();
+		c.setRankCutOff(rankCutOff);
 		long startTime = System.currentTimeMillis();
 
 		if (!noRanks) {

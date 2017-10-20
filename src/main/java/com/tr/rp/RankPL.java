@@ -48,12 +48,9 @@ import com.tr.rp.parser.RankPLLexer;
 import com.tr.rp.parser.RankPLParser;
 
 public class RankPL {
-
-	public static final int DEFAULT_MIN_CUTOFF = 2;
 	
 	protected static int maxRank = 0;
 	protected static int rankCutOff = Rank.MAX;
-	protected static int minCutOff = DEFAULT_MIN_CUTOFF;
 	protected static int timeOut = Integer.MAX_VALUE;
 	protected static boolean noExecStats = false;
 	protected static boolean noRanks = false;
@@ -91,7 +88,7 @@ public class RankPL {
 
 		// Execute
 		try {
-			execute(program, rankCutOff, maxRank, minCutOff, noRanks, terminateAfterFirst);
+			execute(program, rankCutOff, maxRank, noRanks, terminateAfterFirst);
 		} catch (RPLException e) {
 			e.printDescription();
 			System.exit(-1);
@@ -134,7 +131,7 @@ public class RankPL {
 	 * @param program Program to execute
 	 * @throws RPLException Exception occurring during execution of program
 	 */
-	public static Map<Integer, Set<String>> execute(Program program, int rankCutOff, int maxRank, int minCutOff, boolean noRanks, boolean terminateAfterFirst) throws RPLException {
+	public static Map<Integer, Set<String>> execute(Program program, int rankCutOff, int maxRank, boolean noRanks, boolean terminateAfterFirst) throws RPLException {
 		
 		final Map<Integer, Set<String>> resultMap = new LinkedHashMap<Integer, Set<String>>();
 		ExecutionContext c = new ExecutionContext();

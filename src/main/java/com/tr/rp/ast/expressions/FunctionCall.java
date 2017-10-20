@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
@@ -36,13 +37,48 @@ public class FunctionCall extends AbstractFunctionCall {
 	private final FunctionScope functionScope;
 	private final String functionName;
 	private String[] parameters;
+	private final AbstractExpression[] arguments;
 	
+
 	public FunctionCall(String functionName, FunctionScope functionScope, AbstractExpression ... arguments) {
-		super(arguments);
+		this.arguments = arguments;
 		this.functionScope = functionScope;
 		this.functionName = functionName;
 	}
+
+
+	@Override
+	public final boolean hasRankExpression() {
+		for (AbstractExpression arg: arguments) {
+			if (arg.hasRankExpression()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public final AbstractFunctionCall getEmbeddedFunctionCall() {
+		for (AbstractExpression arg: arguments) {
+			AbstractFunctionCall fc = arg.getEmbeddedFunctionCall();
+			if (fc != null) {
+				return fc;
+			}
+		}
+		return this;
+	}
+
+	@Override
+	public final void getVariables(Set<String> list) {
+		for (int i = 0; i < arguments.length; i++) {
+			arguments[i].getVariables(list);
+		}
+	}
 	
+	public final AbstractExpression[] getArguments() {
+		return arguments;
+	}
+
 	public final String getFunctionName() {
 		return functionName;
 	}
@@ -93,6 +129,10 @@ public class FunctionCall extends AbstractFunctionCall {
 					Arrays.equals(((FunctionCall)o).getArguments(), getArguments());
 		}
 		return false;
+	}
+	
+	public int hashCode() {
+		return Arrays.hashCode(arguments) + getFunctionName().hashCode();
 	}
 
 	protected void getExecutorForFunctionCall(String assignToVar, VarStore in, ExecutionContext c, Executor out) throws RPLException {

@@ -36,8 +36,6 @@ open_stat
 
 term_stat
  : assignment_target ':=' exp							# AssignmentStatement
- | assignment_target ':=' exp '<<' exp '>>' exp			# ChoiceAssignmentStatement
- | assignment_target ':=' '<<' exp '...' exp '>>'		# RangeChoiceStatement
  | assignment_target (op=('++'|'--'))					# IncDecStatement
  | Observe exp											# ObserveStatement
  | ObserveL ('(' exp ')')? exp							# ObserveLStatement
@@ -55,8 +53,12 @@ term_stat
  ;
 
 
-exp : expr0;
+exp : exprA;
 
+exprA
+ : expr0 ('<<' exprA '>>' exprA)?						# RankedChoiceExpression						
+ ;
+ 
 expr0
  : expr1  ('?' expr1 ':' expr1)?						# ConditionalExpression
  ;
@@ -95,6 +97,7 @@ expr6
  | '-' expr6 			     	            			# MinusExpr
  | '[' (exp (',' exp)* )? ']'							# ArrayConstructExpr
  | '(' exp ')' 											# ParExpression
+ | '<<' exp '...' exp '>>'								# RangeChoiceExpression
  ;
 
 Define:			'define' | 'DEFINE';

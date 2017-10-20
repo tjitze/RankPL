@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.FunctionScope;
-import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
@@ -17,9 +16,6 @@ import com.tr.rp.executors.MultiMergeExecutor;
 import com.tr.rp.varstore.FreeVarNameProvider;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.arrays.ArrayFactory;
-import com.tr.rp.varstore.arrays.PersistentObjectArray;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class InferringFunctionCall extends FunctionCall {
 	
@@ -62,6 +58,10 @@ public class InferringFunctionCall extends FunctionCall {
 		return false;
 	}
 
+	public int hashCode() {
+		return 1 + super.hashCode();
+	}
+	
 	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
 		return new MultiMergeExecutor(out) {
 

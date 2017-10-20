@@ -153,31 +153,6 @@ public class ParseTest extends RPLBaseTest {
 				assign("x",0))));
 	}
 
-	public void testParseAssignChoose() {
-		String program = "x := 0 << 5 >> 20;";
-		assertEquals(parseStatement(program), (new RankedChoice(
-				assign("x",0), assign("x",20), lit(5))));
-	}
-
-	public void testParseChoose() {
-		assertEquals(parseOpenStatement("normally(5) x := 0; exceptionally x := 20;"), (new RankedChoice(
-				assign("x",0), assign("x",20), lit(5))));
-		assertEquals(parseStatement("x := 0 << 5 >> 20;"), (new RankedChoice(
-				assign("x",0), assign("x",20), lit(5))));
-		assertEquals(parseStatement("x[0] := 0 << 5 >> 20;"), (new RankedChoice(
-				assign(target("x", 0), 0), 
-				assign(target("x", 0), 20), lit(5))));
-		assertEquals(parseStatement("x[1][2] := 1 << 5 >> 20;"), (new RankedChoice(
-				assign(target("x", 1, 2), 1), 
-				assign(target("x", 1, 2), 20), lit(5))));
-		assertEquals(parseStatement("x[x + y] := 2 << 5 >> 20;"), (new RankedChoice(
-				assign(target("x", plus(var("x"), var("y"))), 2), 
-				assign(target("x", plus(var("x"), var("y"))), 20), lit(5))));
-		assertEquals(parseStatement("x[x + y][p * q] := 3 << 5 >> 20;"), (new RankedChoice(
-				assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 3), 
-				assign(target("x", plus(var("x"), var("y")), times(var("p"), var("q"))), 20), lit(5))));
-	}
-
 	public void testParseObserve() {
 		String program = "OBSERVE (x == 10);";
 		assertEquals(parseStatement(program), (new Observe(eq(var("x"), lit(10)))));
@@ -254,7 +229,7 @@ public class ParseTest extends RPLBaseTest {
 		assertEquals(parseStatement("x := fun(fun(a, b), c)").toString(), ("x := fun(fun(a, b), c)"));
 		assertEquals(parseStatement("if (fun1(fun2(a, b), c)) then x := fun3(d); else x := fun4(e)").toString(), ("if (fun1(fun2(a, b), c)) then x := fun3(d) else x := fun4(e)"));
 		assertEquals(parseStatement("while (x == fun1(y)) do y := fun2(z);").toString(), ("while (x == fun1(y)) do y := fun2(z)"));
-		assertEquals(parseStatement("x := fun1() <<fun2()>> fun3()").toString(), ("normally (fun2()) x := fun1() exceptionally x := fun3()"));
+		assertEquals(parseStatement("x := fun1() <<fun2()>> fun3()").toString(), ("x := fun1() <<fun2()>> fun3()"));
 		assertEquals(parseOpenStatement("normally (fun2()) x := fun1(); exceptionally x := fun3();").toString(), ("normally (fun2()) x := fun1() exceptionally x := fun3()"));
 		assertEquals(parseStatement("observe fun()").toString(), ("observe fun()"));
 		assertEquals(parseStatement("observe fun1() == fun2()").toString(), ("observe fun1() == fun2()"));

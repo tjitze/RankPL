@@ -34,7 +34,7 @@ define program() {
  	return "(a = " + a + ", b = " + b + ")";
 }
 result := infer(program());
-assert-ranked(result, [0, ["(a = 20, b = 10)", "(a = 10, b = 20)"]]);
+assert-ranked(result, [0, ["(a = 10, b = 20)", "(a = 20, b = 10)"]]);
 reset;
 
 a := << 0 ... 4 >>;

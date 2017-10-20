@@ -47,7 +47,9 @@ import com.tr.rp.ast.expressions.Min;
 import com.tr.rp.ast.expressions.Negative;
 import com.tr.rp.ast.expressions.Not;
 import com.tr.rp.ast.expressions.ParseInt;
+import com.tr.rp.ast.expressions.RangeChoiceExpression;
 import com.tr.rp.ast.expressions.RankExpr;
+import com.tr.rp.ast.expressions.RankedChoiceExpression;
 import com.tr.rp.ast.expressions.ReadFile;
 import com.tr.rp.ast.expressions.SetAdd;
 import com.tr.rp.ast.expressions.SetContains;
@@ -91,7 +93,6 @@ import com.tr.rp.parser.RankPLParser.AssertStatementContext;
 import com.tr.rp.parser.RankPLParser.AssignmentStatementContext;
 import com.tr.rp.parser.RankPLParser.Assignment_targetContext;
 import com.tr.rp.parser.RankPLParser.BoolExpressionContext;
-import com.tr.rp.parser.RankPLParser.ChoiceAssignmentStatementContext;
 import com.tr.rp.parser.RankPLParser.CompareExprContext;
 import com.tr.rp.parser.RankPLParser.ConditionalExpressionContext;
 import com.tr.rp.parser.RankPLParser.CurrentRankStatementContext;
@@ -125,8 +126,9 @@ import com.tr.rp.parser.RankPLParser.PopFunctionCallContext;
 import com.tr.rp.parser.RankPLParser.PrintRankingStatementContext;
 import com.tr.rp.parser.RankPLParser.PrintStatementContext;
 import com.tr.rp.parser.RankPLParser.ProgramContext;
-import com.tr.rp.parser.RankPLParser.RangeChoiceStatementContext;
+import com.tr.rp.parser.RankPLParser.RankedChoiceExpressionContext;
 import com.tr.rp.parser.RankPLParser.RankedChoiceStatementContext;
+import com.tr.rp.parser.RankPLParser.RangeChoiceExpressionContext;
 import com.tr.rp.parser.RankPLParser.ResetStatementContext;
 import com.tr.rp.parser.RankPLParser.ReturnStatementContext;
 import com.tr.rp.parser.RankPLParser.SequenceStatContext;
@@ -287,21 +289,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	}
 
 	@Override
-	public LanguageElement visitChoiceAssignmentStatement(ChoiceAssignmentStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression value1 = (AbstractExpression)visit(ctx.exp(0));
-		AbstractExpression value2 = (AbstractExpression)visit(ctx.exp(2));
-		AbstractExpression rank = (AbstractExpression)visit(ctx.exp(1));
-		AbstractStatement s1 = new Assign(target, value1);
-		s1.setLineNumber(ctx.exp(0).start.getLine());
-		AbstractStatement s2 = new Assign(target, value2);
-		s2.setLineNumber(ctx.exp(1).start.getLine());
-		AbstractStatement s = new RankedChoice(s1, s2, rank);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
 	public LanguageElement visitIfStatement(IfStatementContext ctx) {
 		AbstractExpression boolExpr = (AbstractExpression)visit(ctx.exp());
 		AbstractStatement a = (AbstractStatement)visit(ctx.stat().get(0));
@@ -377,16 +364,6 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractExpression rank = ctx.exp() == null? lit(1): (AbstractExpression)visit(ctx.exp());
 		AbstractStatement a = (AbstractStatement)visit(ctx.stat());
 		AbstractStatement s = new RankedChoice(new Skip(), a, rank);
-		s.setLineNumber(ctx.getStart().getLine());
-		return s;
-	}
-
-	@Override
-	public LanguageElement visitRangeChoiceStatement(RangeChoiceStatementContext ctx) {
-		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
-		AbstractExpression a = (AbstractExpression)visit(ctx.exp().get(0));
-		AbstractExpression b = (AbstractExpression)visit(ctx.exp().get(1));
-		AbstractStatement s = new RangeChoice(target, a, b);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}
@@ -523,6 +500,26 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		}
 		throw new RuntimeException("Internal parse error");
 	}
+
+	@Override
+	public LanguageElement visitRankedChoiceExpression(RankedChoiceExpressionContext ctx) {
+		AbstractExpression exp1 = (AbstractExpression)visit(ctx.expr0());
+		if (ctx.exprA().size() == 2) {
+			AbstractExpression rank = (AbstractExpression)visit(ctx.exprA(0));
+			AbstractExpression exp2 = (AbstractExpression)visit(ctx.exprA(1));
+			return new RankedChoiceExpression(exp1, exp2, rank);
+		} else {
+			return exp1;
+		}
+	}
+
+	@Override
+	public LanguageElement visitRangeChoiceExpression(RangeChoiceExpressionContext ctx) {
+		AbstractExpression exp1 = (AbstractExpression)visit(ctx.exp(0));
+		AbstractExpression exp2 = (AbstractExpression)visit(ctx.exp(1));
+		return new RangeChoiceExpression(exp1, exp2);
+	}
+
 
 	@Override
 	public LanguageElement visitConditionalExpression(ConditionalExpressionContext ctx) {
@@ -809,6 +806,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		case "inttochar":
 			ensureArgSize(name, args, 1);
 			return new IntToChar(args[0]);
+			
 		case "chartoint":
 			ensureArgSize(name, args, 1);
 			return new CharToInt(args[0]);

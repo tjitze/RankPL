@@ -1,0 +1,122 @@
+c := 1 <<0>> 2;
+assert-ranked(c, 
+	[0, 1],
+	[0, 2]);
+reset;
+
+c := 1 <<1>> 2;
+assert-ranked(c, 
+	[0, 1],
+	[1, 2]);
+reset;
+
+c := 1 <<1>> 1;
+assert-ranked(c, 
+	[0, 1]);
+reset;
+
+c := 1 <<1>> (2 <<2>> 3);
+assert-ranked(c, 
+	[0, 1],
+	[1, 2],
+	[3, 3]);
+reset;
+
+# Right associative!
+c := 1 <<1>> 2 <<2>> 3;
+assert-ranked(c, 
+	[0, 1],
+	[1, 2],
+	[3, 3]);
+reset;
+
+c := (1 <<1>> 2) <<2>> 3;
+assert-ranked(c, 
+	[0, 1],
+	[1, 2],
+	[2, 3]);
+reset;
+
+c := 1 <<1>> (2 <<2>> (3 <<3>> 4));
+assert-ranked(c, 
+	[0, 1],
+	[1, 2],
+	[3, 3],
+	[6, 4]);
+reset;
+
+# Right associative!
+c := 1 <<1>> 2 <<2>> 3 <<3>> 4;
+assert-ranked(c, 
+	[0, 1],
+	[1, 2],
+	[3, 3],
+	[6, 4]);
+reset;
+
+c := (1 <<1>> 2) <<2>> 3 <<3>> 4;
+assert-ranked(c, 
+	[0, 1],
+	[1, 2],
+	[2, 3],
+	[5, 4]);
+reset;
+
+c := ((1 <<1>> 2) <<2>> 3) <<3>> 4;
+assert-ranked(c, 
+	[0, 1],
+	[1, 2],
+	[2, 3],
+	[3, 4]);
+reset;
+
+# In complex expression
+c := (5 <<1>> 6) * 10;
+assert-ranked(c, 
+	[0, 50],
+	[1, 60]);
+reset;
+
+# In complex expression
+c := (5 <<1>> 6) * (10 <<1>> 20);
+assert-ranked(c, 
+	[0, 50],
+	[1, 60],
+	[1, 100],
+	[2, 120]);
+reset;
+
+# As function argument
+c := size([0, 1, 2] <<1>> [0, 1]);
+assert-ranked(c, 
+	[0, 3],
+	[1, 2]);
+reset;
+
+# In array constructor
+c := [0 <<1>> 1, 0 <<1>> 1];
+assert-ranked(c,
+	[0, [0,0]],
+	[1, [1,0]],
+	[1, [0,1]],
+	[2, [1,1]]);
+reset;
+
+# In range expression
+c := << 0 ... 3 <<1>> 5 >>;
+print-ranking(c);
+assert-ranked(c,
+	[0, 0],
+	[0, 1],
+	[0, 2],
+	[1, 3],
+	[1, 4]);
+reset;
+
+# Rank is rank expression
+c := 1 <<10 <<20>> 30>> 2;
+assert-ranked(c, 
+	[0, 1],
+	[10, 2]);
+reset;
+

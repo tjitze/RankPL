@@ -124,6 +124,9 @@ assert(3 == [4,3,2,1,0][1]);
 assert(2 == [4,3,2,1,0][2]);
 assert(1 == [4,3,2,1,0][3]);
 assert(0 == [4,3,2,1,0][4]);
+assert(array(10,0)[0] == 0);
+assert(array(10,array(10,1))[0] == array(10,1));
+assert(array(10,array(10,1))[0][0] == 1);
 
 # IsSet
 assert(!isdefined(not_set));

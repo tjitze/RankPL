@@ -141,7 +141,10 @@ public class FunctionCall extends AbstractFunctionCall {
 		if (parameters == null) {
 			parameters = getFunction().getParameters();
 			if (parameters.length != getArguments().length) {
-				throw new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, getArguments().length);
+				RPLException ex = new RPLWrongNumberOfArgumentsException(getFunction().getName(), parameters.length, getArguments().length);
+				ex.setStatement(fc);
+				ex.setExpression(this);
+				throw ex;
 			}
 		}
 		Function function = getFunction();

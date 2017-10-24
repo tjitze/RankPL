@@ -1,27 +1,28 @@
 input := "tweleven";
 
 dictionary := [
-	"one", "two", "three", "four", "five",
-	"six", "seven", "eight", "nine", "ten", "eleven",
-	"twelve", "thirteen", "fourteen", "fifteen", "sixteen",
-	"seventeen", "eighteen", "nineteen", "twenty"
+        "one", "two", "three", "four", "five",
+        "six", "seven", "eight", "nine", "ten", "eleven",
+        "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+        "seventeen", "eighteen", "nineteen", "twenty"
 ];
 
-choice := << 0 ... size(dictionary) >>;
-potential_match := dictionary[choice];
+potential_match := dictionary[<<0 ... size(dictionary)>>];
 
 i := 0; k := 0;
+
 input := input + "*";
 potential_match := potential_match + "*";
 
 while (i < size(input) & k < size(potential_match)) do {
 	observe-l (1) (input[i] == potential_match[k]);
 	if (input[i] == potential_match[k]) {
-		i := i + 1; k := k + 1;
+		i++; k++;
 	} else {
-		either { i := i + 1; k := k + 1; } or { i := i + 1; } or { k := k + 1; }
+		either { i++; k++; } or { i++; } or { k++; }
 	}
 }
 
 observe i == size(input) & k == size(potential_match);
+
 return substring(potential_match, 0, size(potential_match) - 1);

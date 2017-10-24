@@ -113,7 +113,7 @@ public class While extends AbstractStatement {
 		};
 		return new BranchingExecutor(exp, body, new Skip(), out2, c) {
 			public void handleConditionException(RPLException e) throws RPLException {
-				throw e;
+				While.this.handleConditionException(e);
 			}
 		};
 	}

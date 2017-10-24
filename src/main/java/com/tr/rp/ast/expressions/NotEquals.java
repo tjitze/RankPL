@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeMismatchException;
 import com.tr.rp.exceptions.RPLUndefinedException;
@@ -97,7 +98,7 @@ public class NotEquals extends AbstractExpression {
 	}
 	
 	public String toString() {
-		return "(" + e1 + " != " + e2 + ")";
+		return "(" + StringTools.stripPars(e1.toString()) + " != " + StringTools.stripPars(e2.toString()) + ")";
 	}
 	
 	public boolean equals(Object o) {

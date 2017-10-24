@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 
@@ -65,7 +66,7 @@ public class IsDefined extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "isdefined(" + exp + ")";
+		return "isdefined(" + StringTools.stripPars(exp.toString()) + ")";
 	}
 
 	public boolean equals(Object o) {

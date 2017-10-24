@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.varstore.VarStore;
@@ -80,7 +81,9 @@ public class ListValueAt extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "valueAt(" + list + ", "+ index +")";
+		return "valueAt(" 
+				+ StringTools.stripPars(list.toString()) + ", "
+				+ StringTools.stripPars(index.toString()) + ")";
 	}
 	
 	public boolean equals(Object o) {

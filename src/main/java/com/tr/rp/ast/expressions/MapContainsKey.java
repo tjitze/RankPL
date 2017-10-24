@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
@@ -71,7 +72,9 @@ public class MapContainsKey extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "containsKey(" + map + ", "+ value +")";
+		return "containsKey(" 
+				+ StringTools.stripPars(map.toString()) + ", " 
+				+ StringTools.stripPars(value.toString()) + ")";
 	}
 	
 	public boolean equals(Object o) {

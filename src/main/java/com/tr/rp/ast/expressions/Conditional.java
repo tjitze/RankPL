@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
@@ -82,7 +83,9 @@ public class Conditional extends AbstractExpression {
 	}
 	
 	public String toString() {
-		return "(" + condition + "? " + e1 + ": " + e2 + ")";
+		return "(" + StringTools.stripPars(condition.toString()) + "? " 
+				+ StringTools.stripPars(e1.toString()) + ": " 
+				+ StringTools.stripPars(e2.toString()) + ")";
 	}
 
 	@Override

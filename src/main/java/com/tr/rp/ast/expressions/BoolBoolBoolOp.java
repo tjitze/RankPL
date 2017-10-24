@@ -6,6 +6,7 @@ import java.util.function.BiFunction;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
@@ -79,7 +80,7 @@ public class BoolBoolBoolOp extends AbstractExpression {
 	}
 	
 	public String toString() {
-		return "(" + f.toString().replace("$1", e1.toString()).replace("$2", e2.toString()) + ")";
+		return "(" + f.toString().replace("$1", StringTools.stripPars(e1.toString())).replace("$2", StringTools.stripPars(e2.toString())) + ")";
 	}
 
 	public boolean equals(Object o) {

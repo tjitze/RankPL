@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
@@ -93,7 +94,7 @@ public class Max extends AbstractExpression {
 
 	public String toString() {
 		return "max(" + 
-				Arrays.stream(es).map(e -> e.toString()).collect(Collectors.joining(", ")) + ")";
+				Arrays.stream(es).map(e -> StringTools.stripPars(e.toString())).collect(Collectors.joining(", ")) + ")";
 	}
 
 	public boolean equals(Object o) {

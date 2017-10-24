@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.exceptions.RPLMissingKeyException;
@@ -95,7 +96,8 @@ public class Get extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "get(" + mapOrList + ", "+ keyOrIndex +")";
+		return "get(" + StringTools.stripPars(mapOrList.toString()) + ", " 
+					+ StringTools.stripPars(keyOrIndex.toString()) +")";
 	}
 	
 	public boolean equals(Object o) {

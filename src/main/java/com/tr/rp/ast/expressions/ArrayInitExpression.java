@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLTypeError;
 import com.tr.rp.varstore.VarStore;
@@ -112,9 +113,10 @@ public class ArrayInitExpression extends AbstractExpression {
 	
 	public String toString() {
 		if (initValue != null) {
-			return "array("+dimension+","+initValue+")";
+			return "array("+ StringTools.stripPars(dimension.toString())  +","
+					+ StringTools.stripPars(initValue.toString()) + ")";
 		} else {
-			return "array("+dimension+")";
+			return "array("+ StringTools.stripPars(initValue.toString()) + ")";
 		}
 	}
 	

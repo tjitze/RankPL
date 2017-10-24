@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.varstore.VarStore;
@@ -67,7 +68,7 @@ public class CharToInt extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "charToInt(" + charExp +")";
+		return "charToInt(" + StringTools.stripPars(charExp.toString()) +")";
 	}
 	
 	public boolean equals(Object o) {

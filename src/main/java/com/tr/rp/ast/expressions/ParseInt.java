@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLMiscException;
 import com.tr.rp.varstore.VarStore;
@@ -73,11 +74,7 @@ public class ParseInt extends AbstractExpression {
 	}
 
 	public String toString() {
-		String es = e.toString();
-		if (es.startsWith("(") && es.endsWith(")")) {
-			es = es.substring(1, es.length()-1);
-		}
-		return "parseint(" + es + ")";
+		return "parseint(" + StringTools.stripPars(e.toString()) + ")";
 	}
 
 	public boolean equals(Object o) {

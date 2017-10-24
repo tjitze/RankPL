@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
@@ -62,7 +63,7 @@ public class IsOfType extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "is"+ type.getName() + "(" + exp + ")";
+		return "is"+ type.getName() + "(" + StringTools.stripPars(exp.toString()) + ")";
 	}
 
 	public boolean equals(Object o) {

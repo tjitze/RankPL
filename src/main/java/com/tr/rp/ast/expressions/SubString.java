@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.exceptions.RPLIndexOutOfBoundsException;
 import com.tr.rp.exceptions.RPLMiscException;
@@ -108,19 +109,10 @@ public class SubString extends AbstractExpression {
 	}
 
 	public String toString() {
-		String es = input.toString();
-		if (es.startsWith("(") && es.endsWith(")")) {
-			es = es.substring(1, es.length()-1);
-		}
-		String beginIndex = begin.toString();
-		if (beginIndex.startsWith("(") && beginIndex.endsWith(")")) {
-			beginIndex = es.substring(1, beginIndex.length()-1);
-		}
-		String endIndex = end.toString();
-		if (endIndex.startsWith("(") && endIndex.endsWith(")")) {
-			endIndex = es.substring(1, endIndex.length()-1);
-		}
-		return "SubString(" + es + "," + beginIndex + ", " + endIndex + ")";
+		return "SubString(" 
+			+ StringTools.stripPars(input.toString()) + "," 
+			+ StringTools.stripPars(begin.toString()) + ", " 
+			+ StringTools.stripPars(end.toString()) + ")";
 	}
 
 	public boolean equals(Object o) {

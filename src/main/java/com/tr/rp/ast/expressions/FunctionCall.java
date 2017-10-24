@@ -12,6 +12,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.Function;
 import com.tr.rp.ast.FunctionScope;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.RankedItem;
 import com.tr.rp.base.State;
@@ -120,7 +121,7 @@ public class FunctionCall extends AbstractFunctionCall {
 
 	public String toString() {
 		return getFunctionName() + "(" + 
-				Arrays.stream(getArguments()).map(e -> e.toString()).collect(Collectors.joining(", ")) + ")";
+				Arrays.stream(getArguments()).map(e -> StringTools.stripPars(e.toString())).collect(Collectors.joining(", ")) + ")";
 	}
 	
 	public boolean equals(Object o) {

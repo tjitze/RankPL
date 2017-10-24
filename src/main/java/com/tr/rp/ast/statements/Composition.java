@@ -118,10 +118,12 @@ public class Composition extends AbstractStatement {
 		if (as.startsWith("{") && as.endsWith("}")) {
 			as = as.substring(1, as.length() - 1);
 		}
+		if (!as.endsWith(";")) as += ";";
 		if (bs.startsWith("{") && bs.endsWith("}")) {
 			bs = bs.substring(1, bs.length() - 1);
 		}
-		return "{" + as + ";" + bs + "}";
+		if (!bs.endsWith(";")) bs += ";";
+		return "{" + as + bs + "}";
 	}
 	
 	public boolean equals(Object o) {

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
@@ -60,7 +61,7 @@ public class IntToChar extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "intToChar(" + intExp +")";
+		return "intToChar(" + StringTools.stripPars(intExp.toString()) +")";
 	}
 	
 	public boolean equals(Object o) {

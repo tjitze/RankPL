@@ -57,6 +57,9 @@ public class ObserveL extends AbstractStatement {
 				public void handleConditionException(RPLException e) throws RPLException {
 					ObserveL.this.handleConditionException(e);
 				}
+				public void handleRankExpressionException(RPLException e) throws RPLException {
+					ObserveL.this.handleRankExpressionException(e);
+				}
 			};
 			return ie.getExecutor(out, c);
 		} else {

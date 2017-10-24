@@ -10,7 +10,7 @@ import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 
-public final class RankTransformer<T extends AbstractExpression> implements Executor, Supplier<T> {
+public class RankTransformer<T extends AbstractExpression> implements Executor, Supplier<T> {
 
 	private Executor out;
 	private final T exp;
@@ -18,6 +18,10 @@ public final class RankTransformer<T extends AbstractExpression> implements Exec
 	private T transformedExp = null;
 	private AbstractStatement st;
 	
+	public static <T extends AbstractExpression> RankTransformer<T> create(T e) {
+		return new RankTransformer<T>(e);
+	}
+
 	public RankTransformer(T exp) {
 		this.exp = exp;
 		if (!exp.hasRankExpression()) {
@@ -36,6 +40,15 @@ public final class RankTransformer<T extends AbstractExpression> implements Exec
 			return out;
 		} else {
 			setOutput(out, st);
+			return this;
+		}
+	}
+	
+	public Executor getExecutor(Executor out) {
+		if (!exp.hasRankExpression()) {
+			return out;
+		} else {
+			setOutput(out, null);
 			return this;
 		}
 	}
@@ -83,17 +96,18 @@ public final class RankTransformer<T extends AbstractExpression> implements Exec
 					queue.addLast(s);
 				}
 			} catch (RPLException e) {
-				if (st != null) {
-					e.setStatement(st);
-				}
-				throw e;
+				handleRankTransformException(e);
 			}
 		} else {
 			out.push(s);
 		}
 	}
 
-	public static <T extends AbstractExpression> RankTransformer<T> create(T e) {
-		return new RankTransformer<T>(e);
+	protected void handleRankTransformException(RPLException e) throws RPLException {
+		if (st != null) {
+			e.setStatement(st);
+		}
+		throw e;
 	}
+	
 }

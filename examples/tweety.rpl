@@ -1,4 +1,4 @@
-# three boolean variables: bird, penguin, flies (all assignments ranked 0)
+# Encode space of valuations (initially all equally likely)
 bird := false <<0>> true;
 penguin := false <<0>> true;
 flies := false <<0>> true;
@@ -12,11 +12,13 @@ if (penguin) observe !flies;
 # birds normally fly
 if (bird) observe-l (1) flies;
 
-# The following observation makes the program return "bird=true penguin=false flies=true"
+# The following observation makes the program return 
+# "bird=true penguin=false flies=true"
 observe bird;
 
-# If we uncomment the following line, the program returns "bird=true penguin=true flies=false"
-# observe penguin;
+# If we uncomment the following line, the program returns 
+# "bird=true penguin=true flies=false"
+observe penguin;
 
 return "bird=" + bird + " penguin=" + penguin + " flies=" + flies;
 

@@ -10,6 +10,8 @@ import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.AbstractFunctionCall;
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.State;
+import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.Guard;
 import com.tr.rp.varstore.FreeVarNameProvider;
@@ -48,7 +50,42 @@ public class FunctionCallForm extends AbstractStatement {
 			Assignment assignment = assignments.get(i);
 			out = assignment.functionCall.getExecutor(c, assignment.var, out, this);
 		}
-		return out;
+		final Executor out2 = out;
+		return new Executor() {
+
+			@Override
+			public void close() throws RPLException {
+				try {
+					out2.close();
+				} catch (RPLException e) {
+					if (e.getStatement() == statement) {
+						e.setStatement(FunctionCallForm.this);
+					}
+					// TODO: fix this (we set it to null because exp may contain subst variables)
+					if (e.getExpression().toString().contains("$")) {
+						e.setExpression(null);
+					}
+					throw e;
+				}
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				try {
+					out2.push(s);
+				} catch (RPLException e) {
+					if (e.getStatement() == statement) {
+						e.setStatement(FunctionCallForm.this);
+					}
+					// TODO: fix this (we set it to null because exp may contain subst variables)
+					if (e.getExpression().toString().contains("$")) {
+						e.setExpression(null);
+					}
+					throw e;
+				}
+			}
+			
+		};
 	}
 
 	@Override

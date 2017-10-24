@@ -6,6 +6,7 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
@@ -41,11 +42,7 @@ public class IfElse extends AbstractStatement {
 	}
 
 	public String toString() {
-		String expString = exp.toString();
-		if (!(expString.startsWith("(") && expString.endsWith(")"))) {
-			expString = "(" + expString + ")";
-		}
-		return "if " + expString + " then " + a + " else " + b;
+		return "if " + StringTools.addPars(exp.toString()) + " then " + a + " else " + b;
 	}
 	
 	public boolean equals(Object o) {

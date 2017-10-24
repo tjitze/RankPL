@@ -9,6 +9,7 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
@@ -85,7 +86,7 @@ public class ForInStatement extends AbstractStatement {
 	}	
 
 	public String toString() {
-		return "for (" + target + " in " + exp + ") " + body;
+		return "for (" + target + " in " + StringTools.stripPars(exp.toString()) + ") " + body;
 	}
 	
 	@Override

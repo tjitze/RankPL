@@ -6,6 +6,7 @@ import java.util.Set;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
@@ -75,7 +76,7 @@ public class ForStatement extends AbstractStatement {
 	}
 	
 	public String toString() {
-		return "for (" + init + "; " + forCondition + "; " + next + ") " + body;
+		return "for (" + init + "; " + StringTools.stripPars(forCondition.toString()) + "; " + next + ") " + body;
 	}
 	
 	@Override

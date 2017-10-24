@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
+import com.tr.rp.ast.StringTools;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.Rank;
@@ -153,18 +154,12 @@ public class While extends AbstractStatement {
 	
 	public String toString() {
 		String expString = whileCondition.toString();
-		if (preStatement != null && preStatement instanceof FunctionCallForm) {
-			
-		}
-		if (!(expString.startsWith("(") && expString.endsWith(")"))) {
-			expString = "(" + expString + ")";
-		}
 		String ss = body.toString();
 		if (preStatement != null && preStatement instanceof FunctionCallForm) {
 			expString = ((FunctionCallForm)preStatement).transformStatement(expString);
 			ss = ((FunctionCallForm)preStatement).transformStatement(ss);
 		}
-		return "while " + expString + " do " + ss;
+		return "while " + StringTools.addPars(expString) + " do " + ss;
 	}
 	
 	@Override

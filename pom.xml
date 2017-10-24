@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>RankPL</groupId>
   <artifactId>RankPL</artifactId>
-  <version>0.7</version>
+  <version>0.7.1-SNAPSHOT</version>
   <name>RankPL</name>
   <repositories>
     <repository>

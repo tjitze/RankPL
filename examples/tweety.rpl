@@ -1,0 +1,23 @@
+# three boolean variables: bird, penguin, flies (all assignments ranked 0)
+bird := false <<0>> true;
+penguin := false <<0>> true;
+flies := false <<0>> true;
+
+# penguins are birds
+if (penguin) observe bird;
+
+# penguins don't fly
+if (penguin) observe !flies;
+
+# birds normally fly
+if (bird) observe-l (1) flies;
+
+# The following observation makes the program return "bird=true penguin=false flies=true"
+observe bird;
+
+# If we uncomment the following line, the program returns "bird=true penguin=true flies=false"
+# observe penguin;
+
+return "bird=" + bird + " penguin=" + penguin + " flies=" + flies;
+
+

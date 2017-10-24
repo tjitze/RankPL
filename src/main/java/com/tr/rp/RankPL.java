@@ -214,8 +214,6 @@ public class RankPL {
 				.desc("generate all outcomes").build());
 		options.addOption(Option.builder("c").hasArg().type(Number.class).argName("rank_cutoff")
 				.desc("discard computations above this rank (default ∞)").build());
-		options.addOption(Option.builder("m").hasArg().type(Number.class).argName("min_rank_cutoff")
-				.desc("use if -d option is provided: minimum rank_cutoff to start with. Lower values are faster but might return incorrect results (default 3)").build());
 		options.addOption(Option.builder("f")
 				.desc("terminate after first answer").build());
 		options.addOption(Option.builder("t").hasArg().type(Number.class).argName("timeout")

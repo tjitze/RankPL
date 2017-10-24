@@ -1,6 +1,7 @@
 package com.tr.rp.ast.expressions;
 
 import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.statements.FunctionCallForm;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
@@ -23,6 +24,6 @@ public abstract class AbstractFunctionCall extends AbstractExpression {
 		return null;
 	}
 	
-	public abstract Executor getExecutor(ExecutionContext c, String assignToVar, Executor out);
+	public abstract Executor getExecutor(ExecutionContext c, String assignToVar, Executor out, FunctionCallForm fc);
 
 }

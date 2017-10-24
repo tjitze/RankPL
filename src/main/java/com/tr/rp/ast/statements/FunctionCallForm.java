@@ -46,7 +46,7 @@ public class FunctionCallForm extends AbstractStatement {
 		out = statement.getExecutor(out, c);
 		for (int i = assignments.size() - 1; i >= 0; i--) {
 			Assignment assignment = assignments.get(i);
-			out = assignment.functionCall.getExecutor(c, assignment.var, out);
+			out = assignment.functionCall.getExecutor(c, assignment.var, out, this);
 		}
 		return out;
 	}

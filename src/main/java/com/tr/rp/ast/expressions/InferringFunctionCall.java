@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.FunctionScope;
+import com.tr.rp.ast.statements.FunctionCallForm;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
@@ -62,7 +63,7 @@ public class InferringFunctionCall extends FunctionCall {
 		return 1 + super.hashCode();
 	}
 	
-	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
+	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out, FunctionCallForm fc) {
 		return new MultiMergeExecutor(out) {
 
 			@Override
@@ -85,7 +86,7 @@ public class InferringFunctionCall extends FunctionCall {
 								throw stop;
 							}
 						}
-					});
+					}, fc);
 				} catch (RPLException ex) {
 					if (ex != stop) throw ex;
 				}

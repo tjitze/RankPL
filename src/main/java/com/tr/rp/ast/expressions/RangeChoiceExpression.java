@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.statements.FunctionCallForm;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
@@ -38,12 +39,19 @@ public class RangeChoiceExpression extends AbstractFunctionCall {
 	}
 
 	@Override
-	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
+	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out, FunctionCallForm fc) {
 		return new MultiMergeExecutor(out) {
 			@Override
 			public void transform(VarStore in, Executor out2) throws RPLException {
-				int startInclusive = startInclusiveExp.getIntValue(in);
-				int endExclusive = endExclusiveExp.getIntValue(in);
+				int startInclusive;
+				int endExclusive;
+				try {
+					startInclusive = startInclusiveExp.getIntValue(in);
+					endExclusive = endExclusiveExp.getIntValue(in);
+				} catch (RPLException e) {
+					e.setStatement(fc);
+					throw e;
+				}
 				for (int i = startInclusive; i < endExclusive; i++) {
 					out2.push(in.create(assignToVar, i), 0);
 				}

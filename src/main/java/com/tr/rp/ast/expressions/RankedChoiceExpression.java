@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.tr.rp.ast.AbstractExpression;
+import com.tr.rp.ast.statements.FunctionCallForm;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
@@ -41,7 +42,7 @@ public class RankedChoiceExpression extends AbstractFunctionCall {
 	}
 
 	@Override
-	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
+	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out, FunctionCallForm fc) {
 		return new MultiMergeExecutor(out) {
 			@Override
 			public void transform(VarStore in, Executor out2) throws RPLException {

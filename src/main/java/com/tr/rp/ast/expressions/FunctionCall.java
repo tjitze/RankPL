@@ -13,6 +13,7 @@ import com.tr.rp.ast.Function;
 import com.tr.rp.ast.FunctionScope;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.StringTools;
+import com.tr.rp.ast.statements.FunctionCallForm;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.base.RankedItem;
 import com.tr.rp.base.State;
@@ -136,7 +137,7 @@ public class FunctionCall extends AbstractFunctionCall {
 		return Arrays.hashCode(arguments) + getFunctionName().hashCode();
 	}
 
-	protected void getExecutorForFunctionCall(String assignToVar, VarStore in, ExecutionContext c, Executor out) throws RPLException {
+	protected void getExecutorForFunctionCall(String assignToVar, VarStore in, ExecutionContext c, Executor out, FunctionCallForm fc) throws RPLException {
 		if (parameters == null) {
 			parameters = getFunction().getParameters();
 			if (parameters.length != getArguments().length) {
@@ -144,7 +145,7 @@ public class FunctionCall extends AbstractFunctionCall {
 			}
 		}
 		Function function = getFunction();
-		List<Object> values = getArgumentValues(in);
+		List<Object> values = getArgumentValues(in, fc);
 		if (function.containsCachedValue(values)) {
 			for (RankedItem<Object> ci: getFunction().getCachedValue(values)) {
 				out.push(in.create(assignToVar, ci.item), ci.rank);
@@ -198,19 +199,25 @@ public class FunctionCall extends AbstractFunctionCall {
 			
 	}
 		
-	private final List<Object> getArgumentValues(VarStore vs) throws RPLException {
+	private final List<Object> getArgumentValues(VarStore vs, FunctionCallForm fc) throws RPLException {
 		List<Object> values = new ArrayList<Object>();
 		for (int i = 0; i < getArguments().length; i++) {
-			values.add(getArguments()[i].getValue(vs));
+			try {
+				values.add(getArguments()[i].getValue(vs));
+			} catch (RPLException e) {
+				e.setStatement(fc);
+				e.setExpression(getArguments()[i]);
+				throw e;
+			}
 		}
 		return values;
 	}
 	
-	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out) {
+	public Executor getExecutor(ExecutionContext c, String assignToVar, Executor out, FunctionCallForm fc) {
 		return new MultiMergeExecutor(out) {
 			@Override
 			public void transform(VarStore in, Executor out2) throws RPLException {
-				getExecutorForFunctionCall(assignToVar, in, c, out2);
+				getExecutorForFunctionCall(assignToVar, in, c, out2, fc);
 			}
 		};
 	}

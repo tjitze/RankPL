@@ -21,6 +21,7 @@ import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.expressions.Abs;
 import com.tr.rp.ast.expressions.ArrayConstructExpression;
 import com.tr.rp.ast.expressions.ArrayInitExpression;
+import com.tr.rp.ast.expressions.ArrayRangeConstructExpression;
 import com.tr.rp.ast.expressions.AssignmentTarget;
 import com.tr.rp.ast.expressions.AssignmentTargetList;
 import com.tr.rp.ast.expressions.AssignmentTargetTerminal;
@@ -87,6 +88,7 @@ import com.tr.rp.ast.statements.While;
 import com.tr.rp.parser.RankPLParser.Arithmetic1ExpressionContext;
 import com.tr.rp.parser.RankPLParser.Arithmetic2ExpressionContext;
 import com.tr.rp.parser.RankPLParser.ArrayConstructExprContext;
+import com.tr.rp.parser.RankPLParser.ArrayRangeConstructExprContext;
 import com.tr.rp.parser.RankPLParser.AssertRankedStatementContext;
 import com.tr.rp.parser.RankPLParser.AssertStatementContext;
 import com.tr.rp.parser.RankPLParser.AssignmentStatementContext;
@@ -758,6 +760,16 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		return exp;
 	}
 
+	@Override
+	public LanguageElement visitArrayRangeConstructExpr(ArrayRangeConstructExprContext ctx) {
+		AbstractExpression exp1 = (AbstractExpression)visit(ctx.exp(0));
+		exp1.setLineNumber(ctx.exp(0).getStart().getLine());
+		AbstractExpression exp2 = (AbstractExpression)visit(ctx.exp(1));
+		exp2.setLineNumber(ctx.exp(1).getStart().getLine());
+		ArrayRangeConstructExpression arce = new ArrayRangeConstructExpression(exp1, exp2);
+		arce.setLineNumber(ctx.getStart().getLine());
+		return arce;
+	}
 	
 	public LanguageElement visitParExpression(ParExpressionContext ctx) { 
 		return visit(ctx.getChild(1));

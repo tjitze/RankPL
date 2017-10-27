@@ -163,6 +163,10 @@ assert(array(2, true) == [true, true]);
 assert(array(2, "a") == ["a", "a"]);
 assert(array(2, array(2, "a")) == [["a", "a"], ["a", "a"]]);
 
+assert([0 ... 0] == []);
+assert([0 ... 1] == [0]);
+assert([2 ... 5] == [2, 3, 4]);
+
 # Type checking
 assert(isstring(""));
 assert(!isstring(1));

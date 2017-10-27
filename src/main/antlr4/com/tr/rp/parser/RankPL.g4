@@ -96,6 +96,7 @@ expr6
  | '!' expr6 				                 			# NegateExpr
  | '-' expr6 			     	            			# MinusExpr
  | '[' (exp (',' exp)* )? ']'							# ArrayConstructExpr
+ | '['  exp '...' exp ']'								# ArrayRangeConstructExpr
  | '(' exp ')' 											# ParExpression
  | '<<' exp '...' exp '>>'								# RangeChoiceExpression
  ;

@@ -14,7 +14,7 @@ import com.tr.rp.varstore.types.Type;
 public class Negative extends AbstractExpression {
 
 	private final AbstractExpression e;
-	
+
 	public Negative(AbstractExpression e) {
 		this.e = e;
 	}
@@ -31,7 +31,9 @@ public class Negative extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Negative(e.transformRankExpressions(v, rank));
+		AbstractExpression x = new Negative(e.transformRankExpressions(v, rank));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -41,12 +43,14 @@ public class Negative extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Negative((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression x = new Negative((AbstractExpression) e.replaceEmbeddedFunctionCall(fc, var));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
 	public Object getValue(VarStore v) throws RPLException {
-		return - e.getValue(v, Type.INT);
+		return -e.getValue(v, Type.INT);
 	}
 
 	@Override
@@ -56,17 +60,17 @@ public class Negative extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return - e.getDefiniteValue(Type.INT);
+		return -e.getDefiniteValue(Type.INT);
 	}
 
 	public String toString() {
 		return "-" + e;
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof Negative) && ((Negative)o).e.equals(e);
+		return (o instanceof Negative) && ((Negative) o).e.equals(e);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return e.hashCode();

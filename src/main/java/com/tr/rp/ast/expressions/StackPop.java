@@ -20,7 +20,7 @@ import com.tr.rp.varstore.types.Type;
 public class StackPop extends AbstractExpression {
 
 	private final AbstractExpression e;
-	
+
 	public StackPop(AbstractExpression e) {
 		this.e = e;
 	}
@@ -41,12 +41,16 @@ public class StackPop extends AbstractExpression {
 	}
 
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new StackPop(e.transformRankExpressions(v, rank));
+		AbstractExpression x = new StackPop(e.transformRankExpressions(v, rank));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new StackPop(e.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression x = new StackPop(e.replaceEmbeddedFunctionCall(fc, var));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -66,13 +70,13 @@ public class StackPop extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "pop("+e+")";
+		return "pop(" + e + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof StackPop) && ((StackPop)o).e.equals(e);
+		return (o instanceof StackPop) && ((StackPop) o).e.equals(e);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass().hashCode(), e.hashCode());

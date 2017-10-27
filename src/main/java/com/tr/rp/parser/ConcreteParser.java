@@ -98,6 +98,7 @@ import com.tr.rp.parser.RankPLParser.ConditionalExpressionContext;
 import com.tr.rp.parser.RankPLParser.CurrentRankStatementContext;
 import com.tr.rp.parser.RankPLParser.CutStatementContext;
 import com.tr.rp.parser.RankPLParser.ExceptionallyStatementContext;
+import com.tr.rp.parser.RankPLParser.Expr2Context;
 import com.tr.rp.parser.RankPLParser.ForInStatementContext;
 import com.tr.rp.parser.RankPLParser.ForStatementContext;
 import com.tr.rp.parser.RankPLParser.FunctionCallContext;
@@ -144,6 +145,8 @@ import com.tr.rp.varstore.datastructures.PersistentSet;
 import com.tr.rp.varstore.datastructures.PersistentStack;
 import com.tr.rp.varstore.types.Type;
 
+import st4hidden.org.antlr.runtime.Token;
+
 public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 
 	private FunctionScope functionScope = new FunctionScope();
@@ -172,7 +175,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		} else if (statements.size() == 1) {
 			return statements.get(0);
 		} else {
-			return new Composition(statements);
+			Composition c = new Composition(statements);
+			c.setLineNumber(ctx.getStart().getLine());
+			return c;
 		}
 	}
 
@@ -184,7 +189,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitAssignmentStatement(AssignmentStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		target.setLineNumber(ctx.assignment_target().getStart().getLine());
 		AbstractExpression value = (AbstractExpression)visit(ctx.exp());
+		value.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement s = new Assign(target, value);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -193,6 +200,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitIncDecStatement(IncDecStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		target.setLineNumber(ctx.assignment_target().getStart().getLine());
 		String aop = ctx.op.getText();
 		AbstractStatement s = null;
 		if (aop.equals("++")) s = new Inc(target);
@@ -204,6 +212,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitReturnStatement(ReturnStatementContext ctx) {
 		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
+		e.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement s = new Return(e);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -212,6 +221,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitPrintStatement(PrintStatementContext ctx) {
 		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
+		e.setLineNumber(ctx.exp().getStart().getLine());
 		PrintStatement s = new PrintStatement(e);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -220,6 +230,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitPrintRankingStatement(PrintRankingStatementContext ctx) {
 		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
+		e.setLineNumber(ctx.exp().getStart().getLine());
 		PrintRankingStatement s = new PrintRankingStatement(e);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -228,6 +239,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitCutStatement(CutStatementContext ctx) {
 		AbstractExpression e = (AbstractExpression)visit(ctx.exp());
+		e.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement s = new Cut(e);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -236,9 +248,11 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitAssertRankedStatement(AssertRankedStatementContext ctx) {
 		AbstractExpression arg1 = (AbstractExpression)visit(ctx.exp().get(0));
+		arg1.setLineNumber(ctx.exp(0).getStart().getLine());
 		AbstractExpression[] argRest = new AbstractExpression[ctx.exp().size() - 1];
 		for (int i = 1; i < ctx.exp().size(); i++) {
 			argRest[i-1] = (AbstractExpression)visit(ctx.exp().get(i));
+			argRest[i-1].setLineNumber(ctx.exp().get(i).getStart().getLine());
 		}
 		AssertRanked s = new AssertRanked(arg1, argRest);
 		s.setLineNumber(ctx.getStart().getLine());
@@ -248,6 +262,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitAssertStatement(AssertStatementContext ctx) {
 		AbstractExpression arg = (AbstractExpression)visit(ctx.exp());
+		arg.setLineNumber(ctx.exp().getStart().getLine());
 		Assert s = new Assert(arg);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -275,8 +290,11 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractExpression[] index = new AbstractExpression[ctx.index().size()];
 		for (int i = 0; i < index.length; i++) {
 			index[i] = (AbstractExpression)visit(ctx.index(i));
+			index[i].setLineNumber(ctx.index(i).getStart().getLine());
 		}
-		return new AssignmentTargetTerminal(varName, index);
+		AssignmentTargetTerminal att = new AssignmentTargetTerminal(varName, index);
+		att.setLineNumber(ctx.getStart().getLine());
+		return att;
 	}
 
 	@Override
@@ -284,17 +302,23 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AssignmentTarget[] targets = new AssignmentTarget[ctx.assignment_target().size()];
 		for (int i = 0; i < targets.length; i++) {
 			targets[i] = (AssignmentTarget)visit(ctx.assignment_target(i));
+			targets[i].setLineNumber(ctx.assignment_target(i).getStart().getLine());
 		}
-		return new AssignmentTargetList(targets);
+		AssignmentTargetList atl = new AssignmentTargetList(targets);
+		atl.setLineNumber(ctx.getStart().getLine());
+		return atl;
 	}
 
 	@Override
 	public LanguageElement visitIfStatement(IfStatementContext ctx) {
 		AbstractExpression boolExpr = (AbstractExpression)visit(ctx.exp());
+		boolExpr.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement a = (AbstractStatement)visit(ctx.stat().get(0));
+		a.setLineNumber(ctx.stat().get(0).getStart().getLine());
 		AbstractStatement b;
 		if (ctx.stat().size() > 1) {
 			b = (AbstractStatement)visit(ctx.stat().get(1));
+			b.setLineNumber(ctx.stat().get(1).getStart().getLine());
 		} else {
 			b = new Skip();
 		}
@@ -307,6 +331,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitObserveStatement(ObserveStatementContext ctx) {
 		AbstractExpression boolExpr = (AbstractExpression)visit(ctx.exp());
+		boolExpr.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement s = new Observe(boolExpr);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -318,10 +343,14 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractExpression boolExpr;
 		if (ctx.exp().size() == 1) {
 			rank = new Literal<Integer>(1);
+			rank.setLineNumber(ctx.getStart().getLine());
 			boolExpr = (AbstractExpression)visit(ctx.exp(0));
+			boolExpr.setLineNumber(ctx.exp(0).getStart().getLine());
 		} else {
 			rank = (AbstractExpression)visit(ctx.exp(0));
+			rank.setLineNumber(ctx.exp(0).getStart().getLine());
 			boolExpr = (AbstractExpression)visit(ctx.exp(1));
+			boolExpr.setLineNumber(ctx.exp(1).getStart().getLine());
 		}
 		AbstractStatement s = new ObserveJ(boolExpr, rank);
 		s.setLineNumber(ctx.getStart().getLine());
@@ -334,10 +363,14 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractExpression boolExpr;
 		if (ctx.exp().size() == 1) {
 			rank = new Literal<Integer>(1);
+			rank.setLineNumber(ctx.getStart().getLine());
 			boolExpr = (AbstractExpression)visit(ctx.exp(0));
+			boolExpr.setLineNumber(ctx.exp(0).getStart().getLine());
 		} else {
 			rank = (AbstractExpression)visit(ctx.exp(0));
+			rank.setLineNumber(ctx.exp(0).getStart().getLine());
 			boolExpr = (AbstractExpression)visit(ctx.exp(1));
+			boolExpr.setLineNumber(ctx.exp(1).getStart().getLine());
 		}
 		AbstractStatement s = new ObserveL(boolExpr, rank);
 		s.setLineNumber(ctx.getStart().getLine());
@@ -347,7 +380,10 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitRankedChoiceStatement(RankedChoiceStatementContext ctx) {
 		AbstractExpression rank = ctx.exp() == null? lit(1): (AbstractExpression)visit(ctx.exp());
+		rank.setLineNumber(ctx.exp() == null? ctx.getStart().getLine():
+			ctx.exp().getStart().getLine());
 		AbstractStatement a = (AbstractStatement)visit(ctx.stat().get(0));
+		a.setLineNumber(ctx.stat().get(0).getStart().getLine());
 		AbstractStatement b;
 		if (ctx.stat().size() > 1) {
 			b = (AbstractStatement)visit(ctx.stat().get(1));
@@ -362,7 +398,10 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitExceptionallyStatement(ExceptionallyStatementContext ctx) {
 		AbstractExpression rank = ctx.exp() == null? lit(1): (AbstractExpression)visit(ctx.exp());
+		rank.setLineNumber(ctx.exp() == null? ctx.getStart().getLine():
+			ctx.exp().getStart().getLine());
 		AbstractStatement a = (AbstractStatement)visit(ctx.stat());
+		a.setLineNumber(ctx.stat().getStart().getLine());
 		AbstractStatement s = new RankedChoice(new Skip(), a, rank);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -373,6 +412,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractStatement[] choices = new AbstractStatement[ctx.stat().size()];
 		for (int i = 0; i < choices.length; i++) {
 			choices[i] = (AbstractStatement)visit(ctx.stat().get(i));
+			choices[i].setLineNumber(ctx.stat().get(i).getStart().getLine());
 		}
 		AbstractStatement s = constructIndifferentChoice(choices, 0);
 		s.setLineNumber(ctx.getStart().getLine());
@@ -408,7 +448,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitWhileStatement(WhileStatementContext ctx) {
 		AbstractExpression boolExpr = (AbstractExpression)visit(ctx.exp());
+		boolExpr.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement body = (AbstractStatement)visit(ctx.stat());
+		body.setLineNumber(ctx.stat().getStart().getLine());
 		AbstractStatement s = new While(boolExpr, body);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -417,9 +459,13 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitForStatement(ForStatementContext ctx) {
 		AbstractExpression forCondition = (AbstractExpression)visit(ctx.exp());
+		forCondition.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement init = (AbstractStatement)visit(ctx.term_stat(0));
+		init.setLineNumber(ctx.term_stat(0).getStart().getLine());
 		AbstractStatement next = (AbstractStatement)visit(ctx.term_stat(1));
+		next.setLineNumber(ctx.term_stat(1).getStart().getLine());
 		AbstractStatement body = (AbstractStatement)visit(ctx.stat());
+		body.setLineNumber(ctx.stat().getStart().getLine());
 		AbstractStatement s = new ForStatement(init, forCondition, next, body);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -429,6 +475,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitForInStatement(ForInStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
 		AbstractExpression exp = (AbstractExpression)visit(ctx.exp());
+		exp.setLineNumber(ctx.exp().getStart().getLine());
 		AbstractStatement body = (AbstractStatement)visit(ctx.stat());
 		AbstractStatement s = new ForInStatement(target, exp, body);
 		s.setLineNumber(ctx.getStart().getLine());
@@ -438,6 +485,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitCurrentRankStatement(CurrentRankStatementContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		target.setLineNumber(ctx.assignment_target().getStart().getLine());
 		AbstractStatement s = new CurrentRank(target);
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
@@ -451,8 +499,13 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		} else {
 			AbstractExpression b = (AbstractExpression)visit(ctx.expr3());
 			String aop = ctx.aop.getText();
-			if (aop.equals("+")) return Expressions.plus(a, b);
-			if (aop.equals("-")) return Expressions.minus(a, b);
+			AbstractExpression exp = null;
+			if (aop.equals("+")) exp = Expressions.plus(a, b);
+			if (aop.equals("-")) exp = Expressions.minus(a, b);
+			if (exp != null) {
+				exp.setLineNumber(ctx.getStart().getLine());
+				return exp;
+			}
 		}
 		throw new RuntimeException("Internal parse error");
 	}
@@ -460,14 +513,21 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitArithmetic2Expression(Arithmetic2ExpressionContext ctx) {
 		AbstractExpression a = (AbstractExpression)visit(ctx.expr5());
+		a.setLineNumber(ctx.expr5().getStart().getLine());
 		if (ctx.expr4() == null) {
 			return a;
 		} else {
 			AbstractExpression b = (AbstractExpression)visit(ctx.expr4());
+			b.setLineNumber(ctx.expr4().getStart().getLine());
 			String aop = ctx.aop.getText();
-			if (aop.equals("*")) return Expressions.times(a, b);
-			if (aop.equals("/")) return Expressions.div(a, b);
-			if (aop.equals("%")) return Expressions.mod(a, b);
+			AbstractExpression exp = null;
+			if (aop.equals("*")) exp = Expressions.times(a, b);
+			if (aop.equals("/")) exp = Expressions.div(a, b);
+			if (aop.equals("%")) exp = Expressions.mod(a, b);
+			if (exp != null) {
+				exp.setLineNumber(ctx.getStart().getLine());
+				return exp;
+			}
 		}
 		throw new RuntimeException("Internal parse error");
 	}
@@ -475,12 +535,16 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitIndexedExpression(IndexedExpressionContext ctx) {
 		AbstractExpression a = (AbstractExpression)visit(ctx.expr6());
+		a.setLineNumber(ctx.expr6().getStart().getLine());
 		if (ctx.index().size() > 0) {
 			AbstractExpression[] index = new AbstractExpression[ctx.index().size()];
 			for (int i = 0; i < index.length; i++) {
 				index[i] = (AbstractExpression)visit(ctx.index(i));
+				index[i].setLineNumber(ctx.index(i).getStart().getLine());
 			}
-			return new IndexElementExpression(a, index);
+			IndexElementExpression iee = new IndexElementExpression(a, index);
+			iee.setLineNumber(ctx.getStart().getLine());
+			return iee;
 		} else {
 			return a;
 		}
@@ -493,10 +557,16 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 			return a;
 		} else {
 			AbstractExpression b = (AbstractExpression)visit(ctx.expr1());
+			b.setLineNumber(ctx.expr1().getStart().getLine());
 			String aop = ctx.aop.getText();
-			if (aop.equals("&") || aop.equals("&&")) return Expressions.and(a, b);
-			if (aop.equals("|") || aop.equals("||")) return Expressions.or(a, b);
-			if (aop.equals("^")) return Expressions.xor(a, b);
+			AbstractExpression exp = null;
+			if (aop.equals("&") || aop.equals("&&")) exp = Expressions.and(a, b);
+			if (aop.equals("|") || aop.equals("||")) exp = Expressions.or(a, b);
+			if (aop.equals("^")) exp = Expressions.xor(a, b);
+			if (exp != null) {
+				exp.setLineNumber(ctx.getStart().getLine());
+				return exp;
+			}
 		}
 		throw new RuntimeException("Internal parse error");
 	}
@@ -504,10 +574,15 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitRankedChoiceExpression(RankedChoiceExpressionContext ctx) {
 		AbstractExpression exp1 = (AbstractExpression)visit(ctx.expr0());
+		exp1.setLineNumber(ctx.expr0().getStart().getLine());
 		if (ctx.exprA().size() == 2) {
 			AbstractExpression rank = (AbstractExpression)visit(ctx.exprA(0));
+			rank.setLineNumber(ctx.exprA(0).getStart().getLine());
 			AbstractExpression exp2 = (AbstractExpression)visit(ctx.exprA(1));
-			return new RankedChoiceExpression(exp1, exp2, rank);
+			exp2.setLineNumber(ctx.exprA(1).getStart().getLine());
+			RankedChoiceExpression rce = new RankedChoiceExpression(exp1, exp2, rank);
+			rce.setLineNumber(ctx.getStart().getLine());
+			return rce;
 		} else {
 			return exp1;
 		}
@@ -516,18 +591,27 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitRangeChoiceExpression(RangeChoiceExpressionContext ctx) {
 		AbstractExpression exp1 = (AbstractExpression)visit(ctx.exp(0));
+		exp1.setLineNumber(ctx.exp(0).getStart().getLine());
 		AbstractExpression exp2 = (AbstractExpression)visit(ctx.exp(1));
-		return new RangeChoiceExpression(exp1, exp2);
+		exp2.setLineNumber(ctx.exp(1).getStart().getLine());
+		RangeChoiceExpression rce = new RangeChoiceExpression(exp1, exp2);
+		rce.setLineNumber(ctx.getStart().getLine());
+		return rce;
 	}
 
 
 	@Override
 	public LanguageElement visitConditionalExpression(ConditionalExpressionContext ctx) {
 		AbstractExpression e1 = (AbstractExpression)visit(ctx.expr1(0));
+		e1.setLineNumber(ctx.expr1(0).getStart().getLine());
 		if (ctx.expr1().size() > 1) {
 			AbstractExpression e2 = (AbstractExpression)visit(ctx.expr1(1));
+			e2.setLineNumber(ctx.expr1(1).getStart().getLine());
 			AbstractExpression e3 = (AbstractExpression)visit(ctx.expr1(2));
-			return new Conditional(e1, e2, e3);
+			e3.setLineNumber(ctx.expr1(2).getStart().getLine());
+			Conditional c = new Conditional(e1, e2, e3);
+			c.setLineNumber(ctx.getStart().getLine());
+			return c;
 		} else {
 			return e1;
 		}
@@ -536,7 +620,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitLiteralIntExpression(LiteralIntExpressionContext ctx) {
 		String num = ctx.getText();
-		return new Literal<Integer>(Integer.parseInt(num));
+		Literal<Integer> lit = new Literal<Integer>(Integer.parseInt(num));
+		lit.setLineNumber(ctx.getStart().getLine());
+		return lit;
 	}
 	
 	@Override
@@ -555,6 +641,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		// Try to parse as built in function
 		AbstractExpression builtInFunction = getBuiltInFunction(functionName, args);
 		if (builtInFunction != null) {
+			builtInFunction.setLineNumber(ctx.getStart().getLine());
 			return builtInFunction;
 		}
 		
@@ -564,6 +651,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitPopFunctionCall(PopFunctionCallContext ctx) {
 		AssignmentTarget target = (AssignmentTarget)visit(ctx.assignment_target());
+		target.setLineNumber(ctx.getStart().getLine());
 		return new StackPop(target);
 	}
 	
@@ -574,23 +662,32 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		for (int i = 0; i < args.length; i++) {
 			args[i] = (AbstractExpression)visit(ctx.exp(i));
 		}
-		return new InferringFunctionCall(functionName, functionScope, args);
+		FunctionCall fc = new InferringFunctionCall(functionName, functionScope, args);
+		fc.setLineNumber(ctx.getStart().getLine());;
+		return fc;
 	}
 	
 	@Override
 	public LanguageElement visitCompareExpr(CompareExprContext ctx) {
 		AbstractExpression a = (AbstractExpression)visit(ctx.expr3());
+		a.setLineNumber(ctx.getStart().getLine());
 		if (ctx.expr2() == null) {
 			return a;
 		} else {
 			String cop = ctx.cop.getText();
 			AbstractExpression b = (AbstractExpression)visit(ctx.expr2());
-			if (cop.equals("<")) return Expressions.lt(a, b);
-			if (cop.equals("<=")) return Expressions.leq(a, b);
-			if (cop.equals("==")) return Expressions.eq(a, b);
-			if (cop.equals("!=")) return Expressions.notEquals(a, b);
-			if (cop.equals(">")) return Expressions.gt(a, b);
-			if (cop.equals(">=")) return Expressions.geq(a, b);
+			b.setLineNumber(ctx.getStart().getLine());
+			AbstractExpression exp = null;
+			if (cop.equals("<")) exp = Expressions.lt(a, b);
+			if (cop.equals("<=")) exp = Expressions.leq(a, b);
+			if (cop.equals("==")) exp = Expressions.eq(a, b);
+			if (cop.equals("!=")) exp = Expressions.notEquals(a, b);
+			if (cop.equals(">")) exp = Expressions.gt(a, b);
+			if (cop.equals(">=")) exp = Expressions.geq(a, b);
+			if (exp != null) {
+				exp.setLineNumber(ctx.getStart().getLine());
+				return exp;
+			}
 		}
 		throw new RuntimeException("Internal parse error");
 	}
@@ -598,7 +695,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitNegateExpr(NegateExprContext ctx) {
 		AbstractExpression a = (AbstractExpression)visit(ctx.getChild(1));
-		return new Not(a);
+		AbstractExpression exp = new Not(a);
+		exp.setLineNumber(ctx.getStart().getLine());
+		return exp;
 	}
 
 	@Override
@@ -606,19 +705,25 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		AbstractExpression a = (AbstractExpression)visit(ctx.getChild(1));
 		// Simplify negative literal
 		if (a instanceof Literal && ((Literal)a).getLiteralValue() instanceof Integer) {
-			return new Literal<Integer>(-(int)((Literal)a).getLiteralValue());
+			a = new Literal<Integer>(-(int)((Literal)a).getLiteralValue());
 		} else {
-			return new Negative(a);
+			a = new Negative(a);
 		}
+		a.setLineNumber(ctx.getStart().getLine());
+		return a;
 	}
 
 	@Override
 	public LanguageElement visitLiteralBoolExpr(LiteralBoolExprContext ctx) {
+		AbstractExpression exp;
 		if (ctx.getText().toLowerCase().equals("true")) {
-			return new Literal<Boolean>(true);
+			exp = new Literal<Boolean>(true);
 		} else {
-			return new Literal<Boolean>(false);
+			exp = new Literal<Boolean>(false);
 		}
+		exp.setLineNumber(ctx.getStart().getLine());
+		exp.setLineNumber(ctx.getStart().getLine());
+		return exp;
 	}
 	
 	@Override
@@ -638,7 +743,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	    s = prop.getProperty("x");
 	    // put back leading spaces
 	    for (int i = 0; i < wsCount; i++) s = " " + s;
-		return new Literal<String>(s);
+		Literal<String> lit = new Literal<String>(s);
+		lit.setLineNumber(ctx.getStart().getLine());
+		return lit;
 	}
 
 	@Override
@@ -647,7 +754,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		for (int i = 0; i < values.length; i++) {
 			values[i] = (AbstractExpression)visit(ctx.exp(i));
 		}
-		return new ArrayConstructExpression(values);
+		AbstractExpression exp = new ArrayConstructExpression(values);
+		exp.setLineNumber(ctx.getStart().getLine());
+		return exp;
 	}
 
 	
@@ -688,7 +797,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	public LanguageElement visitVariable(VariableContext ctx) {
 		TerminalNode tn = ctx.VAR();
 		String varName = tn.toString();
-		return new Variable(varName);
+		Variable var = new Variable(varName);
+		var.setLineNumber(ctx.getStart().getLine());
+		return var;
 	}
 	
 	public LanguageElement visitFunctiondef(FunctiondefContext ctx) {

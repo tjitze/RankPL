@@ -16,7 +16,7 @@ import com.tr.rp.varstore.types.Type;
 public class ParseInt extends AbstractExpression {
 
 	private final AbstractExpression e;
-	
+
 	public ParseInt(AbstractExpression e) {
 		this.e = e;
 	}
@@ -33,7 +33,9 @@ public class ParseInt extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new ParseInt(e.transformRankExpressions(v, rank));
+		AbstractExpression x = new ParseInt(e.transformRankExpressions(v, rank));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -43,7 +45,9 @@ public class ParseInt extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new ParseInt((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression x = new ParseInt((AbstractExpression) e.replaceEmbeddedFunctionCall(fc, var));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class ParseInt extends AbstractExpression {
 	}
 
 	public boolean equals(Object o) {
-		return (o instanceof ParseInt) && ((ParseInt)o).e.equals(e);
+		return (o instanceof ParseInt) && ((ParseInt) o).e.equals(e);
 	}
 
 	@Override

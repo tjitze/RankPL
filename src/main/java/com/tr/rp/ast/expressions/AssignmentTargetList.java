@@ -44,7 +44,9 @@ public class AssignmentTargetList extends AssignmentTarget {
 		for (int i = 0; i < elements.length; i++) {
 			newElements[i] = (AssignmentTarget)elements[i].transformRankExpressions(v, rank);
 		}
-		return new AssignmentTargetList(newElements);
+		AssignmentTargetList a = new AssignmentTargetList(newElements);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override
@@ -64,7 +66,9 @@ public class AssignmentTargetList extends AssignmentTarget {
 		for (int i = 0; i < elements.length; i++) {
 			newElements[i] = (AssignmentTarget)elements[i].replaceEmbeddedFunctionCall(fc, var);
 		}
-		return new AssignmentTargetList(newElements);
+		AssignmentTargetList a = new AssignmentTargetList(newElements);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override
@@ -130,7 +134,9 @@ public class AssignmentTargetList extends AssignmentTarget {
 		for (int i = 0; i < elements.length; i++) {
 			values[i] = elements[i].convertToRHSExpression();
 		}
-		return new ArrayConstructExpression(values);
+		ArrayConstructExpression a = new ArrayConstructExpression(values);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 }

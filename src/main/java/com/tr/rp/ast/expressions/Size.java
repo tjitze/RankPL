@@ -16,12 +16,13 @@ import com.tr.rp.varstore.datastructures.PersistentSet;
 import com.tr.rp.varstore.datastructures.PersistentStack;
 
 /**
- * The size expression. Returns the length of the given array, string, set or stack
+ * The size expression. Returns the length of the given array, string, set or
+ * stack
  */
 public class Size extends AbstractExpression {
 
 	private final AbstractExpression e;
-	
+
 	public Size(AbstractExpression e) {
 		this.e = e;
 	}
@@ -38,7 +39,9 @@ public class Size extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Size(e.transformRankExpressions(v, rank));
+		AbstractExpression x = new Size(e.transformRankExpressions(v, rank));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -48,7 +51,9 @@ public class Size extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Size((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression x = new Size((AbstractExpression) e.replaceEmbeddedFunctionCall(fc, var));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -56,17 +61,17 @@ public class Size extends AbstractExpression {
 		Object o = e.getValue(v);
 		if (o != null) {
 			if (o instanceof String) {
-				return ((String)o).length();
+				return ((String) o).length();
 			} else if (o instanceof PersistentArray) {
-				return ((PersistentArray)o).size();
+				return ((PersistentArray) o).size();
 			} else if (o instanceof PersistentStack) {
-				return ((PersistentStack<?>)o).size();
+				return ((PersistentStack<?>) o).size();
 			} else if (o instanceof PersistentSet) {
-				return ((PersistentSet<?>)o).size();
+				return ((PersistentSet<?>) o).size();
 			} else if (o instanceof PersistentMap) {
-				return ((PersistentMap<?,?>)o).size();
+				return ((PersistentMap<?, ?>) o).size();
 			} else if (o instanceof PersistentList) {
-				return ((PersistentList<?>)o).size();
+				return ((PersistentList<?>) o).size();
 			} else {
 				throw new RPLTypeError("string, array, set, map, stack or list", o, e);
 			}
@@ -85,17 +90,17 @@ public class Size extends AbstractExpression {
 		Object o = e.getDefiniteValue();
 		if (o != null) {
 			if (o instanceof String) {
-				return ((String)o).length();
+				return ((String) o).length();
 			} else if (o instanceof PersistentArray) {
-				return ((PersistentArray)o).size();
+				return ((PersistentArray) o).size();
 			} else if (o instanceof PersistentStack) {
-				return ((PersistentStack<?>)o).size();
+				return ((PersistentStack<?>) o).size();
 			} else if (o instanceof PersistentSet) {
-				return ((PersistentSet<?>)o).size();
+				return ((PersistentSet<?>) o).size();
 			} else if (o instanceof PersistentMap) {
-				return ((PersistentMap<?, ?>)o).size();
+				return ((PersistentMap<?, ?>) o).size();
 			} else if (o instanceof PersistentList) {
-				return ((PersistentList<?>)o).size();
+				return ((PersistentList<?>) o).size();
 			} else {
 				throw new RPLTypeError("string, array, set, map or stack", o, e);
 			}
@@ -107,13 +112,13 @@ public class Size extends AbstractExpression {
 	public String toString() {
 		String es = e.toString();
 		if (es.startsWith("(") && es.endsWith(")")) {
-			es = es.substring(1, es.length()-1);
+			es = es.substring(1, es.length() - 1);
 		}
 		return "size(" + es + ")";
 	}
 
 	public boolean equals(Object o) {
-		return (o instanceof Size) && ((Size)o).e.equals(e);
+		return (o instanceof Size) && ((Size) o).e.equals(e);
 	}
 
 	@Override

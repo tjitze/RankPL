@@ -16,7 +16,7 @@ public class SetRemove extends AbstractExpression {
 
 	private final AbstractExpression set;
 	private final AbstractExpression value;
-	
+
 	public SetRemove(AbstractExpression set, AbstractExpression value) {
 		this.set = set;
 		this.value = value;
@@ -35,8 +35,9 @@ public class SetRemove extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new SetRemove(set.transformRankExpressions(v, rank),
-				value.transformRankExpressions(v, rank));
+		AbstractExpression e = new SetRemove(set.transformRankExpressions(v, rank), value.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -51,8 +52,10 @@ public class SetRemove extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new SetRemove((AbstractExpression)set.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new SetRemove((AbstractExpression) set.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) value.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -71,14 +74,13 @@ public class SetRemove extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "remove(" + set + ", "+ value +")";
+		return "remove(" + set + ", " + value + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof SetRemove) && ((SetRemove)o).set.equals(set) 
-				&& ((SetRemove)o).value.equals(value);
+		return (o instanceof SetRemove) && ((SetRemove) o).set.equals(set) && ((SetRemove) o).value.equals(value);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass().hashCode(), set.hashCode(), value.hashCode());

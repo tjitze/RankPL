@@ -17,7 +17,7 @@ public class MapContainsKey extends AbstractExpression {
 
 	private final AbstractExpression map;
 	private final AbstractExpression value;
-	
+
 	public MapContainsKey(AbstractExpression map, AbstractExpression value) {
 		this.map = map;
 		this.value = value;
@@ -36,8 +36,9 @@ public class MapContainsKey extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new MapContainsKey(map.transformRankExpressions(v, rank),
-				value.transformRankExpressions(v, rank));
+		AbstractExpression e = new MapContainsKey(map.transformRankExpressions(v, rank), value.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -52,8 +53,10 @@ public class MapContainsKey extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new MapContainsKey((AbstractExpression)map.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new MapContainsKey((AbstractExpression) map.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) value.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -72,16 +75,15 @@ public class MapContainsKey extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "containsKey(" 
-				+ StringTools.stripPars(map.toString()) + ", " 
-				+ StringTools.stripPars(value.toString()) + ")";
+		return "containsKey(" + StringTools.stripPars(map.toString()) + ", " + StringTools.stripPars(value.toString())
+				+ ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof MapContainsKey) && ((MapContainsKey)o).map.equals(map) 
-				&& ((MapContainsKey)o).value.equals(value);
+		return (o instanceof MapContainsKey) && ((MapContainsKey) o).map.equals(map)
+				&& ((MapContainsKey) o).value.equals(value);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(map.hashCode(), value.hashCode());

@@ -40,9 +40,11 @@ public class ListReplace extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new ListReplace(list.transformRankExpressions(v, rank),
+		ListReplace lr = new ListReplace(list.transformRankExpressions(v, rank),
 				index.transformRankExpressions(v, rank),
 				value.transformRankExpressions(v, rank));
+		lr.setLineNumber(getLineNumber());
+		return lr;
 	}
 
 	@Override
@@ -55,9 +57,11 @@ public class ListReplace extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new ListReplace((AbstractExpression)list.replaceEmbeddedFunctionCall(fc, var),
+		ListReplace lr = new ListReplace((AbstractExpression)list.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)index.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		lr.setLineNumber(getLineNumber());
+		return lr;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class NumNumNumOp extends AbstractExpression {
 
 	private final AbstractExpression e1, e2;
 	private final BiFunction<Integer, Integer, Integer> f;
-	
+
 	public NumNumNumOp(BiFunction<Integer, Integer, Integer> f, AbstractExpression e1, AbstractExpression e2) {
 		this.e1 = e1;
 		this.e2 = e2;
@@ -35,19 +35,26 @@ public class NumNumNumOp extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new NumNumNumOp(f, (AbstractExpression)e1.transformRankExpressions(v, rank), (AbstractExpression)e2.transformRankExpressions(v, rank));
+		AbstractExpression e = new NumNumNumOp(f, (AbstractExpression) e1.transformRankExpressions(v, rank),
+				(AbstractExpression) e2.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		AbstractFunctionCall fc = e1.getEmbeddedFunctionCall();
-		if (fc != null) return fc;
+		if (fc != null)
+			return fc;
 		return e2.getEmbeddedFunctionCall();
 	}
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new NumNumNumOp(f, (AbstractExpression)e1.replaceEmbeddedFunctionCall(fc, var), (AbstractExpression)e2.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new NumNumNumOp(f, (AbstractExpression) e1.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) e2.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -56,6 +63,7 @@ public class NumNumNumOp extends AbstractExpression {
 		int o2 = e2.getValue(e, Type.INT);
 		return f.apply(o1, o2);
 	}
+
 	@Override
 	public boolean hasDefiniteValue() {
 		return e1.hasDefiniteValue() && e2.hasDefiniteValue();
@@ -63,9 +71,9 @@ public class NumNumNumOp extends AbstractExpression {
 
 	@Override
 	public Object getDefiniteValue() throws RPLException {
-		return f.apply((int)e1.getDefiniteValue(Type.INT), (int)e2.getDefiniteValue(Type.INT));
+		return f.apply((int) e1.getDefiniteValue(Type.INT), (int) e2.getDefiniteValue(Type.INT));
 	}
-	
+
 	public AbstractExpression getE1() {
 		return e1;
 	}
@@ -73,18 +81,17 @@ public class NumNumNumOp extends AbstractExpression {
 	public AbstractExpression getE2() {
 		return e2;
 	}
-	
+
 	public String toString() {
-		return "(" + f.toString().replace("$1", StringTools.stripPars(e1.toString())).replace("$2", StringTools.stripPars(e2.toString())) + ")";
+		return "(" + f.toString().replace("$1", StringTools.stripPars(e1.toString())).replace("$2",
+				StringTools.stripPars(e2.toString())) + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof NumNumNumOp) &&
-				((NumNumNumOp)o).e1.equals(e1) &&
-				((NumNumNumOp)o).e2.equals(e2) &&
-				((NumNumNumOp)o).f == f;
+		return (o instanceof NumNumNumOp) && ((NumNumNumOp) o).e1.equals(e1) && ((NumNumNumOp) o).e2.equals(e2)
+				&& ((NumNumNumOp) o).f == f;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(e1, e2, f);

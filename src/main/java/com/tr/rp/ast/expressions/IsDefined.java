@@ -31,7 +31,9 @@ public class IsDefined extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new IsDefined((AbstractExpression)exp.transformRankExpressions(v, rank));
+		IsDefined id = new IsDefined((AbstractExpression)exp.transformRankExpressions(v, rank));
+		id.setLineNumber(getLineNumber());
+		return id;
 	}
 
 	@Override
@@ -41,7 +43,9 @@ public class IsDefined extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new IsDefined((AbstractExpression)exp.replaceEmbeddedFunctionCall(fc, var));
+		IsDefined id = new IsDefined((AbstractExpression)exp.replaceEmbeddedFunctionCall(fc, var));
+		id.setLineNumber(getLineNumber());
+		return id;
 	}
 
 	@Override

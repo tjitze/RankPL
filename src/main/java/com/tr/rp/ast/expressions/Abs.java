@@ -32,7 +32,9 @@ public class Abs extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Abs(e.transformRankExpressions(v, rank));
+		Abs a = new Abs(e.transformRankExpressions(v, rank));
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override
@@ -42,7 +44,9 @@ public class Abs extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Abs((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		Abs a = new Abs((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override

@@ -53,7 +53,9 @@ public class IndexElementExpression extends AbstractExpression {
 			newIndices[i] = (AbstractExpression)indices[i].transformRankExpressions(v, rank);
 		}
 		AbstractExpression newExp = (AbstractExpression)exp.transformRankExpressions(v, rank);
-		return new IndexElementExpression(newExp, newIndices);
+		IndexElementExpression iee = new IndexElementExpression(newExp, newIndices);
+		iee.setLineNumber(getLineNumber());
+		return iee;
 	}
 
 	@Override
@@ -78,7 +80,9 @@ public class IndexElementExpression extends AbstractExpression {
 			newIndices[i] = (AbstractExpression)indices[i].replaceEmbeddedFunctionCall(fc, var);
 		}
 		AbstractExpression newExp = (AbstractExpression)exp.replaceEmbeddedFunctionCall(fc, var);
-		return new IndexElementExpression(newExp, newIndices);
+		IndexElementExpression iee = new IndexElementExpression(newExp, newIndices);
+		iee.setLineNumber(getLineNumber());
+		return iee;
 	}
 
 	@Override

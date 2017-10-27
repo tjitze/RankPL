@@ -36,8 +36,10 @@ public class ListAppend extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new ListAppend(list.transformRankExpressions(v, rank),
+		ListAppend la = new ListAppend(list.transformRankExpressions(v, rank),
 				value.transformRankExpressions(v, rank));
+		la.setLineNumber(getLineNumber());
+		return la;
 	}
 
 	@Override
@@ -52,8 +54,10 @@ public class ListAppend extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new ListAppend((AbstractExpression)list.replaceEmbeddedFunctionCall(fc, var),
+		ListAppend la = new ListAppend((AbstractExpression)list.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		la.setLineNumber(getLineNumber());
+		return la;
 	}
 
 	@Override

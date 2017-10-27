@@ -9,14 +9,12 @@ import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * The Rank expression is an integer-valued expression
- * that has a boolean expression argument. It evaluates
- * to the rank of its argument. This means that its 
- * actual value depends on a ranking function given which
- * it is evaluated. That's what the transformRankExpression
- * method is for. There are cases where an expression can
- * only be used if all rank expressions have been trans-
- * formed, i.e., replaced with int literals.
+ * The Rank expression is an integer-valued expression that has a boolean
+ * expression argument. It evaluates to the rank of its argument. This means
+ * that its actual value depends on a ranking function given which it is
+ * evaluated. That's what the transformRankExpression method is for. There are
+ * cases where an expression can only be used if all rank expressions have been
+ * trans- formed, i.e., replaced with int literals.
  */
 public class RankExpr extends AbstractExpression {
 
@@ -58,7 +56,7 @@ public class RankExpr extends AbstractExpression {
 	public String toString() {
 		String bs = b.toString();
 		if (bs.startsWith("(") && bs.endsWith(")")) {
-			bs = bs.substring(1, bs.length()-1);
+			bs = bs.substring(1, bs.length() - 1);
 		}
 		return "rank(" + bs + ")";
 	}
@@ -72,11 +70,11 @@ public class RankExpr extends AbstractExpression {
 	public Object getDefiniteValue() throws RPLException {
 		return null;
 	}
-	
+
 	public boolean equals(Object o) {
-		return o instanceof RankExpr && ((RankExpr)o).b.equals(b);
+		return o instanceof RankExpr && ((RankExpr) o).b.equals(b);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return b.hashCode();
@@ -89,7 +87,9 @@ public class RankExpr extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new RankExpr((AbstractExpression)b.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new RankExpr((AbstractExpression) b.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override

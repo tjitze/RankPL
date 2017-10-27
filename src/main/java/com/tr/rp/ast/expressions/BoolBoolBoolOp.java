@@ -35,7 +35,9 @@ public class BoolBoolBoolOp extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new BoolBoolBoolOp(f, (AbstractExpression)e1.transformRankExpressions(v, rank), (AbstractExpression)e2.transformRankExpressions(v, rank));
+		BoolBoolBoolOp b = new BoolBoolBoolOp(f, (AbstractExpression)e1.transformRankExpressions(v, rank), (AbstractExpression)e2.transformRankExpressions(v, rank));
+		b.setLineNumber(getLineNumber());
+		return b;
 	}
 
 	@Override
@@ -47,7 +49,9 @@ public class BoolBoolBoolOp extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new BoolBoolBoolOp(f, (AbstractExpression)e1.replaceEmbeddedFunctionCall(fc, var), (AbstractExpression)e2.replaceEmbeddedFunctionCall(fc, var));
+		BoolBoolBoolOp b = new BoolBoolBoolOp(f, (AbstractExpression)e1.replaceEmbeddedFunctionCall(fc, var), (AbstractExpression)e2.replaceEmbeddedFunctionCall(fc, var));
+		b.setLineNumber(getLineNumber());
+		return b;
 	}
 
 	@Override

@@ -45,7 +45,9 @@ public class ArrayConstructExpression extends AbstractExpression {
 		for (int i = 0; i < values.length; i++) {
 			newValues[i] = (AbstractExpression)values[i].transformRankExpressions(v, rank);
 		}
-		return new ArrayConstructExpression(newValues);
+		ArrayConstructExpression a = new ArrayConstructExpression(newValues);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override
@@ -65,7 +67,9 @@ public class ArrayConstructExpression extends AbstractExpression {
 		for (int i = 0; i < values.length; i++) {
 			newValues[i] = (AbstractExpression)values[i].replaceEmbeddedFunctionCall(fc, var);
 		}
-		return new ArrayConstructExpression(newValues);
+		ArrayConstructExpression a = new ArrayConstructExpression(newValues);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override

@@ -60,12 +60,22 @@ public abstract class RPLException extends Exception {
 				statementString = statementString.substring(0, MAX_STATEMENT_STRING_LENGTH) + "...";
 			}
 			info += (info.equals("") ? "In" : ", in") + " statement " + getStatement();
-			if (getStatement().getLineNumber() != -1) {
-				info += ", on line " + getStatement().getLineNumber();
+			if (getSpecificLineNumber() != -1) {
+				info += ", on line " + getSpecificLineNumber();
 			}
 		}
 		if (info.length() > 0) info += ".";
 		System.out.println(info);
+	}
+	
+	public int getSpecificLineNumber() {
+		if (getExpression() != null && getExpression().getLineNumber() > 0) {
+			return getExpression().getLineNumber();
+		}
+		if (getStatement() != null && getStatement().getLineNumber() > 0) {
+			return getStatement().getLineNumber();
+		}
+		return -1;
 	}
 
 }

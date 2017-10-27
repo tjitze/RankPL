@@ -41,8 +41,10 @@ public class Get extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Get(mapOrList.transformRankExpressions(v, rank),
+		Get g = new Get(mapOrList.transformRankExpressions(v, rank),
 				keyOrIndex.transformRankExpressions(v, rank));
+		g.setLineNumber(getLineNumber());
+		return g;
 	}
 
 	@Override
@@ -57,8 +59,10 @@ public class Get extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Get((AbstractExpression)mapOrList.replaceEmbeddedFunctionCall(fc, var),
+		Get g = new Get((AbstractExpression)mapOrList.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)keyOrIndex.replaceEmbeddedFunctionCall(fc, var));
+		g.setLineNumber(getLineNumber());
+		return g;
 	}
 
 	@Override

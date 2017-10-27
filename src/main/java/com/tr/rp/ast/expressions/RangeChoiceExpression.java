@@ -65,7 +65,9 @@ public class RangeChoiceExpression extends AbstractFunctionCall {
 		AbstractExpression newExp1 = (AbstractExpression)startInclusiveExp.transformRankExpressions(v, r);
 		AbstractExpression newExp2 = (AbstractExpression)endExclusiveExp.transformRankExpressions(v, r);
 		if (newExp1 != startInclusiveExp || newExp2 != endExclusiveExp) {
-			return new RangeChoiceExpression(newExp1, newExp2);
+			RangeChoiceExpression rce = new RangeChoiceExpression(newExp1, newExp2);
+			rce.setLineNumber(getLineNumber());
+			return rce;
 		} else {
 			return this;
 		}
@@ -79,7 +81,9 @@ public class RangeChoiceExpression extends AbstractFunctionCall {
 			AbstractExpression newExp1 = (AbstractExpression)startInclusiveExp.replaceEmbeddedFunctionCall(fc, var);
 			AbstractExpression newExp2 = (AbstractExpression)endExclusiveExp.replaceEmbeddedFunctionCall(fc, var);
 			if (newExp1 != startInclusiveExp || newExp2 != endExclusiveExp) {
-				return new RangeChoiceExpression(newExp1, newExp2);
+				RangeChoiceExpression rce = new RangeChoiceExpression(newExp1, newExp2);
+				rce.setLineNumber(getLineNumber());
+				return rce;
 			} else {
 				return this;
 			}

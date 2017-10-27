@@ -17,7 +17,7 @@ public class SubString extends AbstractExpression {
 	private final AbstractExpression input;
 	private final AbstractExpression begin;
 	private final AbstractExpression end;
-	
+
 	public SubString(AbstractExpression stringExp, AbstractExpression start, AbstractExpression end) {
 		this.input = stringExp;
 		this.begin = start;
@@ -33,17 +33,16 @@ public class SubString extends AbstractExpression {
 
 	@Override
 	public boolean hasRankExpression() {
-		return input.hasRankExpression() ||
-					begin.hasRankExpression() ||
-					end.hasRankExpression();
+		return input.hasRankExpression() || begin.hasRankExpression() || end.hasRankExpression();
 	}
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new SubString(
-				(AbstractExpression)input.transformRankExpressions(v, rank),
-				(AbstractExpression)begin.transformRankExpressions(v, rank),
-				(AbstractExpression)end.transformRankExpressions(v, rank));
+		AbstractExpression e = new SubString((AbstractExpression) input.transformRankExpressions(v, rank),
+				(AbstractExpression) begin.transformRankExpressions(v, rank),
+				(AbstractExpression) end.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -61,10 +60,11 @@ public class SubString extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new SubString(
-				(AbstractExpression)input.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)begin.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)end.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new SubString((AbstractExpression) input.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) begin.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) end.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -86,9 +86,7 @@ public class SubString extends AbstractExpression {
 
 	@Override
 	public boolean hasDefiniteValue() {
-		return input.hasDefiniteValue() 
-				&& begin.hasDefiniteValue()
-				&& end.hasDefiniteValue();
+		return input.hasDefiniteValue() && begin.hasDefiniteValue() && end.hasDefiniteValue();
 	}
 
 	@Override
@@ -109,17 +107,13 @@ public class SubString extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "SubString(" 
-			+ StringTools.stripPars(input.toString()) + "," 
-			+ StringTools.stripPars(begin.toString()) + ", " 
-			+ StringTools.stripPars(end.toString()) + ")";
+		return "SubString(" + StringTools.stripPars(input.toString()) + "," + StringTools.stripPars(begin.toString())
+				+ ", " + StringTools.stripPars(end.toString()) + ")";
 	}
 
 	public boolean equals(Object o) {
-		return (o instanceof SubString) && 
-				((SubString)o).input.equals(input) &&
-				((SubString)o).begin.equals(begin) &&
-				((SubString)o).end.equals(end);
+		return (o instanceof SubString) && ((SubString) o).input.equals(input) && ((SubString) o).begin.equals(begin)
+				&& ((SubString) o).end.equals(end);
 	}
 
 	@Override

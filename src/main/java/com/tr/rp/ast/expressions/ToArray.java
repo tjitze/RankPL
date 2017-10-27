@@ -24,7 +24,7 @@ import com.tr.rp.varstore.types.Type;
 public class ToArray extends AbstractExpression {
 
 	private final AbstractExpression e;
-	
+
 	public ToArray(AbstractExpression e) {
 		this.e = e;
 	}
@@ -41,7 +41,9 @@ public class ToArray extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new ToArray(e.transformRankExpressions(v, rank));
+		AbstractExpression x = new ToArray(e.transformRankExpressions(v, rank));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -51,7 +53,9 @@ public class ToArray extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new ToArray((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression x = new ToArray((AbstractExpression) e.replaceEmbeddedFunctionCall(fc, var));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -80,17 +84,17 @@ public class ToArray extends AbstractExpression {
 		Object o = e.getDefiniteValue();
 		if (o != null) {
 			if (o instanceof String) {
-				return ((String)o).length();
+				return ((String) o).length();
 			} else if (o instanceof PersistentArray) {
-				return ((PersistentArray)o).size();
+				return ((PersistentArray) o).size();
 			} else if (o instanceof PersistentStack) {
-				return ((PersistentStack<?>)o).size();
+				return ((PersistentStack<?>) o).size();
 			} else if (o instanceof PersistentSet) {
-				return ((PersistentSet<?>)o).size();
+				return ((PersistentSet<?>) o).size();
 			} else if (o instanceof PersistentMap) {
-				return ((PersistentMap<?, ?>)o).size();
+				return ((PersistentMap<?, ?>) o).size();
 			} else if (o instanceof PersistentList) {
-				return ((PersistentList<?>)o).size();
+				return ((PersistentList<?>) o).size();
 			} else {
 				throw new RPLTypeError("string, array, set, map or stack", o, e);
 			}
@@ -102,13 +106,13 @@ public class ToArray extends AbstractExpression {
 	public String toString() {
 		String es = e.toString();
 		if (es.startsWith("(") && es.endsWith(")")) {
-			es = es.substring(1, es.length()-1);
+			es = es.substring(1, es.length() - 1);
 		}
 		return "size(" + es + ")";
 	}
 
 	public boolean equals(Object o) {
-		return (o instanceof ToArray) && ((ToArray)o).e.equals(e);
+		return (o instanceof ToArray) && ((ToArray) o).e.equals(e);
 	}
 
 	@Override

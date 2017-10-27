@@ -14,7 +14,7 @@ import com.tr.rp.varstore.VarStore;
 public class Variable extends AbstractExpression {
 
 	private final String name;
-	
+
 	public Variable(String name) {
 		this.name = name;
 	}
@@ -41,7 +41,7 @@ public class Variable extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Variable(name);
+		return this;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class Variable extends AbstractExpression {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean hasDefiniteValue() {
 		return false;
@@ -74,13 +74,13 @@ public class Variable extends AbstractExpression {
 	public Object getDefiniteValue() throws RPLException {
 		return null;
 	}
-	
+
 	public String toString() {
 		return name;
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof Variable) && ((Variable)o).name.equals(name);
+		return (o instanceof Variable) && ((Variable) o).name.equals(name);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class MapPut extends AbstractExpression {
 	private final AbstractExpression map;
 	private final AbstractExpression key;
 	private final AbstractExpression value;
-	
+
 	public MapPut(AbstractExpression map, AbstractExpression key, AbstractExpression value) {
 		this.map = map;
 		this.key = key;
@@ -39,24 +39,29 @@ public class MapPut extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new MapPut(map.transformRankExpressions(v, rank),
-				key.transformRankExpressions(v, rank),
+		AbstractExpression e = new MapPut(map.transformRankExpressions(v, rank), key.transformRankExpressions(v, rank),
 				value.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
 	public AbstractFunctionCall getEmbeddedFunctionCall() {
 		AbstractFunctionCall fc = map.getEmbeddedFunctionCall();
-		if (fc == null) fc = key.getEmbeddedFunctionCall();
-		if (fc == null) fc = value.getEmbeddedFunctionCall();
+		if (fc == null)
+			fc = key.getEmbeddedFunctionCall();
+		if (fc == null)
+			fc = value.getEmbeddedFunctionCall();
 		return fc;
 	}
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new MapPut((AbstractExpression)map.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)key.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new MapPut((AbstractExpression) map.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) key.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) value.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -75,18 +80,15 @@ public class MapPut extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "put(" 
-				+ StringTools.stripPars(map.toString()) + ", "
-				+ StringTools.stripPars(key.toString()) + ", " 
+		return "put(" + StringTools.stripPars(map.toString()) + ", " + StringTools.stripPars(key.toString()) + ", "
 				+ StringTools.stripPars(value.toString()) + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof MapPut) && ((MapPut)o).map.equals(map) 
-				&& ((MapPut)o).key.equals(key)
-				&& ((MapPut)o).value.equals(key);
+		return (o instanceof MapPut) && ((MapPut) o).map.equals(map) && ((MapPut) o).key.equals(key)
+				&& ((MapPut) o).value.equals(key);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass().hashCode(), map.hashCode(), key.hashCode(), value.hashCode());

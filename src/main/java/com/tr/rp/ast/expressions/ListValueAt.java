@@ -37,8 +37,10 @@ public class ListValueAt extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new ListValueAt(list.transformRankExpressions(v, rank),
+		ListValueAt lva = new ListValueAt(list.transformRankExpressions(v, rank),
 				index.transformRankExpressions(v, rank));
+		lva.setLineNumber(getLineNumber());
+		return lva;
 	}
 
 	@Override
@@ -53,8 +55,10 @@ public class ListValueAt extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new ListValueAt((AbstractExpression)list.replaceEmbeddedFunctionCall(fc, var),
+		ListValueAt lva = new ListValueAt((AbstractExpression)list.replaceEmbeddedFunctionCall(fc, var),
 				(AbstractExpression)index.replaceEmbeddedFunctionCall(fc, var));
+		lva.setLineNumber(getLineNumber());
+		return lva;
 	}
 
 	@Override

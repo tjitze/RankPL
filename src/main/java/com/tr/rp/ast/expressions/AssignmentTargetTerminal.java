@@ -56,7 +56,9 @@ public class AssignmentTargetTerminal extends AssignmentTarget {
 		for (int i = 0; i < indices.length; i++) {
 			newIndices[i] = (AbstractExpression)indices[i].transformRankExpressions(v, rank);
 		}
-		return new AssignmentTargetTerminal(name, newIndices);
+		AssignmentTargetTerminal a = new AssignmentTargetTerminal(name, newIndices);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override
@@ -76,7 +78,9 @@ public class AssignmentTargetTerminal extends AssignmentTarget {
 		for (int i = 0; i < indices.length; i++) {
 			newIndices[i] = (AbstractExpression)indices[i].replaceEmbeddedFunctionCall(fc, var);
 		}
-		return new AssignmentTargetTerminal(name);
+		AssignmentTargetTerminal a = new AssignmentTargetTerminal(name, newIndices);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override
@@ -156,8 +160,11 @@ public class AssignmentTargetTerminal extends AssignmentTarget {
 	 */
 	public AbstractExpression convertToRHSExpression() {
 		Variable v = new Variable(name);
+		v.setLineNumber(getLineNumber());
 		if (indices.length > 0) {
-			return new IndexElementExpression(v, indices);
+			IndexElementExpression e = new IndexElementExpression(v, indices);
+			e.setLineNumber(getLineNumber());
+			return e;
 		} else {
 			return v;
 		}

@@ -41,7 +41,9 @@ public class Max extends AbstractExpression {
 		for (int i = 0; i < newEs.length; i++) {
 			newEs[i] = (AbstractExpression)es[i].transformRankExpressions(v, rank);
 		}
-		return new Max(newEs);
+		Max m = new Max(newEs);
+		m.setLineNumber(getLineNumber());
+		return m;
 	}
 
 	@Override
@@ -61,7 +63,9 @@ public class Max extends AbstractExpression {
 		for (int i = 0; i < newEs.length; i++) {
 			newEs[i] = (AbstractExpression)es[i].replaceEmbeddedFunctionCall(fc, var);
 		}
-		return new Max(newEs);
+		Max m = new Max(newEs);
+		m.setLineNumber(getLineNumber());
+		return m;
 	}
 
 	@Override

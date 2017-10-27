@@ -9,7 +9,7 @@ import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.varstore.VarStore;
 
 /**
- * Returns a new, empty map
+ * Construct new instances of an object through a supplier
  */
 public class ConstructorExpression extends AbstractExpression {
 	
@@ -20,7 +20,7 @@ public class ConstructorExpression extends AbstractExpression {
 		this.name = name;
 		this.supplier = supplier;
 	}
-	
+
 	@Override
 	public void getVariables(Set<String> list) { }
 

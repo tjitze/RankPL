@@ -30,7 +30,9 @@ public class IntToChar extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new IntToChar(intExp.transformRankExpressions(v, rank));
+		IntToChar itc = new IntToChar(intExp.transformRankExpressions(v, rank));
+		itc.setLineNumber(getLineNumber());
+		return itc;
 	}
 
 	@Override
@@ -40,7 +42,9 @@ public class IntToChar extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new IntToChar((AbstractExpression)intExp.replaceEmbeddedFunctionCall(fc, var));
+		IntToChar itc = new IntToChar((AbstractExpression)intExp.replaceEmbeddedFunctionCall(fc, var));
+		itc.setLineNumber(getLineNumber());
+		return itc;
 	}
 
 	@Override

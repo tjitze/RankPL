@@ -39,7 +39,9 @@ public class ReadFile extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new ReadFile(pathExpr.transformRankExpressions(v, rank));
+		AbstractExpression e = new ReadFile(pathExpr.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -49,7 +51,9 @@ public class ReadFile extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new ReadFile((AbstractExpression)pathExpr.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new ReadFile((AbstractExpression) pathExpr.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -86,13 +90,13 @@ public class ReadFile extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "readFile(" + pathExpr +")";
+		return "readFile(" + pathExpr + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof ReadFile) && ((ReadFile)o).pathExpr.equals(pathExpr);
+		return (o instanceof ReadFile) && ((ReadFile) o).pathExpr.equals(pathExpr);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass(), pathExpr);
@@ -101,10 +105,10 @@ public class ReadFile extends AbstractExpression {
 	private List<String> readFile(String path) throws FileNotFoundException, IOException {
 		List<String> lines = new ArrayList<String>();
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-		    String line;
-		    while ((line = br.readLine()) != null) {
-		    	lines.add(line);
-		    }
+			String line;
+			while ((line = br.readLine()) != null) {
+				lines.add(line);
+			}
 		}
 		return lines;
 	}

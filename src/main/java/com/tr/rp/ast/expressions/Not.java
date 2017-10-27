@@ -14,7 +14,7 @@ import com.tr.rp.varstore.types.Type;
 public class Not extends AbstractExpression {
 
 	private final AbstractExpression e;
-	
+
 	public Not(AbstractExpression e) {
 		this.e = e;
 	}
@@ -31,7 +31,9 @@ public class Not extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Not(e.transformRankExpressions(v, rank));
+		AbstractExpression x = new Not(e.transformRankExpressions(v, rank));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -41,7 +43,9 @@ public class Not extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Not((AbstractExpression)e.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression x = new Not((AbstractExpression) e.replaceEmbeddedFunctionCall(fc, var));
+		x.setLineNumber(getLineNumber());
+		return x;
 	}
 
 	@Override
@@ -62,11 +66,11 @@ public class Not extends AbstractExpression {
 	public String toString() {
 		return "!" + e;
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof Not) && ((Not)o).e.equals(e);
+		return (o instanceof Not) && ((Not) o).e.equals(e);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return e.hashCode();

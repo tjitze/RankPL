@@ -17,7 +17,7 @@ public class MapRemoveKey extends AbstractExpression {
 
 	private final AbstractExpression map;
 	private final AbstractExpression key;
-	
+
 	public MapRemoveKey(AbstractExpression map, AbstractExpression value) {
 		this.map = map;
 		this.key = value;
@@ -36,8 +36,9 @@ public class MapRemoveKey extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new MapRemoveKey(map.transformRankExpressions(v, rank),
-				key.transformRankExpressions(v, rank));
+		AbstractExpression e = new MapRemoveKey(map.transformRankExpressions(v, rank), key.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -52,8 +53,10 @@ public class MapRemoveKey extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new MapRemoveKey((AbstractExpression)map.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)key.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new MapRemoveKey((AbstractExpression) map.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) key.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -72,16 +75,14 @@ public class MapRemoveKey extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "removeKey(" 
-				+ StringTools.stripPars(map.toString()) + ", "
-				+ StringTools.stripPars(key.toString()) + ")";
+		return "removeKey(" + StringTools.stripPars(map.toString()) + ", " + StringTools.stripPars(key.toString())
+				+ ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof MapRemoveKey) && ((MapRemoveKey)o).map.equals(map) 
-				&& ((MapRemoveKey)o).key.equals(key);
+		return (o instanceof MapRemoveKey) && ((MapRemoveKey) o).map.equals(map) && ((MapRemoveKey) o).key.equals(key);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass().hashCode(), map.hashCode(), key.hashCode());

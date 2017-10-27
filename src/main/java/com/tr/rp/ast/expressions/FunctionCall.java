@@ -41,13 +41,11 @@ public class FunctionCall extends AbstractFunctionCall {
 	private String[] parameters;
 	private final AbstractExpression[] arguments;
 	
-
 	public FunctionCall(String functionName, FunctionScope functionScope, AbstractExpression ... arguments) {
 		this.arguments = arguments;
 		this.functionScope = functionScope;
 		this.functionName = functionName;
 	}
-
 
 	@Override
 	public final boolean hasRankExpression() {
@@ -104,7 +102,9 @@ public class FunctionCall extends AbstractFunctionCall {
 		for (int i = 0; i < newArgs.length; i++) {
 			newArgs[i] = (AbstractExpression)getArguments()[i].transformRankExpressions(v, rank);
 		}
-		return new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+		FunctionCall fc = new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+		fc.setLineNumber(getLineNumber());
+		return fc;
 	}
 
 	@Override
@@ -116,7 +116,9 @@ public class FunctionCall extends AbstractFunctionCall {
 			for (int i = 0; i < newArgs.length; i++) {
 				newArgs[i] = (AbstractExpression)getArguments()[i].replaceEmbeddedFunctionCall(fc, var);
 			}
-			return new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+			FunctionCall f = new FunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+			f.setLineNumber(getLineNumber());
+			return f;
 		}
 	}
 

@@ -16,7 +16,7 @@ public class SetAdd extends AbstractExpression {
 
 	private final AbstractExpression set;
 	private final AbstractExpression value;
-	
+
 	public SetAdd(AbstractExpression set, AbstractExpression value) {
 		this.set = set;
 		this.value = value;
@@ -35,8 +35,9 @@ public class SetAdd extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new SetAdd(set.transformRankExpressions(v, rank),
-				value.transformRankExpressions(v, rank));
+		AbstractExpression e = new SetAdd(set.transformRankExpressions(v, rank), value.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -51,8 +52,10 @@ public class SetAdd extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new SetAdd((AbstractExpression)set.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new SetAdd((AbstractExpression) set.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) value.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -71,14 +74,13 @@ public class SetAdd extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "add(" + set + ", "+ value +")";
+		return "add(" + set + ", " + value + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof SetAdd) && ((SetAdd)o).set.equals(set) 
-				&& ((SetAdd)o).value.equals(value);
+		return (o instanceof SetAdd) && ((SetAdd) o).set.equals(set) && ((SetAdd) o).value.equals(value);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass().hashCode(), set.hashCode(), value.hashCode());

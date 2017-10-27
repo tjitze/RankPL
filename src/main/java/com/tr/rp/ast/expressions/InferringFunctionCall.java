@@ -30,7 +30,9 @@ public class InferringFunctionCall extends FunctionCall {
 		for (int i = 0; i < newArgs.length; i++) {
 			newArgs[i] = (AbstractExpression)getArguments()[i].transformRankExpressions(v, rank);
 		}
-		return new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+		InferringFunctionCall ifc = new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+		ifc.setLineNumber(getLineNumber());
+		return ifc;
 	}
 
 	@Override
@@ -42,7 +44,9 @@ public class InferringFunctionCall extends FunctionCall {
 			for (int i = 0; i < newArgs.length; i++) {
 				newArgs[i] = (AbstractExpression)getArguments()[i].replaceEmbeddedFunctionCall(fc, var);
 			}
-			return new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+			InferringFunctionCall ifc = new InferringFunctionCall(getFunctionName(), getFunctionScope(), newArgs);
+			ifc.setLineNumber(getLineNumber());
+			return ifc;
 		}
 	}
 

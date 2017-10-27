@@ -42,7 +42,9 @@ public class Min extends AbstractExpression {
 		for (int i = 0; i < newEs.length; i++) {
 			newEs[i] = (AbstractExpression)es[i].transformRankExpressions(v, rank);
 		}
-		return new Min(newEs);
+		Min m = new Min(newEs);
+		m.setLineNumber(getLineNumber());
+		return m;
 	}
 
 	@Override
@@ -62,7 +64,9 @@ public class Min extends AbstractExpression {
 		for (int i = 0; i < newEs.length; i++) {
 			newEs[i] = (AbstractExpression)es[i].replaceEmbeddedFunctionCall(fc, var);
 		}
-		return new Min(newEs);
+		Min m = new Min(newEs);
+		m.setLineNumber(getLineNumber());
+		return m;
 	}
 
 	@Override

@@ -51,7 +51,9 @@ public class ArrayInitExpression extends AbstractExpression {
 		} else {
 			newInitValue = initValue.transformRankExpressions(v, rank);
 		}
-		return new ArrayInitExpression(newDimension, newInitValue);
+		ArrayInitExpression a = new ArrayInitExpression(newDimension, newInitValue);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override
@@ -75,7 +77,9 @@ public class ArrayInitExpression extends AbstractExpression {
 		} else {
 			newInitValue = initValue.replaceEmbeddedFunctionCall(fc, var);
 		}
-		return new ArrayInitExpression(newDimension, newInitValue);
+		ArrayInitExpression a = new ArrayInitExpression(newDimension, newInitValue);
+		a.setLineNumber(getLineNumber());
+		return a;
 	}
 
 	@Override

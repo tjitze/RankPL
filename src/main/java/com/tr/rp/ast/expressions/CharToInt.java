@@ -31,7 +31,9 @@ public class CharToInt extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new CharToInt(charExp.transformRankExpressions(v, rank));
+		CharToInt c = new CharToInt(charExp.transformRankExpressions(v, rank));
+		c.setLineNumber(getLineNumber());
+		return c;
 	}
 
 	@Override
@@ -41,7 +43,9 @@ public class CharToInt extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new CharToInt((AbstractExpression)charExp.replaceEmbeddedFunctionCall(fc, var));
+		CharToInt c = new CharToInt((AbstractExpression)charExp.replaceEmbeddedFunctionCall(fc, var));
+		c.setLineNumber(getLineNumber());
+		return c;
 	}
 
 	@Override

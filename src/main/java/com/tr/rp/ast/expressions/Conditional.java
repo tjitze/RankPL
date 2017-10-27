@@ -38,9 +38,11 @@ public class Conditional extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new Conditional(condition.transformRankExpressions(v, rank),
+		Conditional c = new Conditional(condition.transformRankExpressions(v, rank),
 				e1.transformRankExpressions(v, rank),
 				e2.transformRankExpressions(v, rank));
+		c.setLineNumber(getLineNumber());
+		return c;
 	}
 
 	@Override
@@ -58,9 +60,11 @@ public class Conditional extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new Conditional(condition.replaceEmbeddedFunctionCall(fc, var),
+		Conditional c = new Conditional(condition.replaceEmbeddedFunctionCall(fc, var),
 				e1.replaceEmbeddedFunctionCall(fc, var),
 				e2.replaceEmbeddedFunctionCall(fc, var));
+		c.setLineNumber(getLineNumber());
+		return c;
 	}
 
 	@Override

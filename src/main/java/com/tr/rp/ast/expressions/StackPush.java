@@ -16,7 +16,7 @@ public class StackPush extends AbstractExpression {
 
 	private final AbstractExpression stack;
 	private final AbstractExpression value;
-	
+
 	public StackPush(AbstractExpression stack, AbstractExpression value) {
 		this.stack = stack;
 		this.value = value;
@@ -35,8 +35,9 @@ public class StackPush extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new StackPush(stack.transformRankExpressions(v, rank),
-				value.transformRankExpressions(v, rank));
+		AbstractExpression e = new StackPush(stack.transformRankExpressions(v, rank), value.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -51,8 +52,10 @@ public class StackPush extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new StackPush((AbstractExpression)stack.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new StackPush((AbstractExpression) stack.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) value.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -71,14 +74,13 @@ public class StackPush extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "push(" + stack + ", "+ value +")";
+		return "push(" + stack + ", " + value + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof StackPush) && ((StackPush)o).stack.equals(stack) 
-				&& ((StackPush)o).value.equals(value);
+		return (o instanceof StackPush) && ((StackPush) o).stack.equals(stack) && ((StackPush) o).value.equals(value);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass().hashCode(), stack.hashCode(), value.hashCode());

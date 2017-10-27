@@ -59,7 +59,9 @@ public class RankedChoiceExpression extends AbstractFunctionCall {
 		AbstractExpression newExp2 = (AbstractExpression)exp2.transformRankExpressions(v, r);
 		AbstractExpression newRank = (AbstractExpression)rank.transformRankExpressions(v, r);
 		if (newExp1 != exp1 || newExp2 != exp2 || newRank != rank) {
-			return new RankedChoiceExpression(newExp1, newExp2, newRank);
+			RankedChoiceExpression rce = new RankedChoiceExpression(newExp1, newExp2, newRank);
+			rce.setLineNumber(getLineNumber());
+			return rce;
 		} else {
 			return this;
 		}
@@ -74,7 +76,9 @@ public class RankedChoiceExpression extends AbstractFunctionCall {
 			AbstractExpression newExp2 = (AbstractExpression)exp2.replaceEmbeddedFunctionCall(fc, var);
 			AbstractExpression newRank = (AbstractExpression)rank.replaceEmbeddedFunctionCall(fc, var);
 			if (newExp1 != exp1 || newExp2 != exp2 || newRank != rank) {
-				return new RankedChoiceExpression(newExp1, newExp2, newRank);
+				RankedChoiceExpression rce = new RankedChoiceExpression(newExp1, newExp2, newRank);
+				rce.setLineNumber(getLineNumber());
+				return rce;
 			} else {
 				return this;
 			}

@@ -62,7 +62,7 @@ public class FunctionCallForm extends AbstractStatement {
 						e.setStatement(FunctionCallForm.this);
 					}
 					// TODO: fix this (we set it to null because exp may contain subst variables)
-					if (e.getExpression().toString().contains("$")) {
+					if (e.getExpression() != null && e.getExpression().toString().contains("$")) {
 						e.setExpression(null);
 					}
 					throw e;
@@ -78,7 +78,7 @@ public class FunctionCallForm extends AbstractStatement {
 						e.setStatement(FunctionCallForm.this);
 					}
 					// TODO: fix this (we set it to null because exp may contain subst variables)
-					if (e.getExpression().toString().contains("$")) {
+					if (e.getExpression() != null && e.getExpression().toString().contains("$")) {
 						e.setExpression(null);
 					}
 					throw e;

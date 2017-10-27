@@ -14,6 +14,8 @@ import com.tr.rp.varstore.types.Type;
  */
 public abstract class AbstractExpression implements LanguageElement {
 
+	private int lineNumber = -1;
+
 	/**
 	 * @return True iff this expression contains a rank expression
 	 * that must be rewritten before it can be evaluated.
@@ -106,5 +108,22 @@ public abstract class AbstractExpression implements LanguageElement {
 	public abstract boolean equals(Object o);
 
 	public abstract int hashCode();
+
+	/**
+	 * @return Line number in source file (-1 if not set).
+	 */
+	public int getLineNumber() {
+		return lineNumber;
+	}
+	
+	/**
+	 * Set the line number of this expression in the source file. Will be used
+	 * for error reporting.
+	 * 
+	 * @param lineNumber Line number of this expression
+	 */
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
 
 }

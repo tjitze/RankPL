@@ -10,13 +10,13 @@ import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 /**
- * contains(set, value): returns true iff set contains value 
+ * contains(set, value): returns true iff set contains value
  */
 public class SetContains extends AbstractExpression {
 
 	private final AbstractExpression set;
 	private final AbstractExpression value;
-	
+
 	public SetContains(AbstractExpression set, AbstractExpression value) {
 		this.set = set;
 		this.value = value;
@@ -35,8 +35,9 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new SetContains(set.transformRankExpressions(v, rank),
-				value.transformRankExpressions(v, rank));
+		AbstractExpression e = new SetContains(set.transformRankExpressions(v, rank), value.transformRankExpressions(v, rank));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -51,8 +52,10 @@ public class SetContains extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new SetContains((AbstractExpression)set.replaceEmbeddedFunctionCall(fc, var),
-				(AbstractExpression)value.replaceEmbeddedFunctionCall(fc, var));
+		AbstractExpression e = new SetContains((AbstractExpression) set.replaceEmbeddedFunctionCall(fc, var),
+				(AbstractExpression) value.replaceEmbeddedFunctionCall(fc, var));
+		e.setLineNumber(getLineNumber());
+		return e;
 	}
 
 	@Override
@@ -71,14 +74,13 @@ public class SetContains extends AbstractExpression {
 	}
 
 	public String toString() {
-		return "contains(" + set + ", "+ value +")";
+		return "contains(" + set + ", " + value + ")";
 	}
-	
+
 	public boolean equals(Object o) {
-		return (o instanceof SetContains) && ((SetContains)o).set.equals(set) 
-				&& ((SetContains)o).value.equals(value);
+		return (o instanceof SetContains) && ((SetContains) o).set.equals(set) && ((SetContains) o).value.equals(value);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(getClass().hashCode(), set.hashCode(), value.hashCode());

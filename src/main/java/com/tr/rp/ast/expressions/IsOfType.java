@@ -34,7 +34,9 @@ public class IsOfType extends AbstractExpression {
 
 	@Override
 	public AbstractExpression transformRankExpressions(VarStore v, int rank) throws RPLException {
-		return new IsOfType((AbstractExpression)exp.transformRankExpressions(v, rank), type);
+		IsOfType iot = new IsOfType((AbstractExpression)exp.transformRankExpressions(v, rank), type);
+		iot.setLineNumber(getLineNumber());
+		return iot;
 	}
 
 	@Override
@@ -44,7 +46,9 @@ public class IsOfType extends AbstractExpression {
 
 	@Override
 	public AbstractExpression replaceEmbeddedFunctionCall(AbstractFunctionCall fc, String var) {
-		return new IsOfType((AbstractExpression)exp.replaceEmbeddedFunctionCall(fc, var), type);
+		IsOfType iot = new IsOfType((AbstractExpression)exp.replaceEmbeddedFunctionCall(fc, var), type);
+		iot.setLineNumber(getLineNumber());
+		return iot;
 	}
 
 	@Override

@@ -78,7 +78,6 @@ import com.tr.rp.ast.statements.ObserveL;
 import com.tr.rp.ast.statements.PrintRankingStatement;
 import com.tr.rp.ast.statements.PrintStatement;
 import com.tr.rp.ast.statements.Program;
-import com.tr.rp.ast.statements.RangeChoice;
 import com.tr.rp.ast.statements.RankedChoice;
 import com.tr.rp.ast.statements.Reset;
 import com.tr.rp.ast.statements.Return;

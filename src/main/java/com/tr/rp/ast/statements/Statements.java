@@ -118,22 +118,6 @@ public class Statements {
 	public static PrintStatement print(boolean b) {
 		return new PrintStatement(lit(b));
 	}
-
-	public static RangeChoice rangeChoice(AssignmentTarget target, AbstractExpression beginExp, AbstractExpression endExp) {
-		return new RangeChoice(target, beginExp, endExp);
-	}
-
-	public static RangeChoice rangeChoice(AssignmentTarget target, int begin, int end) {
-		return new RangeChoice(target, lit(begin), lit(end));
-	}
-
-	public static RangeChoice rangeChoice(String variable, AbstractExpression beginExp, AbstractExpression endExp) {
-		return new RangeChoice(new AssignmentTargetTerminal(variable), beginExp, endExp);
-	}
-
-	public static RangeChoice rangeChoice(String variable, int begin, int end) {
-		return new RangeChoice(new AssignmentTargetTerminal(variable), lit(begin), lit(end));
-	}
 	
 	public static RankedChoice rankedChoice(AbstractStatement s1, AbstractStatement s2, AbstractExpression rank) {
 		return new RankedChoice(s1, s2, rank);

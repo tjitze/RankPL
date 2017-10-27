@@ -7,6 +7,7 @@ import com.tr.rp.ast.AbstractExpression;
 import com.tr.rp.ast.statements.FunctionCallForm;
 import com.tr.rp.base.ExecutionContext;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.exceptions.RPLIllegalRangeException;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.executors.MultiMergeExecutor;
 import com.tr.rp.varstore.VarStore;
@@ -48,6 +49,9 @@ public class RangeChoiceExpression extends AbstractFunctionCall {
 				try {
 					startInclusive = startInclusiveExp.getIntValue(in);
 					endExclusive = endExclusiveExp.getIntValue(in);
+					if (endExclusive < startInclusive) {
+						throw new RPLIllegalRangeException(startInclusive, endExclusive, RangeChoiceExpression.this);
+					}
 				} catch (RPLException e) {
 					e.setStatement(fc);
 					throw e;

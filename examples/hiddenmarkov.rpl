@@ -1,0 +1,49 @@
+#
+# An example of a hidden markov model in RankPL. 
+#
+# Adapted from the example discussed here: en.wikipedia.org/wiki/Hidden_Markov_model
+#
+# The hidden variable (weather) takes a value from {rain, sunny}. We assume that the 
+# weather at time i+1 is normally the same as i and exceptionally (degree 1) different.
+#
+# If it rains, then Bob normally cleans, exceptionally (degree 1) shops, and very 
+# exceptionally (degree 3) walks. If it is sunny then Bob normally walks, exceptionally
+# (degree 1) shops and very exceptionally (degree 4) cleans.
+#
+# The weather array contains expected weather at time 0...n (weather at time 0 is pre-set).
+#
+# The activity array contains the *expected* activities at time 1...n.
+#
+# The observations array contains the *observed* activities at time 1...n.
+#
+# The program returns the inferred weather based on the observed activities.
+
+n := 5;
+weather := array(n);
+activity := array(n);
+observations := array(n);
+
+weather[0] := "rain" <<1>> "sunny";
+
+observations[1] := "clean";
+observations[2] := "walk";
+observations[3] := "clean";
+observations[4] := "shop";
+
+for (i in [1 ... n]) {
+	if (weather[i-1] == "rain") {
+		weather[i] := "rain" <<1>> "sunny";
+	} else {
+		weather[i] := "sunny" <<1>> "rain";		
+	}
+
+	if (weather[i] == "rain") {
+		activity[i] := "clean" <<1>> ("shop" <<2>> "walk");
+	} else {
+		activity[i] := "walk" <<1>> ("shop" <<3>> "clean");
+	}
+
+	observe activity[i] == observations[i];
+}
+
+return weather;

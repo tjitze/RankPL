@@ -90,7 +90,7 @@ public class RankPL {
 		try {
 			execute(program, rankCutOff, maxRank, noRanks, terminateAfterFirst);
 		} catch (RPLException e) {
-			e.printDescription();
+			System.out.println(e.getDetailedDescription());
 			System.exit(-1);
 		} catch (Exception e) {
 			e.printStackTrace();

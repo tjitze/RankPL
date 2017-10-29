@@ -48,7 +48,7 @@ public abstract class RPLException extends Exception {
 		return getDescription();
 	}
 	
-	public void printDescription() {
+	public String getDetailedDescription() {
 		System.out.println("Exception: " + getDescription());
 		String info = "";
 		if (getExpression() != null) {
@@ -60,14 +60,14 @@ public abstract class RPLException extends Exception {
 				statementString = statementString.substring(0, MAX_STATEMENT_STRING_LENGTH) + "...";
 			}
 			info += (info.equals("") ? "In" : ", in") + " statement " + getStatement();
-			if (getSpecificLineNumber() != -1) {
-				info += ", on line " + getSpecificLineNumber();
-			}
+		}
+		if (getSpecificLineNumber() != -1) {
+			info += ", on line " + getSpecificLineNumber();
 		}
 		if (info.length() > 0) info += ".";
-		System.out.println(info);
+		return info;
 	}
-	
+
 	public int getSpecificLineNumber() {
 		if (getExpression() != null && getExpression().getLineNumber() > 0) {
 			return getExpression().getLineNumber();

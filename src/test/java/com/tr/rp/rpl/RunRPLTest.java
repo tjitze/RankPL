@@ -52,19 +52,7 @@ public class RunRPLTest extends TestCase {
 			program.run(ExecutionContext.createDefault(), x -> true);
 			System.out.println("OK");
 		} catch (RPLException e) {
-			AbstractStatement st = e.getStatement();
-			AbstractExpression exp = e.getExpression();
-			if (st != null) {
-				System.err.println("Failure in " + file + " (line " + st.getLineNumber() + ")");
-				System.err.println("Statement: " + st);
-				System.err.println(e.toString());
-			} else if (exp != null) {
-				System.err.println("Failure in " + file);
-				System.err.println("Expression: " + exp);
-				System.err.println(e.toString());
-			}
-			e.printStackTrace();
-			fail("Failure: " + e.toString());
+			fail("Failure: " + e.getDetailedDescription());
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("Failure: " + e.toString());

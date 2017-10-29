@@ -1,6 +1,6 @@
 # News
 
-20 october 2017: A new version ([0.7](https://github.com/tjitze/RankPL/releases/tag/0.7)) has been released.
+29 october 2017: A new version ([0.7.1](https://github.com/tjitze/RankPL/releases/tag/0.7.1)) has been released.
 
 # What is RankPL?
 

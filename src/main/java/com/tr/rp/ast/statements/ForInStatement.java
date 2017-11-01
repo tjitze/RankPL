@@ -11,8 +11,10 @@ import com.tr.rp.ast.AbstractStatement;
 import com.tr.rp.ast.LanguageElement;
 import com.tr.rp.ast.StringTools;
 import com.tr.rp.ast.expressions.AssignmentTarget;
+import com.tr.rp.ast.expressions.IndexElementExpression;
 import com.tr.rp.ast.statements.FunctionCallForm.ExtractedExpression;
 import com.tr.rp.base.ExecutionContext;
+import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
 import com.tr.rp.executors.Executor;
 import com.tr.rp.varstore.FreeVarNameProvider;
@@ -57,7 +59,8 @@ public class ForInStatement extends AbstractStatement {
 
 		While w = new While(cond, b) {
 			public void handleConditionException(RPLException e) throws RPLException {
-				// Should not happen 
+				// Should not happen because we're already checking
+				// whether exp is defined and correctly typed (see below)
 				throw new IllegalStateException();
 			}
 		};
@@ -68,7 +71,27 @@ public class ForInStatement extends AbstractStatement {
 		} else {
 			s = new Composition(init, w);
 		}
-		return s.getExecutor(out, c);
+		Executor ex = s.getExecutor(out, c);
+		return new Executor() {
+
+			@Override
+			public void close() throws RPLException {
+				ex.close();
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				// Ensure exp is defined and correctly typed
+				try {
+					IndexElementExpression.checkType(exp.getValue(s.getVarStore()), exp);
+				} catch (RPLException e) {
+					e.setStatement(ForInStatement.this);
+					throw e;
+				}
+				ex.push(s);
+			}
+			
+		};
 	}	
 	
 	public boolean equals(Object o) {

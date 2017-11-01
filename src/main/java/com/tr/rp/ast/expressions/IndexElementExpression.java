@@ -169,4 +169,22 @@ public class IndexElementExpression extends AbstractExpression {
 		return true;
 	}
 
+	/**
+	 * Check type of object. Throw exception if it's not accepted as
+	 * indexed value.
+	 * @throws RPLException 
+	 */
+	public static boolean checkType(Object o, AbstractExpression exp) throws RPLException {
+		if (o == null) {
+			throw new RPLUndefinedException(exp);
+		} else if (o instanceof String) {
+			return true;
+		} else if (o instanceof PersistentArray) {
+			return true;
+		} else if (o instanceof PersistentList) {
+			return true;
+		} else {
+			throw new RPLTypeError("list", o, exp);
+		}
+	}
 }

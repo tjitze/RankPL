@@ -374,7 +374,7 @@ To execute $\textbf{if }b\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}$ we fi
 		combined by taking the minimum of the two.
 	The result is normalized to account for the case where one branch fails.\looseness=-1
 \begin{align*}
-\dn{\textbf{if }e\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}}(\kappa)	& = || \lambda ||,   \\ 
+\dn{\textbf{if }e\textbf{ then }\{ s_1 \}\textbf{ else }\{ s_2 \}}(\kappa)(\sigma) & = || \lambda ||,   \\ 
 			&  \hspace{-30pt} \mbox{ where }\lambda(\sigma) = min\begin{pmatrix} \dn{s_1}(\kappa_{b})(\sigma) + \kappa(b), \tag{\textbf{D4}} \\ \dn{s_2}(\kappa_{\neg b})(\sigma) + \kappa(\neg b) \end{pmatrix}  
 \end{align*}
 	Given a prior $\kappa$, the rank of a valuation after executing $s_1 \Rank{e} s_2$

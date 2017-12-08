@@ -6,7 +6,7 @@
 
 RankPL is a semi-qualitative probabilistic programming language aimed at modelling uncertainty expressible by distinguishing *normal* from *surprising* events. For example, we can express that a statement is only normally or only surprisingly executed, or that a variable normally becomes *X* but may surprisingly become *Y*. 
 
-This kind of uncertainty often appears in common sense reasoning problems. For example, if we diagnose a boolean circuit, we assume that each component *normally* functions correctly, or if we process sensor data, we assume that each piece of data we receive is *normally* correct. If precise probabilites of such events are unknown, a probabilstic approach is inappropriate.
+This kind of uncertainty often appears in common sense reasoning problems. For example, if we diagnose a boolean circuit, we assume that each component *normally* functions correctly, or if we process sensor data, we assume that each piece of data we receive is *normally* correct. If precise probabilites of such events are unknown or irrelevant, a probabilstic approach is inappropriate.
 
 Like a regular probabilistic programming language, RankPL can be used to easily represent models that generate explanations and predictions based on observed data. RankPL programs generate rankings over possible outcomes: first the normal outcomes, then the surprising ones, then the very surprising ones, and so on. The computational simplicity of ranks allows for efficient and exact inference without the need for sampling techniques.
 

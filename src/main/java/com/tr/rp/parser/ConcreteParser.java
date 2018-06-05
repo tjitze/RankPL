@@ -84,6 +84,7 @@ import com.tr.rp.ast.statements.Reset;
 import com.tr.rp.ast.statements.Return;
 import com.tr.rp.ast.statements.Skip;
 import com.tr.rp.ast.statements.Block;
+import com.tr.rp.ast.statements.Break;
 import com.tr.rp.ast.statements.While;
 import com.tr.rp.parser.RankPLParser.Arithmetic1ExpressionContext;
 import com.tr.rp.parser.RankPLParser.Arithmetic2ExpressionContext;
@@ -94,6 +95,7 @@ import com.tr.rp.parser.RankPLParser.AssertStatementContext;
 import com.tr.rp.parser.RankPLParser.AssignmentStatementContext;
 import com.tr.rp.parser.RankPLParser.Assignment_targetContext;
 import com.tr.rp.parser.RankPLParser.BoolExpressionContext;
+import com.tr.rp.parser.RankPLParser.BreakStatementContext;
 import com.tr.rp.parser.RankPLParser.CompareExprContext;
 import com.tr.rp.parser.RankPLParser.ConditionalExpressionContext;
 import com.tr.rp.parser.RankPLParser.CurrentRankStatementContext;
@@ -272,6 +274,13 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 	@Override
 	public LanguageElement visitResetStatement(ResetStatementContext ctx) {
 		Reset s = new Reset();
+		s.setLineNumber(ctx.getStart().getLine());
+		return s;
+	}
+
+	@Override
+	public LanguageElement visitBreakStatement(BreakStatementContext ctx) {
+		Break s = new Break();
 		s.setLineNumber(ctx.getStart().getLine());
 		return s;
 	}

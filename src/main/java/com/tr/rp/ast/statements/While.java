@@ -115,12 +115,18 @@ public class While extends AbstractStatement {
 			public void handleConditionException(RPLException e) throws RPLException {
 				While.this.handleConditionException(e);
 			}
+			public boolean extraBranchCondition(State s) {
+				return !s.getVarStore().containsVar("$break")
+						&& !s.getVarStore().containsVar("$return");
+			}
 		};
 	}
 
 	private boolean getCheckedExpValue(AbstractExpression exp, State s) throws RPLException {
 		try {
-			return exp.getValue(s.getVarStore(), Type.BOOL);
+			return !s.getVarStore().containsVar("$break") && 
+				!s.getVarStore().containsVar("$return") && 
+					exp.getValue(s.getVarStore(), Type.BOOL);
 		} catch (RPLException e) {
 			handleConditionException(e);
 			return false;
@@ -130,6 +136,20 @@ public class While extends AbstractStatement {
 	@Override
 	public Executor getExecutor(Executor out, ExecutionContext c) {
 		LinkedList<Callable> def = new LinkedList<Callable>();
+		Executor ex = out;
+		out = new Executor() {
+
+			@Override
+			public void close() throws RPLException {
+				ex.close();
+			}
+
+			@Override
+			public void push(State s) throws RPLException {
+				ex.push(s.getVarStore().unset("$break"), s.getRank());
+			}
+			
+		};
 		Executor e = getIteration(() -> whileCondition, new Deduplicator(Guard.checkIfEnabled(out)), 0, c, 0, def);
 		return new Executor() {
 			@Override

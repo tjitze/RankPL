@@ -61,7 +61,7 @@ public class BranchingExecutor implements Executor {
 
 	private boolean getCheckedExpValue(State s) throws RPLException {
 		try {
-			return exp.get().getValue(s.getVarStore(), Type.BOOL);
+			return extraBranchCondition(s) && exp.get().getValue(s.getVarStore(), Type.BOOL);
 		} catch (RPLException e) {
 			handleConditionException(e);
 			return false;
@@ -73,6 +73,13 @@ public class BranchingExecutor implements Executor {
 	 */
 	public void handleConditionException(RPLException e) throws RPLException {
 		throw e;
+	}
+	
+	/**
+	 * Override to implement extra check for condition
+	 */
+	public boolean extraBranchCondition(State s) {
+		return true;
 	}
 	
 	private class InternalMerger {

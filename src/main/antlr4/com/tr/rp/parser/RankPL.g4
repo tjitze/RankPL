@@ -49,6 +49,7 @@ term_stat
  | AssertRanked '(' exp (',' exp)* ')'					# AssertRankedStatement
  | Assert exp											# AssertStatement
  | Reset												# ResetStatement
+ | Break												# BreakStatement
  | CurrentRank '(' assignment_target ')'				# CurrentRankStatement
  ;
 
@@ -125,6 +126,7 @@ Cut: 			'cut' | 'CUT';
 Assert: 		'assert' | 'ASSERT';
 AssertRanked: 	'assert-ranked' | 'ASSERT-RANKED';
 Reset: 			'reset' | 'RESET';
+Break: 			'break' | 'BREAK';
 True: 			'true' | 'TRUE';
 False: 			'false' | 'FALSE';
 Infer: 			'infer' | 'INFER';

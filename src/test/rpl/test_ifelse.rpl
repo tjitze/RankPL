@@ -1,5 +1,25 @@
 # simple if
 a := 10;
+b := 0;
+if (a == 10) b := 1; else b := 2;
+assert(b == 1);
+reset;
+
+# simple if
+a := 10;
+b := 0;
+if (a == 10) b := 1;
+assert(b == 1);
+reset;
+
+# simple then
+a := 11;
+if (a == 10) b := 1; else b := 2;
+assert(b == 2);
+reset;
+
+# simple if
+a := 10;
 if (a == 10) {
 	b := 1;
 } else {

@@ -1,0 +1,145 @@
+# Simple break condition 
+x := 0;
+while (true) do {
+	x++;
+	if (x >= 500) break;
+}
+assert(x == 500);
+reset;
+
+# Simple break loop three alternatives variation 1
+x := 0;
+y := 10 << 1 >> (20 << 1 >> 30);
+while (true) do {
+	x++;
+	if (x >= y) break;
+}
+assert-ranked(x,
+	[0, 10],
+	[1, 20],
+	[2, 30]);
+reset;
+
+# Simple break loop three alternatives variation 2
+x := 0;
+y := 10 << 1 >> (30 << 1 >> 20);
+while (true) do {
+	x++;
+	if (x >= y) break;
+}
+assert-ranked(x,
+	[0, 10],
+	[1, 30],
+	[2, 20]);
+reset;
+
+# Simple break loop three alternatives variation 3
+x := 0;
+y := 20 << 1 >> (10 << 1 >> 30);
+while (true) do {
+	x++;
+	if (x >= y) break;
+}
+assert-ranked(x,
+	[0, 20],
+	[1, 10],
+	[2, 30]);
+reset;
+
+# Simple break loop three alternatives variation 4
+x := 0;
+y := 20 << 1 >> (30 << 1 >> 10);
+while (true) do {
+	x++;
+	if (x >= y) break;
+}
+assert-ranked(x,
+	[0, 20],
+	[1, 30],
+	[2, 10]);
+reset;
+
+# Simple break loop three alternatives variation 5
+x := 0;
+y := 30 << 1 >> (10 << 1 >> 20);
+while (true) do {
+	x++;
+	if (x >= y) break;
+}
+assert-ranked(x,
+	[0, 30],
+	[1, 10],
+	[2, 20]);
+reset;
+
+# Simple break loop three alternatives variation 6
+x := 0;
+y := 30 << 1 >> (20 << 1 >> 10);
+while (true) do {
+	x++;
+	if (x >= y) break;
+}
+assert-ranked(x,
+	[0, 30],
+	[1, 20],
+	[2, 10]);
+reset;
+
+# Nested while, break in inner 
+x := 0;
+z := 0;
+while (x < 100) do {
+	y := 0;
+	while (true) do {
+		y++;
+		z++;
+		if (y >= 100) break;
+	}
+	x++;
+}
+assert(z == 100 * 100);
+reset;
+
+# Nested while, break in outer 
+x := 0;
+z := 0;
+while (true) do {
+	y := 0;
+	while (y <= 100) do {
+		y++;
+		z++;
+	}
+	x++;
+	if (x >= 100) break;
+}
+assert(z == 100 * 100);
+reset;
+
+# Nested while, break in inner and outer 
+x := 0;
+z := 0;
+while (true) do {
+	y := 0;
+	while (true) do {
+		y++;
+		z++;
+		if (y >= 100) break;
+	}
+	x++;
+	if (x >= 100) break;
+}
+assert(z == 100 * 100);
+reset;
+
+# Make sure statements after break are skipped
+x := 0;
+y := 0;
+while (true) do {
+	x++;
+	if (x >= 500) break;
+	y := x;
+}
+assert(x == 500);
+assert(y == 499);
+reset;
+

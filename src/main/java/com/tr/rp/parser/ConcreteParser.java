@@ -958,6 +958,7 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 				return;
 			}
 		}
+		// TODO: Throw custom exception
 		throw new IllegalArgumentException("The " + name + " function expects " + 
 				Arrays.stream(argSizes).mapToObj(i -> "" + i).collect(Collectors.joining(" or ")) +
 				" arguments, not " + args.length);

@@ -18,21 +18,31 @@ import com.tr.rp.varstore.types.Type;
 public class Filter implements Executor {
 
 	private final Executor out;
-	private final Supplier<AbstractExpression> expSupplier;
+	private final Predicate predicate;
 	private int offset = -1;
 	private Consumer<Integer> offsetListener;
 	
+	public Filter(Executor out, Predicate predicate) {
+		this.out = out;
+		this.predicate = predicate;
+	}
+	
 	public Filter(Executor out, Supplier<AbstractExpression> expSupplier) {
 		this.out = out;
-		this.expSupplier = expSupplier;
+		this.predicate = new Predicate() {
+			@Override
+			public boolean test(State s) throws RPLException {
+				return expSupplier.get().getValue(s.getVarStore(), Type.BOOL);
+			}
+		};
 	}
 	
 	public Filter(Executor out, AbstractExpression exp) {
 		this.out = out;
-		this.expSupplier = new Supplier<AbstractExpression>() {
+		this.predicate = new Predicate() {
 			@Override
-			public AbstractExpression get() {
-				return exp;
+			public boolean test(State s) throws RPLException {
+				return exp.getValue(s.getVarStore(), Type.BOOL);
 			}
 		};
 	}
@@ -44,7 +54,7 @@ public class Filter implements Executor {
 	
 	@Override
 	public void push(State s) throws RPLException {
-		if (getCheckedValue(s.getVarStore())) {
+		if (getCheckedValue(s)) {
 			if (offset == -1) {
 				offset = s.getRank();
 				if (offsetListener != null) {
@@ -55,9 +65,9 @@ public class Filter implements Executor {
 		}
  	}
 
-	private boolean getCheckedValue(VarStore varStore) throws RPLException {
+	private boolean getCheckedValue(State s) throws RPLException {
 		try {
-			return expSupplier.get().getValue(varStore, Type.BOOL);
+			return predicate.test(s);
 		} catch (RPLException e) {
 			handleConditionException(e);
 			return false;
@@ -73,6 +83,10 @@ public class Filter implements Executor {
 
 	public void setOffsetListener(Consumer<Integer> offsetListener) {
 		this.offsetListener = offsetListener;
+	}
+	
+	public static abstract class Predicate {
+		public abstract boolean test(State s) throws RPLException;
 	}
 
 }

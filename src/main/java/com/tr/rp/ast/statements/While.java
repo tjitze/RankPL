@@ -142,6 +142,9 @@ public class While extends AbstractStatement {
 			@Override
 			public void close() throws RPLException {
 				ex.close();
+				if (!def.isEmpty()) {
+					throw new IllegalStateException();
+				}
 			}
 
 			@Override
@@ -156,6 +159,7 @@ public class While extends AbstractStatement {
 			public void close() throws RPLException {
 				while (!def.isEmpty()) def.removeFirst().call();
 				e.close();
+				while (!def.isEmpty()) def.removeFirst().call();
 			}
 
 			@Override

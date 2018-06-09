@@ -11,6 +11,7 @@ import com.tr.rp.base.ExecutorProvider;
 import com.tr.rp.base.Rank;
 import com.tr.rp.base.State;
 import com.tr.rp.exceptions.RPLException;
+import com.tr.rp.varstore.VarStore;
 import com.tr.rp.varstore.types.Type;
 
 public class BranchingExecutor implements Executor {
@@ -24,19 +25,31 @@ public class BranchingExecutor implements Executor {
 	
 	public BranchingExecutor(Supplier<AbstractExpression> exp, ExecutorProvider s1, ExecutorProvider s2, Executor out,
 			ExecutionContext c) {
+		this.exp = exp;
 		InternalMerger m = new InternalMerger(new Deduplicator(out));
-		Executor exec1 = new Filter(s1.getExecutor(m.getIn1(), c), exp) {
+		Filter.Predicate pos = new Filter.Predicate() {
+			@Override
+			public boolean test(State s) throws RPLException {
+				return testBranchCondition(s);
+			}
+		};
+		Filter.Predicate neg = new Filter.Predicate() {
+			@Override
+			public boolean test(State s) throws RPLException {
+				return !pos.test(s);
+			}
+		};
+		Executor exec1 = new Filter(s1.getExecutor(m.getIn1(), c), pos) {
 			public void handleConditionException(RPLException e) throws RPLException {
 				BranchingExecutor.this.handleConditionException(e);
 			}
 		};
-		Executor exec2 = new Filter(s2.getExecutor(m.getIn2(), c), () -> new Not(exp.get())) {
+		Executor exec2 = new Filter(s2.getExecutor(m.getIn2(), c), neg) {
 			public void handleConditionException(RPLException e) throws RPLException {
 				BranchingExecutor.this.handleConditionException(e);
 			}
 		};
 		splitter = new Splitter(exec1, exec2);
-		this.exp = exp;
 	}
 
 	@Override
@@ -47,7 +60,7 @@ public class BranchingExecutor implements Executor {
 	@Override
 	public void push(State s) throws RPLException {
 		inRank = s.getRank();
-		if (getCheckedExpValue(s)) {
+		if (testBranchCondition(s)) {
 			if (shift1 == Rank.MAX) {
 				shift1 = s.getRank();
 			}
@@ -59,7 +72,7 @@ public class BranchingExecutor implements Executor {
 		splitter.push(s);
 	}
 
-	private boolean getCheckedExpValue(State s) throws RPLException {
+	private boolean testBranchCondition(State s) throws RPLException {
 		try {
 			return extraBranchCondition(s) && exp.get().getValue(s.getVarStore(), Type.BOOL);
 		} catch (RPLException e) {

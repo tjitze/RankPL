@@ -59,6 +59,7 @@ import com.tr.rp.ast.expressions.Size;
 import com.tr.rp.ast.expressions.StackPeek;
 import com.tr.rp.ast.expressions.StackPop;
 import com.tr.rp.ast.expressions.StackPush;
+import com.tr.rp.ast.expressions.StartsWith;
 import com.tr.rp.ast.expressions.SubString;
 import com.tr.rp.ast.expressions.ToArray;
 import com.tr.rp.ast.expressions.Variable;
@@ -925,6 +926,9 @@ public class ConcreteParser extends RankPLBaseVisitor<LanguageElement> {
 		case "substring":
 			ensureArgSize(name, args, 3);
 			return new SubString(args[0], args[1], args[2]);
+		case "startswith":
+			ensureArgSize(name, args, 2);
+			return new StartsWith(args[0], args[1]);
 		case "rank":
 			ensureArgSize(name, args, 1);
 			return new RankExpr(args[0]);

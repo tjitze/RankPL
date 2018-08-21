@@ -87,8 +87,8 @@ expr5
 
 expr6
  : INT													# LiteralIntExpression
- | True				 					 				# LiteralBoolExpr
- | False			 					 				# LiteralBoolExpr
+ | bool_True				 					 			# LiteralBoolExpr
+ | bool_False			 					 				# LiteralBoolExpr
  | QUOTED_STRING										# LiteralStringExpr
  | Infer '(' VAR ('()' | ('(' (exp (',' exp)*) ')')) ')'# InferringFunctionCall
  | VAR ('()' | ('(' (exp (',' exp)*) ')'))				# FunctionCall
@@ -127,8 +127,8 @@ Assert: 		'assert' | 'ASSERT';
 AssertRanked: 	'assert-ranked' | 'ASSERT-RANKED';
 Reset: 			'reset' | 'RESET';
 Break: 			'break' | 'BREAK';
-True: 			'true' | 'TRUE';
-False: 			'false' | 'FALSE';
+bool_True: 		'true' | 'TRUE';
+bool_False:		'false' | 'FALSE';
 Infer: 			'infer' | 'INFER';
 CurrentRank: 	'currentrank' | 'CURRENTRANK' | 'currentRank';
 

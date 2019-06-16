@@ -1,6 +1,6 @@
 # News
 
-29 october 2017: A new version ([0.7.1](https://github.com/tjitze/RankPL/releases/tag/0.7.1)) has been released.
+16 june 2019: RankPL is no longer maintained. Please look at [ranked programming](https://github.com/tjitze/ranked-programming) for a new and improved Scheme-based version of this language.
 
 # What is RankPL?
 
